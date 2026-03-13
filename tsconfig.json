@@ -1,0 +1,3 @@
+{
+	"extends": "@shadcn-registry-docs-template/config/tsconfig.base.json"
+}
