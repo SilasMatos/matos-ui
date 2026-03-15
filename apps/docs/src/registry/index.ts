@@ -12,8 +12,8 @@ const TEMPLATE_STYLE = {
 };
 
 export const registry = {
-  name: "template/ui",
-  homepage: "https://shadcn-registry-docs-template.pages.dev/",
+  name: "matos/ui",
+  homepage: "https://matos-ui.vercel.app/",
   items: [
     {
       name: "index",

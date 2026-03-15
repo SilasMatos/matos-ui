@@ -2,13 +2,16 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "all",
   "type": "registry:all",
-  "description": "All components from [brand-name] (UI components, blocks, and agents)",
+  "description": "All components from Matos UI (UI components, blocks, and agents)",
   "dependencies": [
     "@base-ui/react",
     "class-variance-authority",
-    "lucide-react"
+    "lucide-react",
+    "tailwind-merge",
+    "tailwind-variants"
   ],
   "registryDependencies": [
+    "badge",
     "button",
     "utils"
   ],
@@ -20,10 +23,22 @@
       "content": "\"use client\";\r\n\r\nimport { Button as ButtonPrimitive } from \"@base-ui/react/button\";\r\nimport { cva, type VariantProps } from \"class-variance-authority\";\r\n\r\nimport { cn } from \"@/lib/utils\";\r\n\r\nconst buttonVariants = cva(\r\n  \"focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 rounded-lg border border-transparent bg-clip-padding text-sm font-medium focus-visible:ring-3 aria-invalid:ring-3 [&_svg:not([class*='size-'])]:size-4 group/button inline-flex shrink-0 items-center justify-center whitespace-nowrap transition-all outline-none select-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0\",\r\n  {\r\n    variants: {\r\n      variant: {\r\n        default: \"bg-primary text-primary-foreground [a]:hover:bg-primary/80\",\r\n        outline:\r\n          \"border-border bg-background hover:bg-muted hover:text-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 aria-expanded:bg-muted aria-expanded:text-foreground\",\r\n        secondary:\r\n          \"bg-secondary text-secondary-foreground hover:bg-secondary/80 aria-expanded:bg-secondary aria-expanded:text-secondary-foreground\",\r\n        ghost:\r\n          \"hover:bg-muted hover:text-foreground dark:hover:bg-muted/50 aria-expanded:bg-muted aria-expanded:text-foreground\",\r\n        destructive:\r\n          \"bg-destructive/10 hover:bg-destructive/20 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/20 text-destructive focus-visible:border-destructive/40 dark:hover:bg-destructive/30\",\r\n        link: \"text-primary underline-offset-4 hover:underline\",\r\n      },\r\n      size: {\r\n        default:\r\n          \"h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2\",\r\n        xs: \"h-6 gap-1 rounded-[min(var(--radius-md),10px)] px-2 text-xs in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3\",\r\n        sm: \"h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5\",\r\n        lg: \"h-9 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3\",\r\n        icon: \"size-8\",\r\n        \"icon-xs\":\r\n          \"size-6 rounded-[min(var(--radius-md),10px)] in-data-[slot=button-group]:rounded-lg [&_svg:not([class*='size-'])]:size-3\",\r\n        \"icon-sm\":\r\n          \"size-7 rounded-[min(var(--radius-md),12px)] in-data-[slot=button-group]:rounded-lg\",\r\n        \"icon-lg\": \"size-9\",\r\n      },\r\n    },\r\n    defaultVariants: {\r\n      variant: \"default\",\r\n      size: \"default\",\r\n    },\r\n  },\r\n);\r\n\r\nfunction Button({\r\n  className,\r\n  variant = \"default\",\r\n  size = \"default\",\r\n  ...props\r\n}: ButtonPrimitive.Props & VariantProps<typeof buttonVariants>) {\r\n  return (\r\n    <ButtonPrimitive\r\n      data-slot=\"button\"\r\n      className={cn(buttonVariants({ variant, size, className }))}\r\n      {...props}\r\n    />\r\n  );\r\n}\r\n\r\nexport { Button, buttonVariants };\r\n"
     },
     {
+      "path": "components/ui/badge.tsx",
+      "type": "registry:ui",
+      "target": "",
+      "content": "import { tv, type VariantProps } from \"tailwind-variants\";\r\nimport { twMerge } from \"tailwind-merge\";\r\nimport type { ComponentProps } from \"react\";\r\n\r\nexport const badgeVariants = tv({\r\n  base: [\r\n    \"inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-medium transition-colors\",\r\n    \"focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring\",\r\n  ],\r\n  variants: {\r\n    variant: {\r\n      default:\r\n        \"border-transparent bg-primary text-primary-foreground hover:bg-primary/80\",\r\n      secondary:\r\n        \"border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80\",\r\n      destructive:\r\n        \"border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80\",\r\n      outline: \"border-border text-foreground\",\r\n    },\r\n  },\r\n  defaultVariants: {\r\n    variant: \"default\",\r\n  },\r\n});\r\n\r\nexport interface BadgeProps\r\n  extends ComponentProps<\"span\">,\r\n    VariantProps<typeof badgeVariants> {}\r\n\r\nexport function Badge({ className, variant, ...props }: BadgeProps) {\r\n  return (\r\n    <span\r\n      data-slot=\"badge\"\r\n      className={twMerge(badgeVariants({ variant }), className)}\r\n      {...props}\r\n    />\r\n  );\r\n}\r\n"
+    },
+    {
       "path": "examples/button-demo.tsx",
       "type": "registry:example",
       "target": "",
-      "content": "import { Button } from \"@/components/ui/button\";\n\nexport default function ButtonDemo() {\n  return (\n    <div className=\"flex flex-wrap items-center gap-3\">\n      <Button variant=\"default\">Default</Button>\n      <Button variant=\"secondary\">Secondary</Button>\n      <Button variant=\"outline\">Outline</Button>\n      <Button variant=\"ghost\">Ghost</Button>\n      <Button variant=\"destructive\">Destructive</Button>\n      <Button variant=\"link\">Link</Button>\n    </div>\n  );\n}\n"
+      "content": "import { Button } from \"@/components/ui/button\";\r\n\r\nexport default function ButtonDemo() {\r\n  return (\r\n    <div className=\"flex flex-wrap items-center gap-3\">\r\n      <Button variant=\"default\">Default</Button>\r\n      <Button variant=\"secondary\">Secondary</Button>\r\n      <Button variant=\"outline\">Outline</Button>\r\n      <Button variant=\"ghost\">Ghost</Button>\r\n      <Button variant=\"destructive\">Destructive</Button>\r\n      <Button variant=\"link\">Link</Button>\r\n    </div>\r\n  );\r\n}\r\n"
+    },
+    {
+      "path": "examples/badge-demo.tsx",
+      "type": "registry:example",
+      "target": "",
+      "content": "import { Badge } from \"@/components/ui/badge\";\r\n\r\nexport default function BadgeDemo() {\r\n  return (\r\n    <div className=\"flex flex-wrap items-center gap-2\">\r\n      <Badge>Default</Badge>\r\n      <Badge variant=\"secondary\">Secondary</Badge>\r\n      <Badge variant=\"destructive\">Destructive</Badge>\r\n      <Badge variant=\"outline\">Outline</Badge>\r\n    </div>\r\n  );\r\n}\r\n"
     }
   ]
 }

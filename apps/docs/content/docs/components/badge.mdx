@@ -1,0 +1,66 @@
+---
+title: Badge
+description: Exibe um badge ou indicador de status.
+---
+
+<ComponentPreview name="badge-demo" />
+
+## Instalação
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.vercel.app/r/badge.json" />
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the following dependencies:</Step>
+
+<CodeBlockCommand command="npm install tailwind-merge tailwind-variants" />
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource
+  name="badge"
+  title="components/ui/badge.tsx"
+/>
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { Badge } from "@/components/ui/badge"
+```
+
+```tsx
+<Badge>New</Badge>
+<Badge variant="secondary">Secondary</Badge>
+<Badge variant="destructive">Destructive</Badge>
+<Badge variant="outline">Outline</Badge>
+```
+
+## Reference
+
+### Props
+
+| Prop      | Type                                                                 | Default     |
+| --------- | -------------------------------------------------------------------- | ----------- |
+| `variant` | `"default" \| "secondary" \| "destructive" \| "outline"`             | `"default"` |
+
+O `Badge` também aceita todas as props de `<span>` (HTML).

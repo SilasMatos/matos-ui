@@ -34,6 +34,9 @@ export function SiteHeader() {
               </Link>
             }
           />
+          <div>
+            <h1 className="">Matos UI</h1>
+          </div>
           <MainNav items={siteConfig.navItems} className="hidden lg:flex" />
           <div className="ml-auto flex items-center gap-2 md:flex-1 md:justify-end">
             <CommandMenu tree={pageTree} navItems={siteConfig.navItems} />

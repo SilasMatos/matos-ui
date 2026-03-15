@@ -12,4 +12,15 @@ export const ui: Registry["items"] = [
       },
     ],
   },
+  {
+    name: "badge",
+    type: "registry:ui",
+    dependencies: ["tailwind-merge", "tailwind-variants"],
+    files: [
+      {
+        path: "ui/badge.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
 ];

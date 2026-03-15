@@ -1,0 +1,16 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "badge",
+  "dependencies": [
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "files": [
+    {
+      "path": "components/ui/badge.tsx",
+      "content": "import { tv, type VariantProps } from \"tailwind-variants\";\r\nimport { twMerge } from \"tailwind-merge\";\r\nimport type { ComponentProps } from \"react\";\r\n\r\nexport const badgeVariants = tv({\r\n  base: [\r\n    \"inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-medium transition-colors\",\r\n    \"focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring\",\r\n  ],\r\n  variants: {\r\n    variant: {\r\n      default:\r\n        \"border-transparent bg-primary text-primary-foreground hover:bg-primary/80\",\r\n      secondary:\r\n        \"border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80\",\r\n      destructive:\r\n        \"border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80\",\r\n      outline: \"border-border text-foreground\",\r\n    },\r\n  },\r\n  defaultVariants: {\r\n    variant: \"default\",\r\n  },\r\n});\r\n\r\nexport interface BadgeProps\r\n  extends ComponentProps<\"span\">,\r\n    VariantProps<typeof badgeVariants> {}\r\n\r\nexport function Badge({ className, variant, ...props }: BadgeProps) {\r\n  return (\r\n    <span\r\n      data-slot=\"badge\"\r\n      className={twMerge(badgeVariants({ variant }), className)}\r\n      {...props}\r\n    />\r\n  );\r\n}\r\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

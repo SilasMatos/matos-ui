@@ -1,5 +1,5 @@
 {
-	"name": "shadcn-registry-docs-template",
+	"name": "matos-ui",
 	"private": true,
 	"workspaces": [
 		"apps/*",
@@ -19,7 +19,7 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.2.0",
-		"@shadcn-registry-docs-template/config": "workspace:*",
+		"@matos-ui/config": "workspace:*",
 		"husky": "^9.1.7",
 		"lint-staged": "^16.1.2",
 		"turbo": "^2.8.12",

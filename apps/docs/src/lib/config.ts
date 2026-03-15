@@ -1,10 +1,9 @@
 export const siteConfig = {
-  name: "shadcn-regisry-docs-template",
-  url: "https://shadcn-registry-docs-template.pages.dev/",
-  description: "Build your next styled shadcn/ui components",
+  name: "Matos UI",
+  url: "https://matos-ui.vercel.app/",
+  description: "Componentes estilizados para shadcn/ui",
   links: {
-    twitter: "https://twitter.com/0xMaqed",
-    github: "https://github.com/Maqed/shadcn-registry-docs-template",
+    github: "https://github.com/silasmatos/matos-ui",
   },
   navItems: [
     {

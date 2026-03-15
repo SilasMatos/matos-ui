@@ -18,7 +18,7 @@ export async function GET(
     <DefaultImage
       title={page.data.title}
       description={page.data.description}
-      site="shadcn-registry-docs-template"
+      site="Matos UI"
     />,
     {
       width: 1200,

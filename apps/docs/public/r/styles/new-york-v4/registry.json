@@ -1,6 +1,6 @@
 {
-  "name": "template/ui",
-  "homepage": "https://shadcn-registry-docs-template.pages.dev/",
+  "name": "matos/ui",
+  "homepage": "https://matos-ui.vercel.app/",
   "items": [
     {
       "name": "index",
@@ -46,6 +46,20 @@
       ]
     },
     {
+      "name": "badge",
+      "type": "registry:ui",
+      "dependencies": [
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/badge.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "button-demo",
       "type": "registry:example",
       "registryDependencies": [
@@ -54,6 +68,19 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/button-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "badge-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "badge"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/badge-demo.tsx",
           "type": "registry:example"
         }
       ]
