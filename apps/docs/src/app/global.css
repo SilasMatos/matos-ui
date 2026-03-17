@@ -131,23 +131,18 @@
 }
 
 .hero-grid {
-  background-image: linear-gradient(var(--foreground) 1px, transparent 1px),
+  background-image:
+    linear-gradient(var(--foreground) 1px, transparent 1px),
     linear-gradient(90deg, var(--foreground) 1px, transparent 1px);
   background-size: 64px 64px;
 }
 
 .hero-highlight {
-  background: linear-gradient(
-    transparent 60%,
-    oklch(0.205 0 0 / 8%) 60%
-  );
+  background: linear-gradient(transparent 60%, oklch(0.205 0 0 / 8%) 60%);
 }
 
 .dark .hero-highlight {
-  background: linear-gradient(
-    transparent 60%,
-    oklch(0.985 0 0 / 10%) 60%
-  );
+  background: linear-gradient(transparent 60%, oklch(0.985 0 0 / 10%) 60%);
 }
 
 @utility step {
