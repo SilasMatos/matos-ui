@@ -18,6 +18,7 @@
     "@takumi-rs/image-response": "^0.70.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "framer-motion": "^12.37.0",
     "fumadocs-core": "16.6.16",
     "fumadocs-mdx": "14.2.9",
     "fumadocs-ui": "npm:@fumadocs/base-ui@16.6.16",

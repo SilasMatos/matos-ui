@@ -1,4 +1,4 @@
-import { Inter } from "next/font/google";
+import { Allerta, Inter } from "next/font/google";
 
 import { Provider } from "@/components/provider";
 
@@ -9,9 +9,19 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
+const allerta = Allerta({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-allerta",
+});
+
 export default function Layout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={inter.className} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${inter.className} ${allerta.variable}`}
+      suppressHydrationWarning
+    >
       <body className="flex flex-col min-h-screen [--header-height:calc(var(--spacing)*13)]">
         <Provider>
           <SiteHeader />

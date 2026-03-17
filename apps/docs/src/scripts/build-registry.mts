@@ -423,8 +423,8 @@ async function buildAllJson() {
     $schema: "https://ui.shadcn.com/schema/registry-item.json",
     name: "all",
     type: "registry:all",
-	description:
-		"All components from Matos UI (UI components, blocks, and agents)",
+    description:
+      "All components from Matos UI (UI components, blocks, and agents)",
     dependencies: Array.from(allDependencies).sort(),
     registryDependencies: Array.from(allRegistryDependencies).sort(),
     files: allFiles,
@@ -443,17 +443,17 @@ async function buildPackageRegistries() {
   console.log("📦 Building package-specific registries...");
 
   // Build UI components registry
-	await buildPackageJson(
-		"ui",
-		"ui.json",
-		"All UI components from @matos-ui/ui",
-	);
+  await buildPackageJson(
+    "ui",
+    "ui.json",
+    "All UI components from @matos-ui/ui",
+  );
 
-	await buildPackageJson(
-		"blocks",
-		"blocks.json",
-		"All blocks from @matos-ui/blocks",
-	);
+  await buildPackageJson(
+    "blocks",
+    "blocks.json",
+    "All blocks from @matos-ui/blocks",
+  );
 }
 
 try {
