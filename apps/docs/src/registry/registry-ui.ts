@@ -34,4 +34,15 @@ export const ui: Registry["items"] = [
       },
     ],
   },
+  {
+    name: "accordion",
+    type: "registry:ui",
+    dependencies: ["framer-motion", "lucide-react", "clsx", "tailwind-merge"],
+    files: [
+      {
+        path: "ui/accordion.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
 ];

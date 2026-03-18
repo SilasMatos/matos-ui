@@ -41,6 +41,33 @@
       ]
     },
     {
+      "name": "divider",
+      "type": "registry:ui",
+      "dependencies": ["tailwind-merge", "tailwind-variants"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/divider.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "accordion",
+      "type": "registry:ui",
+      "dependencies": [
+        "framer-motion",
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/accordion.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "button-demo",
       "type": "registry:example",
       "registryDependencies": ["button"],
@@ -58,6 +85,28 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/badge-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "divider-demo",
+      "type": "registry:example",
+      "registryDependencies": ["divider"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/divider-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "accordion-demo",
+      "type": "registry:example",
+      "registryDependencies": ["accordion"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/accordion-demo.tsx",
           "type": "registry:example"
         }
       ]

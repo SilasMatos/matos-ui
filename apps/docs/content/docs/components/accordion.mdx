@@ -1,0 +1,69 @@
+---
+title: Accordion
+description: Área expansível com trigger e conteúdo animado.
+---
+
+<ComponentPreview name="accordion-demo" />
+
+## Instalação
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.vercel.app/r/accordion.json" />
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the following dependencies:</Step>
+
+<CodeBlockCommand command="npm install framer-motion lucide-react clsx tailwind-merge" />
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource
+  name="accordion"
+  title="components/ui/accordion.tsx"
+/>
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "@/components/ui/accordion"
+```
+
+```tsx
+<Accordion>
+  <AccordionItem value="item-1">
+    <AccordionTrigger value="item-1">Título</AccordionTrigger>
+    <AccordionContent value="item-1">
+      Conteúdo expansível com animação.
+    </AccordionContent>
+  </AccordionItem>
+</Accordion>
+```
+
+## Reference
+
+Componentes compound: `Accordion`, `AccordionItem`, `AccordionTrigger`, `AccordionContent`. Cada um aceita props de seu elemento raiz (`div` ou `button`) além de `value` e `children` onde aplicável.
