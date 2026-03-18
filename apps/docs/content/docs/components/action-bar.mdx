@@ -1,0 +1,39 @@
+---
+title: Action Bar
+description: Barra de ação fixa para confirmar exclusões.
+---
+
+<ComponentPreview name="action-bar-demo" />
+
+## Usage
+
+```tsx
+import { ActionBar } from '@/components/ui/action-bar'
+```
+
+```tsx
+<ActionBar
+  subject="Meu Workspace"
+  tone="destructive"
+  placement="bottomCenter"
+  actions={{
+    onConfirm: () => {},
+    onCancel: () => {},
+    isLoading: false
+  }}
+/>
+```
+
+## Reference
+
+### Props
+
+| Prop        | Type                                                                    | Default          |
+| ----------- | ----------------------------------------------------------------------- | ---------------- |
+| `subject`   | `string`                                                                | —                |
+| `placement` | `"bottomCenter" \| "bottomRight" \| "bottomLeft"`                       | `"bottomCenter"` |
+| `tone`      | `"default" \| "destructive"`                                            | `"default"`      |
+| `size`      | `"sm" \| "md"`                                                          | `"md"`           |
+| `actions`   | `{ onConfirm: () => void; onCancel: () => void; isDeleting?: boolean }` | —                |
+
+O `ActionBar` também aceita todas as props de `<div>`.

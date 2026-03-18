@@ -45,4 +45,16 @@ export const ui: Registry["items"] = [
       },
     ],
   },
+  {
+    name: "action-bar",
+    type: "registry:ui",
+    dependencies: ["lucide-react", "tailwind-merge", "tailwind-variants"],
+    registryDependencies: ["button"],
+    files: [
+      {
+        path: "ui/action-bar.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
 ];

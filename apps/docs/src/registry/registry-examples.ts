@@ -45,4 +45,15 @@ export const examples: Registry["items"] = [
       },
     ],
   },
+  {
+    name: "action-bar-demo",
+    type: "registry:example",
+    registryDependencies: ["action-bar"],
+    files: [
+      {
+        path: "examples/action-bar-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
 ];

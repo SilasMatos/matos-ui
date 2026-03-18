@@ -90,6 +90,24 @@
       ]
     },
     {
+      "name": "action-bar",
+      "type": "registry:ui",
+      "dependencies": [
+        "lucide-react",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
+      "registryDependencies": [
+        "button"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/action-bar.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "button-demo",
       "type": "registry:example",
       "registryDependencies": [
@@ -137,6 +155,19 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/accordion-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "action-bar-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "action-bar"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/action-bar-demo.tsx",
           "type": "registry:example"
         }
       ]

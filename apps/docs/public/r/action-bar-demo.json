@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "action-bar-demo",
+  "registryDependencies": [
+    "action-bar"
+  ],
+  "files": [
+    {
+      "path": "components/examples/action-bar-demo.tsx",
+      "content": "'use client'\r\n\r\nimport { useState } from 'react'\r\nimport { Trash2 } from 'lucide-react'\r\n\r\nimport { Button } from '@/components/ui/button'\r\nimport { ActionBar } from '@/components/ui/action-bar'\r\n\r\nexport default function ActionBarDemo() {\r\n  const [isEnabled, setIsEnabled] = useState(true)\r\n  const [isLoading, setIsLoading] = useState(false)\r\n\r\n  function handleConfirm() {\r\n    setIsLoading(true)\r\n\r\n    window.setTimeout(() => {\r\n      setIsLoading(false)\r\n      setIsEnabled(false)\r\n    }, 1200)\r\n  }\r\n\r\n  return (\r\n    <div className=\"relative min-h-[320px] space-y-4\">\r\n      <div className=\"flex gap-2\">\r\n        <Button\r\n          type=\"button\"\r\n          variant=\"outline\"\r\n          size=\"sm\"\r\n          onClick={() => setIsEnabled(v => !v)}\r\n        >\r\n          {isEnabled ? 'Desativar' : 'Ativar'} Action Bar\r\n        </Button>\r\n      </div>\r\n\r\n      {isEnabled && (\r\n        <ActionBar\r\n          placement=\"bottomCenter\"\r\n          tone=\"destructive\"\r\n          subject=\"Meu Workspace\"\r\n          icon={<Trash2 className=\"size-4 text-destructive\" aria-hidden />}\r\n          confirmLabel=\"Excluir\"\r\n          confirmLabelLoading=\"Excluindo...\"\r\n          actions={{\r\n            onCancel: () => setIsEnabled(false),\r\n            onConfirm: handleConfirm,\r\n            isLoading\r\n          }}\r\n        />\r\n      )}\r\n    </div>\r\n  )\r\n}\r\n",
+      "type": "registry:example"
+    }
+  ],
+  "type": "registry:example"
+}

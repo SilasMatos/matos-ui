@@ -104,6 +104,27 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
   },
+  "action-bar": {
+    name: "action-bar",
+    type: "registry:ui",
+    registryDependencies: ["button"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/action-bar.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/ui/action-bar.tsx");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
   "button-demo": {
     name: "button-demo",
     type: "registry:example",
@@ -187,6 +208,29 @@ export const Index: Record<string, any> = {
     component: React.lazy(async () => {
       const mod = await import(
         "@/registry/new-york-v4/examples/accordion-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "action-bar-demo": {
+    name: "action-bar-demo",
+    type: "registry:example",
+    registryDependencies: ["action-bar"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/action-bar-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/action-bar-demo.tsx"
       );
       const exportName =
         Object.keys(mod).find(
