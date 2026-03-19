@@ -13,6 +13,7 @@ import { siteConfig } from "@/lib/config";
 import { source } from "@/lib/source";
 import { Button } from "@/registry/new-york-v4/ui/button";
 import { Separator } from "@/registry/new-york-v4/ui/separator";
+import { XformerlyTwitter } from "@/registry/new-york-v4/ui/x-icon";
 
 export function SiteHeader() {
   const pathname = usePathname();
@@ -68,6 +69,22 @@ export function SiteHeader() {
               className="ml-2 hidden lg:block"
             />
             <GitHubLink />
+            <Button
+              variant="ghost"
+              size="icon"
+              nativeButton={false}
+              render={
+                <Link
+                  href={siteConfig.links.twitter}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <XformerlyTwitter className="" />
+                </Link>
+              }
+            >
+              <XformerlyTwitter className="" />
+            </Button>
             <Separator orientation="vertical" className="hidden 3xl:flex" />
             <ModeSwitcher />
           </div>
