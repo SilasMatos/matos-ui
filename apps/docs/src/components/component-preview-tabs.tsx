@@ -8,6 +8,7 @@ export function ComponentPreviewTabs({
   previewClassName,
   align = "center",
   hideCode = false,
+  chromeless = false,
   component,
   source,
   sourcePreview,
@@ -16,6 +17,8 @@ export function ComponentPreviewTabs({
   previewClassName?: string;
   align?: "center" | "start" | "end";
   hideCode?: boolean;
+  /** Altura segue o conteúdo (sem `h-72`), com scroll se passar do viewport. */
+  chromeless?: boolean;
   component: React.ReactNode;
   source: React.ReactNode;
   sourcePreview?: React.ReactNode;
@@ -25,13 +28,18 @@ export function ComponentPreviewTabs({
   return (
     <div
       data-slot="component-preview"
+      data-chromeless-preview={chromeless ? "true" : undefined}
       className={cn(
         "group relative mt-4 mb-12 flex flex-col overflow-hidden rounded-xl border",
         className,
       )}
       {...props}
     >
-      <PreviewWrapper align={align} previewClassName={previewClassName}>
+      <PreviewWrapper
+        align={align}
+        previewClassName={previewClassName}
+        chromeless={chromeless}
+      >
         {component}
       </PreviewWrapper>
       {!hideCode && (
@@ -75,18 +83,25 @@ export function ComponentPreviewTabs({
 function PreviewWrapper({
   align,
   previewClassName,
+  chromeless,
   children,
 }: {
   align: "center" | "start" | "end";
   previewClassName?: string;
+  chromeless?: boolean;
   children: React.ReactNode;
 }) {
   return (
     <div data-slot="preview">
       <div
         data-align={align}
+        data-chromeless={chromeless ? "true" : undefined}
         className={cn(
-          "preview relative flex h-72 w-full justify-center p-10 data-[align=center]:items-center data-[align=end]:items-end data-[align=start]:items-start data-[chromeless=true]:h-auto data-[chromeless=true]:p-0",
+          "preview relative flex w-full justify-center p-6 sm:p-10",
+          "data-[align=center]:items-center data-[align=end]:items-end data-[align=start]:items-start",
+          chromeless
+            ? "h-auto min-h-0 max-h-[min(85vh,920px)] overflow-y-auto overflow-x-hidden py-8"
+            : "h-72",
           previewClassName,
         )}
       >

@@ -1,0 +1,62 @@
+---
+title: Detail Panel
+description: Painel animado em partes compostas — cabeçalho, conteúdo, rodapé e blocos opcionais.
+---
+
+<ComponentPreview name="detail-panel-demo" chromeless align="start" />
+
+## Usage
+
+```tsx
+import {
+  DetailPanel,
+  DetailPanelHeader,
+  DetailPanelContent,
+  DetailPanelFooter,
+  DetailPanelHighlight,
+  DetailPanelRows,
+  DetailPanelRow,
+  DetailPanelNote,
+  DetailPanelAttachments,
+  DetailPanelAttachment,
+  DetailPanelFooterAction,
+  DetailPanelSeparator,
+} from '@/components/ui/detail-panel'
+```
+
+```tsx
+<DetailPanel open={open} onClose={() => setOpen(false)}>
+  <DetailPanelHeader>Título</DetailPanelHeader>
+  <DetailPanelContent>
+    <DetailPanelHighlight label="Rótulo" primary="Principal" secondary=" extra" />
+    <DetailPanelSeparator />
+    <DetailPanelRows>
+      <DetailPanelRow label="Campo" value="Valor" />
+    </DetailPanelRows>
+  </DetailPanelContent>
+  <DetailPanelFooter>
+    <DetailPanelFooterAction ariaLabel="Ação" icon={<Icon />} />
+  </DetailPanelFooter>
+</DetailPanel>
+```
+
+## Reference
+
+### Partes
+
+| Componente | Função |
+| --- | --- |
+| `DetailPanel` | Raiz: `open`, `onClose`, animação; aceita props de `motion.div`. |
+| `DetailPanelHeader` | Título (`children`) e botão fechar quando há `onClose` no painel. |
+| `DetailPanelContent` | Área interna com borda e fundo (`bg-background`). |
+| `DetailPanelSeparator` | Linha divisória animada. |
+| `DetailPanelHighlight` | Bloco de destaque (rótulo + texto grande). |
+| `DetailPanelRows` | Lista com stagger; envolve vários `DetailPanelRow`. |
+| `DetailPanelRow` | Linha ícone + label + valor. |
+| `DetailPanelNote` | Bloco de nota (`children` = corpo). |
+| `DetailPanelAttachments` | Cabeçalho “Anexos” + `children`. |
+| `DetailPanelAttachment` | Uma linha de anexo. |
+| `DetailPanelFooter` | Barra inferior; `children` costumam ser `DetailPanelFooterAction`. |
+| `DetailPanelFooterAction` | Botão de ícone na barra. |
+
+Também exportados: `detailPanelVariants` e tipos (`DetailPanelProps`, `DetailPanelHighlightProps`, etc.).

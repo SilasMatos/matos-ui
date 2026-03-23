@@ -22,7 +22,7 @@ export function SiteHeader() {
 
   return (
     <header
-      className={`sticky top-0 z-50 w-full py-2 transition-colors container mx-auto px-6 3xl:fixed:px-0 ${isHome ? "bg-transparent backdrop-blur-md" : "bg-background"}`}
+      className={`sticky top-0 z-50 w-full py-2 transition-colors ${isHome ? "bg-transparent backdrop-blur-md" : "bg-background"}`}
     >
       <div className="container-wrapper px-6 3xl:fixed:px-0">
         <div className="flex h-(--header-height) items-center **:data-[slot=separator]:h-4! 3xl:fixed:container">

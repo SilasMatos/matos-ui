@@ -56,4 +56,15 @@ export const examples: Registry["items"] = [
       },
     ],
   },
+  {
+    name: "detail-panel-demo",
+    type: "registry:example",
+    registryDependencies: ["detail-panel", "button"],
+    files: [
+      {
+        path: "examples/detail-panel-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
 ];

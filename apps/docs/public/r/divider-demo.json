@@ -7,7 +7,7 @@
   "files": [
     {
       "path": "components/examples/divider-demo.tsx",
-      "content": "import { Divider } from \"@/components/ui/divider\";\r\n\r\nexport default function DividerDemo() {\r\n  return (\r\n    <div className=\"space-y-6\">\r\n      <div className=\"flex h-24 items-center gap-4\">\r\n        Item\r\n        <Divider orientation=\"vertical\" />\r\n        Item\r\n        <Divider orientation=\"vertical\" variant=\"dashed\" />\r\n        Item\r\n      </div>\r\n    </div>\r\n  );\r\n}\r\n",
+      "content": "import { Divider } from \"@/components/ui/divider\";\n\nexport default function DividerDemo() {\n  return (\n    <div className=\"space-y-6\">\n      <div className=\"flex h-24 items-center gap-4\">\n        Item\n        <Divider orientation=\"vertical\" />\n        Item\n        <Divider orientation=\"vertical\" variant=\"dashed\" />\n        Item\n      </div>\n    </div>\n  );\n}\n",
       "type": "registry:example"
     }
   ],

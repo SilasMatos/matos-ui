@@ -57,4 +57,20 @@ export const ui: Registry["items"] = [
       },
     ],
   },
+  {
+    name: "detail-panel",
+    type: "registry:ui",
+    dependencies: [
+      "framer-motion",
+      "lucide-react",
+      "tailwind-merge",
+      "tailwind-variants",
+    ],
+    files: [
+      {
+        path: "ui/detail-panel.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
 ];

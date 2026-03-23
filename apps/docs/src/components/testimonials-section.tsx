@@ -1,0 +1,182 @@
+"use client";
+
+import { AnimatePresence, motion, type Variants } from "framer-motion";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { XformerlyTwitter } from "@/registry/new-york-v4/ui/x-icon";
+
+interface Testimonial {
+  quote: string;
+  highlight: string;
+  author: string;
+  role: string;
+}
+
+const testimonials: Testimonial[] = [
+  {
+    quote: "The accessibility features are outstanding.",
+    highlight: "WCAG compliant out of the box",
+    author: "Emily Watson",
+    role: "UX Designer",
+  },
+  {
+    quote: "We shipped our design system in half the time.",
+    highlight: "Incredibly well-documented",
+    author: "Lucas Ribeiro",
+    role: "Frontend Lead",
+  },
+  {
+    quote: "The variant system is a game changer for consistency.",
+    highlight: "Tailwind Variants integration",
+    author: "Ana Pereira",
+    role: "Product Engineer",
+  },
+];
+
+const cardVariants: Variants = {
+  enter: (direction: number) => ({
+    x: direction > 0 ? 200 : -200,
+    opacity: 0,
+    scale: 0.95,
+    rotateY: direction > 0 ? 8 : -8,
+  }),
+  center: {
+    x: 0,
+    opacity: 1,
+    scale: 1,
+    rotateY: 0,
+    transition: { duration: 0.5, ease: [0.25, 0.4, 0.25, 1] },
+  },
+  exit: (direction: number) => ({
+    x: direction > 0 ? -200 : 200,
+    opacity: 0,
+    scale: 0.95,
+    rotateY: direction > 0 ? -8 : 8,
+    transition: { duration: 0.4, ease: [0.25, 0.4, 0.25, 1] },
+  }),
+};
+
+export function TestimonialsSection() {
+  const [[current, direction], setCurrent] = useState([0, 0]);
+
+  const paginate = useCallback(
+    (dir: number) => {
+      setCurrent([
+        (current + dir + testimonials.length) % testimonials.length,
+        dir,
+      ]);
+    },
+    [current],
+  );
+
+  useEffect(() => {
+    const timer = setInterval(() => paginate(1), 6000);
+    return () => clearInterval(timer);
+  }, [paginate]);
+
+  const t = testimonials[current];
+
+  return (
+    <section className="relative overflow-hidden bg-secondary py-24 md:py-32">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,var(--foreground)_0%,transparent_70%)] opacity-[0.03]" />
+
+      <div className="relative mx-auto max-w-5xl px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6, ease: [0.25, 0.4, 0.25, 1] }}
+          className="mb-16 text-center"
+        >
+          <span className="mb-4 inline-block rounded-full border border-border/60 bg-muted/50 px-4 py-1.5 text-xs font-medium uppercase tracking-widest text-muted-foreground">
+            Testimonials
+          </span>
+          <h2 className="mt-4 text-3xl font-semibold tracking-tight text-secondary-foreground md:text-4xl">
+            What our <span className="font-logo italic">Users say</span>
+          </h2>
+        </motion.div>
+
+        <div className="relative mx-auto flex max-w-lg flex-col items-center">
+          <AnimatePresence mode="wait" custom={direction}>
+            <motion.div
+              key={current}
+              custom={direction}
+              variants={cardVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              className="w-full"
+            >
+              <div className="relative overflow-hidden rounded-2xl border border-border bg-card p-8">
+                <div className="absolute -top-px left-0 right-0 h-px bg-linear-to-r from-transparent via-border to-transparent" />
+
+                <p className="text-base leading-relaxed text-card-foreground/80">
+                  {t.quote}{" "}
+                  <span className="rounded-sm bg-emerald-500/15 px-1.5 py-0.5 font-medium text-emerald-500 dark:text-emerald-400">
+                    {t.highlight}
+                  </span>{" "}
+                  and the design system is consistent. Our users with
+                  disabilities have given us excellent feedback.
+                </p>
+
+                <div className="mt-6 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="flex size-10 items-center justify-center rounded-full bg-muted text-sm font-semibold text-muted-foreground">
+                      {t.author
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")}
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-card-foreground">
+                        {t.author}
+                      </p>
+                      <p className="text-xs text-muted-foreground">{t.role}</p>
+                    </div>
+                  </div>
+                  <XformerlyTwitter className="size-5 text-muted-foreground/50" />
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+
+          <div className="mt-8 flex items-center gap-4">
+            <button
+              type="button"
+              onClick={() => paginate(-1)}
+              className="inline-flex size-9 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:border-foreground/30 hover:text-foreground"
+              aria-label="Anterior"
+            >
+              <ArrowLeft className="size-4" />
+            </button>
+
+            <div className="flex gap-2">
+              {testimonials.map((_, i) => (
+                <button
+                  key={`dot-${testimonials[i].author}`}
+                  type="button"
+                  onClick={() => setCurrent([i, i > current ? 1 : -1])}
+                  className={`h-1.5 rounded-full transition-all duration-300 ${
+                    i === current
+                      ? "w-6 bg-foreground/60"
+                      : "w-1.5 bg-foreground/15"
+                  }`}
+                  aria-label={`Testimonial ${i + 1}`}
+                />
+              ))}
+            </div>
+
+            <button
+              type="button"
+              onClick={() => paginate(1)}
+              className="inline-flex size-9 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:border-foreground/30 hover:text-foreground"
+              aria-label="Próximo"
+            >
+              <ArrowRight className="size-4" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

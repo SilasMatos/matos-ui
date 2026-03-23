@@ -108,6 +108,22 @@
       ]
     },
     {
+      "name": "detail-panel",
+      "type": "registry:ui",
+      "dependencies": [
+        "framer-motion",
+        "lucide-react",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/detail-panel.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "button-demo",
       "type": "registry:example",
       "registryDependencies": [
@@ -168,6 +184,20 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/action-bar-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "detail-panel-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "detail-panel",
+        "button"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/detail-panel-demo.tsx",
           "type": "registry:example"
         }
       ]

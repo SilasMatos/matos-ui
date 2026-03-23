@@ -7,7 +7,7 @@
   "files": [
     {
       "path": "components/examples/button-demo.tsx",
-      "content": "import { Button } from \"@/components/ui/button\";\r\n\r\nexport default function ButtonDemo() {\r\n  return (\r\n    <div className=\"flex flex-wrap items-center gap-3\">\r\n      <Button variant=\"default\">Default</Button>\r\n      <Button variant=\"secondary\">Secondary</Button>\r\n      <Button variant=\"outline\">Outline</Button>\r\n      <Button variant=\"ghost\">Ghost</Button>\r\n      <Button variant=\"destructive\">Destructive</Button>\r\n      <Button variant=\"link\">Link</Button>\r\n    </div>\r\n  );\r\n}\r\n",
+      "content": "import { Button } from \"@/components/ui/button\";\n\nexport default function ButtonDemo() {\n  return (\n    <div className=\"flex flex-wrap items-center gap-3\">\n      <Button variant=\"default\">Default</Button>\n      <Button variant=\"secondary\">Secondary</Button>\n      <Button variant=\"outline\">Outline</Button>\n      <Button variant=\"ghost\">Ghost</Button>\n      <Button variant=\"destructive\">Destructive</Button>\n      <Button variant=\"link\">Link</Button>\n    </div>\n  );\n}\n",
       "type": "registry:example"
     }
   ],

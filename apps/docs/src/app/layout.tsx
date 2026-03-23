@@ -22,7 +22,10 @@ export default function Layout({ children }: LayoutProps<"/">) {
       className={`${inter.className} ${allerta.variable}`}
       suppressHydrationWarning
     >
-      <body className="flex flex-col min-h-screen [--header-height:calc(var(--spacing)*13)]">
+      <body
+        className="flex flex-col min-h-screen [--header-height:calc(var(--spacing)*13)]"
+        cz-shortcut-listen="true"
+      >
         <Provider>
           <SiteHeader />
           {children}

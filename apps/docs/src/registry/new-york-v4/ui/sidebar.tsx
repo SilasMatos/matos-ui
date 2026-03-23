@@ -475,18 +475,46 @@ function SidebarMenuItem({ className, ...props }: React.ComponentProps<"li">) {
 }
 
 const sidebarMenuButtonVariants = cva(
-  "ring-sidebar-ring hover:bg-sidebar-accent hover:text-sidebar-accent-foreground active:bg-sidebar-accent active:text-sidebar-accent-foreground data-active:bg-sidebar-accent data-active:text-sidebar-accent-foreground data-open:hover:bg-sidebar-accent data-open:hover:text-sidebar-accent-foreground gap-2 rounded-md p-2 text-left text-sm transition-[width,height,padding] group-has-data-[sidebar=menu-action]/menu-item:pr-8 group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2! focus-visible:ring-2 data-active:font-medium peer/menu-button group/menu-button flex w-full items-center overflow-hidden outline-hidden disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&_svg]:size-4 [&_svg]:shrink-0 [&>span:last-child]:truncate",
+  `
+  relative
+  flex w-full items-center gap-2 rounded-md p-2 text-sm
+
+  transition-all duration-200 ease-out
+
+  hover:bg-sidebar-accent/80
+  data-[active=true]:bg-sidebar-accent
+
+  /* 👉 AQUI */
+  hover:translate-x-[2px]
+  data-[active=true]:translate-x-[2px]
+
+  /* quadrado branco */
+  before:absolute
+  before:left-1
+  before:top-1/2
+  before:-translate-y-1/2
+  before:h-5
+  before:w-1
+  before:rounded-sm
+  before:bg-white
+  before:opacity-0
+  before:transition-all
+  before:duration-200
+
+  hover:before:opacity-100
+  data-[active=true]:before:opacity-100
+  `,
   {
     variants: {
       variant: {
-        default: "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+        default: "",
         outline:
-          "bg-background hover:bg-sidebar-accent hover:text-sidebar-accent-foreground shadow-[0_0_0_1px_hsl(var(--sidebar-border))] hover:shadow-[0_0_0_1px_hsl(var(--sidebar-accent))]",
+          "bg-background shadow-[0_0_0_1px_hsl(var(--sidebar-border))] hover:shadow-[0_0_0_1px_hsl(var(--sidebar-accent))]",
       },
       size: {
-        default: "h-8 text-sm",
+        default: "h-8",
         sm: "h-7 text-xs",
-        lg: "h-12 text-sm group-data-[collapsible=icon]:p-0!",
+        lg: "h-12 group-data-[collapsible=icon]:p-0!",
       },
     },
     defaultVariants: {
@@ -495,7 +523,6 @@ const sidebarMenuButtonVariants = cva(
     },
   },
 );
-
 function SidebarMenuButton({
   render,
   isActive = false,
@@ -515,7 +542,8 @@ function SidebarMenuButton({
     props: mergeProps<"button">(
       {
         className: cn(sidebarMenuButtonVariants({ variant, size }), className),
-      },
+        "data-active": isActive ? "true" : "false",
+      } as React.ComponentProps<"button">,
       props,
     ),
     render: !tooltip ? render : <TooltipTrigger render={render} />,

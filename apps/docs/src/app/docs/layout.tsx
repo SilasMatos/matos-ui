@@ -8,9 +8,9 @@ export default function DocsLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="container-wrapper flex flex-1 flex-col px-2">
+    <div className="container-wrapper flex flex-1 flex-col px-6 3xl:fixed:px-0 bg-background">
       <SidebarProvider
-        className="min-h-min flex-1 items-start px-0 [--top-spacing:0] lg:grid lg:grid-cols-[var(--sidebar-width)_minmax(0,1fr)] lg:[--top-spacing:calc(var(--spacing)*4)] 3xl:fixed:container 3xl:fixed:px-3"
+        className="min-h-min flex-1 items-start px-0 [--top-spacing:0] lg:grid lg:grid-cols-[var(--sidebar-width)_minmax(0,1fr)] lg:[--top-spacing:calc(var(--spacing)*4)] 3xl:fixed:container"
         style={
           {
             "--sidebar-width": "calc(var(--spacing) * 72)",

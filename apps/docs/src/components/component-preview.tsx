@@ -11,6 +11,7 @@ export function ComponentPreview({
   previewClassName,
   align = "center",
   hideCode = false,
+  chromeless = false,
   caption,
   ...props
 }: React.ComponentProps<"div"> & {
@@ -21,6 +22,8 @@ export function ComponentPreview({
   type?: "block" | "component" | "example";
   previewClassName?: string;
   caption?: string;
+  /** Preview com altura automática para componentes altos (ex.: painéis). */
+  chromeless?: boolean;
 }) {
   if (type === "block") {
     const content = (
@@ -76,6 +79,7 @@ export function ComponentPreview({
       previewClassName={previewClassName}
       align={align}
       hideCode={hideCode}
+      chromeless={chromeless}
       component={React.createElement(Component)}
       source={<ComponentSource name={name} collapsible={false} />}
       sourcePreview={<ComponentSource name={name} collapsible={false} />}

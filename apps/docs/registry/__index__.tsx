@@ -125,6 +125,27 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
   },
+  "detail-panel": {
+    name: "detail-panel",
+    type: "registry:ui",
+    registryDependencies: undefined,
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/detail-panel.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/ui/detail-panel.tsx");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
   "button-demo": {
     name: "button-demo",
     type: "registry:example",
@@ -231,6 +252,29 @@ export const Index: Record<string, any> = {
     component: React.lazy(async () => {
       const mod = await import(
         "@/registry/new-york-v4/examples/action-bar-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "detail-panel-demo": {
+    name: "detail-panel-demo",
+    type: "registry:example",
+    registryDependencies: ["detail-panel", "button"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/detail-panel-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/detail-panel-demo.tsx"
       );
       const exportName =
         Object.keys(mod).find(
