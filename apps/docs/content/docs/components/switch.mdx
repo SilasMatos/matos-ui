@@ -1,0 +1,38 @@
+---
+title: Switch
+description: Interruptor acessível (toggle) com tamanhos, variantes filled/outline, forma pill ou retangular e modos com ícone ou texto On/Off.
+---
+
+<ComponentPreview name="switch-demo" />
+
+## Usage
+
+```tsx
+import { Switch } from '@/components/ui/switch'
+```
+
+```tsx
+<Switch
+  checked={on}
+  onCheckedChange={setOn}
+  aria-label="Ativar notificações"
+/>
+```
+
+## Reference
+
+### Props
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `checked` | `boolean` | — (modo não controlado se omitido) |
+| `defaultChecked` | `boolean` | `false` |
+| `onCheckedChange` | `(checked: boolean) => void` | — |
+| `size` | `"sm" \| "md" \| "lg"` | `"md"` |
+| `variant` | `"filled" \| "outline"` | `"filled"` |
+| `shape` | `"pill" \| "rectangle"` | `"pill"` |
+| `content` | `"default" \| "icon" \| "label"` | `"default"` |
+
+O `Switch` repassa props de `<button>` (exceto que `type` default é `"button"`). Sempre use **`aria-label`** (ou `aria-labelledby`) quando não houver rótulo visível.
+
+Também exportado: **`switchVariants`** (slots `root` / `thumb`) para estender com `tailwind-variants`.

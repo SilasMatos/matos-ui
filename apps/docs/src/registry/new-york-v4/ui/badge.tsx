@@ -23,36 +23,10 @@ export const badgeVariants = tv({
 
       ghost: "border-transparent text-foreground bg-transparent hover:bg-muted",
 
-      success: "border-transparent bg-green-500 text-white hover:bg-green-600",
-
-      warning:
-        "border-transparent bg-yellow-500 text-black hover:bg-yellow-600",
-
-      info: "border-transparent bg-blue-500 text-white hover:bg-blue-600",
-
-      purple: "border-transparent bg-purple-500 text-white hover:bg-purple-600",
-
-      pink: "border-transparent bg-pink-500 text-white hover:bg-pink-600",
-
       soft: "border-transparent bg-muted text-muted-foreground",
-
-      outlineSuccess: "border-green-500 text-green-600 bg-transparent",
-
-      outlineWarning: "border-yellow-500 text-yellow-600 bg-transparent",
-
-      outlineInfo: "border-blue-500 text-blue-600 bg-transparent",
 
       dotted:
         "border border-dashed border-border bg-transparent text-foreground",
-
-      dottedSuccess:
-        "border border-dashed border-green-500 text-green-600 bg-transparent",
-
-      dottedWarning:
-        "border border-dashed border-yellow-500 text-yellow-600 bg-transparent",
-
-      dottedInfo:
-        "border border-dashed border-blue-500 text-blue-600 bg-transparent",
     },
   },
 

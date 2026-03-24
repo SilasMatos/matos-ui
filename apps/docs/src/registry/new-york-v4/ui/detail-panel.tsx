@@ -20,7 +20,7 @@ import { tv, type VariantProps } from "tailwind-variants";
 export const detailPanelVariants = tv({
   base: [
     "w-full max-w-[420px] overflow-hidden rounded-2xl border border-border",
-    "bg-background text-foreground shadow-xl",
+    "bg-secondary text-foreground shadow-xl",
   ],
 });
 
@@ -196,7 +196,12 @@ function DetailPanelSeparator({ className }: { className?: string }) {
     <motion.div
       {...fadeUp(0.1)}
       data-slot="detail-panel-separator"
-      className={twMerge("h-px bg-border", className)}
+      className={twMerge(
+        "h-1 w-full shrink-0 bg-repeat-x bg-position-[center_top]",
+        "bg-[radial-gradient(circle,var(--border)_1px,transparent_1.5px)]",
+        "bg-size-[12px_4px]",
+        className,
+      )}
     />
   );
 }

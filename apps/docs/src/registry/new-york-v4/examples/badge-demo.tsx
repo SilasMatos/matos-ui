@@ -13,31 +13,9 @@ export default function BadgeDemo() {
 
       <Badge variant="ghost">Ghost</Badge>
 
-      <Badge variant="success">Success</Badge>
-
-      <Badge variant="warning">Warning</Badge>
-
-      <Badge variant="info">Info</Badge>
-
-      <Badge variant="purple">Purple</Badge>
-
-      <Badge variant="pink">Pink</Badge>
-
       <Badge variant="soft">Soft</Badge>
 
-      <Badge variant="outlineSuccess">Outline Success</Badge>
-
-      <Badge variant="outlineWarning">Outline Warning</Badge>
-
-      <Badge variant="outlineInfo">Outline Info</Badge>
-
       <Badge variant="dotted">Dotted</Badge>
-
-      <Badge variant="dottedSuccess">Dotted Success</Badge>
-
-      <Badge variant="dottedWarning">Dotted Warning</Badge>
-
-      <Badge variant="dottedInfo">Dotted Info</Badge>
     </div>
   );
 }

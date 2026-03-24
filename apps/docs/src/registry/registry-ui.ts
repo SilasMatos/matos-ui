@@ -73,4 +73,15 @@ export const ui: Registry["items"] = [
       },
     ],
   },
+  {
+    name: "switch",
+    type: "registry:ui",
+    dependencies: ["lucide-react", "tailwind-merge", "tailwind-variants"],
+    files: [
+      {
+        path: "ui/switch.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
 ];
