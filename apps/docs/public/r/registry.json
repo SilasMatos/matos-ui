@@ -139,6 +139,53 @@
       ]
     },
     {
+      "name": "file-upload",
+      "type": "registry:ui",
+      "dependencies": [
+        "lucide-react",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/file-upload.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "notification-stack",
+      "type": "registry:ui",
+      "dependencies": [
+        "framer-motion",
+        "lucide-react",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/notification-stack.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "metric-card",
+      "type": "registry:ui",
+      "dependencies": [
+        "framer-motion",
+        "lucide-react",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/metric-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "button-demo",
       "type": "registry:example",
       "registryDependencies": [
@@ -226,6 +273,46 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/switch-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "file-upload-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "file-upload"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/file-upload-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "notification-stack-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "notification-stack",
+        "button"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/notification-stack-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "metric-card-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "metric-card"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/metric-card-demo.tsx",
           "type": "registry:example"
         }
       ]

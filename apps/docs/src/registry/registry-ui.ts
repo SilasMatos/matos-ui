@@ -84,4 +84,47 @@ export const ui: Registry["items"] = [
       },
     ],
   },
+  {
+    name: "file-upload",
+    type: "registry:ui",
+    dependencies: ["lucide-react", "tailwind-merge", "tailwind-variants"],
+    files: [
+      {
+        path: "ui/file-upload.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "notification-stack",
+    type: "registry:ui",
+    dependencies: [
+      "framer-motion",
+      "lucide-react",
+      "tailwind-merge",
+      "tailwind-variants",
+    ],
+    files: [
+      {
+        path: "ui/notification-stack.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "metric-card",
+    type: "registry:ui",
+    dependencies: [
+      "framer-motion",
+      "lucide-react",
+      "tailwind-merge",
+      "tailwind-variants",
+    ],
+    files: [
+      {
+        path: "ui/metric-card.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
 ];

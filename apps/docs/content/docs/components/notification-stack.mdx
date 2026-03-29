@@ -1,0 +1,94 @@
+---
+title: Notification Stack
+description: Cards de notificação empilhados com animações spring — swipe para dispensar, camadas visuais de profundidade e avatares.
+---
+
+<ComponentPreview name="notification-stack-demo" chromeless align="start" />
+
+## Usage
+
+```tsx
+import {
+  NotificationStack,
+  type NotificationData,
+} from '@/components/ui/notification-stack'
+```
+
+```tsx
+const [notifications, setNotifications] = useState<NotificationData[]>([])
+
+function dismiss(id: string) {
+  setNotifications(prev => prev.filter(n => n.id !== id))
+}
+
+<NotificationStack
+  notifications={notifications}
+  onDismiss={dismiss}
+  size="md"
+/>
+```
+
+### Com Provider
+
+Para disparar notificações de qualquer lugar da aplicação:
+
+```tsx
+import {
+  NotificationStackProvider,
+  useNotificationStack,
+} from '@/components/ui/notification-stack'
+```
+
+```tsx
+<NotificationStackProvider>
+  <App />
+</NotificationStackProvider>
+```
+
+```tsx
+function MeuComponente() {
+  const { add, dismiss, dismissAll } = useNotificationStack()
+
+  function handleClick() {
+    add({
+      app: 'Vercel',
+      title: 'Deploy concluído',
+      description: 'Projeto implantado com sucesso.',
+      timestamp: 'agora',
+    })
+  }
+
+  return <button onClick={handleClick}>Notificar</button>
+}
+```
+
+## Reference
+
+### NotificationStack Props
+
+| Prop | Tipo | Padrão | Descrição |
+| --- | --- | --- | --- |
+| `notifications` | `NotificationData[]` | — | Lista de notificações. |
+| `onDismiss` | `(id: string) => void` | — | Callback ao dispensar. |
+| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Largura do stack. |
+| `maxStackLayers` | `number` | `3` | Camadas visíveis atrás do card principal. |
+
+### NotificationData
+
+| Campo | Tipo | Descrição |
+| --- | --- | --- |
+| `id` | `string` | Identificador único. |
+| `app` | `string?` | Nome do app (exibido como label uppercase). |
+| `title` | `string` | Título / nome do remetente. |
+| `description` | `string?` | Mensagem da notificação. |
+| `avatar` | `ReactNode?` | Avatar ou ícone à esquerda. |
+| `timestamp` | `string?` | Texto de tempo (ex.: "2 min atrás"). |
+| `action` | `{ label, onClick }?` | Botão de ação na notificação. |
+
+### Interações
+
+- **Arrastar** o card para cima, baixo ou lados para dispensar
+- **Clique no ×** dispensa imediatamente
+- Camadas atrás se reempilham automaticamente com animação spring
+
+Também exportados: `notificationStackVariants`, `notificationCardVariants` e todos os tipos.

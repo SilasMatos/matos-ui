@@ -78,4 +78,37 @@ export const examples: Registry["items"] = [
       },
     ],
   },
+  {
+    name: "file-upload-demo",
+    type: "registry:example",
+    registryDependencies: ["file-upload"],
+    files: [
+      {
+        path: "examples/file-upload-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "notification-stack-demo",
+    type: "registry:example",
+    registryDependencies: ["notification-stack", "button"],
+    files: [
+      {
+        path: "examples/notification-stack-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "metric-card-demo",
+    type: "registry:example",
+    registryDependencies: ["metric-card"],
+    files: [
+      {
+        path: "examples/metric-card-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
 ];

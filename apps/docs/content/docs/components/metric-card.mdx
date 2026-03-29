@@ -1,0 +1,49 @@
+---
+title: Metric Card
+description: Card de métricas animado com números contados, sparkline, indicador de tendência e padrão Inset Card UI.
+---
+
+<ComponentPreview name="metric-card-demo" chromeless align="start" />
+
+## Usage
+
+```tsx
+import { MetricCard } from '@/components/ui/metric-card'
+```
+
+```tsx
+<MetricCard
+  label="Receita Mensal"
+  value={42850}
+  prefix="R$ "
+  trend={{ value: 12, label: "vs mês anterior" }}
+  sparkline={[2400, 1398, 3200, 2780, 3490, 4000, 4200]}
+  footer={<span className="text-xs text-muted-foreground">Atualizado agora</span>}
+/>
+```
+
+## Reference
+
+### MetricCard Props
+
+| Prop | Tipo | Padrão | Descrição |
+| --- | --- | --- | --- |
+| `label` | `string` | — | Rótulo exibido no header solto. |
+| `value` | `number` | — | Valor numérico principal (animado). |
+| `prefix` | `string?` | — | Prefixo do valor (ex.: `R$`). |
+| `suffix` | `string?` | — | Sufixo do valor (ex.: `%`). |
+| `decimals` | `number` | `0` | Casas decimais. |
+| `trend` | `{ value, label? }?` | — | Badge de tendência (positivo/negativo). |
+| `sparkline` | `number[]?` | — | Dados para o gráfico sparkline. |
+| `footer` | `ReactNode?` | — | Conteúdo do footer solto. |
+| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Largura máxima do card. |
+
+### Subcomponentes exportados
+
+| Componente | Descrição |
+| --- | --- |
+| `AnimatedNumber` | Número com animação spring de contagem. |
+| `TrendBadge` | Badge colorido com seta e porcentagem. |
+| `Sparkline` | Gráfico SVG com linha suave, área e ponto final. |
+
+Também exportado: `metricCardVariants` e tipo `MetricCardProps`.

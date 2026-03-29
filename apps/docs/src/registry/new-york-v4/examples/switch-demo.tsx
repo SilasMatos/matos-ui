@@ -1,12 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { Switch } from "@/registry/new-york-v4/ui/switch";
 
 export default function SwitchDemo() {
-  const [filled, setFilled] = useState(true);
-  const [outline, setOutline] = useState(false);
-
   return (
     <div className="flex flex-col gap-8">
       <section className="flex flex-col gap-3">

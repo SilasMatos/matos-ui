@@ -1,0 +1,53 @@
+---
+title: File Upload
+description: Componente de upload de arquivos com drag-and-drop, filtro por tipo, limite de tamanho e quantidade, suportando modos únicos e múltiplos.
+---
+
+<ComponentPreview name="file-upload-demo" chromeless align="start" />
+
+## Usage
+
+```tsx
+import { FileUpload } from '@/components/ui/file-upload'
+```
+
+```tsx
+<FileUpload
+  files={files}
+  onFilesChange={setFiles}
+  accept="image/*,.pdf"
+  maxSize={5 * 1024 * 1024}
+/>
+```
+
+## Reference
+
+### Props
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `files` | `FileUploadFile[]` | — (modo não controlado se omitido) |
+| `onFilesChange` | `(files: FileUploadFile[]) => void` | — |
+| `accept` | `string` | — |
+| `multiple` | `boolean` | `false` |
+| `maxSize` | `number` | — |
+| `maxFiles` | `number` | — |
+| `title` | `string` | `"Arraste e solte seus arquivos"` |
+| `description` | `string` | `"ou clique para selecionar um arquivo"` |
+| `disabled` | `boolean` | `false` |
+| `size` | `"sm" \| "md" \| "lg"` | `"md"` |
+| `variant` | `"default" \| "outline" \| "ghost"` | `"default"` |
+
+### Interfaces
+
+```ts
+export interface FileUploadFile {
+  file: File;
+  id: string;
+  error?: string;
+}
+```
+
+O `FileUpload` repassa props clássicas de `<div role="button">`. Internamente usa um `<input type="file" className="sr-only" />`.
+
+Também exportado: **`fileUploadVariants`** com slots `root` / `icon` / `title` / `description` / `fileList` / `fileItem` / `fileName` / `fileSize` / `removeButton` / `errorText` para fácil customização via `tailwind-variants`.

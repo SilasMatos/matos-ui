@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "file-upload-demo",
+  "registryDependencies": [
+    "file-upload"
+  ],
+  "files": [
+    {
+      "path": "components/examples/file-upload-demo.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport { FileUpload } from \"@/components/ui/file-upload\";\nimport type { FileUploadFile } from \"@/components/ui/file-upload\";\n\nexport default function FileUploadDemo() {\n  const [singleFiles, setSingleFiles] = useState<FileUploadFile[]>([]);\n  const [multiFiles, setMultiFiles] = useState<FileUploadFile[]>([]);\n\n  return (\n    <div className=\"flex flex-col gap-10\">\n      {/* — Default — */}\n      <section className=\"flex flex-col gap-3\">\n        <p className=\"text-xs font-medium uppercase tracking-wider text-muted-foreground\">\n          Upload simples\n        </p>\n        <FileUpload\n          files={singleFiles}\n          onFilesChange={setSingleFiles}\n          accept=\"image/*,.pdf\"\n          maxSize={5 * 1024 * 1024}\n        />\n      </section>\n\n      {/* — Múltiplos arquivos — */}\n      <section className=\"flex flex-col gap-3\">\n        <p className=\"text-xs font-medium uppercase tracking-wider text-muted-foreground\">\n          Múltiplos arquivos\n        </p>\n        <FileUpload\n          variant=\"outline\"\n          multiple\n          maxFiles={5}\n          files={multiFiles}\n          onFilesChange={setMultiFiles}\n          title=\"Envie até 5 arquivos\"\n          description=\"Arraste ou clique para selecionar\"\n        />\n      </section>\n\n      {/* — Variantes — */}\n      <section className=\"flex flex-col gap-3\">\n        <p className=\"text-xs font-medium uppercase tracking-wider text-muted-foreground\">\n          Variantes\n        </p>\n        <div className=\"grid grid-cols-1 gap-4 md:grid-cols-3\">\n          <FileUpload size=\"sm\" title=\"Default\" description=\"Pequeno\" />\n          <FileUpload\n            variant=\"outline\"\n            size=\"sm\"\n            title=\"Outline\"\n            description=\"Pequeno\"\n          />\n          <FileUpload\n            variant=\"ghost\"\n            size=\"sm\"\n            title=\"Ghost\"\n            description=\"Pequeno\"\n          />\n        </div>\n      </section>\n\n      {/* — Desabilitado — */}\n      <section className=\"flex flex-col gap-3\">\n        <p className=\"text-xs font-medium uppercase tracking-wider text-muted-foreground\">\n          Desabilitado\n        </p>\n        <FileUpload disabled size=\"sm\" />\n      </section>\n    </div>\n  );\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "type": "registry:example"
+}
