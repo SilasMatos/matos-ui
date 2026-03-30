@@ -111,4 +111,15 @@ export const examples: Registry["items"] = [
       },
     ],
   },
+  {
+    name: "feedback-card-demo",
+    type: "registry:example",
+    registryDependencies: ["feedback-card"],
+    files: [
+      {
+        path: "examples/feedback-card-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
 ];

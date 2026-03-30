@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "feedback-card-demo",
+  "registryDependencies": [
+    "feedback-card"
+  ],
+  "files": [
+    {
+      "path": "components/examples/feedback-card-demo.tsx",
+      "content": "\"use client\";\n\nimport { FeedbackCard } from \"@/components/ui/feedback-card\";\n\nexport default function FeedbackCardDemo() {\n  return (\n    <div className=\"flex w-full items-center justify-center p-8\">\n      <FeedbackCard\n        onSubmit={(data) => {\n          console.log(\"Feedback enviado:\", data);\n        }}\n      />\n    </div>\n  );\n}\n",
+      "type": "registry:example"
+    }
+  ],
+  "type": "registry:example"
+}

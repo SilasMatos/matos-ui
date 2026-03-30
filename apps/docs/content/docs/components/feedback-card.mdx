@@ -1,0 +1,40 @@
+---
+title: Feedback Card
+description: Um card de avaliação super interativo com animações morphing de layout, emojis e SVG animado baseado no padrão Inset Card UI.
+---
+
+<ComponentPreview name="feedback-card-demo" chromeless align="center" />
+
+## Uso
+
+```tsx
+import { FeedbackCard } from '@/components/ui/feedback-card'
+```
+
+```tsx
+<FeedbackCard
+  onSubmit={(data) => {
+    console.log("Nota escolhida:", data.rating)
+    console.log("Mensagem opcional:", data.message)
+  }}
+/>
+```
+
+## Propriedades
+
+| Prop | Tipo | Padrão | Descrição |
+| --- | --- | --- | --- |
+| `title` | `string` | `"Como foi sua experiência?"` | Título no estado inicial. |
+| `subtitle` | `string` | `"Sua opinião nos ajuda a melhorar"` | Subtítulo no estado inicial. |
+| `options` | `FeedbackOption[]` | Padrão interno | Opções com carinhas, labels e values. |
+| `onSubmit` | `(data) => void` | — | Executado ao clicar em "Enviar feedback". |
+| `successTitle` | `string` | `"Obrigado pelo feedback!"` | Título do painel de sucesso. |
+| `successDescription` | `string` | `"Sua avaliação foi enviada com sucesso."` | Descrição do painel final. |
+| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Define a largura máxima do componente. |
+
+### Transições Fluidas (Morphing)
+
+Este componente usa a tag `layout` do **Framer Motion** para realizar uma transição responsiva impecável entre cada uma de suas etapas. Nenhuma montagem de DOM acontece de forma brusca, tudo é guiado por uma animação `spring`.
+
+- O emoji selecionado migra naturalmente para o lado superior (`layoutId`) da caixa com um subtil *shared element transition*.
+- A tag SVG do tick final se escreve "sozinha" usando a animação `pathLength` da engine do Framer Motion.

@@ -150,6 +150,22 @@
       ]
     },
     {
+      "name": "feedback-card",
+      "type": "registry:ui",
+      "dependencies": [
+        "framer-motion",
+        "lucide-react",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/feedback-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "button-demo",
       "type": "registry:example",
       "registryDependencies": ["button"],
@@ -255,6 +271,17 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/metric-card-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "feedback-card-demo",
+      "type": "registry:example",
+      "registryDependencies": ["feedback-card"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/feedback-card-demo.tsx",
           "type": "registry:example"
         }
       ]

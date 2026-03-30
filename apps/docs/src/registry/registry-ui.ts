@@ -127,4 +127,20 @@ export const ui: Registry["items"] = [
       },
     ],
   },
+  {
+    name: "feedback-card",
+    type: "registry:ui",
+    dependencies: [
+      "framer-motion",
+      "lucide-react",
+      "tailwind-merge",
+      "tailwind-variants",
+    ],
+    files: [
+      {
+        path: "ui/feedback-card.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
 ];
