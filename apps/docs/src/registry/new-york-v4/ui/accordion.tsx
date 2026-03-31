@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, type HTMLMotionProps } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import * as React from "react";
 
@@ -44,7 +44,7 @@ export function Accordion({ children, className, ...props }: AccordionProps) {
   );
 }
 
-export interface AccordionItemProps extends React.ComponentProps<"div"> {
+export interface AccordionItemProps extends HTMLMotionProps<"div"> {
   value: string;
   children: React.ReactNode;
 }
@@ -126,7 +126,7 @@ export function AccordionTrigger({
   );
 }
 
-export interface AccordionContentProps extends React.ComponentProps<"div"> {
+export interface AccordionContentProps extends HTMLMotionProps<"div"> {
   value: string;
   children: React.ReactNode;
 }

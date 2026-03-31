@@ -1,0 +1,10 @@
+services:
+  matos-ui-docs:
+    container_name: matos-ui-docs
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: matos-ui/docs:prod
+    ports:
+      - "8080:80"
+    restart: unless-stopped
