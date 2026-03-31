@@ -22,10 +22,6 @@ export const feedbackCardVariants = tv({
   },
 });
 
-/* ------------------------------------------------------------------ */
-/*  Types                                                              */
-/* ------------------------------------------------------------------ */
-
 export type FeedbackOption = {
   value: string;
   emoji: string;
