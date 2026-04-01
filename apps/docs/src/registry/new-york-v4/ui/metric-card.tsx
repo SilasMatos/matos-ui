@@ -68,7 +68,7 @@ export function MetricCard({
       className={twMerge(metricCardVariants({ size }), className)}
       {...props}
     >
-      <div className="px-4 pt-4 pb-3">
+      <div className="px-4 py-2 ">
         <motion.span
           {...fadeUp(0)}
           className="text-[11px] font-medium uppercase tracking-widest text-muted-foreground"
@@ -77,9 +77,9 @@ export function MetricCard({
         </motion.span>
       </div>
 
-      <div className="mx-2 overflow-hidden rounded-xl bg-card">
+      <div className="mx-2 mb-2 overflow-hidden rounded-xl bg-card">
         <div className="space-y-3 p-4 pb-2">
-          <div className="flex items-baseline gap-1.5">
+          <div className="flex items-baseline justify-between gap-1.5">
             <AnimatedNumber
               value={value}
               prefix={prefix}
@@ -95,15 +95,6 @@ export function MetricCard({
           <Sparkline data={sparkline} trend={trend?.value} />
         )}
       </div>
-
-      {footer && (
-        <motion.div
-          {...fadeUp(0.45)}
-          className="flex items-center px-4 pt-2 pb-3"
-        >
-          {footer}
-        </motion.div>
-      )}
     </div>
   );
 }
@@ -142,7 +133,7 @@ function AnimatedNumber({
   return (
     <motion.span
       {...fadeUp(0.08)}
-      className="text-[36px] font-semibold leading-none tracking-[-0.03em]"
+      className="text-xl font-semibold leading-none tracking-[-0.03em]"
     >
       <motion.span>{display}</motion.span>
     </motion.span>
