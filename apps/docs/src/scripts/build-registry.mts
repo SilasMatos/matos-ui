@@ -2,6 +2,7 @@ import { exec } from "node:child_process";
 import { existsSync, promises as fs } from "node:fs";
 import path from "node:path";
 import { rimraf } from "rimraf";
+import { getSiteUrl } from "../lib/site-url";
 import { registry } from "../registry";
 
 interface JsonRegistryFile {
@@ -17,6 +18,8 @@ interface RegistryFileEntry {
   target: string;
   content: string;
 }
+
+const siteUrl = getSiteUrl();
 
 // copied most of the functions from:
 // https://github.com/creativetimofficial/ui/blob/main/apps/www/scripts/build-registry.mts
@@ -250,6 +253,9 @@ function rewriteImports(
 
   // Rewrite imports from @/registry/new-york-v4/lib/... to @/lib/...
   content = content.replace(/@\/registry\/new-york-v4\/lib\//g, "@/lib/");
+
+  // Keep command examples aligned with current environment URL.
+  content = content.replace(/https:\/\/matos-ui\.(vercel\.app|com)/g, siteUrl);
 
   return content;
 }
