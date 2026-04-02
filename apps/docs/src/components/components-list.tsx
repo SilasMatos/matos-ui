@@ -1,9 +1,13 @@
-import Link from "next/link";
+import { getLocale } from "next-intl/server";
+
+import { Link } from "@/i18n/navigation";
 import { getPagesFromFolder } from "@/lib/page-tree";
 import { source } from "@/lib/source";
 
-export function ComponentsList() {
-  const componentsFolder = source.pageTree.children.find(
+export async function ComponentsList() {
+  const locale = await getLocale();
+  const tree = source.getPageTree(locale);
+  const componentsFolder = tree.children.find(
     (page) => page.$id === "components",
   );
 

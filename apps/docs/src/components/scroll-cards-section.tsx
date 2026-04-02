@@ -1,7 +1,9 @@
 "use client";
 
 import { motion, useScroll, useTransform, type Variants } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { useRef } from "react";
+
 import { MiniDataTable } from "./mini-data-table";
 import { OrbitIcons } from "./orbit-icons";
 import { ToggleExemple } from "./toggle-exemple";
@@ -14,36 +16,6 @@ interface CardData {
   heightClass: string;
   yOffset: number;
 }
-
-const cards: CardData[] = [
-  {
-    id: "card-01",
-    number: "01",
-    title: "Strategic Vision",
-    description:
-      "Conecte o seu calendário. Nós cuidaremos de toda a verificação cruzada",
-    heightClass: "h-[340px]",
-    yOffset: 0,
-  },
-  {
-    id: "card-02",
-    number: "02",
-    title: "Deep Execution",
-    description:
-      "Translate vision into relentless, disciplined action — day after day, quarter after quarter.",
-    heightClass: "h-[320px]",
-    yOffset: 60,
-  },
-  {
-    id: "card-03",
-    number: "03",
-    title: "Resilient Mindset",
-    description:
-      "Build the mental architecture that turns every setback into a stepping stone toward mastery.",
-    heightClass: "h-[320px]",
-    yOffset: 20,
-  },
-];
 
 const cardVariants: Variants = {
   hidden: { opacity: 0, y: 100, scale: 0.95 },
@@ -136,6 +108,8 @@ function Card({ card, index }: { card: CardData; index: number }) {
 }
 
 export function ScrollCardsSection() {
+  const t = useTranslations("scrollCards");
+  const cards = t.raw("cards") as CardData[];
   const sectionRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -159,7 +133,6 @@ export function ScrollCardsSection() {
         />
 
         <div className="relative z-10">
-          {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -168,19 +141,18 @@ export function ScrollCardsSection() {
             className="mb-14 text-center"
           >
             <span className="mb-4 inline-block rounded-full border border-border/60 bg-muted/50 px-4 py-1.5 text-xs font-medium uppercase tracking-widest text-muted-foreground">
-              Pilares
+              {t("badge")}
             </span>
 
             <h2 className="mt-4 text-3xl font-semibold tracking-tight text-card-foreground md:text-4xl">
-              Secrets Behind Success
+              {t("title")}
             </h2>
 
             <p className="mx-auto mt-4 max-w-md text-base leading-relaxed text-muted-foreground">
-              Os fundamentos que guiam cada decisão de design.
+              {t("subtitle")}
             </p>
           </motion.div>
 
-          {/* Cards */}
           <div className="grid grid-cols-1 items-end gap-6 sm:grid-cols-2 md:grid-cols-3">
             {cards.map((card, i) => (
               <div key={card.id}>

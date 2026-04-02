@@ -1,0 +1,129 @@
+{
+  "common": {
+    "menu": "Menu",
+    "home": "Home"
+  },
+  "LocaleSwitcher": {
+    "label": "Language",
+    "en": "English",
+    "pt-BR": "Português (BR)"
+  },
+  "nav": {
+    "docs": "Docs",
+    "components": "Components"
+  },
+  "command": {
+    "searchLong": "Search documentation...",
+    "searchShort": "Search...",
+    "placeholder": "Search documentation…",
+    "empty": "No results found.",
+    "pagesGroup": "Pages"
+  },
+  "docs": {
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "hero": {
+    "badge": "Open Source Component Library",
+    "titleLine1": "A Smarter Way to",
+    "titleLine2": "Build with",
+    "brand": "Matos UI",
+    "description": "Powerful, accessible and styled components built on top of shadcn/ui. Built with powerful variants and fluid animations.",
+    "getStarted": "Get Started",
+    "components": "Components",
+    "featurePowerful": "Powerful",
+    "featureAccessible": "Accessible",
+    "featureStyled": "Styled"
+  },
+  "footer": {
+    "openSource": "Open Source",
+    "navigate": "Navigate",
+    "social": "Social",
+    "home": "Home",
+    "docs": "Docs",
+    "components": "Components",
+    "github": "GitHub",
+    "twitter": "Twitter",
+    "rights": "All rights reserved",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service"
+  },
+  "features": {
+    "badge": "How it works",
+    "title": "Simple to use,",
+    "titleAccent": "truly powerful",
+    "cards": [
+      {
+        "number": "01",
+        "title": "Copy and paste",
+        "description": "No heavy dependencies. Copy components directly into your project and customize as you like."
+      },
+      {
+        "number": "02",
+        "title": "Variant-driven styling",
+        "description": "Powerful variants with Tailwind Variants. Change styles, sizes, and states without friction."
+      },
+      {
+        "number": "03",
+        "title": "Fluid animations",
+        "description": "Transitions and micro-interactions with Framer Motion that elevate the user experience."
+      }
+    ]
+  },
+  "scrollCards": {
+    "badge": "Pillars",
+    "title": "Secrets Behind Success",
+    "subtitle": "The foundations behind every design decision.",
+    "cards": [
+      {
+        "id": "card-01",
+        "number": "01",
+        "title": "Strategic Vision",
+        "description": "Connect your calendar. We handle all the cross-checking."
+      },
+      {
+        "id": "card-02",
+        "number": "02",
+        "title": "Deep Execution",
+        "description": "Translate vision into relentless, disciplined action — day after day, quarter after quarter."
+      },
+      {
+        "id": "card-03",
+        "number": "03",
+        "title": "Resilient Mindset",
+        "description": "Build the mental architecture that turns every setback into a stepping stone toward mastery."
+      }
+    ]
+  },
+  "testimonials": {
+    "badge": "Testimonials",
+    "title": "What our",
+    "titleAccent": "Users say",
+    "prev": "Previous",
+    "next": "Next",
+    "dotLabel": "Testimonial {n}",
+    "items": [
+      {
+        "quote": "The accessibility features are outstanding.",
+        "highlight": "WCAG compliant out of the box",
+        "suffix": "The design system stays consistent. Users with disabilities have given us excellent feedback.",
+        "author": "Emily Watson",
+        "role": "UX Designer"
+      },
+      {
+        "quote": "We shipped our design system in half the time.",
+        "highlight": "Incredibly well-documented",
+        "suffix": "Onboarding new contributors was painless.",
+        "author": "Lucas Ribeiro",
+        "role": "Frontend Lead"
+      },
+      {
+        "quote": "The variant system is a game changer for consistency.",
+        "highlight": "Tailwind Variants integration",
+        "suffix": "Our product teams finally speak the same UI language.",
+        "author": "Ana Pereira",
+        "role": "Product Engineer"
+      }
+    ]
+  }
+}

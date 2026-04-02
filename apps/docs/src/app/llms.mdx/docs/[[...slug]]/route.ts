@@ -1,16 +1,16 @@
 import { notFound } from "next/navigation";
 
+import { i18n } from "@/lib/i18n";
 import { getLLMText, source } from "@/lib/source";
 
 export const revalidate = false;
 
 export async function GET(
   _req: Request,
-  { params }: RouteContext<"/llms.mdx/docs/[[...slug]]">,
+  { params }: { params: Promise<{ slug?: string[] }> },
 ) {
   const { slug } = await params;
-  // remove the appended "index.mdx"
-  const page = source.getPage(slug?.slice(0, -1));
+  const page = source.getPage(slug?.slice(0, -1), i18n.defaultLanguage);
   if (!page) notFound();
 
   return new Response(await getLLMText(page), {
@@ -21,7 +21,7 @@ export async function GET(
 }
 
 export function generateStaticParams() {
-  return source.getPages().map((page) => ({
+  return source.getPages(i18n.defaultLanguage).map((page) => ({
     slug: [...page.slugs, "index.mdx"],
   }));
 }

@@ -2,7 +2,9 @@
 
 import { motion, type Variants } from "framer-motion";
 import { ArrowRight, Blocks, Sparkle, Zap } from "lucide-react";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+
+import { Link } from "@/i18n/navigation";
 import { Button } from "@/registry/new-york-v4/ui/button";
 
 const container: Variants = {
@@ -32,13 +34,14 @@ const scaleIn: Variants = {
   },
 };
 
-const FEATURES = [
-  { icon: Zap, label: "Powerful" },
-  { icon: Blocks, label: "Accessible" },
-  { icon: Sparkle, label: "Styled" },
-];
-
 export function HeroSection() {
+  const t = useTranslations("hero");
+  const features = [
+    { icon: Zap, label: t("featurePowerful") },
+    { icon: Blocks, label: t("featureAccessible") },
+    { icon: Sparkle, label: t("featureStyled") },
+  ];
+
   return (
     <section className="relative flex flex-1 flex-col items-center justify-center px-6 py-20 md:py-28">
       <motion.div
@@ -56,18 +59,18 @@ export function HeroSection() {
               <span className="absolute inline-flex size-full animate-ping rounded-full bg-foreground/40" />
               <span className="relative inline-flex size-2 rounded-full bg-foreground" />
             </span>
-            <span>Open Source Component Library</span>
+            <span>{t("badge")}</span>
             <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
           </Link>
         </motion.div>
 
         <motion.div variants={fadeUp} className="flex flex-col gap-4">
           <h1 className="text-5xl font-semibold tracking-tight md:text-7xl">
-            <span className="text-muted-foreground/50">A Smarter Way to </span>
+            <span className="text-muted-foreground/50">{t("titleLine1")} </span>
             <br className="hidden sm:block" />
-            <span className="text-muted-foreground/50">Build with </span>
+            <span className="text-muted-foreground/50">{t("titleLine2")} </span>
             <span className="hero-highlight relative inline-block text-foreground">
-              Matos UI
+              {t("brand")}
             </span>
           </h1>
         </motion.div>
@@ -76,8 +79,7 @@ export function HeroSection() {
           variants={fadeUp}
           className="max-w-xl text-base leading-relaxed text-muted-foreground/80 md:text-lg"
         >
-          Powerful, accessible and styled components built on top of shadcn/ui.
-          Built with powerful variants and fluid animations.
+          {t("description")}
         </motion.p>
 
         <motion.div
@@ -91,7 +93,7 @@ export function HeroSection() {
             className="group gap-2 rounded-full px-5 text-sm"
             render={
               <Link href="/docs">
-                <span>Get Started</span>
+                <span>{t("getStarted")}</span>
                 <ArrowRight className="size-4 -rotate-45 transition-all ease-out group-hover:ml-1 group-hover:rotate-0" />
               </Link>
             }
@@ -103,7 +105,7 @@ export function HeroSection() {
             className="group gap-2 rounded-full px-5 text-sm"
             render={
               <Link href="/docs/components">
-                <span>Components</span>
+                <span>{t("components")}</span>
                 <ArrowRight className="size-4 -rotate-45 transition-all ease-out group-hover:ml-1 group-hover:rotate-0" />
               </Link>
             }
@@ -114,7 +116,7 @@ export function HeroSection() {
           variants={fadeUp}
           className="mt-6 flex flex-wrap items-center justify-center gap-6"
         >
-          {FEATURES.map(({ icon: Icon, label }) => (
+          {features.map(({ icon: Icon, label }) => (
             <motion.div
               key={label}
               variants={scaleIn}

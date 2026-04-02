@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { getPagesFromFolder } from "@/lib/page-tree";
-import type { source } from "@/lib/source";
+
+import { Link } from "@/i18n/navigation";
+import { getPagesFromFolder, type DocsPageTree } from "@/lib/page-tree";
 import {
   Sidebar,
   SidebarContent,
@@ -20,7 +20,7 @@ import {
 export function DocsSidebar({
   tree,
   ...props
-}: React.ComponentProps<typeof Sidebar> & { tree: typeof source.pageTree }) {
+}: React.ComponentProps<typeof Sidebar> & { tree: DocsPageTree }) {
   const pathname = usePathname();
 
   return (

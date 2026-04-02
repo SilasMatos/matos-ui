@@ -1,9 +1,11 @@
 "use client";
 import { SearchIcon } from "lucide-react";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
 import type { ComponentProps } from "react";
 import * as React from "react";
-import type { source } from "@/lib/source";
+
+import { Link } from "@/i18n/navigation";
+import type { DocsPageTree } from "@/lib/page-tree";
 import { cn } from "@/lib/utils";
 import { Button } from "@/registry/new-york-v4/ui/button";
 import {
@@ -39,16 +41,15 @@ export function CommandMenu({
   navItems,
   ...props
 }: ComponentProps<typeof CommandDialog> & {
-  tree: typeof source.pageTree;
+  tree: DocsPageTree;
   navItems?: { href: string; label: string }[];
 }) {
   const [open, setOpen] = React.useState(false);
+  const t = useTranslations("command");
 
-  // Convert tree structure to grouped items
   const groupedItems = React.useMemo<PageGroup[]>(() => {
     const groups: PageGroup[] = [];
 
-    // Add nav items group
     if (navItems && navItems.length > 0) {
       groups.push({
         items: navItems.map((item) => ({
@@ -58,11 +59,10 @@ export function CommandMenu({
           url: item.href,
           value: `Navigation ${item.label}`,
         })),
-        value: "Pages",
+        value: t("pagesGroup"),
       });
     }
 
-    // Add tree groups
     tree.children.forEach((group) => {
       if (group.type === "folder") {
         const items: PageItem[] = [];
@@ -90,7 +90,7 @@ export function CommandMenu({
     });
 
     return groups;
-  }, [tree, navItems]);
+  }, [tree, navItems, t]);
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -125,10 +125,10 @@ export function CommandMenu({
             onClick={() => setOpen(true)}
             {...props}
           >
-            <span className="hidden xl:inline-flex">
-              Search documentation...
+            <span className="hidden xl:inline-flex">{t("searchLong")}</span>
+            <span className="hidden md:inline-flex xl:hidden">
+              {t("searchShort")}
             </span>
-            <span className="hidden md:inline-flex xl:hidden">Search...</span>
             <span>
               <SearchIcon className="md:hidden" />
             </span>
@@ -137,9 +137,9 @@ export function CommandMenu({
       ></CommandDialogTrigger>
       <CommandDialogPopup>
         <Command items={groupedItems}>
-          <CommandInput placeholder="Search documentation…" />
+          <CommandInput placeholder={t("placeholder")} />
           <CommandPanel>
-            <CommandEmpty>No results found.</CommandEmpty>
+            <CommandEmpty>{t("empty")}</CommandEmpty>
             <CommandList>
               {(group: PageGroup, _index: number) => (
                 <CommandGroup items={group.items} key={group.value}>
@@ -152,7 +152,7 @@ export function CommandMenu({
                         render={
                           <Link
                             href={item.url}
-                            onNavigate={() => setOpen(false)}
+                            onClick={() => setOpen(false)}
                           />
                         }
                       >

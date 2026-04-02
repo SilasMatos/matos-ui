@@ -8,14 +8,5 @@ export const siteConfig = {
     github: "https://github.com/silasmatos/matos-ui",
     twitter: "https://x.com/silasmatos_",
   },
-  navItems: [
-    {
-      href: "/docs",
-      label: "Docs",
-    },
-    {
-      href: "/docs/components",
-      label: "Components",
-    },
-  ],
+  navItems: [{ href: "/docs" }, { href: "/docs/components" }] as const,
 };
