@@ -129,7 +129,7 @@ function getFileTarget(file: RegistryItemFile) {
     }
 
     if (file.type === "registry:ui") {
-      target = `components/ui/${fileName}`;
+      target = `components/matos-ui/${fileName}`;
     }
 
     if (file.type === "registry:hook") {
@@ -199,13 +199,13 @@ export function fixImport(content: string, pathMappings: Map<string, string>) {
   // Fix UI component imports
   content = content.replaceAll(
     "@/registry/new-york-v4/ui/",
-    "@/components/ui/",
+    "@/components/matos-ui/",
   );
 
   // Fix example imports
   content = content.replaceAll(
     "@/registry/new-york-v4/examples/",
-    "@/components/examples/",
+    "@/components/matos-ui/examples/",
   );
 
   // Fix hook imports

@@ -6,9 +6,10 @@
   ],
   "files": [
     {
-      "path": "components/examples/divider-demo.tsx",
-      "content": "import { Divider } from \"@/components/ui/divider\";\n\nexport default function DividerDemo() {\n  return (\n    <div className=\"space-y-6\">\n      <div className=\"flex h-24 items-center gap-4\">\n        Item\n        <Divider orientation=\"vertical\" />\n        Item\n        <Divider orientation=\"vertical\" variant=\"dashed\" />\n        Item\n      </div>\n    </div>\n  );\n}\n",
-      "type": "registry:example"
+      "path": "components/matos-ui/examples/divider-demo.tsx",
+      "content": "import { Divider } from \"@/components/matos-ui/divider\";\n\nexport default function DividerDemo() {\n  return (\n    <div className=\"space-y-6\">\n      <div className=\"flex h-24 items-center gap-4\">\n        Item\n        <Divider orientation=\"vertical\" />\n        Item\n        <Divider orientation=\"vertical\" variant=\"dashed\" />\n        Item\n      </div>\n    </div>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/divider-demo.tsx"
     }
   ],
   "type": "registry:example"
