@@ -2,30 +2,37 @@ import { findNeighbour } from "fumadocs-core/page-tree";
 import { DocsBody } from "fumadocs-ui/layouts/docs/page";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+
 import { DocsCopyPage } from "@/components/docs-copy-page";
 import { DocsTableOfContents } from "@/components/docs-toc";
+import { Link } from "@/i18n/navigation";
 import { getPageImage, source } from "@/lib/source";
 import { absoluteUrl } from "@/lib/utils";
 import { getMDXComponents } from "@/mdx-components";
 import { Button } from "@/registry/new-york-v4/ui/button";
 
-export default async function Page(props: {
-  params: Promise<{ slug: string[] }>;
-}) {
+type PageParams = { locale: string; slug?: string[] };
+
+export default async function Page(props: { params: Promise<PageParams> }) {
   const params = await props.params;
-  const page = source.getPage(params.slug);
+  const { locale, slug } = params;
+  setRequestLocale(locale);
+
+  const page = source.getPage(slug ?? [], locale);
   if (!page) {
     notFound();
   }
 
+  const t = await getTranslations({ locale, namespace: "docs" });
   const doc = page.data;
   const MDX = doc.body;
   const isChangelog = params.slug?.[0] === "changelog";
+  const pageTree = source.getPageTree(locale);
   const neighbours = isChangelog
     ? { previous: null, next: null }
-    : findNeighbour(source.pageTree, page.url);
+    : findNeighbour(pageTree, page.url);
   const raw = await page.data.getText("raw");
 
   return (
@@ -52,11 +59,16 @@ export default async function Page(props: {
                         variant="secondary"
                         size="icon"
                         className="extend-touch-target size-8 shadow-none md:size-7"
-                        render={<Link href={neighbours.previous.url} />}
+                        render={
+                          <Link
+                            href={neighbours.previous.url}
+                            prefetch={false}
+                          />
+                        }
                         nativeButton={false}
                       >
                         <ArrowLeftIcon />
-                        <span className="sr-only">Previous</span>
+                        <span className="sr-only">{t("previous")}</span>
                       </Button>
                     )}
                     {neighbours.next && (
@@ -64,10 +76,12 @@ export default async function Page(props: {
                         variant="secondary"
                         size="icon"
                         className="extend-touch-target size-8 shadow-none md:size-7"
-                        render={<Link href={neighbours.next.url} />}
+                        render={
+                          <Link href={neighbours.next.url} prefetch={false} />
+                        }
                         nativeButton={false}
                       >
-                        <span className="sr-only">Next</span>
+                        <span className="sr-only">{t("next")}</span>
                         <ArrowRightIcon />
                       </Button>
                     )}
@@ -90,7 +104,9 @@ export default async function Page(props: {
                 variant="secondary"
                 size="sm"
                 className="shadow-none"
-                render={<Link href={neighbours.previous.url} />}
+                render={
+                  <Link href={neighbours.previous.url} prefetch={false} />
+                }
                 nativeButton={false}
               >
                 <ArrowLeftIcon /> {neighbours.previous.name}
@@ -101,7 +117,7 @@ export default async function Page(props: {
                 variant="secondary"
                 size="sm"
                 className="ml-auto shadow-none"
-                render={<Link href={neighbours.next.url} />}
+                render={<Link href={neighbours.next.url} prefetch={false} />}
                 nativeButton={false}
               >
                 {neighbours.next.name} <ArrowRightIcon />
@@ -122,15 +138,16 @@ export default async function Page(props: {
   );
 }
 
-export async function generateStaticParams() {
-  return source.generateParams();
+export function generateStaticParams() {
+  return source.generateParams("slug", "locale");
 }
 
-export async function generateMetadata(
-  props: PageProps<"/docs/[[...slug]]">,
-): Promise<Metadata> {
+export async function generateMetadata(props: {
+  params: Promise<PageParams>;
+}): Promise<Metadata> {
   const params = await props.params;
-  const page = source.getPage(params.slug);
+  const { locale, slug } = params;
+  const page = source.getPage(slug ?? [], locale);
   if (!page) notFound();
 
   return {

@@ -6,9 +6,10 @@
   ],
   "files": [
     {
-      "path": "components/examples/badge-demo.tsx",
-      "content": "import { Badge } from \"@/components/ui/badge\";\n\nexport default function BadgeDemo() {\n  return (\n    <div className=\"flex flex-wrap items-center gap-2\">\n      <Badge>Default</Badge>\n\n      <Badge variant=\"secondary\">Secondary</Badge>\n\n      <Badge variant=\"destructive\">Destructive</Badge>\n\n      <Badge variant=\"outline\">Outline</Badge>\n\n      <Badge variant=\"ghost\">Ghost</Badge>\n\n      <Badge variant=\"soft\">Soft</Badge>\n\n      <Badge variant=\"dotted\">Dotted</Badge>\n    </div>\n  );\n}\n",
-      "type": "registry:example"
+      "path": "components/matos-ui/examples/badge-demo.tsx",
+      "content": "import { Badge } from \"@/components/matos-ui/badge\";\n\nexport default function BadgeDemo() {\n  return (\n    <div className=\"flex flex-wrap items-center gap-2\">\n      <Badge>Default</Badge>\n\n      <Badge variant=\"secondary\">Secondary</Badge>\n\n      <Badge variant=\"destructive\">Destructive</Badge>\n\n      <Badge variant=\"outline\">Outline</Badge>\n\n      <Badge variant=\"ghost\">Ghost</Badge>\n\n      <Badge variant=\"soft\">Soft</Badge>\n\n      <Badge variant=\"dotted\">Dotted</Badge>\n    </div>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/badge-demo.tsx"
     }
   ],
   "type": "registry:example"

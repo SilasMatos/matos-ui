@@ -2,38 +2,17 @@
 
 import { motion, type Variants } from "framer-motion";
 import { Blocks, Paintbrush, Sparkles } from "lucide-react";
+import { useTranslations } from "next-intl";
 import type { ComponentType } from "react";
 
-interface Feature {
+interface FeatureCard {
   number: string;
   title: string;
   description: string;
   icon: ComponentType<{ className?: string }>;
 }
 
-const features: Feature[] = [
-  {
-    number: "01",
-    title: "Copie e cole",
-    description:
-      "Sem dependências pesadas. Copie os componentes diretamente para o seu projeto e customize como quiser.",
-    icon: Blocks,
-  },
-  {
-    number: "02",
-    title: "Estilização com variantes",
-    description:
-      "Variantes poderosas com Tailwind Variants. Altere estilos, tamanhos e estados sem esforço.",
-    icon: Paintbrush,
-  },
-  {
-    number: "03",
-    title: "Animações fluidas",
-    description:
-      "Transições e micro-interações com Framer Motion que elevam a experiência do usuário.",
-    icon: Sparkles,
-  },
-];
+const icons = [Blocks, Paintbrush, Sparkles];
 
 const sectionVariants: Variants = {
   hidden: { opacity: 0 },
@@ -53,6 +32,18 @@ const cardVariants: Variants = {
 };
 
 export function FeaturesSection() {
+  const t = useTranslations("features");
+  const rawCards = t.raw("cards") as {
+    number: string;
+    title: string;
+    description: string;
+  }[];
+
+  const features: FeatureCard[] = rawCards.map((card, i) => ({
+    ...card,
+    icon: icons[i] ?? Blocks,
+  }));
+
   return (
     <section className="relative py-24 md:py-32">
       <div className="mx-auto max-w-5xl px-6">
@@ -64,13 +55,11 @@ export function FeaturesSection() {
           className="mb-16 text-center"
         >
           <span className="mb-4 inline-block rounded-full border border-border/60 bg-muted/50 px-4 py-1.5 text-xs font-medium uppercase tracking-widest text-muted-foreground">
-            Como funciona
+            {t("badge")}
           </span>
           <h2 className="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">
-            Simples de usar,{" "}
-            <span className="text-muted-foreground/60">
-              poderoso de verdade
-            </span>
+            {t("title")}{" "}
+            <span className="text-muted-foreground/60">{t("titleAccent")}</span>
           </h2>
         </motion.div>
 

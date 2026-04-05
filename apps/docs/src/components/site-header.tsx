@@ -1,24 +1,30 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import logoSrc from "@/assets/logo.png";
 import { CommandMenu } from "@/components/command-menu";
 import { GitHubLink } from "@/components/github-link";
+import { LocaleSwitcher } from "@/components/locale-switcher";
 import { MainNav } from "@/components/main-nav";
 import { MobileNav } from "@/components/mobile-nav";
 import { ModeSwitcher } from "@/components/mode-switcher";
+import { Link, usePathname } from "@/i18n/navigation";
 import { siteConfig } from "@/lib/config";
-import { source } from "@/lib/source";
+import type { DocsPageTree } from "@/lib/page-tree";
 import { Button } from "@/registry/new-york-v4/ui/button";
 import { Separator } from "@/registry/new-york-v4/ui/separator";
 import { XformerlyTwitter } from "@/registry/new-york-v4/ui/x-icon";
 
-export function SiteHeader() {
+export function SiteHeader({ pageTree }: { pageTree: DocsPageTree }) {
   const pathname = usePathname();
+  const tNav = useTranslations("nav");
   const isHome = pathname === "/";
-  const pageTree = source.pageTree;
+
+  const navItems = siteConfig.navItems.map((item) => ({
+    href: item.href,
+    label: item.href === "/docs/components" ? tNav("components") : tNav("docs"),
+  }));
 
   return (
     <header
@@ -28,7 +34,7 @@ export function SiteHeader() {
         <div className="flex h-(--header-height) items-center **:data-[slot=separator]:h-4! 3xl:fixed:container">
           <MobileNav
             tree={pageTree}
-            items={siteConfig.navItems}
+            items={navItems}
             className="flex lg:hidden"
           />
           <Button
@@ -56,14 +62,15 @@ export function SiteHeader() {
           >
             <h1>
               {" "}
-              <span className="font-bold">matos</span>{" "}
+              <span className="font-bold">matos</span>
               <span className="text-muted-foreground/50">ui</span>
             </h1>
           </Link>
           <div className="h-8 w-px bg-border mx-4"></div>
-          <MainNav items={siteConfig.navItems} className="hidden lg:flex" />
+          <MainNav items={navItems} className="hidden lg:flex" />
           <div className="ml-auto flex items-center gap-2 md:flex-1 md:justify-end">
-            <CommandMenu tree={pageTree} navItems={siteConfig.navItems} />
+            <CommandMenu tree={pageTree} navItems={navItems} />
+            <LocaleSwitcher />
             <Separator
               orientation="vertical"
               className="ml-2 hidden lg:block"

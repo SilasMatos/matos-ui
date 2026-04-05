@@ -19,7 +19,7 @@ export default function AccordionDemo() {
         <AccordionTrigger value="item-2">Como instalar?</AccordionTrigger>
         <AccordionContent value="item-2">
           Use o CLI do shadcn: npx shadcn@latest add
-          https://matos-ui.vercel.app/r/accordion.json
+          https://matos-ui.com/r/accordion.json
         </AccordionContent>
       </AccordionItem>
       <AccordionItem value="item-3">

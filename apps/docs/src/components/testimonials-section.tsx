@@ -2,36 +2,18 @@
 
 import { AnimatePresence, motion, type Variants } from "framer-motion";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useState } from "react";
+
 import { XformerlyTwitter } from "@/registry/new-york-v4/ui/x-icon";
 
 interface Testimonial {
   quote: string;
   highlight: string;
+  suffix: string;
   author: string;
   role: string;
 }
-
-const testimonials: Testimonial[] = [
-  {
-    quote: "The accessibility features are outstanding.",
-    highlight: "WCAG compliant out of the box",
-    author: "Emily Watson",
-    role: "UX Designer",
-  },
-  {
-    quote: "We shipped our design system in half the time.",
-    highlight: "Incredibly well-documented",
-    author: "Lucas Ribeiro",
-    role: "Frontend Lead",
-  },
-  {
-    quote: "The variant system is a game changer for consistency.",
-    highlight: "Tailwind Variants integration",
-    author: "Ana Pereira",
-    role: "Product Engineer",
-  },
-];
 
 const cardVariants: Variants = {
   enter: (direction: number) => ({
@@ -57,6 +39,8 @@ const cardVariants: Variants = {
 };
 
 export function TestimonialsSection() {
+  const t = useTranslations("testimonials");
+  const testimonials = t.raw("items") as Testimonial[];
   const [[current, direction], setCurrent] = useState([0, 0]);
 
   const paginate = useCallback(
@@ -66,7 +50,7 @@ export function TestimonialsSection() {
         dir,
       ]);
     },
-    [current],
+    [current, testimonials.length],
   );
 
   useEffect(() => {
@@ -74,7 +58,7 @@ export function TestimonialsSection() {
     return () => clearInterval(timer);
   }, [paginate]);
 
-  const t = testimonials[current];
+  const item = testimonials[current];
 
   return (
     <section className="relative overflow-hidden bg-secondary py-24 md:py-32">
@@ -89,10 +73,11 @@ export function TestimonialsSection() {
           className="mb-16 text-center"
         >
           <span className="mb-4 inline-block rounded-full border border-border/60 bg-muted/50 px-4 py-1.5 text-xs font-medium uppercase tracking-widest text-muted-foreground">
-            Testimonials
+            {t("badge")}
           </span>
           <h2 className="mt-4 text-3xl font-semibold tracking-tight text-secondary-foreground md:text-4xl">
-            What our <span className="font-logo italic">Users say</span>
+            {t("title")}{" "}
+            <span className="font-logo italic">{t("titleAccent")}</span>
           </h2>
         </motion.div>
 
@@ -111,27 +96,26 @@ export function TestimonialsSection() {
                 <div className="absolute -top-px left-0 right-0 h-px bg-linear-to-r from-transparent via-border to-transparent" />
 
                 <p className="text-base leading-relaxed text-card-foreground/80">
-                  {t.quote}{" "}
+                  {item.quote}{" "}
                   <span className="rounded-sm bg-emerald-500/15 px-1.5 py-0.5 font-medium text-emerald-500 dark:text-emerald-400">
-                    {t.highlight}
+                    {item.highlight}
                   </span>{" "}
-                  and the design system is consistent. Our users with
-                  disabilities have given us excellent feedback.
+                  {item.suffix}
                 </p>
 
                 <div className="mt-6 flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="flex size-10 items-center justify-center rounded-full bg-muted text-sm font-semibold text-muted-foreground">
-                      {t.author
+                      {item.author
                         .split(" ")
                         .map((n) => n[0])
                         .join("")}
                     </div>
                     <div>
                       <p className="text-sm font-medium text-card-foreground">
-                        {t.author}
+                        {item.author}
                       </p>
-                      <p className="text-xs text-muted-foreground">{t.role}</p>
+                      <p className="text-xs text-muted-foreground">{item.role}</p>
                     </div>
                   </div>
                   <XformerlyTwitter className="size-5 text-muted-foreground/50" />
@@ -145,15 +129,15 @@ export function TestimonialsSection() {
               type="button"
               onClick={() => paginate(-1)}
               className="inline-flex size-9 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:border-foreground/30 hover:text-foreground"
-              aria-label="Anterior"
+              aria-label={t("prev")}
             >
               <ArrowLeft className="size-4" />
             </button>
 
             <div className="flex gap-2">
-              {testimonials.map((_, i) => (
+              {testimonials.map((tm, i) => (
                 <button
-                  key={`dot-${testimonials[i].author}`}
+                  key={tm.author}
                   type="button"
                   onClick={() => setCurrent([i, i > current ? 1 : -1])}
                   className={`h-1.5 rounded-full transition-all duration-300 ${
@@ -161,7 +145,7 @@ export function TestimonialsSection() {
                       ? "w-6 bg-foreground/60"
                       : "w-1.5 bg-foreground/15"
                   }`}
-                  aria-label={`Testimonial ${i + 1}`}
+                  aria-label={t("dotLabel", { n: i + 1 })}
                 />
               ))}
             </div>
@@ -170,7 +154,7 @@ export function TestimonialsSection() {
               type="button"
               onClick={() => paginate(1)}
               className="inline-flex size-9 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:border-foreground/30 hover:text-foreground"
-              aria-label="Próximo"
+              aria-label={t("next")}
             >
               <ArrowRight className="size-4" />
             </button>

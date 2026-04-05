@@ -1,13 +1,12 @@
 import type { BaseLayoutProps } from "fumadocs-ui/layouts/shared";
 
-// fill this with your actual GitHub info, for example:
 export const gitConfig = {
   user: "silasmatos",
   repo: "matos-ui",
   branch: "main",
 };
 
-export function baseOptions(): BaseLayoutProps {
+export function baseOptions(_locale: string): BaseLayoutProps {
   return {
     nav: {
       enabled: false,

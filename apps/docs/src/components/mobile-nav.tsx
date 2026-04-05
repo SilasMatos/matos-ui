@@ -1,11 +1,11 @@
 "use client";
 
-import Link, { type LinkProps } from "next/link";
-import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import type { ComponentProps } from "react";
 import * as React from "react";
 
-import { getPagesFromFolder } from "@/lib/page-tree";
-import type { source } from "@/lib/source";
+import { Link } from "@/i18n/navigation";
+import { getPagesFromFolder, type DocsPageTree } from "@/lib/page-tree";
 import { cn } from "@/lib/utils";
 import { Button } from "@/registry/new-york-v4/ui/button";
 import {
@@ -19,11 +19,12 @@ export function MobileNav({
   items,
   className,
 }: {
-  tree: typeof source.pageTree;
+  tree: DocsPageTree;
   items: { href: string; label: string }[];
   className?: string;
 }) {
   const [open, setOpen] = React.useState(false);
+  const t = useTranslations("common");
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -51,10 +52,10 @@ export function MobileNav({
                   )}
                 />
               </div>
-              <span className="sr-only">Toggle Menu</span>
+              <span className="sr-only">{t("menu")}</span>
             </div>
             <span className="flex h-8 items-center text-lg leading-none font-medium">
-              Menu
+              {t("menu")}
             </span>
           </Button>
         }
@@ -69,20 +70,17 @@ export function MobileNav({
         <div className="flex flex-col gap-12 overflow-auto px-6 py-6">
           <div className="flex flex-col gap-4">
             <div className="text-sm font-medium text-muted-foreground">
-              Menu
+              {t("menu")}
             </div>
             <div className="flex flex-col gap-3">
-              <MobileLink href="/" onOpenChange={setOpen}>
-                Home
+              <MobileLink href="/" onNavigate={() => setOpen(false)}>
+                {t("home")}
               </MobileLink>
-              {items.map((item, index) => (
+              {items.map((item) => (
                 <MobileLink
-                  key={`mobile-link-${
-                    // biome-ignore lint/suspicious/noArrayIndexKey: <not a problem>
-                    index
-                  }`}
+                  key={item.href}
                   href={item.href}
-                  onOpenChange={setOpen}
+                  onNavigate={() => setOpen(false)}
                 >
                   {item.label}
                 </MobileLink>
@@ -90,33 +88,28 @@ export function MobileNav({
             </div>
           </div>
           <div className="flex flex-col gap-8">
-            {tree?.children?.map((group, index) => {
+            {tree.children.map((group) => {
               if (group.type === "folder") {
                 const pages = getPagesFromFolder(group);
                 return (
                   <div
-                    key={`${group.$id}-mobile-link`}
+                    key={group.$id}
                     className="flex flex-col gap-4"
                   >
                     <div className="text-sm font-medium text-muted-foreground">
                       {group.name}
                     </div>
                     <div className="flex flex-col gap-3">
-                      {pages.map((item) => {
-                        return (
-                          <MobileLink
-                            key={`${item.url}-${
-                              // biome-ignore lint/suspicious/noArrayIndexKey: <not a problem>
-                              index
-                            }`}
-                            href={item.url}
-                            onOpenChange={setOpen}
-                            className="flex items-center gap-2"
-                          >
-                            {item.name}
-                          </MobileLink>
-                        );
-                      })}
+                      {pages.map((item) => (
+                        <MobileLink
+                          key={item.$id}
+                          href={item.url}
+                          onNavigate={() => setOpen(false)}
+                          className="flex items-center gap-2"
+                        >
+                          {item.name}
+                        </MobileLink>
+                      ))}
                     </div>
                   </div>
                 );
@@ -132,23 +125,19 @@ export function MobileNav({
 
 function MobileLink({
   href,
-  onOpenChange,
+  onNavigate,
   className,
   children,
   ...props
-}: LinkProps & {
-  onOpenChange?: (open: boolean) => void;
+}: ComponentProps<typeof Link> & {
+  onNavigate?: () => void;
   children: React.ReactNode;
   className?: string;
 }) {
-  const router = useRouter();
   return (
     <Link
       href={href}
-      onClick={() => {
-        router.push(href.toString());
-        onOpenChange?.(false);
-      }}
+      onClick={() => onNavigate?.()}
       className={cn("flex items-center gap-2 text-2xl font-medium", className)}
       {...props}
     >

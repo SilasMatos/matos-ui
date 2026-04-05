@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion, type HTMLMotionProps } from "framer-motion";
+import { AnimatePresence, type HTMLMotionProps, motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import * as React from "react";
 

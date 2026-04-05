@@ -1,0 +1,129 @@
+{
+  "common": {
+    "menu": "Menu",
+    "home": "Início"
+  },
+  "LocaleSwitcher": {
+    "label": "Idioma",
+    "en": "English",
+    "pt-BR": "Português (BR)"
+  },
+  "nav": {
+    "docs": "Documentação",
+    "components": "Componentes"
+  },
+  "command": {
+    "searchLong": "Buscar na documentação...",
+    "searchShort": "Buscar...",
+    "placeholder": "Buscar na documentação…",
+    "empty": "Nenhum resultado encontrado.",
+    "pagesGroup": "Páginas"
+  },
+  "docs": {
+    "previous": "Anterior",
+    "next": "Próximo"
+  },
+  "hero": {
+    "badge": "Biblioteca de componentes open source",
+    "titleLine1": "Um jeito mais inteligente de",
+    "titleLine2": "construir com",
+    "brand": "Matos UI",
+    "description": "Componentes poderosos, acessíveis e estilizados sobre o shadcn/ui. Com variantes expressivas e animações fluidas.",
+    "getStarted": "Começar",
+    "components": "Componentes",
+    "featurePowerful": "Poderoso",
+    "featureAccessible": "Acessível",
+    "featureStyled": "Estilizado"
+  },
+  "footer": {
+    "openSource": "Open Source",
+    "navigate": "Navegar",
+    "social": "Social",
+    "home": "Início",
+    "docs": "Documentação",
+    "components": "Componentes",
+    "github": "GitHub",
+    "twitter": "Twitter",
+    "rights": "Todos os direitos reservados",
+    "privacy": "Política de privacidade",
+    "terms": "Termos de serviço"
+  },
+  "features": {
+    "badge": "Como funciona",
+    "title": "Simples de usar,",
+    "titleAccent": "poderoso de verdade",
+    "cards": [
+      {
+        "number": "01",
+        "title": "Copie e cole",
+        "description": "Sem dependências pesadas. Copie os componentes diretamente para o seu projeto e customize como quiser."
+      },
+      {
+        "number": "02",
+        "title": "Estilização com variantes",
+        "description": "Variantes poderosas com Tailwind Variants. Altere estilos, tamanhos e estados sem esforço."
+      },
+      {
+        "number": "03",
+        "title": "Animações fluidas",
+        "description": "Transições e micro-interações com Framer Motion que elevam a experiência do usuário."
+      }
+    ]
+  },
+  "scrollCards": {
+    "badge": "Pilares",
+    "title": "Segredos por trás do sucesso",
+    "subtitle": "Os fundamentos que guiam cada decisão de design.",
+    "cards": [
+      {
+        "id": "card-01",
+        "number": "01",
+        "title": "Visão estratégica",
+        "description": "Conecte o seu calendário. Nós cuidamos de toda a verificação cruzada."
+      },
+      {
+        "id": "card-02",
+        "number": "02",
+        "title": "Execução profunda",
+        "description": "Transforme visão em ação disciplinada — dia após dia, trimestre após trimestre."
+      },
+      {
+        "id": "card-03",
+        "number": "03",
+        "title": "Mentalidade resiliente",
+        "description": "Construa a arquitetura mental que transforma cada obstáculo em degrau rumo à maestria."
+      }
+    ]
+  },
+  "testimonials": {
+    "badge": "Depoimentos",
+    "title": "O que nossos",
+    "titleAccent": "usuários dizem",
+    "prev": "Anterior",
+    "next": "Próximo",
+    "dotLabel": "Depoimento {n}",
+    "items": [
+      {
+        "quote": "Os recursos de acessibilidade são excepcionais.",
+        "highlight": "Compatível com WCAG desde o primeiro dia",
+        "suffix": "O design system permanece consistente. Usuários com deficiência nos deram excelente feedback.",
+        "author": "Emily Watson",
+        "role": "UX Designer"
+      },
+      {
+        "quote": "Entregamos nosso design system em metade do tempo.",
+        "highlight": "Documentação impecável",
+        "suffix": "Integrar novos contribuidores foi simples.",
+        "author": "Lucas Ribeiro",
+        "role": "Frontend Lead"
+      },
+      {
+        "quote": "O sistema de variantes mudou o jogo da consistência.",
+        "highlight": "Integração com Tailwind Variants",
+        "suffix": "Nossos times de produto finalmente falam a mesma linguagem de UI.",
+        "author": "Ana Pereira",
+        "role": "Product Engineer"
+      }
+    ]
+  }
+}

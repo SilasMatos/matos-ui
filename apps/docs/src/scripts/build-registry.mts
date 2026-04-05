@@ -2,6 +2,7 @@ import { exec } from "node:child_process";
 import { existsSync, promises as fs } from "node:fs";
 import path from "node:path";
 import { rimraf } from "rimraf";
+import { getSiteUrl } from "../lib/site-url";
 import { registry } from "../registry";
 
 interface JsonRegistryFile {
@@ -17,6 +18,8 @@ interface RegistryFileEntry {
   target: string;
   content: string;
 }
+
+const siteUrl = getSiteUrl();
 
 // copied most of the functions from:
 // https://github.com/creativetimofficial/ui/blob/main/apps/www/scripts/build-registry.mts
@@ -180,16 +183,17 @@ async function cleanupGeneratedPaths() {
           // Remove only src/registry/ prefix, keep new-york-v4/ for branding
           let cleanPath = file.path.replace(/^src\/registry\//, "");
 
-          // For UI components, prepend with components/
+          // For UI components, prepend with components/matos-ui/
           if (cleanPath.startsWith("new-york-v4/ui/")) {
-            cleanPath = `components/${cleanPath.replace(/^new-york-v4\//, "")}`;
+            cleanPath = `components/matos-ui/${cleanPath.replace(/^new-york-v4\/ui\//, "")}`;
           }
-          // For examples, prepend with components/
+          // For examples, prepend with components/matos-ui/
           else if (cleanPath.startsWith("new-york-v4/examples/")) {
-            cleanPath = `components/${cleanPath.replace(/^new-york-v4\//, "")}`;
+            cleanPath = `components/matos-ui/${cleanPath.replace(/^new-york-v4\//, "")}`;
           }
 
           file.path = cleanPath;
+          file.target = cleanPath;
 
           // Clean up imports in the content field using the path mappings
           if (file.content) {
@@ -236,20 +240,23 @@ function rewriteImports(
     }
   });
 
-  // Rewrite imports from @/registry/new-york-v4/ui/... to @/components/ui/...
+  // Rewrite imports from @/registry/new-york-v4/ui/... to @/components/matos-ui/...
   content = content.replace(
     /@\/registry\/new-york-v4\/ui\//g,
-    "@/components/ui/",
+    "@/components/matos-ui/",
   );
 
-  // Rewrite imports from @/registry/new-york-v4/examples/... to @/components/examples/...
+  // Rewrite imports from @/registry/new-york-v4/examples/... to @/components/matos-ui/examples/...
   content = content.replace(
     /@\/registry\/new-york-v4\/examples\//g,
-    "@/components/examples/",
+    "@/components/matos-ui/examples/",
   );
 
   // Rewrite imports from @/registry/new-york-v4/lib/... to @/lib/...
   content = content.replace(/@\/registry\/new-york-v4\/lib\//g, "@/lib/");
+
+  // Keep command examples aligned with current environment URL.
+  content = content.replace(/https:\/\/matos-ui\.(vercel\.app|com)/g, siteUrl);
 
   return content;
 }
@@ -274,7 +281,6 @@ async function buildPackageJson(
 
   // Aggregate all dependencies and registryDependencies
   const allDependencies = new Set<string>();
-  const allRegistryDependencies = new Set<string>();
   const allFiles: RegistryFileEntry[] = [];
 
   // Build path mappings for import rewriting
@@ -289,11 +295,6 @@ async function buildPackageJson(
     }
 
     // Collect registryDependencies
-    if (component.registryDependencies) {
-      for (const dep of component.registryDependencies) {
-        allRegistryDependencies.add(dep);
-      }
-    }
 
     // Collect files and read their content
     if (component.files) {
@@ -311,9 +312,9 @@ async function buildPackageJson(
         let cleanPath = file.path;
         if (packageType === "ui") {
           if (cleanPath.startsWith("ui/")) {
-            cleanPath = `components/${cleanPath}`;
+            cleanPath = `components/matos-ui/${cleanPath.replace(/^ui\//, "")}`;
           } else if (cleanPath.startsWith("examples/")) {
-            cleanPath = `components/${cleanPath}`;
+            cleanPath = `components/matos-ui/${cleanPath}`;
           }
         }
 
@@ -325,7 +326,7 @@ async function buildPackageJson(
         allFiles.push({
           path: cleanPath,
           type: file.type,
-          target: file.target ?? "",
+          target: cleanPath,
           content: content,
         });
       }
@@ -346,7 +347,7 @@ async function buildPackageJson(
     type: typeMap[packageType],
     description: description,
     dependencies: Array.from(allDependencies).sort(),
-    registryDependencies: Array.from(allRegistryDependencies).sort(),
+    registryDependencies: [],
     files: allFiles,
   };
 
@@ -364,7 +365,6 @@ async function buildAllJson() {
 
   // Combine all components
   const allDependencies = new Set<string>();
-  const allRegistryDependencies = new Set<string>();
   const allFiles: RegistryFileEntry[] = [];
   const pathMappings = new Map<string, string>();
 
@@ -372,11 +372,6 @@ async function buildAllJson() {
     if (component.dependencies) {
       for (const dep of component.dependencies) {
         allDependencies.add(dep);
-      }
-    }
-    if (component.registryDependencies) {
-      for (const dep of component.registryDependencies) {
-        allRegistryDependencies.add(dep);
       }
     }
 
@@ -393,9 +388,9 @@ async function buildAllJson() {
         let cleanPath = file.path;
         if (component.type === "registry:ui") {
           if (cleanPath.startsWith("ui/")) {
-            cleanPath = `components/${cleanPath}`;
+            cleanPath = `components/matos-ui/${cleanPath.replace(/^ui\//, "")}`;
           } else if (cleanPath.startsWith("examples/")) {
-            cleanPath = `components/${cleanPath}`;
+            cleanPath = `components/matos-ui/${cleanPath}`;
           }
         }
 
@@ -406,7 +401,7 @@ async function buildAllJson() {
         allFiles.push({
           path: cleanPath,
           type: file.type,
-          target: file.target ?? "",
+          target: cleanPath,
           content: content,
         });
       }
@@ -422,11 +417,11 @@ async function buildAllJson() {
   const allJson = {
     $schema: "https://ui.shadcn.com/schema/registry-item.json",
     name: "all",
-    type: "registry:all",
+    type: "registry:item",
     description:
       "All components from Matos UI (UI components, blocks, and agents)",
     dependencies: Array.from(allDependencies).sort(),
-    registryDependencies: Array.from(allRegistryDependencies).sort(),
+    registryDependencies: [],
     files: allFiles,
   };
 

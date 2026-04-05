@@ -1,4 +1,5 @@
 import type { Registry } from "shadcn/schema";
+import { getSiteUrl } from "../lib/site-url";
 import { examples } from "./registry-examples";
 import { ui } from "./registry-ui";
 
@@ -13,7 +14,7 @@ const TEMPLATE_STYLE = {
 
 export const registry = {
   name: "matos/ui",
-  homepage: "https://matos-ui.vercel.app/",
+  homepage: `${getSiteUrl()}/`,
   items: [
     {
       name: "index",

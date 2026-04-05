@@ -1,21 +1,25 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+
+import { Link } from "@/i18n/navigation";
 import { siteConfig } from "@/lib/config";
 
-const navigation = [
-  { label: "Home", href: "/" },
-  { label: "Docs", href: "/docs" },
-  { label: "Components", href: "/docs/components" },
-];
-
-const social = [
-  { label: "GitHub", href: siteConfig.links.github, external: true },
-  { label: "Twitter", href: siteConfig.links.twitter, external: true },
-];
-
 export function SiteFooter() {
+  const t = useTranslations("footer");
+
+  const navigation = [
+    { label: t("home"), href: "/" },
+    { label: t("docs"), href: "/docs" },
+    { label: t("components"), href: "/docs/components" },
+  ];
+
+  const social = [
+    { label: t("github"), href: siteConfig.links.github, external: true },
+    { label: t("twitter"), href: siteConfig.links.twitter, external: true },
+  ];
+
   return (
     <footer className="relative overflow-hidden bg-card">
       <div className="mx-auto max-w-5xl px-6 pt-16 pb-8">
@@ -27,7 +31,7 @@ export function SiteFooter() {
           className="grid grid-cols-1 gap-12 sm:grid-cols-[1fr_auto_auto] sm:gap-16"
         >
           <div className="flex flex-col gap-3">
-            <p className="text-xs text-muted-foreground">Open Source</p>
+            <p className="text-xs text-muted-foreground">{t("openSource")}</p>
             <a
               href={`mailto:contact@${siteConfig.url.replace("https://", "")}`}
               className="text-lg font-medium text-card-foreground/80 transition-colors hover:text-card-foreground"
@@ -38,7 +42,7 @@ export function SiteFooter() {
 
           <div className="flex flex-col gap-3">
             <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-              Navigate
+              {t("navigate")}
             </p>
             <nav className="flex flex-col gap-2">
               {navigation.map((link) => (
@@ -55,7 +59,7 @@ export function SiteFooter() {
 
           <div className="flex flex-col gap-3">
             <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-              Social
+              {t("social")}
             </p>
             <nav className="flex flex-col gap-2">
               {social.map((link) => (
@@ -102,21 +106,20 @@ export function SiteFooter() {
 
         <div className="flex flex-col items-center justify-between gap-4 border-t border-border pt-6 sm:flex-row">
           <p className="text-xs text-muted-foreground/60">
-            &copy;{new Date().getFullYear()} {siteConfig.name}. All rights
-            reserved
+            &copy;{new Date().getFullYear()} {siteConfig.name}. {t("rights")}
           </p>
           <div className="flex gap-6">
             <Link
               href="/docs"
               className="text-xs text-muted-foreground/60 transition-colors hover:text-muted-foreground"
             >
-              Privacy Policy
+              {t("privacy")}
             </Link>
             <Link
               href="/docs"
               className="text-xs text-muted-foreground/60 transition-colors hover:text-muted-foreground"
             >
-              Terms of Service
+              {t("terms")}
             </Link>
           </div>
         </div>

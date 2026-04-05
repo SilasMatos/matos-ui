@@ -7,9 +7,10 @@
   ],
   "files": [
     {
-      "path": "components/ui/divider.tsx",
+      "path": "components/matos-ui/divider.tsx",
       "content": "import type { ComponentProps } from \"react\";\nimport { twMerge } from \"tailwind-merge\";\nimport { tv, type VariantProps } from \"tailwind-variants\";\n\nexport const dividerVariants = tv({\n  base: \"shrink-0 border-border\",\n\n  variants: {\n    orientation: {\n      horizontal: \"w-full border-t\",\n      vertical: \"h-full border-l\",\n    },\n\n    variant: {\n      solid: \"\",\n      dashed: \"border-dashed\",\n      dotted: \"border-dotted\",\n    },\n\n    color: {\n      default: \"border-border\",\n    },\n\n    size: {\n      sm: \"border\",\n      md: \"border-2\",\n      lg: \"border-[3px]\",\n    },\n  },\n\n  defaultVariants: {\n    orientation: \"horizontal\",\n    variant: \"solid\",\n    color: \"default\",\n    size: \"sm\",\n  },\n});\n\nexport type DividerProps = ComponentProps<\"div\"> &\n  VariantProps<typeof dividerVariants>;\n\nexport function Divider({\n  className,\n  orientation = \"horizontal\",\n  variant,\n  color,\n  size,\n  ...props\n}: DividerProps) {\n  const classes = twMerge(\n    dividerVariants({ orientation, variant, color, size }),\n    className,\n  );\n\n  if (orientation === \"vertical\") {\n    return (\n      <div\n        data-slot=\"divider\"\n        data-orientation=\"vertical\"\n        className={classes}\n        aria-hidden\n        {...props}\n      />\n    );\n  }\n\n  return (\n    <hr\n      data-slot=\"divider\"\n      data-orientation=\"horizontal\"\n      className={classes}\n      aria-hidden\n      {...(props as ComponentProps<\"hr\">)}\n    />\n  );\n}\n",
-      "type": "registry:ui"
+      "type": "registry:ui",
+      "target": "components/matos-ui/divider.tsx"
     }
   ],
   "type": "registry:ui"

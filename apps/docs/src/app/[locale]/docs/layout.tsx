@@ -1,12 +1,20 @@
+import { setRequestLocale } from "next-intl/server";
+
 import { DocsSidebar } from "@/components/docs-sidebar";
 import { source } from "@/lib/source";
 import { SidebarProvider } from "@/registry/new-york-v4/ui/sidebar";
 
-export default function DocsLayout({
-  children,
-}: {
+type Props = {
   children: React.ReactNode;
-}) {
+  params: Promise<{ locale: string }>;
+};
+
+export default async function DocsLayout({ children, params }: Props) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
+  const tree = source.getPageTree(locale);
+
   return (
     <div className="container-wrapper flex flex-1 flex-col px-6 3xl:fixed:px-0 bg-background">
       <SidebarProvider
@@ -17,7 +25,7 @@ export default function DocsLayout({
           } as React.CSSProperties
         }
       >
-        <DocsSidebar tree={source.pageTree} />
+        <DocsSidebar tree={tree} />
         <div className="h-full w-full">{children}</div>
       </SidebarProvider>
     </div>

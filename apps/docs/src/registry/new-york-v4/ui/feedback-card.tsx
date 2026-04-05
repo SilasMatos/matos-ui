@@ -48,10 +48,6 @@ const defaultOptions: FeedbackOption[] = [
 
 type Step = "rating" | "message" | "success";
 
-/* ------------------------------------------------------------------ */
-/*  Animated Check                                                     */
-/* ------------------------------------------------------------------ */
-
 function AnimatedCheck() {
   return (
     <motion.div
@@ -89,10 +85,6 @@ function AnimatedCheck() {
     </motion.div>
   );
 }
-
-/* ------------------------------------------------------------------ */
-/*  Emoji Button                                                       */
-/* ------------------------------------------------------------------ */
 
 type EmojiButtonProps = {
   option: FeedbackOption;
@@ -167,7 +159,6 @@ export function FeedbackCard({
 
   const handleSelect = useCallback((option: FeedbackOption) => {
     setSelected(option);
-    // Small delay so user sees the selection animation
     setTimeout(() => setStep("message"), 280);
   }, []);
 
@@ -195,7 +186,6 @@ export function FeedbackCard({
       {...(props as object)}
     >
       <AnimatePresence mode="wait" initial={false}>
-        {/* ── Step 1: Rating ── */}
         {step === "rating" && (
           <motion.div
             key="rating"
@@ -204,13 +194,12 @@ export function FeedbackCard({
             exit={{ opacity: 0, scale: 0.96 }}
             transition={{ duration: 0.25 }}
           >
-            {/* Header (solto no outer bg-secondary) */}
-            <div className="space-y-1 px-5 pt-5 pb-3">
+            <div className="space-y-1 px-5  ">
               <motion.h3
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.05 }}
-                className="text-sm font-semibold"
+                className="text-base font-semibold"
               >
                 {title}
               </motion.h3>
@@ -218,13 +207,12 @@ export function FeedbackCard({
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="text-[12px] text-muted-foreground"
+                className="text-sm text-muted-foreground"
               >
                 {subtitle}
               </motion.p>
             </div>
 
-            {/* Inner Panel (bg-card inset) */}
             <div className="mx-2 mb-2 overflow-hidden rounded-xl bg-card p-4">
               <div className="flex items-center justify-between">
                 {options.map((option, i) => (
@@ -241,7 +229,6 @@ export function FeedbackCard({
           </motion.div>
         )}
 
-        {/* ── Step 2: Message ── */}
         {step === "message" && selected && (
           <motion.div
             key="message"
@@ -250,14 +237,13 @@ export function FeedbackCard({
             exit={{ opacity: 0, scale: 0.96 }}
             transition={{ duration: 0.25 }}
           >
-            {/* Header with selected emoji badge */}
-            <div className="flex items-start justify-between px-5 pt-5 pb-3">
-              <div className="space-y-1">
+            <div className="flex items-center justify-between px-5  ">
+              <div className="">
                 <motion.h3
                   initial={{ opacity: 0, x: -6 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.05 }}
-                  className="text-sm font-semibold"
+                  className="text-base font-semibold"
                 >
                   Conte-nos mais
                 </motion.h3>
@@ -265,7 +251,7 @@ export function FeedbackCard({
                   initial={{ opacity: 0, x: -6 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.1 }}
-                  className="text-[12px] text-muted-foreground"
+                  className="text-sm text-muted-foreground"
                 >
                   O que podemos melhorar?
                 </motion.p>

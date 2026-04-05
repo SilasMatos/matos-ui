@@ -8,10 +8,10 @@ export const revalidate = false;
 
 export async function GET(
   _req: Request,
-  { params }: RouteContext<"/og/docs/[...slug]">,
+  { params }: { params: Promise<{ locale: string; slug: string[] }> },
 ) {
-  const { slug } = await params;
-  const page = source.getPage(slug.slice(0, -1));
+  const { locale, slug } = await params;
+  const page = source.getPage(slug.slice(0, -1), locale);
   if (!page) notFound();
 
   return new ImageResponse(
@@ -28,8 +28,10 @@ export async function GET(
 }
 
 export function generateStaticParams() {
-  return source.getPages().map((page) => ({
-    lang: page.locale,
-    slug: getPageImage(page).segments,
-  }));
+  return source.getLanguages().flatMap((entry) =>
+    entry.pages.map((page) => ({
+      locale: entry.language,
+      slug: getPageImage(page).segments,
+    })),
+  );
 }
