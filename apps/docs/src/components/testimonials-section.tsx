@@ -115,7 +115,9 @@ export function TestimonialsSection() {
                       <p className="text-sm font-medium text-card-foreground">
                         {item.author}
                       </p>
-                      <p className="text-xs text-muted-foreground">{item.role}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {item.role}
+                      </p>
                     </div>
                   </div>
                   <XformerlyTwitter className="size-5 text-muted-foreground/50" />

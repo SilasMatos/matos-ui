@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 
 import { Link } from "@/i18n/navigation";
-import { getPagesFromFolder, type DocsPageTree } from "@/lib/page-tree";
+import { type DocsPageTree, getPagesFromFolder } from "@/lib/page-tree";
 import {
   Sidebar,
   SidebarContent,

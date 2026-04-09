@@ -5,7 +5,7 @@ import type { ComponentProps } from "react";
 import * as React from "react";
 
 import { Link } from "@/i18n/navigation";
-import { getPagesFromFolder, type DocsPageTree } from "@/lib/page-tree";
+import { type DocsPageTree, getPagesFromFolder } from "@/lib/page-tree";
 import { cn } from "@/lib/utils";
 import { Button } from "@/registry/new-york-v4/ui/button";
 import {
@@ -92,10 +92,7 @@ export function MobileNav({
               if (group.type === "folder") {
                 const pages = getPagesFromFolder(group);
                 return (
-                  <div
-                    key={group.$id}
-                    className="flex flex-col gap-4"
-                  >
+                  <div key={group.$id} className="flex flex-col gap-4">
                     <div className="text-sm font-medium text-muted-foreground">
                       {group.name}
                     </div>
