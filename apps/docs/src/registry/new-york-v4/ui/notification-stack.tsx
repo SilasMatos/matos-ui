@@ -24,9 +24,9 @@ export const notificationStackVariants = tv({
   base: ["relative flex flex-col items-center"],
   variants: {
     size: {
-      sm: "w-[320px]",
-      md: "w-[380px]",
-      lg: "w-[440px]",
+      sm: "w-[300px]",
+      md: "w-[360px]",
+      lg: "w-[420px]",
     },
   },
   defaultVariants: {
@@ -36,7 +36,7 @@ export const notificationStackVariants = tv({
 
 export const notificationCardVariants = tv({
   base: [
-    "w-full overflow-hidden rounded-[20px] border border-border",
+    "w-full overflow-hidden rounded-[16px] border border-border",
     "bg-secondary text-foreground shadow-lg",
   ],
 });
@@ -88,10 +88,7 @@ export function NotificationStackProvider({
   const add = useCallback((notification: Omit<NotificationData, "id">) => {
     counterRef.current += 1;
     const id = `notification-${counterRef.current}-${Date.now()}`;
-    const newNotification: NotificationData = {
-      ...notification,
-      id,
-    };
+    const newNotification: NotificationData = { ...notification, id };
     setNotifications((prev) => [...prev, newNotification]);
     return id;
   }, []);
@@ -117,7 +114,7 @@ export function NotificationStackProvider({
 }
 
 const cardVariants: Variants = {
-  initial: { opacity: 0, y: -40, scale: 0.95 },
+  initial: { opacity: 0, y: -30, scale: 0.96 },
   animate: {
     opacity: 1,
     y: 0,
@@ -131,10 +128,10 @@ const cardVariants: Variants = {
   },
   exit: {
     opacity: 0,
-    y: -60,
-    scale: 0.92,
+    y: -50,
+    scale: 0.93,
     transition: {
-      duration: 0.3,
+      duration: 0.25,
       ease: [0.36, 0, 0.66, -0.56],
     },
   },
@@ -146,7 +143,7 @@ const stackLayerVariants: Variants = {
     opacity: 1,
     scaleX: 1 - i * 0.04,
     scaleY: 1,
-    y: i * 8,
+    y: i * 5, // reduzido de 8 → 5
     transition: {
       type: "spring",
       stiffness: 300,
@@ -195,7 +192,7 @@ export function NotificationStack({
     >
       <div
         className="relative w-full"
-        style={{ paddingBottom: stackCount * 8 }}
+        style={{ paddingBottom: stackCount * 5 }} // reduzido de 8 → 5
       >
         <AnimatePresence>
           {Array.from({ length: stackCount }).map((_, i) => {
@@ -239,25 +236,26 @@ export function NotificationStack({
               style={{ zIndex: stackCount + 1 }}
             >
               <div className={notificationCardVariants()}>
-                <div className="flex items-center justify-between px-4 pt-4 pb-3">
+                {/* Header — mais compacto */}
+                <div className="flex items-center justify-between px-3 pt-2.5 pb-1.5">
                   {topNotification.app && (
                     <motion.span
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: 0.1 }}
-                      className="text-[11px] font-medium uppercase tracking-widest text-muted-foreground"
+                      className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground"
                     >
                       {topNotification.app}
                     </motion.span>
                   )}
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1.5">
                     {topNotification.timestamp && (
                       <motion.span
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.15 }}
-                        className="text-[11px] text-muted-foreground"
+                        className="text-[10px] text-muted-foreground"
                       >
                         {topNotification.timestamp}
                       </motion.span>
@@ -269,17 +267,18 @@ export function NotificationStack({
                       whileTap={{ scale: 0.85 }}
                       onClick={() => onDismiss?.(topNotification.id)}
                       aria-label="Dispensar notificação"
-                      className="flex size-6 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      className="flex size-5 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     >
-                      <X className="size-3.5" strokeWidth={2} />
+                      <X className="size-3" strokeWidth={2} />
                     </motion.button>
                   </div>
                 </div>
 
+                {/* Body — mais compacto */}
                 <div
                   className={twMerge(
-                    " flex items-start gap-3 overflow-hidden rounded-xl  bg-card p-4",
-                    remainingCount === 0 && "mb-2",
+                    "flex items-start gap-2.5 overflow-hidden rounded-xl bg-card px-3 py-2.5 mx-1",
+                    remainingCount === 0 && "mb-1.5",
                   )}
                 >
                   {topNotification.avatar && (
@@ -292,7 +291,7 @@ export function NotificationStack({
                         damping: 20,
                         delay: 0.12,
                       }}
-                      className="mt-0.5 flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-muted"
+                      className="mt-0.5 flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-muted"
                     >
                       {topNotification.avatar}
                     </motion.div>
@@ -313,7 +312,7 @@ export function NotificationStack({
                         initial={{ opacity: 0, x: -6 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.14, duration: 0.25 }}
-                        className="mt-0.5 text-[13px] leading-relaxed text-muted-foreground"
+                        className="text-xs leading-snug text-muted-foreground"
                       >
                         {topNotification.description}
                       </motion.p>
@@ -328,7 +327,7 @@ export function NotificationStack({
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.97 }}
                         onClick={topNotification.action.onClick}
-                        className="mt-2 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                        className="mt-1.5 rounded-md bg-primary px-2.5 py-1 text-[11px] font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       >
                         {topNotification.action.label}
                       </motion.button>
@@ -336,14 +335,15 @@ export function NotificationStack({
                   </div>
                 </div>
 
+                {/* Footer contador */}
                 {remainingCount > 0 && (
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.25 }}
-                    className="flex items-center px-4 pt-2 pb-3"
+                    className="flex items-center px-3 pt-1.5 pb-2"
                   >
-                    <span className="text-xs text-muted-foreground/80">
+                    <span className="text-[11px] text-muted-foreground/80">
                       {remainingCount} more notification
                       {remainingCount > 1 ? "s" : ""}
                     </span>

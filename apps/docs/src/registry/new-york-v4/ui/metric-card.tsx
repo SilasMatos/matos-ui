@@ -162,7 +162,7 @@ function TrendBadge({ value, label }: TrendBadgeProps) {
         delay: 0.5,
       }}
       className={twMerge(
-        "ml-1 flex items-center gap-0.5 rounded-full px-2 py-0.5",
+        "ml-1 flex items-center gap-0.5 rounded-full px-2 ",
         "text-[11px] font-medium",
         isPositive && "bg-chart-2/10 text-chart-2",
         !isPositive && !isNeutral && "bg-destructive/10 text-destructive",
