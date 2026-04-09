@@ -68,7 +68,7 @@ export function OrbitIcons() {
             <div
               className="absolute"
               style={{
-                top: "50%",
+                top: "60%",
                 left: "50%",
                 transform: `translate(-50%, -50%) translateX(${icon.orbit}px)`,
               }}

@@ -24,8 +24,8 @@ export function SiteFooter() {
     <footer className="relative overflow-hidden bg-card">
       <div className="mx-auto max-w-5xl px-6 pt-16 pb-8">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 30, filter: "blur(6px)" }}
+          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.7, ease: [0.25, 0.4, 0.25, 1] }}
           className="grid grid-cols-1 gap-12 sm:grid-cols-[1fr_auto_auto] sm:gap-16"
@@ -93,10 +93,10 @@ export function SiteFooter() {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0, scale: 0.9, filter: "blur(10px)" }}
+          whileInView={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
           viewport={{ once: true, margin: "-30px" }}
-          transition={{ duration: 0.8, ease: [0.25, 0.4, 0.25, 1] }}
+          transition={{ duration: 1.2, ease: [0.25, 0.4, 0.25, 1] }}
           className="mt-16 mb-12 select-none text-center"
         >
           <h2 className="font-logo text-6xl font-bold tracking-tighter text-foreground/5 sm:text-8xl md:text-9xl">
