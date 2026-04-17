@@ -1,11 +1,11 @@
 ---
 title: Accordion
-description: Área expansível com trigger e conteúdo animado.
+description: Expandable area with trigger and animated content..
 ---
 
 <ComponentPreview name="accordion-demo" />
 
-## Instalação
+## Installation
 
 <CodeTabs>
 
@@ -29,10 +29,7 @@ description: Área expansível com trigger e conteúdo animado.
 
 <Step>Copy and paste the following code into your project.</Step>
 
-<ComponentSource
-  name="accordion"
-  title="components/matos-ui/accordion.tsx"
-/>
+<ComponentSource name="accordion" title="components/matos-ui/accordion.tsx" />
 
 <Step>Update the import paths to match your project setup.</Step>
 
@@ -49,16 +46,16 @@ import {
   Accordion,
   AccordionItem,
   AccordionTrigger,
-  AccordionContent,
-} from "@/components/matos-ui/accordion"
+  AccordionContent
+} from '@/components/matos-ui/accordion'
 ```
 
 ```tsx
 <Accordion>
   <AccordionItem value="item-1">
-    <AccordionTrigger value="item-1">Título</AccordionTrigger>
+    <AccordionTrigger value="item-1">Title</AccordionTrigger>
     <AccordionContent value="item-1">
-      Conteúdo expansível com animação.
+      Expandable content with animation.
     </AccordionContent>
   </AccordionItem>
 </Accordion>
@@ -66,4 +63,4 @@ import {
 
 ## Reference
 
-Componentes compound: `Accordion`, `AccordionItem`, `AccordionTrigger`, `AccordionContent`. Cada um aceita props de seu elemento raiz (`div` ou `button`) além de `value` e `children` onde aplicável.
+Compound components: `Accordion`, `AccordionItem`, `AccordionTrigger`, `AccordionContent`. Each accepts props from its root element (`div` or `button`) plus `value` and `children` where applicable.

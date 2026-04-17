@@ -1,6 +1,6 @@
 ---
 title: File Upload
-description: Componente de upload de arquivos com drag-and-drop, filtro por tipo, limite de tamanho e quantidade, suportando modos únicos e múltiplos.
+description: File upload component with drag-and-drop, type filtering, size and count limits, supporting single and multiple modes.
 ---
 
 <ComponentPreview name="file-upload-demo" chromeless align="start" />
@@ -24,30 +24,30 @@ import { FileUpload } from '@/components/matos-ui/file-upload'
 
 ### Props
 
-| Prop | Type | Default |
-| --- | --- | --- |
-| `files` | `FileUploadFile[]` | — (modo não controlado se omitido) |
-| `onFilesChange` | `(files: FileUploadFile[]) => void` | — |
-| `accept` | `string` | — |
-| `multiple` | `boolean` | `false` |
-| `maxSize` | `number` | — |
-| `maxFiles` | `number` | — |
-| `title` | `string` | `"Arraste e solte seus arquivos"` |
-| `description` | `string` | `"ou clique para selecionar um arquivo"` |
-| `disabled` | `boolean` | `false` |
-| `size` | `"sm" \| "md" \| "lg"` | `"md"` |
-| `variant` | `"default" \| "outline" \| "ghost"` | `"default"` |
+| Prop            | Type                                | Default                       |
+| --------------- | ----------------------------------- | ----------------------------- |
+| `files`         | `FileUploadFile[]`                  | — (uncontrolled if omitted)   |
+| `onFilesChange` | `(files: FileUploadFile[]) => void` | —                             |
+| `accept`        | `string`                            | —                             |
+| `multiple`      | `boolean`                           | `false`                       |
+| `maxSize`       | `number`                            | —                             |
+| `maxFiles`      | `number`                            | —                             |
+| `title`         | `string`                            | `"Drag and drop your files"`  |
+| `description`   | `string`                            | `"or click to select a file"` |
+| `disabled`      | `boolean`                           | `false`                       |
+| `size`          | `"sm" \| "md" \| "lg"`              | `"md"`                        |
+| `variant`       | `"default" \| "outline" \| "ghost"` | `"default"`                   |
 
 ### Interfaces
 
 ```ts
 export interface FileUploadFile {
-  file: File;
-  id: string;
-  error?: string;
+  file: File
+  id: string
+  error?: string
 }
 ```
 
-O `FileUpload` repassa props clássicas de `<div role="button">`. Internamente usa um `<input type="file" className="sr-only" />`.
+`FileUpload` forwards standard props to `<div role="button">`. Internally it renders an `<input type="file" className="sr-only" />`.
 
-Também exportado: **`fileUploadVariants`** com slots `root` / `icon` / `title` / `description` / `fileList` / `fileItem` / `fileName` / `fileSize` / `removeButton` / `errorText` para fácil customização via `tailwind-variants`.
+Also exported: **`fileUploadVariants`** with slots `root` / `icon` / `title` / `description` / `fileList` / `fileItem` / `fileName` / `fileSize` / `removeButton` / `errorText` for easy customisation via `tailwind-variants`.

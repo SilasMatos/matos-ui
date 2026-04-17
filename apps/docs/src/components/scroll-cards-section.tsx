@@ -35,13 +35,18 @@ function Card({ card, index }: { card: CardData; index: number }) {
   return (
     <motion.div
       className={`relative flex flex-col rounded-2xl p-7 ${card.heightClass} group overflow-hidden border border-border/40 bg-muted/50`}
-      style={{ marginTop: card.yOffset }}
+      style={{ marginTop: card.yOffset, transformPerspective: 800 }}
       custom={index}
       variants={cardVariants}
       initial="hidden"
       whileInView="show"
       viewport={{ once: true, margin: "-20%" }}
-      whileHover={{ scale: 1.04, y: -6 }}
+      whileHover={{
+        scale: 1.03,
+        y: -8,
+        rotateX: -2,
+        transition: { type: "spring", stiffness: 300, damping: 20 },
+      }}
     >
       <div className="absolute inset-0 bg-linear-to-br from-foreground/3 to-transparent opacity-0 transition duration-500 group-hover:opacity-100" />
       <div className="absolute inset-0 rounded-2xl border border-border/20 transition duration-500 group-hover:border-border/60" />
@@ -49,10 +54,14 @@ function Card({ card, index }: { card: CardData; index: number }) {
       <div className="flex flex-col h-full">
         <motion.span
           className="mb-2 text-6xl font-bold text-foreground/10"
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, x: -30, filter: "blur(8px)" }}
+          whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
           viewport={{ once: true }}
-          transition={{ delay: index * 0.2 + 0.3 }}
+          transition={{
+            delay: index * 0.2 + 0.3,
+            duration: 0.7,
+            ease: [0.25, 0.4, 0.25, 1],
+          }}
         >
           {card.number}
         </motion.span>
@@ -89,7 +98,7 @@ function Card({ card, index }: { card: CardData; index: number }) {
         )}
         {card.id === "card-03" && (
           <div className="relative mt-auto pt-6">
-            <div className="absolute -bottom-35 left-1/2 w-full -translate-x-1/2">
+            <div className="absolute -bottom-60 left-2/3 w-full -translate-x-1/2">
               <MiniDataTable />
             </div>
           </div>
@@ -120,8 +129,9 @@ export function ScrollCardsSection() {
   const bgOpacity = useTransform(scrollYProgress, [0, 0.3], [0, 1]);
 
   return (
-    <section className="relative overflow-hidden bg-card">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,var(--foreground)_0%,transparent_60%)] opacity-[0.03]" />
+    <section className="relative overflow-hidden bg-black">
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-size-[64px_64px]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.04),transparent_60%)]" />
 
       <div
         ref={sectionRef}
@@ -134,23 +144,59 @@ export function ScrollCardsSection() {
 
         <div className="relative z-10">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial="hidden"
+            whileInView="show"
             viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6 }}
+            variants={{
+              hidden: { opacity: 0 },
+              show: { opacity: 1, transition: { staggerChildren: 0.15 } },
+            }}
             className="mb-14 text-center"
           >
-            <span className="mb-4 inline-block rounded-full border border-border/60 bg-muted/50 px-4 py-1.5 text-xs font-medium uppercase tracking-widest text-muted-foreground">
+            <motion.span
+              variants={{
+                hidden: { opacity: 0, y: 20, filter: "blur(4px)" },
+                show: {
+                  opacity: 1,
+                  y: 0,
+                  filter: "blur(0px)",
+                  transition: { duration: 0.5 },
+                },
+              }}
+              className="mb-4 inline-block rounded-full border border-border/60 bg-muted/50 px-4 py-1.5 text-xs font-medium uppercase tracking-widest text-muted-foreground"
+            >
               {t("badge")}
-            </span>
+            </motion.span>
 
-            <h2 className="mt-4 text-3xl font-semibold tracking-tight text-card-foreground md:text-4xl">
+            <motion.h2
+              variants={{
+                hidden: { opacity: 0, y: 20, filter: "blur(4px)" },
+                show: {
+                  opacity: 1,
+                  y: 0,
+                  filter: "blur(0px)",
+                  transition: { duration: 0.5 },
+                },
+              }}
+              className="mt-4 text-3xl font-semibold tracking-tight text-card-foreground md:text-4xl"
+            >
               {t("title")}
-            </h2>
+            </motion.h2>
 
-            <p className="mx-auto mt-4 max-w-md text-base leading-relaxed text-muted-foreground">
+            <motion.p
+              variants={{
+                hidden: { opacity: 0, y: 20, filter: "blur(4px)" },
+                show: {
+                  opacity: 1,
+                  y: 0,
+                  filter: "blur(0px)",
+                  transition: { duration: 0.5 },
+                },
+              }}
+              className="mx-auto mt-4 max-w-md text-base leading-relaxed text-muted-foreground"
+            >
               {t("subtitle")}
-            </p>
+            </motion.p>
           </motion.div>
 
           <div className="grid grid-cols-1 items-end gap-6 sm:grid-cols-2 md:grid-cols-3">

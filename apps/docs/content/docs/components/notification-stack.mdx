@@ -1,6 +1,6 @@
 ---
 title: Notification Stack
-description: Cards de notificação empilhados com animações spring — swipe para dispensar, camadas visuais de profundidade e avatares.
+description: Stacked notification cards with spring animations — swipe to dismiss, visual depth layers and avatars.
 ---
 
 <ComponentPreview name="notification-stack-demo" chromeless align="start" />
@@ -10,7 +10,7 @@ description: Cards de notificação empilhados com animações spring — swipe 
 ```tsx
 import {
   NotificationStack,
-  type NotificationData,
+  type NotificationData
 } from '@/components/matos-ui/notification-stack'
 ```
 
@@ -21,21 +21,21 @@ function dismiss(id: string) {
   setNotifications(prev => prev.filter(n => n.id !== id))
 }
 
-<NotificationStack
+;<NotificationStack
   notifications={notifications}
   onDismiss={dismiss}
   size="md"
 />
 ```
 
-### Com Provider
+### With Provider
 
-Para disparar notificações de qualquer lugar da aplicação:
+To trigger notifications from anywhere in the app:
 
 ```tsx
 import {
   NotificationStackProvider,
-  useNotificationStack,
+  useNotificationStack
 } from '@/components/matos-ui/notification-stack'
 ```
 
@@ -46,19 +46,19 @@ import {
 ```
 
 ```tsx
-function MeuComponente() {
+function MyComponent() {
   const { add, dismiss, dismissAll } = useNotificationStack()
 
   function handleClick() {
     add({
       app: 'Vercel',
-      title: 'Deploy concluído',
-      description: 'Projeto implantado com sucesso.',
-      timestamp: 'agora',
+      title: 'Deploy complete',
+      description: 'Project deployed successfully.',
+      timestamp: 'just now'
     })
   }
 
-  return <button onClick={handleClick}>Notificar</button>
+  return <button onClick={handleClick}>Notify</button>
 }
 ```
 
@@ -66,29 +66,29 @@ function MeuComponente() {
 
 ### NotificationStack Props
 
-| Prop | Tipo | Padrão | Descrição |
-| --- | --- | --- | --- |
-| `notifications` | `NotificationData[]` | — | Lista de notificações. |
-| `onDismiss` | `(id: string) => void` | — | Callback ao dispensar. |
-| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Largura do stack. |
-| `maxStackLayers` | `number` | `3` | Camadas visíveis atrás do card principal. |
+| Prop             | Type                   | Default | Description                         |
+| ---------------- | ---------------------- | ------- | ----------------------------------- |
+| `notifications`  | `NotificationData[]`   | —       | List of notifications.              |
+| `onDismiss`      | `(id: string) => void` | —       | Callback when dismissed.            |
+| `size`           | `"sm" \| "md" \| "lg"` | `"md"`  | Stack width.                        |
+| `maxStackLayers` | `number`               | `3`     | Visible layers behind the top card. |
 
 ### NotificationData
 
-| Campo | Tipo | Descrição |
-| --- | --- | --- |
-| `id` | `string` | Identificador único. |
-| `app` | `string?` | Nome do app (exibido como label uppercase). |
-| `title` | `string` | Título / nome do remetente. |
-| `description` | `string?` | Mensagem da notificação. |
-| `avatar` | `ReactNode?` | Avatar ou ícone à esquerda. |
-| `timestamp` | `string?` | Texto de tempo (ex.: "2 min atrás"). |
-| `action` | `{ label, onClick }?` | Botão de ação na notificação. |
+| Field         | Type                  | Description                              |
+| ------------- | --------------------- | ---------------------------------------- |
+| `id`          | `string`              | Unique identifier.                       |
+| `app`         | `string?`             | App name (displayed as uppercase label). |
+| `title`       | `string`              | Title / sender name.                     |
+| `description` | `string?`             | Notification message.                    |
+| `avatar`      | `ReactNode?`          | Avatar or icon on the left.              |
+| `timestamp`   | `string?`             | Time text (e.g., "2 min ago").           |
+| `action`      | `{ label, onClick }?` | Action button inside the notification.   |
 
-### Interações
+### Interactions
 
-- **Arrastar** o card para cima, baixo ou lados para dispensar
-- **Clique no ×** dispensa imediatamente
-- Camadas atrás se reempilham automaticamente com animação spring
+- **Drag** the card up, down, or sideways to dismiss
+- **Click ×** to dismiss immediately
+- Background layers automatically re-stack with a spring animation
 
-Também exportados: `notificationStackVariants`, `notificationCardVariants` e todos os tipos.
+Also exported: `notificationStackVariants`, `notificationCardVariants` and all types.

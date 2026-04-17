@@ -1,6 +1,6 @@
----
+﻿---
 title: Detail Panel
-description: Painel animado em partes compostas — cabeçalho, conteúdo, rodapé e blocos opcionais.
+description: Animated panel with compound parts — header, content, footer, and optional blocks.
 ---
 
 <ComponentPreview name="detail-panel-demo" chromeless align="start" />
@@ -20,43 +20,43 @@ import {
   DetailPanelAttachments,
   DetailPanelAttachment,
   DetailPanelFooterAction,
-  DetailPanelSeparator,
+  DetailPanelSeparator
 } from '@/components/matos-ui/detail-panel'
 ```
 
 ```tsx
 <DetailPanel open={open} onClose={() => setOpen(false)}>
-  <DetailPanelHeader>Título</DetailPanelHeader>
+  <DetailPanelHeader>Title</DetailPanelHeader>
   <DetailPanelContent>
-    <DetailPanelHighlight label="Rótulo" primary="Principal" secondary=" extra" />
+    <DetailPanelHighlight label="Label" primary="Primary" secondary=" extra" />
     <DetailPanelSeparator />
     <DetailPanelRows>
-      <DetailPanelRow label="Campo" value="Valor" />
+      <DetailPanelRow label="Field" value="Value" />
     </DetailPanelRows>
   </DetailPanelContent>
   <DetailPanelFooter>
-    <DetailPanelFooterAction ariaLabel="Ação" icon={<Icon />} />
+    <DetailPanelFooterAction ariaLabel="Action" icon={<Icon />} />
   </DetailPanelFooter>
 </DetailPanel>
 ```
 
 ## Reference
 
-### Partes
+### Parts
 
-| Componente | Função |
-| --- | --- |
-| `DetailPanel` | Raiz: `open`, `onClose`, animação; aceita props de `motion.div`. |
-| `DetailPanelHeader` | Título (`children`) e botão fechar quando há `onClose` no painel. |
-| `DetailPanelContent` | Área interna com borda e fundo (`bg-background`). |
-| `DetailPanelSeparator` | Linha divisória animada. |
-| `DetailPanelHighlight` | Bloco de destaque (rótulo + texto grande). |
-| `DetailPanelRows` | Lista com stagger; envolve vários `DetailPanelRow`. |
-| `DetailPanelRow` | Linha ícone + label + valor. |
-| `DetailPanelNote` | Bloco de nota (`children` = corpo). |
-| `DetailPanelAttachments` | Cabeçalho “Anexos” + `children`. |
-| `DetailPanelAttachment` | Uma linha de anexo. |
-| `DetailPanelFooter` | Barra inferior; `children` costumam ser `DetailPanelFooterAction`. |
-| `DetailPanelFooterAction` | Botão de ícone na barra. |
+| Component                 | Role                                                                 |
+| ------------------------- | -------------------------------------------------------------------- |
+| `DetailPanel`             | Root: `open`, `onClose`, animation; accepts props from `motion.div`. |
+| `DetailPanelHeader`       | Title (`children`) and close button when `onClose` is present.       |
+| `DetailPanelContent`      | Inner area with border and background (`bg-background`).             |
+| `DetailPanelSeparator`    | Animated divider line.                                               |
+| `DetailPanelHighlight`    | Highlight block (label + large text).                                |
+| `DetailPanelRows`         | Staggered list; wraps multiple `DetailPanelRow`.                     |
+| `DetailPanelRow`          | Icon + label + value row.                                            |
+| `DetailPanelNote`         | Note block (`children` = body).                                      |
+| `DetailPanelAttachments`  | "Attachments" heading + `children`.                                  |
+| `DetailPanelAttachment`   | A single attachment row.                                             |
+| `DetailPanelFooter`       | Bottom bar; `children` are typically `DetailPanelFooterAction`.      |
+| `DetailPanelFooterAction` | Icon button in the bar.                                              |
 
-Também exportados: `detailPanelVariants` e tipos (`DetailPanelProps`, `DetailPanelHighlightProps`, etc.).
+Also exported: `detailPanelVariants` and types (`DetailPanelProps`, `DetailPanelHighlightProps`, etc.).

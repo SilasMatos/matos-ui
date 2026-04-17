@@ -1,11 +1,11 @@
 ---
 title: Feedback Card
-description: Um card de avaliação super interativo com animações morphing de layout, emojis e SVG animado baseado no padrão Inset Card UI.
+description: A highly interactive rating card with layout morphing animations, emojis, and animated SVG based on the Inset Card UI pattern.
 ---
 
 <ComponentPreview name="feedback-card-demo" chromeless align="center" />
 
-## Uso
+## Usage
 
 ```tsx
 import { FeedbackCard } from '@/components/matos-ui/feedback-card'
@@ -13,28 +13,28 @@ import { FeedbackCard } from '@/components/matos-ui/feedback-card'
 
 ```tsx
 <FeedbackCard
-  onSubmit={(data) => {
-    console.log("Nota escolhida:", data.rating)
-    console.log("Mensagem opcional:", data.message)
+  onSubmit={data => {
+    console.log('Nota escolhida:', data.rating)
+    console.log('Mensagem opcional:', data.message)
   }}
 />
 ```
 
-## Propriedades
+## Props
 
-| Prop | Tipo | Padrão | Descrição |
-| --- | --- | --- | --- |
-| `title` | `string` | `"Como foi sua experiência?"` | Título no estado inicial. |
-| `subtitle` | `string` | `"Sua opinião nos ajuda a melhorar"` | Subtítulo no estado inicial. |
-| `options` | `FeedbackOption[]` | Padrão interno | Opções com carinhas, labels e values. |
-| `onSubmit` | `(data) => void` | — | Executado ao clicar em "Enviar feedback". |
-| `successTitle` | `string` | `"Obrigado pelo feedback!"` | Título do painel de sucesso. |
-| `successDescription` | `string` | `"Sua avaliação foi enviada com sucesso."` | Descrição do painel final. |
-| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Define a largura máxima do componente. |
+| Prop                 | Type                   | Default                                     | Description                                    |
+| -------------------- | ---------------------- | ------------------------------------------- | ---------------------------------------------- |
+| `title`              | `string`               | `"How was your experience?"`                | Title in the initial state.                    |
+| `subtitle`           | `string`               | `"Your feedback helps us improve"`          | Subtitle in the initial state.                 |
+| `options`            | `FeedbackOption[]`     | Internal default                            | Options with emoji faces, labels and values.   |
+| `onSubmit`           | `(data) => void`       | —                                           | Called when the user clicks "Submit feedback". |
+| `successTitle`       | `string`               | `"Thank you for your feedback!"`            | Title of the success panel.                    |
+| `successDescription` | `string`               | `"Your rating was submitted successfully."` | Description of the final panel.                |
+| `size`               | `"sm" \| "md" \| "lg"` | `"md"`                                      | Sets the maximum width of the component.       |
 
-### Transições Fluidas (Morphing)
+### Fluid Transitions (Morphing)
 
-Este componente usa a tag `layout` do **Framer Motion** para realizar uma transição responsiva impecável entre cada uma de suas etapas. Nenhuma montagem de DOM acontece de forma brusca, tudo é guiado por uma animação `spring`.
+This component uses **Framer Motion**'s `layout` prop to achieve seamless transitions between each step. No DOM mounting happens abruptly — everything is driven by a `spring` animation.
 
-- O emoji selecionado migra naturalmente para o lado superior (`layoutId`) da caixa com um subtil *shared element transition*.
-- A tag SVG do tick final se escreve "sozinha" usando a animação `pathLength` da engine do Framer Motion.
+- The selected emoji naturally migrates to the top of the card (`layoutId`) via a subtle _shared element transition_.
+- The final SVG checkmark draws itself using the `pathLength` animation from the Framer Motion engine.

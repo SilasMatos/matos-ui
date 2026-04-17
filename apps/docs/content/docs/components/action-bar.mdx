@@ -1,6 +1,6 @@
 ---
 title: Action Bar
-description: Barra de ação fixa para confirmar exclusões.
+description: Fixed action bar for confirming deletions.
 ---
 
 <ComponentPreview name="action-bar-demo" />
@@ -13,7 +13,7 @@ import { ActionBar } from '@/components/matos-ui/action-bar'
 
 ```tsx
 <ActionBar
-  subject="Meu Workspace"
+  subject="My Workspace"
   tone="destructive"
   placement="bottomCenter"
   actions={{
@@ -36,4 +36,4 @@ import { ActionBar } from '@/components/matos-ui/action-bar'
 | `size`      | `"sm" \| "md"`                                                          | `"md"`           |
 | `actions`   | `{ onConfirm: () => void; onCancel: () => void; isDeleting?: boolean }` | —                |
 
-O `ActionBar` também aceita todas as props de `<div>`.
+`ActionBar` also accepts all props from `<div>`.

@@ -1,8 +1,8 @@
 "use client";
 
+import { AnimatePresence, motion, type Variants } from "framer-motion";
 import { MenuIcon } from "lucide-react";
 import * as React from "react";
-
 import { cn } from "@/lib/utils";
 import { Button } from "@/registry/new-york-v4/ui/button";
 import {
@@ -29,23 +29,35 @@ function useActiveItem(itemIds: string[]) {
 
     for (const id of itemIds ?? []) {
       const element = document.getElementById(id);
-      if (element) {
-        observer.observe(element);
-      }
+      if (element) observer.observe(element);
     }
 
     return () => {
       for (const id of itemIds ?? []) {
         const element = document.getElementById(id);
-        if (element) {
-          observer.unobserve(element);
-        }
+        if (element) observer.unobserve(element);
       }
     };
   }, [itemIds]);
 
   return activeId;
 }
+
+const containerVariants: Variants = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.05, delayChildren: 0.1 },
+  },
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, x: 8 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.2, ease: "easeOut" },
+  },
+};
 
 export function DocsTableOfContents({
   toc,
@@ -67,9 +79,7 @@ export function DocsTableOfContents({
   );
   const activeHeading = useActiveItem(itemIds);
 
-  if (!toc?.length) {
-    return null;
-  }
+  if (!toc?.length) return null;
 
   if (variant === "dropdown") {
     return (
@@ -93,9 +103,7 @@ export function DocsTableOfContents({
             <DropdownMenuItem
               key={item.url}
               render={<a href={item.url}>{item.title}</a>}
-              onClick={() => {
-                setOpen(false);
-              }}
+              onClick={() => setOpen(false)}
               data-depth={item.depth}
               className="data-[depth=3]:pl-6 data-[depth=4]:pl-8"
             />
@@ -106,21 +114,66 @@ export function DocsTableOfContents({
   }
 
   return (
-    <div className={cn("flex flex-col gap-2 p-4 pt-0 text-sm", className)}>
-      <p className="sticky top-0 h-6 bg-background text-xs font-medium text-muted-foreground">
-        On This Page
-      </p>
-      {toc.map((item) => (
-        <a
-          key={item.url}
-          href={item.url}
-          className="text-[0.8rem] text-muted-foreground no-underline transition-colors hover:text-foreground data-[active=true]:font-medium data-[active=true]:text-foreground data-[depth=3]:pl-4 data-[depth=4]:pl-6"
-          data-active={item.url === `#${activeHeading}`}
-          data-depth={item.depth}
+    <div
+      className={cn("flex flex-col pt-4 text-sm overflow-hidden", className)}
+    >
+      <motion.p
+        className="mb-3 px-3 text-[0.8rem]  font-semibold uppercase tracking-wider text-muted-foreground/60"
+        initial={{ opacity: 0, y: -4 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.25, ease: "easeOut" }}
+      >
+        On this page
+      </motion.p>
+
+      <div className="border-l border-border">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="flex flex-col"
         >
-          {item.title}
-        </a>
-      ))}
+          {toc.map((item) => {
+            const isActive = item.url === `#${activeHeading}`;
+            return (
+              <motion.a
+                key={item.url}
+                href={item.url}
+                variants={itemVariants}
+                className={cn(
+                  "relative -ml-px flex items-center border-l-2 py-1 pr-3 text-[0.78rem] leading-snug no-underline transition-colors",
+                  item.depth === 3 && "pl-5",
+                  item.depth === 4 && "pl-7",
+                  item.depth <= 2 && "pl-3",
+                  isActive
+                    ? "font-medium text-foreground"
+                    : "border-transparent text-muted-foreground hover:text-foreground",
+                )}
+                whileHover={{ x: 2 }}
+                transition={{ duration: 0.15 }}
+              >
+                {/* Animated border indicator using layoutId */}
+                <AnimatePresence>
+                  {isActive && (
+                    <motion.span
+                      layoutId="toc-active-line"
+                      className="absolute -left-[2px] top-0 h-full w-[2px] rounded-full bg-foreground"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{
+                        layout: { type: "spring", stiffness: 380, damping: 32 },
+                        opacity: { duration: 0.15 },
+                      }}
+                    />
+                  )}
+                </AnimatePresence>
+                {item.title}
+              </motion.a>
+            );
+          })}
+        </motion.div>
+      </div>
     </div>
   );
 }
