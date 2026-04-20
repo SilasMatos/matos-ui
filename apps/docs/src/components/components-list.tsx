@@ -8,7 +8,7 @@ export async function ComponentsList() {
   const locale = await getLocale();
   const tree = source.getPageTree(locale);
   const componentsFolder = tree.children.find(
-    (page) => page.$id === "components",
+    (page) => page.$id?.split(":").at(-1) === "components",
   );
 
   if (componentsFolder?.type !== "folder") {

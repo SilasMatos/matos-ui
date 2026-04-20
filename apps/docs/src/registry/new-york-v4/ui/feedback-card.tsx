@@ -368,7 +368,7 @@ export function FeedbackCard({
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={handleReset}
-                className="mt-1 text-xs text-muted-foreground/70 transition-colors hover:text-foreground"
+                className="mt-1 text-xs text-muted-foreground/70 transition-colors hover:text-foreground border border-muted rounded-lg px-3 py-1 hover:border-foreground/30"
               >
                 Enviar outro feedback
               </motion.button>
