@@ -65,13 +65,13 @@ export function HeroSection() {
         {floatingBlocks.map((block, i) => (
           <motion.div
             key={`${block.left}-${block.top}`}
-            className="absolute rounded-lg border border-white/10"
+            className="absolute rounded-lg border border-foreground/10"
             style={{
               left: block.left,
               top: block.top,
               width: block.w,
               height: block.h,
-              backgroundColor: `rgba(255,255,255,${block.o})`,
+              backgroundColor: `rgba(var(--hero-block-rgb),${block.o})`,
             }}
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{
@@ -95,28 +95,28 @@ export function HeroSection() {
 
       <div className="pointer-events-none absolute inset-6 md:inset-12 lg:inset-16">
         <motion.div
-          className="absolute -left-px -top-px h-24 w-24 border-l border-t border-white/20"
+          className="absolute -left-px -top-px h-24 w-24 border-l border-t border-foreground/20"
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.4, ease: [0.25, 0.4, 0.25, 1] }}
           style={{ transformOrigin: "top left" }}
         />
         <motion.div
-          className="absolute -right-px -top-px h-24 w-24 border-r border-t border-white/20"
+          className="absolute -right-px -top-px h-24 w-24 border-r border-t border-foreground/20"
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.5, ease: [0.25, 0.4, 0.25, 1] }}
           style={{ transformOrigin: "top right" }}
         />
         <motion.div
-          className="absolute -bottom-px -left-px h-24 w-24 border-b border-l border-white/20"
+          className="absolute -bottom-px -left-px h-24 w-24 border-b border-l border-foreground/20"
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.6, ease: [0.25, 0.4, 0.25, 1] }}
           style={{ transformOrigin: "bottom left" }}
         />
         <motion.div
-          className="absolute -bottom-px -right-px h-24 w-24 border-b border-r border-white/20"
+          className="absolute -bottom-px -right-px h-24 w-24 border-b border-r border-foreground/20"
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.7, ease: [0.25, 0.4, 0.25, 1] }}
@@ -127,7 +127,7 @@ export function HeroSection() {
           {Array.from({ length: EDGE_LINES }).map((_, i) => (
             <motion.div
               key={`t-${String(i)}`}
-              className="h-20 w-px origin-top bg-linear-to-b from-white/25 to-transparent"
+              className="h-20 w-px origin-top bg-linear-to-b from-foreground/25 to-transparent"
               initial={{ scaleY: 0 }}
               animate={{ scaleY: 1 }}
               transition={{
@@ -143,7 +143,7 @@ export function HeroSection() {
           {Array.from({ length: EDGE_LINES }).map((_, i) => (
             <motion.div
               key={`b-${String(i)}`}
-              className="h-20 w-px origin-bottom bg-linear-to-t from-white/25 to-transparent"
+              className="h-20 w-px origin-bottom bg-linear-to-t from-foreground/25 to-transparent"
               initial={{ scaleY: 0 }}
               animate={{ scaleY: 1 }}
               transition={{
@@ -156,7 +156,7 @@ export function HeroSection() {
         </div>
       </div>
 
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_40%,rgba(255,255,255,0.03),transparent_70%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_40%,rgba(0,0,0,0.03),transparent_70%)] dark:bg-[radial-gradient(ellipse_60%_40%_at_50%_40%,rgba(255,255,255,0.03),transparent_70%)]" />
 
       <motion.div
         variants={container}
@@ -164,32 +164,42 @@ export function HeroSection() {
         animate="show"
         className="relative z-10 flex max-w-4xl flex-col items-center gap-6 text-center"
       >
-        <motion.div variants={fadeUp}>
-          <Link
-            href="/docs"
-            className="group inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/4 px-4 py-1.5 text-sm text-white/60 backdrop-blur-sm transition-colors hover:border-white/20 hover:bg-white/8"
-          >
-            <span className="relative flex size-2">
-              <span className="absolute inline-flex size-full animate-ping rounded-full bg-white/40" />
-              <span className="relative inline-flex size-2 rounded-full bg-white" />
-            </span>
-            <span>{t("badge")}</span>
-            <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
-          </Link>
+        <motion.div
+          variants={fadeUp}
+          whileHover={{
+            scale: 1.05,
+            borderColor: "rgba(var(--hero-block-rgb), 0.5)",
+            transition: { duration: 0.3, ease: "easeInOut" },
+          }}
+          className="group inline-flex items-center gap-2.5 rounded-full border border-foreground/10 bg-foreground/4 px-4 py-1.5 text-sm text-foreground/60 backdrop-blur-sm transition-colors hover:border-foreground/20 hover:bg-foreground/8"
+        >
+          <span className="relative flex size-2">
+            <span
+              className="absolute inline-flex size-full animate-spin rounded-full border-2 border-dashed border-foreground/40"
+              style={{ animationDuration: "2s" }}
+            />
+            <span
+              className="absolute inline-flex size-full animate-ping rounded-full bg-foreground/40"
+              style={{ animationDuration: "1.5s" }}
+            />
+            <span className="relative inline-flex size-2 rounded-full bg-foreground" />
+          </span>
+          <span>{t("badge")}</span>
+          <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
         </motion.div>
 
         <motion.div variants={fadeUp} className="flex flex-col gap-4">
           <h1 className="text-5xl font-bold tracking-tight md:text-7xl lg:text-8xl">
-            <span className="text-white/40">{t("titleLine1")} </span>
+            <span className="text-foreground/40">{t("titleLine1")} </span>
             <br className="hidden sm:block" />
-            <span className="text-white/40">{t("titleLine2")} </span>
-            <span className="text-white">{t("brand")}</span>
+            <span className="text-foreground/40">{t("titleLine2")} </span>
+            <span className="text-foreground">{t("brand")}</span>
           </h1>
         </motion.div>
 
         <motion.p
           variants={fadeUp}
-          className="max-w-xl text-base leading-relaxed text-white/50 md:text-lg"
+          className="max-w-xl text-base leading-relaxed text-foreground/50 md:text-lg"
         >
           {t("description")}
         </motion.p>
@@ -202,7 +212,7 @@ export function HeroSection() {
             nativeButton={false}
             variant="default"
             size="lg"
-            className="group gap-2 rounded-full bg-white px-6 text-sm text-black hover:bg-white/90"
+            className="group gap-2 rounded-full bg-foreground px-6 text-sm text-background hover:bg-foreground/90"
             render={
               <Link href="/docs">
                 <span>{t("getStarted")}</span>
@@ -214,7 +224,7 @@ export function HeroSection() {
             nativeButton={false}
             variant="outline"
             size="lg"
-            className="group gap-2 rounded-full border-white/15 bg-transparent px-6 text-sm text-white/80 hover:border-white/30 hover:bg-white/5"
+            className="group gap-2 rounded-full border-foreground/15 bg-transparent px-6 text-sm text-foreground/80 hover:border-foreground/30 hover:bg-foreground/5"
             render={
               <Link href="/docs/components">
                 <span>{t("components")}</span>
@@ -234,10 +244,10 @@ export function HeroSection() {
               variants={scaleIn}
               whileHover={{
                 scale: 1.06,
-                backgroundColor: "rgba(255,255,255,0.06)",
+                backgroundColor: "rgba(var(--hero-block-rgb),0.06)",
                 transition: { type: "spring", stiffness: 400, damping: 20 },
               }}
-              className="flex cursor-default items-center gap-2 rounded-lg border border-white/6 bg-white/3 px-4 py-2.5 text-sm text-white/50 backdrop-blur-sm"
+              className="flex cursor-default items-center gap-2 rounded-lg border border-foreground/6 bg-foreground/3 px-4 py-2.5 text-sm text-foreground/50 backdrop-blur-sm"
             >
               <Icon className="size-4" />
               <span>{label}</span>
@@ -246,7 +256,7 @@ export function HeroSection() {
         </motion.div>
       </motion.div>
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-linear-to-t from-black to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-linear-to-t from-background to-transparent" />
     </section>
   );
 }

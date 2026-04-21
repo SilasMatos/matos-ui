@@ -129,10 +129,7 @@ export function ScrollCardsSection() {
   const bgOpacity = useTransform(scrollYProgress, [0, 0.3], [0, 1]);
 
   return (
-    <section className="relative overflow-hidden bg-black">
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-size-[64px_64px]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.04),transparent_60%)]" />
-
+    <section className="relative overflow-hidden bg-background">
       <div
         ref={sectionRef}
         className="relative mx-auto max-w-5xl px-6 py-24 md:py-32"

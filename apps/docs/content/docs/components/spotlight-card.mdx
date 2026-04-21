@@ -1,0 +1,51 @@
+---
+title: Spotlight Card
+description: Card with a radial spotlight effect that follows the cursor, creating visual depth with light layers.
+---
+
+<ComponentPreview name="spotlight-card-demo" chromeless align="start" />
+
+## Usage
+
+```tsx
+import {
+  SpotlightCard,
+  SpotlightCardHeader,
+  SpotlightCardContent,
+  SpotlightCardFooter
+} from '@/components/matos-ui/spotlight-card'
+```
+
+```tsx
+<SpotlightCard glow="primary">
+  <SpotlightCardHeader>
+    <h3>Title</h3>
+  </SpotlightCardHeader>
+  <SpotlightCardContent>
+    <p>Card content.</p>
+  </SpotlightCardContent>
+  <SpotlightCardFooter>
+    <span>Footer</span>
+  </SpotlightCardFooter>
+</SpotlightCard>
+```
+
+## Reference
+
+### SpotlightCard Props
+
+| Prop            | Type                                                  | Default     | Description                        |
+| --------------- | ----------------------------------------------------- | ----------- | ---------------------------------- |
+| `glow`          | `"default" \| "primary" \| "accent" \| "destructive"` | `"default"` | Color of the radial light effect.  |
+| `size`          | `"sm" \| "md" \| "lg" \| "full"`                      | `"md"`      | Maximum width of the card.         |
+| `spotlightSize` | `number`                                              | `350`       | Radius in pixels of the spotlight. |
+
+### Exported Subcomponents
+
+| Component              | Description                                      |
+| ---------------------- | ------------------------------------------------ |
+| `SpotlightCardHeader`  | Header area with standard padding (`px-5 pt-5`). |
+| `SpotlightCardContent` | Main content area (`px-5 py-3`).                 |
+| `SpotlightCardFooter`  | Footer with flex row and gap (`px-5 pb-5`).      |
+
+Also exported: `spotlightCardVariants`, `spotlightCardHeaderVariants`, `spotlightCardContentVariants`, `spotlightCardFooterVariants`, and their corresponding prop types.

@@ -143,4 +143,15 @@ export const ui: Registry["items"] = [
       },
     ],
   },
+  {
+    name: "spotlight-card",
+    type: "registry:ui",
+    dependencies: ["framer-motion", "tailwind-merge", "tailwind-variants"],
+    files: [
+      {
+        path: "ui/spotlight-card.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
 ];

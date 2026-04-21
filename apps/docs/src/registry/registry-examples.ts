@@ -122,4 +122,15 @@ export const examples: Registry["items"] = [
       },
     ],
   },
+  {
+    name: "spotlight-card-demo",
+    type: "registry:example",
+    registryDependencies: ["spotlight-card"],
+    files: [
+      {
+        path: "examples/spotlight-card-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
 ];

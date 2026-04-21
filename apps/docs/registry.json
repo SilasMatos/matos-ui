@@ -1,6 +1,6 @@
 {
   "name": "matos/ui",
-  "homepage": "http://localhost:4000/",
+  "homepage": "https://matos-ui.com/",
   "items": [
     {
       "name": "index",
@@ -166,6 +166,17 @@
       ]
     },
     {
+      "name": "spotlight-card",
+      "type": "registry:ui",
+      "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/spotlight-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "button-demo",
       "type": "registry:example",
       "registryDependencies": ["button"],
@@ -282,6 +293,17 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/feedback-card-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "spotlight-card-demo",
+      "type": "registry:example",
+      "registryDependencies": ["spotlight-card"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/spotlight-card-demo.tsx",
           "type": "registry:example"
         }
       ]

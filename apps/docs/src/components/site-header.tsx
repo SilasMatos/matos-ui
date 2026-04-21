@@ -5,7 +5,6 @@ import { useTranslations } from "next-intl";
 import logoSrc from "@/assets/logo.png";
 import { CommandMenu } from "@/components/command-menu";
 import { GitHubLink } from "@/components/github-link";
-import { LocaleSwitcher } from "@/components/locale-switcher";
 import { MainNav } from "@/components/main-nav";
 import { MobileNav } from "@/components/mobile-nav";
 import { ModeSwitcher } from "@/components/mode-switcher";
@@ -70,7 +69,6 @@ export function SiteHeader({ pageTree }: { pageTree: DocsPageTree }) {
           <MainNav items={navItems} className="hidden lg:flex" />
           <div className="ml-auto flex items-center gap-2 md:flex-1 md:justify-end">
             <CommandMenu tree={pageTree} navItems={navItems} />
-            <LocaleSwitcher />
             <Separator
               orientation="vertical"
               className="ml-2 hidden lg:block"
