@@ -17,6 +17,12 @@ interface CardData {
   yOffset: number;
 }
 
+const cardHeightClasses: Record<string, string> = {
+  "card-01": "min-h-[330px]",
+  "card-02": "min-h-[280px]",
+  "card-03": "min-h-[310px]",
+};
+
 const cardVariants: Variants = {
   hidden: { opacity: 0, y: 100, scale: 0.95 },
   show: (i: number) => ({
@@ -34,7 +40,7 @@ const cardVariants: Variants = {
 function Card({ card, index }: { card: CardData; index: number }) {
   return (
     <motion.div
-      className={`relative flex flex-col rounded-2xl p-7 ${card.heightClass} group overflow-hidden border border-border/40 bg-muted/50`}
+      className={`relative flex flex-col rounded-2xl p-7 ${cardHeightClasses[card.id] ?? ""} group overflow-hidden border border-border/40 bg-muted/50`}
       style={{ marginTop: card.yOffset, transformPerspective: 800 }}
       custom={index}
       variants={cardVariants}
@@ -87,7 +93,7 @@ function Card({ card, index }: { card: CardData; index: number }) {
         </motion.p>
 
         {card.id === "card-01" && (
-          <div className="mt-auto pt-11 flex justify-center">
+          <div className="absolute left-1/2 -translate-x-1/2 -bottom-16">
             <OrbitIcons />
           </div>
         )}
@@ -97,10 +103,8 @@ function Card({ card, index }: { card: CardData; index: number }) {
           </div>
         )}
         {card.id === "card-03" && (
-          <div className="relative mt-auto pt-6">
-            <div className="absolute -bottom-60 left-2/3 w-full -translate-x-1/2">
-              <MiniDataTable />
-            </div>
+          <div className="absolute -bottom-30 left-1/2 -translate-x-1/2 w-full px-4">
+            <MiniDataTable />
           </div>
         )}
       </div>

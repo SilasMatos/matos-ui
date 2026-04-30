@@ -38,7 +38,7 @@ const icons = [
 
 export function OrbitIcons() {
   return (
-    <div className="relative flex items-center justify-center w-[150px] h-[150px]">
+    <div className="relative flex items-center justify-center w-[150px] h-[150px] ">
       {/* Centro */}
       <div className="absolute z-20 px-2 py-0.5 bg-white/80 backdrop-blur-md rounded-full shadow border text-[10px]">
         <span className="font-semibold text-gray-800">Matos UI</span>
