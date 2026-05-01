@@ -1,5 +1,6 @@
 "use client";
 
+import { motion, useReducedMotion } from "framer-motion";
 import { Check, X } from "lucide-react";
 import { type ComponentProps, useCallback, useState } from "react";
 import { twMerge } from "tailwind-merge";
@@ -20,14 +21,31 @@ const labelThumbTranslate: Record<"sm" | "md" | "lg", string> = {
 export const switchVariants = tv({
   slots: {
     root: [
-      "group relative inline-flex shrink-0 cursor-pointer items-center overflow-hidden border-2 border-transparent transition-colors",
+      "group relative inline-flex shrink-0 cursor-pointer items-center overflow-visible border transition-all duration-300 active:scale-[0.98]",
+      "before:absolute before:-inset-2 before:content-['']",
       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
       "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
     ],
+    rail: [
+      "pointer-events-none absolute inset-0 overflow-hidden [border-radius:inherit]",
+      "before:absolute before:inset-px before:bg-background/45 before:opacity-0 before:transition-opacity before:duration-300 before:[border-radius:inherit]",
+      "group-data-[state=checked]:before:opacity-100",
+    ],
+    glow: [
+      "pointer-events-none absolute inset-0 opacity-0 blur-md transition-opacity duration-300 [border-radius:inherit]",
+      "bg-primary/35 group-data-[state=checked]:opacity-70",
+    ],
     thumb: [
-      "pointer-events-none absolute top-1/2 left-0.5 z-10 flex -translate-y-1/2 items-center justify-center overflow-hidden rounded-full",
-      "bg-foreground shadow-sm transition-[transform,background-color] duration-200 ease-out will-change-transform",
-      "group-data-[state=checked]:bg-primary-foreground",
+      "pointer-events-none absolute top-1/2 left-0.5 z-10 flex -translate-y-1/2 items-center justify-center overflow-hidden",
+      "bg-background text-muted-foreground shadow-sm ring-1 ring-border transition-[background-color,color,box-shadow] duration-300 will-change-transform",
+      "group-data-[state=checked]:bg-primary-foreground group-data-[state=checked]:text-primary group-data-[state=checked]:shadow-md group-data-[state=checked]:ring-primary/20",
+    ],
+    thumbCore: [
+      "absolute inset-1 bg-muted/80 opacity-100 transition-opacity duration-300 [border-radius:inherit]",
+      "group-data-[state=checked]:opacity-0",
+    ],
+    thumbShine: [
+      "absolute inset-x-1 top-0.5 h-1/3 rounded-full bg-foreground/10 opacity-70",
     ],
   },
   variants: {
@@ -47,10 +65,10 @@ export const switchVariants = tv({
     },
     variant: {
       filled: {
-        root: "border-transparent bg-input data-[state=checked]:border-transparent data-[state=checked]:bg-primary",
+        root: "border-border/60 bg-muted shadow-inner data-[state=checked]:border-primary/30 data-[state=checked]:bg-primary",
       },
       outline: {
-        root: "border-border bg-transparent dark:border-muted-foreground/30 data-[state=checked]:border-primary data-[state=checked]:bg-primary/10 dark:data-[state=checked]:bg-primary/15",
+        root: "border-border bg-background shadow-xs data-[state=checked]:border-primary/45 data-[state=checked]:bg-primary/12 dark:data-[state=checked]:bg-primary/20",
       },
     },
     shape: {
@@ -98,6 +116,7 @@ export function Switch({
   ...props
 }: SwitchProps) {
   const [internal, setInternal] = useState(defaultChecked);
+  const shouldReduceMotion = useReducedMotion();
   const isControlled = controlledChecked !== undefined;
   const checked = isControlled ? controlledChecked : internal;
 
@@ -133,12 +152,15 @@ export function Switch({
       )}
       {...props}
     >
+      <span className={styles.glow()} />
+      <span className={styles.rail()} />
+
       {content === "label" ? (
         <>
-          <span className="pointer-events-none absolute top-1/2 left-1.5 -translate-y-1/2 text-[9px] font-medium text-muted-foreground transition-opacity group-data-[state=checked]:opacity-25">
+          <span className="pointer-events-none absolute top-1/2 left-1.5 z-10 -translate-y-1/2 text-[9px] font-medium text-muted-foreground transition-opacity duration-300 group-data-[state=checked]:opacity-30">
             Off
           </span>
-          <span className="pointer-events-none absolute top-1/2 right-1.5 -translate-y-1/2 text-[9px] font-medium text-muted-foreground transition-[opacity,color] group-data-[state=checked]:text-primary-foreground group-data-[state=unchecked]:opacity-25">
+          <span className="pointer-events-none absolute top-1/2 right-1.5 z-10 -translate-y-1/2 text-[9px] font-medium text-muted-foreground transition-[opacity,color] duration-300 group-data-[state=checked]:text-primary-foreground group-data-[state=unchecked]:opacity-30">
             On
           </span>
         </>
@@ -150,16 +172,32 @@ export function Switch({
           content === "label" ? labelThumbTranslate[size ?? "md"] : undefined,
         )}
       >
+        <span className={styles.thumbCore()} />
+        <span className={styles.thumbShine()} />
+        {content === "default" ? (
+          <motion.span
+            className="relative z-10 size-1.5 rounded-full bg-muted-foreground group-data-[state=checked]:bg-primary"
+            animate={
+              shouldReduceMotion
+                ? undefined
+                : {
+                    opacity: checked ? 1 : 0.55,
+                    scale: checked ? [0.75, 1.25, 1] : 0.75,
+                  }
+            }
+            transition={{ duration: 0.26, ease: "easeOut" }}
+          />
+        ) : null}
         {content === "icon" ? (
           <span
             data-slot="switch-icon-wrap"
-            className="relative flex size-full shrink-0 items-center justify-center"
+            className="relative z-10 flex size-full shrink-0 items-center justify-center"
           >
             <Check
               data-slot="switch-icon"
               className={twMerge(
-                "absolute inset-0 m-auto size-3 text-primary transition-opacity",
-                checked ? "opacity-100" : "opacity-0",
+                "absolute inset-0 m-auto size-3 text-primary transition-[opacity,scale] duration-200",
+                checked ? "scale-100 opacity-100" : "scale-75 opacity-0",
               )}
               strokeWidth={2.5}
               aria-hidden="true"
@@ -167,8 +205,8 @@ export function Switch({
             <X
               data-slot="switch-icon"
               className={twMerge(
-                "absolute inset-0 m-auto size-3 text-background transition-opacity",
-                checked ? "opacity-0" : "opacity-100",
+                "absolute inset-0 m-auto size-3 text-muted-foreground transition-[opacity,scale] duration-200",
+                checked ? "scale-75 opacity-0" : "scale-100 opacity-100",
               )}
               strokeWidth={2.5}
               aria-hidden="true"

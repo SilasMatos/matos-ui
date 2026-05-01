@@ -1,6 +1,6 @@
 ---
 title: Switch
-description: Accessible toggle switch with sizes, filled/outline variants, pill or rectangular shape, and icon or On/Off label modes.
+description: Animated toggle switch with layered surfaces, spring feedback, sizes, variants, shapes, icons, and On/Off label modes.
 ---
 
 <ComponentPreview name="switch-demo" />
@@ -35,4 +35,4 @@ import { Switch } from '@/components/matos-ui/switch'
 
 `Switch` forwards props to `<button>` (default `type` is `"button"`). Always use **`aria-label`** (or `aria-labelledby`) when there is no visible label.
 
-Also exported: **`switchVariants`** (slots `root` / `thumb`) for extending with `tailwind-variants`.
+Also exported: **`switchVariants`** (slots `root`, `rail`, `glow`, `thumb`, `thumbCore`, and `thumbShine`) for extending with `tailwind-variants`.

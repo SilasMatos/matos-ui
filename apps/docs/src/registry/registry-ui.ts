@@ -154,4 +154,15 @@ export const ui: Registry["items"] = [
       },
     ],
   },
+  {
+    name: "kinetic-card",
+    type: "registry:ui",
+    dependencies: ["framer-motion", "tailwind-merge", "tailwind-variants"],
+    files: [
+      {
+        path: "ui/kinetic-card.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
 ];

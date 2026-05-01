@@ -217,6 +217,21 @@
       ]
     },
     {
+      "name": "kinetic-card",
+      "type": "registry:ui",
+      "dependencies": [
+        "framer-motion",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/kinetic-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "button-demo",
       "type": "registry:example",
       "registryDependencies": [
@@ -370,6 +385,19 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/spotlight-card-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "kinetic-card-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "kinetic-card"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/kinetic-card-demo.tsx",
           "type": "registry:example"
         }
       ]

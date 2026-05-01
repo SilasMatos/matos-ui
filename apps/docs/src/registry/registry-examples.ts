@@ -133,4 +133,15 @@ export const examples: Registry["items"] = [
       },
     ],
   },
+  {
+    name: "kinetic-card-demo",
+    type: "registry:example",
+    registryDependencies: ["kinetic-card"],
+    files: [
+      {
+        path: "examples/kinetic-card-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
 ];

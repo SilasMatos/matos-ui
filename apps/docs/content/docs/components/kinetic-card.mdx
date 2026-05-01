@@ -1,0 +1,51 @@
+---
+title: Kinetic Card
+description: Animated card with theme-aware beams, ambient texture, and structured content slots.
+---
+
+<ComponentPreview name="kinetic-card-demo" chromeless align="start" />
+
+## Usage
+
+```tsx
+import {
+  KineticCard,
+  KineticCardHeader,
+  KineticCardContent,
+  KineticCardFooter
+} from '@/components/matos-ui/kinetic-card'
+```
+
+```tsx
+<KineticCard badge="Live" tone="accent">
+  <KineticCardHeader>
+    <h3>Adaptive orchestration</h3>
+  </KineticCardHeader>
+  <KineticCardContent>
+    <p>Animated surface for feature highlights and status panels.</p>
+  </KineticCardContent>
+  <KineticCardFooter>
+    <span>Updated now</span>
+  </KineticCardFooter>
+</KineticCard>
+```
+
+## Reference
+
+### KineticCard Props
+
+| Prop    | Type                                                  | Default     | Description                              |
+| ------- | ----------------------------------------------------- | ----------- | ---------------------------------------- |
+| `size`  | `"sm" \| "md" \| "lg" \| "full"`                      | `"md"`      | Maximum width of the card.               |
+| `tone`  | `"default" \| "primary" \| "accent" \| "destructive"` | `"default"` | Theme token used by the animated beams.  |
+| `badge` | `ReactNode`                                           | `undefined` | Optional floating badge in the top right. |
+
+### Exported Subcomponents
+
+| Component            | Description                                  |
+| -------------------- | -------------------------------------------- |
+| `KineticCardHeader`  | Header slot with balanced top spacing.       |
+| `KineticCardContent` | Main content slot for text or custom layout. |
+| `KineticCardFooter`  | Footer slot for status and actions.          |
+
+Also exported: `kineticCardVariants`, `kineticCardHeaderVariants`, `kineticCardContentVariants`, `kineticCardFooterVariants`, and their corresponding prop types.

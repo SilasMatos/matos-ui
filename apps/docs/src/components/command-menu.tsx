@@ -120,24 +120,33 @@ export function CommandMenu({
           <Button
             variant="outline"
             className={cn(
-              "relative h-8 w-fit justify-start rounded-lg md:pl-3 font-normal text-foreground shadow-none hover:bg-muted/50 md:w-48 lg:w-40 xl:w-64 dark:bg-card",
+              "group relative h-9 w-9 justify-center gap-2 rounded-lg border-border/70 bg-background/80 px-0 font-normal text-muted-foreground shadow-xs/5 backdrop-blur transition-all hover:border-ring/40 hover:bg-muted/60 hover:text-foreground focus-visible:border-ring/70 focus-visible:ring-ring/20 md:w-48 md:justify-start md:px-3 lg:w-40 xl:w-64 dark:bg-card/80 dark:hover:bg-muted/40",
             )}
             onClick={() => setOpen(true)}
             {...props}
           >
-            <span className="hidden xl:inline-flex">{t("searchLong")}</span>
-            <span className="hidden md:inline-flex xl:hidden">
+            <SearchIcon className="size-4 text-muted-foreground/70 transition-colors group-hover:text-foreground" />
+            <span className="hidden min-w-0 flex-1 truncate text-left text-sm xl:inline-flex">
+              {t("searchLong")}
+            </span>
+            <span className="hidden min-w-0 flex-1 truncate text-left text-sm md:inline-flex xl:hidden">
               {t("searchShort")}
             </span>
-            <span>
-              <SearchIcon className="md:hidden" />
-            </span>
+            <kbd className="pointer-events-none hidden h-5 items-center gap-0.5 rounded-md border bg-muted/60 px-1.5 font-medium text-[10px] text-muted-foreground/80 leading-none shadow-xs/5 xl:inline-flex">
+              Ctrl K
+            </kbd>
           </Button>
         }
       ></CommandDialogTrigger>
-      <CommandDialogPopup>
+      <CommandDialogPopup className="overflow-hidden border-border/70 shadow-2xl shadow-black/10 dark:shadow-black/30">
         <Command items={groupedItems}>
-          <CommandInput placeholder={t("placeholder")} />
+          <div className="relative px-3 pt-3 pb-2">
+            <SearchIcon className="-translate-y-1/2 pointer-events-none absolute top-1/2 left-6 size-4 text-muted-foreground/70" />
+            <CommandInput
+              className="h-11 rounded-xl border-border/70 bg-background/85 pl-9 pr-3 text-sm shadow-xs/5 transition-colors placeholder:text-muted-foreground/60 focus-visible:border-ring/70 focus-visible:ring-3 focus-visible:ring-ring/15 dark:bg-input/25"
+              placeholder={t("placeholder")}
+            />
+          </div>
           <CommandPanel>
             <CommandEmpty>{t("empty")}</CommandEmpty>
             <CommandList>
