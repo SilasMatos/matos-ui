@@ -1,0 +1,10 @@
+{
+	"version": 1,
+	"skills": {
+		"motion-design": {
+			"source": "lottiefiles/motion-design-skill",
+			"sourceType": "github",
+			"computedHash": "4f16f46c81f25a2a25b7a4720b7ea001e65f384b31b5b7f4b455fef87fbc9016"
+		}
+	}
+}

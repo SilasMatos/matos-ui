@@ -143,7 +143,7 @@ const stackLayerVariants: Variants = {
     opacity: 1,
     scaleX: 1 - i * 0.04,
     scaleY: 1,
-    y: i * 5, // reduzido de 8 → 5
+    y: i * 5,
     transition: {
       type: "spring",
       stiffness: 300,
@@ -192,7 +192,7 @@ export function NotificationStack({
     >
       <div
         className="relative w-full"
-        style={{ paddingBottom: stackCount * 5 }} // reduzido de 8 → 5
+        style={{ paddingBottom: stackCount * 5 }}
       >
         <AnimatePresence>
           {Array.from({ length: stackCount }).map((_, i) => {
@@ -236,20 +236,63 @@ export function NotificationStack({
               style={{ zIndex: stackCount + 1 }}
             >
               <div className={notificationCardVariants()}>
-                {/* Header — mais compacto */}
-                <div className="flex items-center justify-between px-3 pt-2.5 pb-1.5">
-                  {topNotification.app && (
-                    <motion.span
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 0.1 }}
-                      className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground"
+                <div
+                  className={twMerge(
+                    "flex items-center gap-2.5 overflow-hidden rounded-xl bg-card px-3 py-2 mx-1 mt-1",
+                    remainingCount === 0 && "mb-1",
+                  )}
+                >
+                  {topNotification.avatar && (
+                    <motion.div
+                      initial={{ scale: 0, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 20,
+                        delay: 0.12,
+                      }}
+                      className="flex size-7 shrink-0 items-center justify-center overflow-hidden rounded-full bg-muted"
                     >
-                      {topNotification.app}
-                    </motion.span>
+                      {topNotification.avatar}
+                    </motion.div>
                   )}
 
-                  <div className="flex items-center gap-1.5">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-1.5">
+                      {topNotification.app && (
+                        <motion.span
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ delay: 0.1 }}
+                          className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground"
+                        >
+                          {topNotification.app}
+                        </motion.span>
+                      )}
+                      <motion.p
+                        initial={{ opacity: 0, x: -6 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.08, duration: 0.25 }}
+                        className="truncate text-sm font-semibold leading-tight"
+                      >
+                        {topNotification.title}
+                      </motion.p>
+                    </div>
+
+                    {topNotification.description && (
+                      <motion.p
+                        initial={{ opacity: 0, x: -6 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.14, duration: 0.25 }}
+                        className="truncate text-xs leading-snug text-muted-foreground"
+                      >
+                        {topNotification.description}
+                      </motion.p>
+                    )}
+                  </div>
+
+                  <div className="flex shrink-0 items-center gap-1.5">
                     {topNotification.timestamp && (
                       <motion.span
                         initial={{ opacity: 0 }}
@@ -259,6 +302,21 @@ export function NotificationStack({
                       >
                         {topNotification.timestamp}
                       </motion.span>
+                    )}
+
+                    {topNotification.action && (
+                      <motion.button
+                        type="button"
+                        initial={{ opacity: 0, y: 4 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.22 }}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.97 }}
+                        onClick={topNotification.action.onClick}
+                        className="rounded-md bg-primary px-2 py-0.5 text-[11px] font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      >
+                        {topNotification.action.label}
+                      </motion.button>
                     )}
 
                     <motion.button
@@ -274,68 +332,6 @@ export function NotificationStack({
                   </div>
                 </div>
 
-                {/* Body — mais compacto */}
-                <div
-                  className={twMerge(
-                    "flex items-start gap-2.5 overflow-hidden rounded-xl bg-card px-3 py-2.5 mx-1",
-                    remainingCount === 0 && "mb-1.5",
-                  )}
-                >
-                  {topNotification.avatar && (
-                    <motion.div
-                      initial={{ scale: 0, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      transition={{
-                        type: "spring",
-                        stiffness: 400,
-                        damping: 20,
-                        delay: 0.12,
-                      }}
-                      className="mt-0.5 flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-muted"
-                    >
-                      {topNotification.avatar}
-                    </motion.div>
-                  )}
-
-                  <div className="min-w-0 flex-1">
-                    <motion.p
-                      initial={{ opacity: 0, x: -6 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.08, duration: 0.25 }}
-                      className="text-sm font-semibold leading-tight"
-                    >
-                      {topNotification.title}
-                    </motion.p>
-
-                    {topNotification.description && (
-                      <motion.p
-                        initial={{ opacity: 0, x: -6 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.14, duration: 0.25 }}
-                        className="text-xs leading-snug text-muted-foreground"
-                      >
-                        {topNotification.description}
-                      </motion.p>
-                    )}
-
-                    {topNotification.action && (
-                      <motion.button
-                        type="button"
-                        initial={{ opacity: 0, y: 4 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.22 }}
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.97 }}
-                        onClick={topNotification.action.onClick}
-                        className="mt-1.5 rounded-md bg-primary px-2.5 py-1 text-[11px] font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                      >
-                        {topNotification.action.label}
-                      </motion.button>
-                    )}
-                  </div>
-                </div>
-
-                {/* Footer contador */}
                 {remainingCount > 0 && (
                   <motion.div
                     initial={{ opacity: 0 }}
