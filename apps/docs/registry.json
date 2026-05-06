@@ -1,6 +1,6 @@
 {
   "name": "matos/ui",
-  "homepage": "https://matos-ui.com/",
+  "homepage": "http://localhost:4000/",
   "items": [
     {
       "name": "index",
@@ -36,6 +36,22 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/badge.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "breadcrumb",
+      "type": "registry:ui",
+      "dependencies": [
+        "framer-motion",
+        "lucide-react",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/breadcrumb.tsx",
           "type": "registry:ui"
         }
       ]
@@ -96,12 +112,17 @@
       ]
     },
     {
-      "name": "switch",
+      "name": "command-dock",
       "type": "registry:ui",
-      "dependencies": ["lucide-react", "tailwind-merge", "tailwind-variants"],
+      "dependencies": [
+        "framer-motion",
+        "lucide-react",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
       "files": [
         {
-          "path": "src/registry/new-york-v4/ui/switch.tsx",
+          "path": "src/registry/new-york-v4/ui/command-dock.tsx",
           "type": "registry:ui"
         }
       ]
@@ -109,7 +130,12 @@
     {
       "name": "file-upload",
       "type": "registry:ui",
-      "dependencies": ["lucide-react", "tailwind-merge", "tailwind-variants"],
+      "dependencies": [
+        "framer-motion",
+        "lucide-react",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/file-upload.tsx",
@@ -210,6 +236,17 @@
       ]
     },
     {
+      "name": "breadcrumb-demo",
+      "type": "registry:example",
+      "registryDependencies": ["breadcrumb"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/breadcrumb-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
       "name": "divider-demo",
       "type": "registry:example",
       "registryDependencies": ["divider"],
@@ -254,12 +291,12 @@
       ]
     },
     {
-      "name": "switch-demo",
+      "name": "command-dock-demo",
       "type": "registry:example",
-      "registryDependencies": ["switch"],
+      "registryDependencies": ["command-dock"],
       "files": [
         {
-          "path": "src/registry/new-york-v4/examples/switch-demo.tsx",
+          "path": "src/registry/new-york-v4/examples/command-dock-demo.tsx",
           "type": "registry:example"
         }
       ]

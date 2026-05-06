@@ -1,25 +1,27 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import type * as React from "react";
 
-const headerVariants = {
+const smoothEase = [0.25, 0.46, 0.45, 0.94] as const;
+
+const headerVariants: Variants = {
   hidden: {},
   visible: {
     transition: { staggerChildren: 0.07, delayChildren: 0 },
   },
 };
 
-const lineVariants = {
+const lineVariants: Variants = {
   hidden: { opacity: 0, y: 10 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] },
+    transition: { duration: 0.3, ease: smoothEase },
   },
 };
 
-const bodyVariants = {
+const bodyVariants: Variants = {
   hidden: { opacity: 0, y: 14 },
   visible: {
     opacity: 1,
@@ -28,7 +30,7 @@ const bodyVariants = {
   },
 };
 
-const bottomNavVariants = {
+const bottomNavVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,

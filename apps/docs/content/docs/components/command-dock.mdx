@@ -1,0 +1,73 @@
+---
+title: Command Dock
+description: Smart macOS-style dock with contextual actions, proximity magnification, and spring motion.
+---
+
+<ComponentPreview name="command-dock-demo" chromeless align="start" />
+
+## Usage
+
+```tsx
+import {
+  CommandDock,
+  type CommandDockAction
+} from '@/components/matos-ui/command-dock'
+```
+
+```tsx
+const actions: CommandDockAction[] = [
+  {
+    id: 'command',
+    label: 'Open Command Center',
+    description: 'Jump into search, recent files, and workflow shortcuts.',
+    icon: <Command className="size-5" aria-hidden />,
+    shortcut: 'Cmd K',
+    tone: 'primary'
+  },
+  {
+    id: 'share',
+    label: 'Share Update',
+    description: 'Compose a concise status update from the current context.',
+    icon: <MessageSquareText className="size-5" aria-hidden />
+  }
+]
+
+;<CommandDock
+  actions={actions}
+  defaultActiveId="command"
+  panelTitle="Ready for action"
+  onSelect={(action) => console.log(action.id)}
+/>
+```
+
+## Reference
+
+### CommandDock Props
+
+| Prop               | Type                                  | Default                                      | Description                                |
+| ------------------ | ------------------------------------- | -------------------------------------------- | ------------------------------------------ |
+| `actions`          | `CommandDockAction[]`                 | -                                            | Actions displayed in the dock.             |
+| `activeId`         | `string`                              | `undefined`                                  | Controlled selected action id.             |
+| `defaultActiveId`  | `string`                              | First action id                              | Initial selected action for uncontrolled use. |
+| `onSelect`         | `(action: CommandDockAction) => void` | `undefined`                                  | Called when an enabled action is selected. |
+| `panelTitle`       | `string`                              | `"Command ready"`                            | Small label shown in the contextual panel. |
+| `panelDescription` | `string`                              | `"Select an action to reveal contextual controls."` | Fallback description for actions. |
+| `ariaLabel`        | `string`                              | `"Command dock"`                             | Accessible label for the dock toolbar.     |
+| `showPanel`        | `boolean`                             | `true`                                       | Shows or hides the contextual panel.       |
+| `size`             | `"sm" \| "md" \| "lg"`               | `"md"`                                      | Dock and icon sizing.                      |
+| `align`            | `"start" \| "center" \| "end"`       | `"center"`                                  | Horizontal alignment of the component.     |
+
+### CommandDockAction
+
+| Field         | Type                                                        | Description                                  |
+| ------------- | ----------------------------------------------------------- | -------------------------------------------- |
+| `id`          | `string`                                                    | Unique action identifier.                    |
+| `label`       | `string`                                                    | Accessible label and panel heading.          |
+| `icon`        | `ReactNode`                                                 | Icon rendered inside the dock item.          |
+| `description` | `string?`                                                   | Contextual panel copy.                       |
+| `badge`       | `string?`                                                   | Optional panel badge.                        |
+| `shortcut`    | `string?`                                                   | Optional keyboard shortcut hint.             |
+| `tone`        | `"default" \| "primary" \| "success" \| "warning" \| "danger"` | Visual tone for the icon.                |
+| `disabled`    | `boolean?`                                                  | Disables selection and lowers opacity.       |
+
+Also exported: `commandDockVariants`, `CommandDockProps`, and `CommandDockAction`.

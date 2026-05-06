@@ -78,11 +78,12 @@ Alguns itens publicados no registry:
 
 - `button`
 - `badge`
+- `breadcrumb`
 - `divider`
 - `accordion`
 - `action-bar`
 - `detail-panel`
-- `switch`
+- `command-dock`
 - `file-upload`
 - `notification-stack`
 - `metric-card`

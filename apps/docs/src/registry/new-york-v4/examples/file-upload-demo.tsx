@@ -9,64 +9,56 @@ export default function FileUploadDemo() {
   const [multiFiles, setMultiFiles] = useState<FileUploadFile[]>([]);
 
   return (
-    <div className="flex flex-col gap-10">
-      {/* — Default — */}
+    <div className="mx-auto flex w-full max-w-2xl flex-col gap-8">
       <section className="flex flex-col gap-3">
-        <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-          Upload simples
-        </p>
+        <div className="space-y-1">
+          <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
+            Single file
+          </p>
+          <h3 className="text-sm font-medium">Quiet upload surface</h3>
+        </div>
         <FileUpload
           files={singleFiles}
           onFilesChange={setSingleFiles}
           accept="image/*,.pdf"
           maxSize={5 * 1024 * 1024}
+          title="Drop your file"
+          description="Images or PDF up to 5 MB"
         />
       </section>
 
-      {/* — Múltiplos arquivos — */}
       <section className="flex flex-col gap-3">
-        <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-          Múltiplos arquivos
-        </p>
+        <div className="space-y-1">
+          <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
+            Multiple files
+          </p>
+          <h3 className="text-sm font-medium">Stacked file feedback</h3>
+        </div>
         <FileUpload
           variant="outline"
           multiple
           maxFiles={5}
           files={multiFiles}
           onFilesChange={setMultiFiles}
-          title="Envie até 5 arquivos"
-          description="Arraste ou clique para selecionar"
+          title="Drop up to 5 files"
+          description="The list animates as files are added or removed"
         />
       </section>
 
-      {/* — Variantes — */}
-      <section className="flex flex-col gap-3">
-        <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-          Variantes
-        </p>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          <FileUpload size="sm" title="Default" description="Pequeno" />
-          <FileUpload
-            variant="outline"
-            size="sm"
-            title="Outline"
-            description="Pequeno"
-          />
-          <FileUpload
-            variant="ghost"
-            size="sm"
-            title="Ghost"
-            description="Pequeno"
-          />
-        </div>
-      </section>
-
-      {/* — Desabilitado — */}
-      <section className="flex flex-col gap-3">
-        <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-          Desabilitado
-        </p>
-        <FileUpload disabled size="sm" />
+      <section className="grid grid-cols-1 gap-3 md:grid-cols-3">
+        <FileUpload size="sm" title="Default" description="Minimal" />
+        <FileUpload
+          variant="outline"
+          size="sm"
+          title="Outline"
+          description="Subtle border"
+        />
+        <FileUpload
+          variant="ghost"
+          size="sm"
+          title="Ghost"
+          description="Soft surface"
+        />
       </section>
     </div>
   );

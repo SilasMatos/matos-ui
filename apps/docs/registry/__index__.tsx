@@ -62,6 +62,27 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
   },
+  breadcrumb: {
+    name: "breadcrumb",
+    type: "registry:ui",
+    registryDependencies: undefined,
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/breadcrumb.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/ui/breadcrumb.tsx");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
   divider: {
     name: "divider",
     type: "registry:ui",
@@ -146,19 +167,19 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
   },
-  switch: {
-    name: "switch",
+  "command-dock": {
+    name: "command-dock",
     type: "registry:ui",
     registryDependencies: undefined,
     files: [
       {
-        path: "src/registry/new-york-v4/ui/switch.tsx",
+        path: "src/registry/new-york-v4/ui/command-dock.tsx",
         type: "registry:ui",
         target: "",
       },
     ],
     component: React.lazy(async () => {
-      const mod = await import("@/registry/new-york-v4/ui/switch.tsx");
+      const mod = await import("@/registry/new-york-v4/ui/command-dock.tsx");
       const exportName =
         Object.keys(mod).find(
           (key) =>
@@ -341,6 +362,29 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
   },
+  "breadcrumb-demo": {
+    name: "breadcrumb-demo",
+    type: "registry:example",
+    registryDependencies: ["breadcrumb"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/breadcrumb-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/breadcrumb-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
   "divider-demo": {
     name: "divider-demo",
     type: "registry:example",
@@ -433,20 +477,20 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
   },
-  "switch-demo": {
-    name: "switch-demo",
+  "command-dock-demo": {
+    name: "command-dock-demo",
     type: "registry:example",
-    registryDependencies: ["switch"],
+    registryDependencies: ["command-dock"],
     files: [
       {
-        path: "src/registry/new-york-v4/examples/switch-demo.tsx",
+        path: "src/registry/new-york-v4/examples/command-dock-demo.tsx",
         type: "registry:example",
         target: "",
       },
     ],
     component: React.lazy(async () => {
       const mod = await import(
-        "@/registry/new-york-v4/examples/switch-demo.tsx"
+        "@/registry/new-york-v4/examples/command-dock-demo.tsx"
       );
       const exportName =
         Object.keys(mod).find(

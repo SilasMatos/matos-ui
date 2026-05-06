@@ -24,6 +24,17 @@ export const examples: Registry["items"] = [
     ],
   },
   {
+    name: "breadcrumb-demo",
+    type: "registry:example",
+    registryDependencies: ["breadcrumb"],
+    files: [
+      {
+        path: "examples/breadcrumb-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
     name: "divider-demo",
     type: "registry:example",
     registryDependencies: ["divider"],
@@ -68,12 +79,12 @@ export const examples: Registry["items"] = [
     ],
   },
   {
-    name: "switch-demo",
+    name: "command-dock-demo",
     type: "registry:example",
-    registryDependencies: ["switch"],
+    registryDependencies: ["command-dock"],
     files: [
       {
-        path: "examples/switch-demo.tsx",
+        path: "examples/command-dock-demo.tsx",
         type: "registry:example",
       },
     ],

@@ -24,6 +24,22 @@ export const ui: Registry["items"] = [
     ],
   },
   {
+    name: "breadcrumb",
+    type: "registry:ui",
+    dependencies: [
+      "framer-motion",
+      "lucide-react",
+      "tailwind-merge",
+      "tailwind-variants",
+    ],
+    files: [
+      {
+        path: "ui/breadcrumb.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
     name: "divider",
     type: "registry:ui",
     dependencies: ["tailwind-merge", "tailwind-variants"],
@@ -74,12 +90,17 @@ export const ui: Registry["items"] = [
     ],
   },
   {
-    name: "switch",
+    name: "command-dock",
     type: "registry:ui",
-    dependencies: ["lucide-react", "tailwind-merge", "tailwind-variants"],
+    dependencies: [
+      "framer-motion",
+      "lucide-react",
+      "tailwind-merge",
+      "tailwind-variants",
+    ],
     files: [
       {
-        path: "ui/switch.tsx",
+        path: "ui/command-dock.tsx",
         type: "registry:ui",
       },
     ],
@@ -87,7 +108,12 @@ export const ui: Registry["items"] = [
   {
     name: "file-upload",
     type: "registry:ui",
-    dependencies: ["lucide-react", "tailwind-merge", "tailwind-variants"],
+    dependencies: [
+      "framer-motion",
+      "lucide-react",
+      "tailwind-merge",
+      "tailwind-variants",
+    ],
     files: [
       {
         path: "ui/file-upload.tsx",
