@@ -51,6 +51,22 @@ export const ui: Registry["items"] = [
     ],
   },
   {
+    name: "dynamic-island",
+    type: "registry:ui",
+    dependencies: [
+      "framer-motion",
+      "lucide-react",
+      "tailwind-merge",
+      "tailwind-variants",
+    ],
+    files: [
+      {
+        path: "ui/dynamic-island.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
     name: "accordion",
     type: "registry:ui",
     dependencies: ["framer-motion", "lucide-react", "clsx", "tailwind-merge"],

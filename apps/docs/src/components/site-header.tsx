@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import logoSrc from "@/assets/logo.png";
+import logoSrc from "@/assets/logo-white.png";
 import { CommandMenu } from "@/components/command-menu";
 import { GitHubLink } from "@/components/github-link";
 import { MainNav } from "@/components/main-nav";
@@ -46,9 +46,9 @@ export function SiteHeader({ pageTree }: { pageTree: DocsPageTree }) {
                 <Image
                   src={logoSrc}
                   alt={`${siteConfig.name} logo`}
-                  width={32}
-                  height={32}
-                  className="size-8 object-contain"
+                  width={25}
+                  height={25}
+                  className=""
                   priority
                 />
                 <span className="sr-only">{siteConfig.name}</span>

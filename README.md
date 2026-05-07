@@ -88,6 +88,7 @@ export function Example() {
 - `badge`
 - `breadcrumb`
 - `divider`
+- `dynamic-island`
 - `accordion`
 - `action-bar`
 - `detail-panel`

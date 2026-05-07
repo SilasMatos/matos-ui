@@ -71,27 +71,27 @@
     ]
   },
   "scrollCards": {
-    "badge": "Pilares",
-    "title": "Segredos por trás do sucesso",
-    "subtitle": "Os fundamentos que guiam cada decisão de design.",
+    "badge": "Estilizado por design",
+    "title": "Como os componentes do Matos UI ganham forma",
+    "subtitle": "Cada componente nasce de tokens do tema, variantes claras e motion que apoia a interface.",
     "cards": [
       {
         "id": "card-01",
         "number": "01",
-        "title": "Visão estratégica",
-        "description": "Conecte o seu calendário. Nós cuidamos de toda a verificação cruzada."
+        "title": "Superfícies por tokens",
+        "description": "Fundos, bordas, textos e estados muted usam tokens do tema para se adaptar à sua marca."
       },
       {
         "id": "card-02",
         "number": "02",
-        "title": "Execução profunda",
-        "description": "Transforme visão em ação disciplinada — dia após dia, trimestre após trimestre."
+        "title": "Variantes legíveis",
+        "description": "Tamanhos, tons e estados de interação ficam próximos da API do componente com Tailwind Variants."
       },
       {
         "id": "card-03",
         "number": "03",
-        "title": "Mentalidade resiliente",
-        "description": "Construa a arquitetura mental que transforma cada obstáculo em degrau rumo à maestria."
+        "title": "Motion polido",
+        "description": "Framer Motion adiciona transições curtas, feedback de layout e hovers sem roubar o foco."
       }
     ]
   },
@@ -123,6 +123,33 @@
         "suffix": "Nossos times de produto finalmente falam a mesma linguagem de UI.",
         "author": "Ana Pereira",
         "role": "Product Engineer"
+      }
+    ]
+  },
+  "matosAspects": {
+    "badge": "Detalhes prontos para produto",
+    "title": "Mais sobre a abordagem do Matos UI",
+    "subtitle": "Um registry feito para copiar, estilizar e manter dentro da sua aplicação.",
+    "items": [
+      {
+        "label": "Copy-first",
+        "title": "Registry aberto",
+        "description": "Instale só os componentes que precisa, inspecione o código e mantenha tudo no seu projeto."
+      },
+      {
+        "label": "Interação pronta",
+        "title": "Estados acessíveis",
+        "description": "Foco, disabled, loading e hooks de ARIA fazem parte do design, não ficam para depois."
+      },
+      {
+        "label": "Tokens do tema",
+        "title": "Sem estilos fixos",
+        "description": "Os componentes usam bg-card, border-border, text-muted-foreground e tokens primários."
+      },
+      {
+        "label": "Motion-first",
+        "title": "Micro motion sutil",
+        "description": "Hover, layout e presença deixam a interface viva sem perder velocidade."
       }
     ]
   }

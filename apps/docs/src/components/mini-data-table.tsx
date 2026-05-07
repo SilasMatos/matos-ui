@@ -5,32 +5,32 @@ import { cn } from "@/lib/utils";
 
 const data = [
   {
-    id: "reuniao-produto",
-    name: "Reunião Produto",
+    id: "product-meeting",
+    name: "Product Meeting",
     time: "09:00",
     type: "meeting",
-    status: "Confirmado",
+    status: "Confirmed",
   },
   {
-    id: "call-cliente",
-    name: "Call Cliente",
+    id: "client-call",
+    name: "Client Call",
     time: "11:30",
     type: "call",
-    status: "Pendente",
+    status: "Pending",
   },
   {
     id: "design-review",
     name: "Design Review",
     time: "14:00",
     type: "review",
-    status: "Em andamento",
+    status: "In Progress",
   },
   {
     id: "sprint-sync",
     name: "Sprint Sync",
     time: "16:00",
     type: "sync",
-    status: "Confirmado",
+    status: "Confirmed",
   },
 ];
 

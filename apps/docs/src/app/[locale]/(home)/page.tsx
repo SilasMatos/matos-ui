@@ -1,6 +1,7 @@
 import { setRequestLocale } from "next-intl/server";
 
 import { HeroSection } from "@/components/hero-section";
+import { MatosAspectsSection } from "@/components/matos-aspects-section";
 import { ScrollCardsSection } from "@/components/scroll-cards-section";
 import { SiteFooter } from "@/components/site-footer";
 import { TestimonialsSection } from "@/components/testimonials-section";
@@ -18,6 +19,7 @@ export default async function HomePage({ params }: Props) {
       <HeroSection />
 
       <ScrollCardsSection />
+      <MatosAspectsSection />
       <TestimonialsSection />
       <SiteFooter />
     </>

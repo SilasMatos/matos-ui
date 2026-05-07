@@ -1,9 +1,12 @@
 "use client";
 
-import { motion, type Variants } from "framer-motion";
-import { ArrowRight, Blocks, Sparkle, Zap } from "lucide-react";
+import { motion, useReducedMotion, type Variants } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 
+import { Framer } from "@/components/icons/framer-motion";
+import { ShadcnUI } from "@/components/icons/shadcn";
+import { TailwindCSS } from "@/components/icons/tailwind";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/registry/new-york-v4/ui/button";
 
@@ -53,10 +56,11 @@ const floatingBlocks = [
 
 export function HeroSection() {
   const t = useTranslations("hero");
+  const shouldReduceMotion = useReducedMotion();
   const features = [
-    { icon: Zap, label: t("featurePowerful") },
-    { icon: Blocks, label: t("featureAccessible") },
-    { icon: Sparkle, label: t("featureStyled") },
+    { icon: TailwindCSS, label: "Tailwind CSS" },
+    { icon: Framer, label: "Framer Motion" },
+    { icon: ShadcnUI, label: "shadcn/ui" },
   ];
 
   return (
@@ -167,25 +171,40 @@ export function HeroSection() {
         <motion.div
           variants={fadeUp}
           whileHover={{
-            scale: 1.05,
-            borderColor: "rgba(var(--hero-block-rgb), 0.5)",
-            transition: { duration: 0.3, ease: "easeInOut" },
+            scale: 1.04,
+            transition: { type: "spring", stiffness: 420, damping: 24 },
           }}
-          className="group inline-flex items-center gap-2.5 rounded-full border border-foreground/10 bg-foreground/4 px-4 py-1.5 text-sm text-foreground/60 backdrop-blur-sm transition-colors hover:border-foreground/20 hover:bg-foreground/8"
+          className="group relative isolate inline-flex overflow-hidden rounded-full p-px text-sm text-foreground/60"
         >
-          <span className="relative flex size-2">
-            <span
-              className="absolute inline-flex size-full animate-spin rounded-full border-2 border-dashed border-foreground/40"
-              style={{ animationDuration: "2s" }}
-            />
-            <span
-              className="absolute inline-flex size-full animate-ping rounded-full bg-foreground/40"
-              style={{ animationDuration: "1.5s" }}
-            />
-            <span className="relative inline-flex size-2 rounded-full bg-foreground" />
+          <motion.span
+            aria-hidden="true"
+            animate={shouldReduceMotion ? undefined : { rotate: 360 }}
+            className="-inset-16 absolute"
+            style={{
+              background:
+                "conic-gradient(from 0deg, transparent 0deg, rgba(var(--hero-block-rgb),0.02) 80deg, rgba(var(--hero-block-rgb),0.62) 135deg, transparent 190deg, transparent 360deg)",
+            }}
+            transition={{
+              duration: 5.5,
+              ease: "linear",
+              repeat: Infinity,
+            }}
+          />
+          <span className="relative z-10 inline-flex items-center gap-2.5 rounded-full border border-foreground/10 bg-background/75 px-4 py-1.5 backdrop-blur-md transition-colors group-hover:border-foreground/20 group-hover:bg-background/85">
+            <span className="relative flex size-2">
+              <span
+                className="absolute inline-flex size-full animate-spin rounded-full border-2 border-dashed border-foreground/40"
+                style={{ animationDuration: "2s" }}
+              />
+              <span
+                className="absolute inline-flex size-full animate-ping rounded-full bg-foreground/40"
+                style={{ animationDuration: "1.5s" }}
+              />
+              <span className="relative inline-flex size-2 rounded-full bg-foreground" />
+            </span>
+            <span>{t("badge")}</span>
+            <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
           </span>
-          <span>{t("badge")}</span>
-          <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
         </motion.div>
 
         <motion.div variants={fadeUp} className="flex flex-col gap-4">
@@ -193,7 +212,45 @@ export function HeroSection() {
             <span className="text-foreground/40">{t("titleLine1")} </span>
             <br className="hidden sm:block" />
             <span className="text-foreground/40">{t("titleLine2")} </span>
-            <span className="text-foreground">{t("brand")}</span>
+            <motion.span
+              animate={
+                shouldReduceMotion
+                  ? undefined
+                  : {
+                      textShadow: [
+                        "0 0 0px rgba(var(--hero-block-rgb),0)",
+                        "0 0 28px rgba(var(--hero-block-rgb),0.28)",
+                        "0 0 0px rgba(var(--hero-block-rgb),0)",
+                      ],
+                      y: [0, -2, 0],
+                    }
+              }
+              className="relative inline-block text-foreground"
+              transition={{
+                duration: 4.2,
+                ease: "easeInOut",
+                repeat: Infinity,
+              }}
+            >
+              {t("brand")}
+              <motion.span
+                aria-hidden="true"
+                animate={
+                  shouldReduceMotion
+                    ? undefined
+                    : {
+                        opacity: [0.2, 0.75, 0.2],
+                        scaleX: [0.16, 1, 0.16],
+                      }
+                }
+                className="-bottom-1 absolute inset-x-1 h-px origin-center bg-linear-to-r from-transparent via-foreground/45 to-transparent"
+                transition={{
+                  duration: 4.2,
+                  ease: "easeInOut",
+                  repeat: Infinity,
+                }}
+              />
+            </motion.span>
           </h1>
         </motion.div>
 
@@ -238,19 +295,76 @@ export function HeroSection() {
           variants={fadeUp}
           className="mt-8 flex flex-wrap items-center justify-center gap-5"
         >
-          {features.map(({ icon: Icon, label }) => (
+          {features.map(({ icon: Icon, label }, index) => (
             <motion.div
               key={label}
+              animate={
+                shouldReduceMotion
+                  ? undefined
+                  : {
+                      y: [0, -4, 0],
+                    }
+              }
               variants={scaleIn}
+              whileTap={{ scale: 0.98 }}
               whileHover={{
-                scale: 1.06,
-                backgroundColor: "rgba(var(--hero-block-rgb),0.06)",
-                transition: { type: "spring", stiffness: 400, damping: 20 },
+                scale: 1.07,
+                y: -6,
+                borderColor: "rgba(var(--hero-block-rgb),0.26)",
+                backgroundColor: "rgba(var(--hero-block-rgb),0.08)",
+                boxShadow: "0 18px 45px rgba(var(--hero-block-rgb),0.16)",
+                transition: { type: "spring", stiffness: 360, damping: 22 },
               }}
-              className="flex cursor-default items-center gap-2 rounded-lg border border-foreground/6 bg-foreground/3 px-4 py-2.5 text-sm text-foreground/50 backdrop-blur-sm"
+              className="group relative flex cursor-default items-center gap-2.5 overflow-hidden rounded-xl border border-foreground/6 bg-foreground/3 px-4 py-2.5 text-sm text-foreground/55 backdrop-blur-sm"
+              transition={{
+                y: {
+                  duration: 3.6,
+                  ease: "easeInOut",
+                  repeat: Infinity,
+                  delay: index * 0.35,
+                },
+              }}
             >
-              <Icon className="size-4" />
-              <span>{label}</span>
+              <motion.span
+                aria-hidden="true"
+                animate={
+                  shouldReduceMotion
+                    ? undefined
+                    : {
+                        opacity: [0.1, 0.7, 0.1],
+                        scaleX: [0.25, 1, 0.25],
+                      }
+                }
+                className="absolute inset-x-3 top-0 h-px origin-center bg-linear-to-r from-transparent via-foreground/40 to-transparent"
+                transition={{
+                  duration: 3.4,
+                  ease: "easeInOut",
+                  repeat: Infinity,
+                  delay: index * 0.3,
+                }}
+              />
+              <motion.span
+                animate={
+                  shouldReduceMotion
+                    ? undefined
+                    : {
+                        scale: [1, 1.08, 1],
+                        rotate: [0, index === 1 ? 2 : -2, 0],
+                      }
+                }
+                className="relative flex size-7 items-center justify-center rounded-lg border border-foreground/8 bg-background/60 text-foreground/70 transition-colors group-hover:border-foreground/20 group-hover:text-foreground"
+                transition={{
+                  duration: 3.2,
+                  ease: "easeInOut",
+                  repeat: Infinity,
+                  delay: 0.2 + index * 0.25,
+                }}
+              >
+                <Icon className="size-4" />
+              </motion.span>
+              <span className="relative font-medium transition-colors group-hover:text-foreground/80">
+                {label}
+              </span>
             </motion.div>
           ))}
         </motion.div>

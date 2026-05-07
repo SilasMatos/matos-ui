@@ -55,13 +55,22 @@ import { Button } from "@/components/matos-ui/button"
 <Button>Click me</Button>
 ```
 
+```tsx
+<Button loading loadingText="Saving...">
+  Save changes
+</Button>
+```
+
 ## Reference
 
 ### Props
 
 The `Button` component accepts all props from [`@base-ui-components/react` Button](https://base-ui.com/react/components/button) plus the following:
 
-| Prop      | Type                                                                       | Default     |
-| --------- | -------------------------------------------------------------------------- | ----------- |
-| `variant` | `"default" \| "secondary" \| "outline" \| "ghost" \| "destructive" \| "link"` | `"default"` |
-| `size`    | `"default" \| "xs" \| "sm" \| "lg" \| "icon" \| "icon-xs" \| "icon-sm" \| "icon-lg"` | `"default"` |
+| Prop          | Type                                                                       | Default     |
+| ------------- | -------------------------------------------------------------------------- | ----------- |
+| `variant`     | `"default" \| "secondary" \| "outline" \| "ghost" \| "destructive" \| "link"` | `"default"` |
+| `size`        | `"default" \| "xs" \| "sm" \| "lg" \| "icon" \| "icon-xs" \| "icon-sm" \| "icon-lg"` | `"default"` |
+| `loading`     | `boolean`                                                                  | `false`     |
+| `loadingText` | `ReactNode`                                                                | `children`  |
+| `loadingIcon` | `ReactNode`                                                                | Spinner     |

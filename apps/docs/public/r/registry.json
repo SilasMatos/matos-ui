@@ -90,6 +90,22 @@
       ]
     },
     {
+      "name": "dynamic-island",
+      "type": "registry:ui",
+      "dependencies": [
+        "framer-motion",
+        "lucide-react",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/dynamic-island.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "accordion",
       "type": "registry:ui",
       "dependencies": [
@@ -297,6 +313,19 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/divider-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "dynamic-island-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "dynamic-island"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/dynamic-island-demo.tsx",
           "type": "registry:example"
         }
       ]

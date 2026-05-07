@@ -1,0 +1,85 @@
+---
+title: Dynamic Island
+description: Floating pill component with premium animated states for music, timers, recording, confirmation, notifications, progress, and calls.
+---
+
+<ComponentPreview name="dynamic-island-demo" chromeless align="start" />
+
+## Usage
+
+```tsx
+import { DynamicIsland } from '@/components/matos-ui/dynamic-island'
+```
+
+```tsx
+<DynamicIsland
+  variant="music"
+  title="Soft Focus"
+  description="Matos Radio"
+  isPlaying
+  onPlayPause={() => {}}
+/>
+```
+
+## Examples
+
+```tsx
+<DynamicIsland
+  variant="progress"
+  title="Uploading assets"
+  progress={72}
+/>
+```
+
+```tsx
+<DynamicIsland
+  variant="confirm"
+  title="Publish changes?"
+  description="This will update the public registry."
+  onCancel={() => {}}
+  onConfirm={() => {}}
+/>
+```
+
+```tsx
+<DynamicIsland
+  variant="call"
+  title="Incoming call"
+  description="Alex Morgan"
+  onCancel={() => {}}
+  onConfirm={() => {}}
+/>
+```
+
+## Props
+
+| Prop            | Type                                                                                  | Default            | Description                                      |
+| --------------- | ------------------------------------------------------------------------------------- | ------------------ | ------------------------------------------------ |
+| `variant`       | `"music" \| "timer" \| "recording" \| "confirm" \| "notification" \| "progress" \| "call"` | `"notification"`   | Controls the island layout and behavior.         |
+| `size`          | `"sm" \| "md" \| "lg"`                                                                | `"md"`             | Controls spacing, height, and control size.      |
+| `title`         | `string`                                                                              | Variant fallback   | Main text for the island.                        |
+| `description`   | `string`                                                                              | Variant fallback   | Supporting text for compact context.             |
+| `time`          | `string`                                                                              | `undefined`        | Timer or recording time display.                 |
+| `progress`      | `number`                                                                              | `0`                | Progress percentage from `0` to `100`.           |
+| `image`         | `string`                                                                              | `undefined`        | Optional artwork or avatar image URL.            |
+| `isPlaying`     | `boolean`                                                                             | `false`            | Music playback state.                            |
+| `isActive`      | `boolean`                                                                             | `false`            | Timer running state.                             |
+| `onPlayPause`   | `() => void`                                                                          | `undefined`        | Called by the music play/pause button.           |
+| `onConfirm`     | `() => void`                                                                          | `undefined`        | Called by confirm or accept actions.             |
+| `onCancel`      | `() => void`                                                                          | `undefined`        | Called by cancel or decline actions.             |
+| `onStop`        | `() => void`                                                                          | `undefined`        | Called by the recording stop action.             |
+| `actions`       | `ReactNode`                                                                           | `undefined`        | Custom trailing content for notification mode.   |
+| `icon`          | `ReactNode`                                                                           | Variant fallback   | Custom leading icon.                             |
+| `className`     | `string`                                                                              | `undefined`        | Extra class names for the root wrapper.          |
+
+`DynamicIsland` also accepts props from `ComponentProps<"div">`.
+
+## Accessibility Notes
+
+- The root uses `data-slot="dynamic-island"` for styling and composition hooks.
+- Interactive actions are real buttons with accessible labels.
+- Focus states use theme tokens and `focus-visible` rings.
+- Motion respects `prefers-reduced-motion` through `useReducedMotion`.
+- Recording, progress, and call states rely on visible text in addition to animated indicators.
+
+Also exported: `dynamicIslandVariants`, `DynamicIslandProps`, and `DynamicIslandVariant`.

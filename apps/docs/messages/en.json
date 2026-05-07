@@ -71,27 +71,27 @@
     ]
   },
   "scrollCards": {
-    "badge": "Pillars",
-    "title": "Secrets Behind Success",
-    "subtitle": "The foundations behind every design decision.",
+    "badge": "Styled by design",
+    "title": "How Matos UI components are shaped",
+    "subtitle": "Every component starts from theme tokens, clean variants, and motion that supports the interface.",
     "cards": [
       {
         "id": "card-01",
         "number": "01",
-        "title": "Strategic Vision",
-        "description": "Connect your calendar. We handle all the cross-checking."
+        "title": "Token-first surfaces",
+        "description": "Backgrounds, borders, text, and muted states use theme tokens so every component adapts to your brand."
       },
       {
         "id": "card-02",
         "number": "02",
-        "title": "Deep Execution",
-        "description": "Translate vision into relentless, disciplined action — day after day, quarter after quarter."
+        "title": "Readable variants",
+        "description": "Sizes, tones, and interaction states stay close to the component API with Tailwind Variants."
       },
       {
         "id": "card-03",
         "number": "03",
-        "title": "Resilient Mindset",
-        "description": "Build the mental architecture that turns every setback into a stepping stone toward mastery."
+        "title": "Polished motion",
+        "description": "Framer Motion adds small transitions, layout feedback, and hover states without stealing focus."
       }
     ]
   },
@@ -123,6 +123,33 @@
         "suffix": "Our product teams finally speak the same UI language.",
         "author": "Ana Pereira",
         "role": "Product Engineer"
+      }
+    ]
+  },
+  "matosAspects": {
+    "badge": "Product-ready details",
+    "title": "More of the Matos UI approach",
+    "subtitle": "A registry built to be copied, styled, and owned inside your application.",
+    "items": [
+      {
+        "label": "Copy-first",
+        "title": "Open registry",
+        "description": "Install only the components you need, inspect the source, and keep the code in your project."
+      },
+      {
+        "label": "Interaction-ready",
+        "title": "Accessible states",
+        "description": "Focus rings, disabled states, loading feedback, and ARIA hooks are treated as part of the design."
+      },
+      {
+        "label": "Theme tokens",
+        "title": "No hardcoded styling",
+        "description": "Components lean on bg-card, border-border, text-muted-foreground, and primary tokens."
+      },
+      {
+        "label": "Motion-first",
+        "title": "Subtle micro motion",
+        "description": "Hover, layout, and presence animations make the interface feel alive while staying fast."
       }
     ]
   }

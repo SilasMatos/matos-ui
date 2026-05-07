@@ -46,6 +46,17 @@ export const examples: Registry["items"] = [
     ],
   },
   {
+    name: "dynamic-island-demo",
+    type: "registry:example",
+    registryDependencies: ["dynamic-island"],
+    files: [
+      {
+        path: "examples/dynamic-island-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
     name: "accordion-demo",
     type: "registry:example",
     registryDependencies: ["accordion"],
