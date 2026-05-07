@@ -1,80 +1,88 @@
 # Matos UI
 
-Registry de componentes UI para shadcn/ui.
+Matos UI is a public component registry for teams building polished React and Next.js interfaces with Tailwind CSS and shadcn/ui.
 
-Este repositorio publica componentes prontos (ex.: `button`, `badge`, `accordion`, `file-upload`) para serem instalados direto no seu projeto via CLI do shadcn.
+The project provides ready-to-install UI components with focused APIs, accessible defaults, responsive layouts, and carefully tuned micro-interactions. Components are distributed through the shadcn CLI, so you copy the source into your own codebase instead of depending on a black-box package.
 
-## Como usar o registry no seu projeto
+## Highlights
 
-### 1) Pre-requisitos
+- Built for React, Next.js, Tailwind CSS, and shadcn/ui projects
+- Installed directly into your app with `shadcn add`
+- Source-first components you can customize freely
+- Motion-rich interactions using Framer Motion where it adds clarity
+- Registry JSON generated for individual components, demos, and full collections
+- Documentation app powered by Next.js and Fumadocs
 
-- Projeto React/Next.js com Tailwind
-- shadcn/ui inicializado no projeto consumidor
-- Node.js 18+ (ou Bun)
+## Using the Registry
 
-Se ainda nao inicializou o shadcn no projeto consumidor:
+### Prerequisites
+
+- A React or Next.js project using Tailwind CSS
+- shadcn/ui initialized in the consuming project
+- Node.js 18+ or Bun
+
+If your project is not initialized with shadcn/ui yet:
 
 ```bash
 npx shadcn@latest init
 ```
 
-### 2) URL base do registry
+### Registry URL
 
-Use a URL do seu ambiente publicado:
+Production registry:
 
 ```txt
 https://matos-ui.com/r
 ```
 
-Para desenvolvimento local deste repositorio, normalmente:
+Local development registry:
 
 ```txt
 http://localhost:4000/r
 ```
 
-### 3) Instalar componentes
+### Install a Component
 
-No projeto consumidor, rode:
+Use the shadcn CLI with a component JSON URL:
 
 ```bash
 npx shadcn@latest add https://matos-ui.com/r/button.json
 ```
 
-Outros exemplos:
+More examples:
 
 ```bash
-npx shadcn@latest add https://matos-ui.com/r/badge.json
-npx shadcn@latest add https://matos-ui.com/r/accordion.json
-npx shadcn@latest add https://matos-ui.com/r/action-bar.json
+npx shadcn@latest add https://matos-ui.com/r/breadcrumb.json
+npx shadcn@latest add https://matos-ui.com/r/command-dock.json
 npx shadcn@latest add https://matos-ui.com/r/file-upload.json
+npx shadcn@latest add https://matos-ui.com/r/notification-stack.json
 ```
 
-O CLI baixa os arquivos do componente e instala dependencias necessarias.
+The CLI downloads the component source, places it in your project, and installs the required dependencies.
 
-### 4) Instalar exemplos prontos (opcional)
+### Install a Demo
 
-Voce tambem pode adicionar exemplos de uso:
+Each component can also ship with a demo:
 
 ```bash
 npx shadcn@latest add https://matos-ui.com/r/button-demo.json
-npx shadcn@latest add https://matos-ui.com/r/metric-card-demo.json
+npx shadcn@latest add https://matos-ui.com/r/breadcrumb-demo.json
+npx shadcn@latest add https://matos-ui.com/r/command-dock-demo.json
 ```
 
-### 5) Usar no codigo
+### Use the Component
 
-Depois de adicionar, importe normalmente no seu app:
+After installation, import it from your local components folder:
 
 ```tsx
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/matos-ui/button"
 
 export function Example() {
-  return <Button>Salvar</Button>
+  return <Button>Save changes</Button>
 }
 ```
 
-## Itens disponiveis
-
-Alguns itens publicados no registry:
+## Available Components
 
 - `button`
 - `badge`
@@ -88,49 +96,96 @@ Alguns itens publicados no registry:
 - `notification-stack`
 - `metric-card`
 - `feedback-card`
+- `spotlight-card`
+- `kinetic-card`
 
-E seus respectivos `*-demo`.
+Most components include a matching `*-demo` registry item.
 
-## Desenvolvimento deste repositorio
+## Project Structure
+
+```txt
+apps/docs                         Documentation website and registry build
+apps/docs/content/docs            MDX documentation pages
+apps/docs/src/registry            Registry source definitions
+apps/docs/src/registry/new-york-v4 Components and examples
+apps/docs/public/r                Generated registry JSON files
+packages/config                   Shared TypeScript configuration
+```
+
+## Local Development
+
+Install dependencies:
 
 ```bash
 bun install
+```
+
+Start the documentation app:
+
+```bash
 bun run dev
 ```
 
-Scripts principais:
+The docs app usually runs at:
 
-- `bun run dev` - sobe ambiente de desenvolvimento
-- `bun run build` - build de producao (inclui registry)
-- `bun run check` - lint/format com Biome
+```txt
+http://localhost:4000
+```
 
-## Publicacao com Docker + Nginx
+## Scripts
 
-Este projeto builda o app `apps/docs` (Next static export) e serve os arquivos estaticos via Nginx.
+- `bun run dev` starts the development environment
+- `bun run build` builds the production documentation app and registry
+- `bun run check` runs Biome checks and formatting
 
-Build da imagem:
+Inside `apps/docs`:
+
+- `bun run registry:build` regenerates registry JSON files
+- `bun run types:check` generates docs types and runs TypeScript
+
+## Adding a Component
+
+1. Add the component source in `apps/docs/src/registry/new-york-v4/ui`.
+2. Add a demo in `apps/docs/src/registry/new-york-v4/examples`.
+3. Register both in `registry-ui.ts` and `registry-examples.ts`.
+4. Add an MDX documentation page in `apps/docs/content/docs/components`.
+5. Run:
+
+```bash
+bun run --cwd apps/docs registry:build
+bun run --cwd apps/docs types:check
+```
+
+## Deployment
+
+This repository builds the `apps/docs` Next.js app and serves the static output through Docker and Nginx.
+
+Build the image:
 
 ```bash
 docker build -t matos-ui/docs:prod .
 ```
 
-Rodar container:
+Run the container:
 
 ```bash
 docker run -d --name matos-ui-docs -p 8080:80 --restart unless-stopped matos-ui/docs:prod
 ```
 
-Rodar com Docker Compose:
+Run with Docker Compose:
 
 ```bash
 docker compose -f docker-compose.prod.yml up -d --build
 ```
 
-### DNS (matos-ui.com na VPS)
+## DNS and HTTPS
 
-1. Registro **A** para `@` apontando para o IP publico da VPS.
-2. `www` como **CNAME** para `matos-ui.com` (ou **A** com o mesmo IP).
+For `matos-ui.com`:
 
-### TLS (HTTPS)
+1. Add an **A** record for `@` pointing to the public server IP.
+2. Add `www` as a **CNAME** to `matos-ui.com`, or as an **A** record to the same IP.
+3. Use Nginx or Caddy on the host for HTTPS with Let's Encrypt and proxy traffic to `http://127.0.0.1:8080`.
 
-Recomendado usar Nginx/Caddy no host na porta 443 com Let's Encrypt e `proxy_pass` para `http://127.0.0.1:8080`.
+## License
+
+This project is currently maintained as a public component registry. Add a license file before distributing it under a formal open-source license.
