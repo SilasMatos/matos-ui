@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
+
 import { Button } from "@/registry/new-york-v4/ui/button";
 import {
   type NotificationData,
@@ -10,55 +11,59 @@ import {
 const sampleNotifications: Omit<NotificationData, "id">[] = [
   {
     app: "GitHub",
-    title: "Marina Rocha",
-    description: "Abriu PR #128: Refatoração dos design tokens 🚀",
-    timestamp: "2 min atrás",
+    title: "Design tokens updated",
+    description: "PR #128 is ready with refined surfaces and spacing tokens.",
+    timestamp: "2m ago",
+    action: {
+      label: "Review",
+      onClick: () => {},
+    },
     avatar: (
-      <span className="flex size-10 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
-        MR
-      </span>
-    ),
-  },
-  {
-    app: "Slack",
-    title: "João Silva",
-    description: "Hey, revisou o componente novo? ☕",
-    timestamp: "5 min atrás",
-    avatar: (
-      <span className="flex size-10 items-center justify-center rounded-full bg-muted text-xs font-bold text-foreground">
-        JS
-      </span>
-    ),
-  },
-  {
-    app: "Vercel",
-    title: "Deploy concluído",
-    description: "matos-ui foi implantado em produção com sucesso.",
-    timestamp: "8 min atrás",
-    avatar: (
-      <span className="flex size-10 items-center justify-center rounded-full bg-foreground text-xs font-bold text-background">
-        ▲
+      <span className="flex size-full items-center justify-center rounded-xl bg-primary text-primary-foreground text-xs font-semibold">
+        GH
       </span>
     ),
   },
   {
     app: "Linear",
-    title: "Lucas Pereira",
-    description: "Atribuiu MAT-342 a você: Corrigir layout mobile",
-    timestamp: "12 min atrás",
+    title: "MAT-342 assigned",
+    description: "Fix mobile spacing on the notification stack preview.",
+    timestamp: "5m ago",
     avatar: (
-      <span className="flex size-10 items-center justify-center rounded-full bg-muted text-xs font-bold text-foreground">
-        LP
+      <span className="flex size-full items-center justify-center rounded-xl bg-muted text-foreground text-xs font-semibold">
+        LN
       </span>
     ),
   },
   {
-    app: "E-mail",
-    title: "Ana Costa",
-    description: "Enviou os wireframes atualizados para revisão 📎",
-    timestamp: "15 min atrás",
+    app: "Vercel",
+    title: "Deploy completed",
+    description: "matos-ui.com was deployed successfully to production.",
+    timestamp: "8m ago",
     avatar: (
-      <span className="flex size-10 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
+      <span className="flex size-full items-center justify-center rounded-xl bg-foreground text-background text-xs font-semibold">
+        V
+      </span>
+    ),
+  },
+  {
+    app: "Slack",
+    title: "New design feedback",
+    description: "The inset card direction feels cleaner and easier to scan.",
+    timestamp: "12m ago",
+    avatar: (
+      <span className="flex size-full items-center justify-center rounded-xl bg-muted text-foreground text-xs font-semibold">
+        SL
+      </span>
+    ),
+  },
+  {
+    app: "Email",
+    title: "Wireframes shared",
+    description: "Ana sent the updated component flow for final review.",
+    timestamp: "15m ago",
+    avatar: (
+      <span className="flex size-full items-center justify-center rounded-xl bg-primary text-primary-foreground text-xs font-semibold">
         AC
       </span>
     ),
@@ -67,9 +72,9 @@ const sampleNotifications: Omit<NotificationData, "id">[] = [
 
 export default function NotificationStackDemo() {
   const [notifications, setNotifications] = useState<NotificationData[]>(() =>
-    sampleNotifications.slice(0, 3).map((n, i) => ({
-      ...n,
-      id: `initial-${i}`,
+    sampleNotifications.slice(0, 3).map((notification, index) => ({
+      ...notification,
+      id: `initial-${index}`,
     })),
   );
 
@@ -85,14 +90,16 @@ export default function NotificationStackDemo() {
     const newNotification: NotificationData = {
       ...sample,
       id: `demo-${counterRef.current}-${Date.now()}`,
-      timestamp: "agora",
+      timestamp: "now",
     };
 
     setNotifications((prev) => [...prev, newNotification]);
   }, []);
 
   const dismiss = useCallback((id: string) => {
-    setNotifications((prev) => prev.filter((n) => n.id !== id));
+    setNotifications((prev) =>
+      prev.filter((notification) => notification.id !== id),
+    );
   }, []);
 
   const dismissAll = useCallback(() => {
@@ -100,7 +107,7 @@ export default function NotificationStackDemo() {
   }, []);
 
   return (
-    <div className="flex flex-col items-center gap-8">
+    <div className="flex flex-col items-center gap-7">
       <div className="flex flex-wrap items-center justify-center gap-2">
         <Button
           type="button"
@@ -108,7 +115,7 @@ export default function NotificationStackDemo() {
           size="sm"
           onClick={addNotification}
         >
-          Adicionar notificação
+          Add notification
         </Button>
         <Button
           type="button"
@@ -117,15 +124,16 @@ export default function NotificationStackDemo() {
           onClick={dismissAll}
           disabled={notifications.length === 0}
         >
-          Limpar tudo
+          Clear all
         </Button>
       </div>
 
-      <p className="text-xs text-muted-foreground">
-        Arraste o card para dispensar · Clique no × para fechar
+      <p className="max-w-sm text-center text-muted-foreground text-xs">
+        Drag the top card to dismiss it, or use the close control in the loose
+        header.
       </p>
 
-      <div className="flex items-center justify-center py-4">
+      <div className="flex min-h-44 items-center justify-center py-2">
         <NotificationStack
           notifications={notifications}
           onDismiss={dismiss}

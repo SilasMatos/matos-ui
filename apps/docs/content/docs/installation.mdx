@@ -1,0 +1,159 @@
+---
+title: Installation
+description: Everything you need to install Matos UI components and run the registry locally.
+---
+
+Matos UI is distributed through the shadcn CLI. Components are copied into your project, so you own the code and can style it with your theme.
+
+## Requirements
+
+Before installing components, make sure your app has:
+
+- React or Next.js
+- Tailwind CSS
+- shadcn/ui initialized
+- Node.js 18+ or Bun
+
+## Start a New Project
+
+Create a Next.js app:
+
+```bash
+npx create-next-app@latest my-app
+```
+
+Move into the project:
+
+```bash
+cd my-app
+```
+
+Initialize shadcn/ui:
+
+```bash
+npx shadcn@latest init
+```
+
+## Add Matos UI Components
+
+Install a component from the production registry:
+
+```bash
+npx shadcn@latest add https://matos-ui.com/r/button.json
+```
+
+Install more components:
+
+```bash
+npx shadcn@latest add https://matos-ui.com/r/badge.json
+npx shadcn@latest add https://matos-ui.com/r/breadcrumb.json
+npx shadcn@latest add https://matos-ui.com/r/command-dock.json
+npx shadcn@latest add https://matos-ui.com/r/dynamic-island.json
+npx shadcn@latest add https://matos-ui.com/r/file-upload.json
+```
+
+Install a demo:
+
+```bash
+npx shadcn@latest add https://matos-ui.com/r/button-demo.json
+```
+
+## Common Dependencies
+
+The shadcn CLI installs registry dependencies when they are declared by the component. If you are copying files manually, install the packages used across Matos UI:
+
+```bash
+npm install @base-ui/react framer-motion lucide-react tailwind-merge tailwind-variants
+```
+
+With Bun:
+
+```bash
+bun add @base-ui/react framer-motion lucide-react tailwind-merge tailwind-variants
+```
+
+## Use a Component
+
+After installation, import the component from your local components folder:
+
+```tsx
+import { Button } from "@/components/matos-ui/button"
+
+export function Example() {
+  return <Button>Save changes</Button>
+}
+```
+
+## Run This Repository Locally
+
+Clone the repository:
+
+```bash
+git clone https://github.com/SilasMatos/matos-ui.git
+```
+
+Move into the project:
+
+```bash
+cd matos-ui
+```
+
+Install dependencies:
+
+```bash
+bun install
+```
+
+Start the docs app:
+
+```bash
+bun run --cwd apps/docs dev
+```
+
+The docs run at:
+
+```txt
+http://localhost:4000
+```
+
+## Registry Commands
+
+Build the registry JSON files:
+
+```bash
+bun run --cwd apps/docs registry:build
+```
+
+Run TypeScript checks for the docs app:
+
+```bash
+bun run --cwd apps/docs types:check
+```
+
+Build the full docs app:
+
+```bash
+bun run --cwd apps/docs build
+```
+
+Run the full monorepo build:
+
+```bash
+bun run build
+```
+
+Format and lint the workspace:
+
+```bash
+bun run check
+```
+
+## Local Registry URL
+
+When the docs dev server is running, you can install components from the local registry:
+
+```bash
+npx shadcn@latest add http://localhost:4000/r/button.json
+```
+
+This is useful when testing new components before publishing.

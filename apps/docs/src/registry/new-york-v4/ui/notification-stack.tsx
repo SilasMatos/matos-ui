@@ -4,6 +4,7 @@ import {
   AnimatePresence,
   motion,
   type PanInfo,
+  useReducedMotion,
   type Variants,
 } from "framer-motion";
 import { X } from "lucide-react";
@@ -21,7 +22,10 @@ import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
 
 export const notificationStackVariants = tv({
-  base: ["relative flex flex-col items-center"],
+  base: [
+    "relative flex flex-col items-center",
+    "[--notification-panel-inset:--spacing(2.5)]",
+  ],
   variants: {
     size: {
       sm: "w-[300px]",
@@ -36,8 +40,8 @@ export const notificationStackVariants = tv({
 
 export const notificationCardVariants = tv({
   base: [
-    "w-full overflow-hidden rounded-[16px] border border-border",
-    "bg-secondary text-foreground shadow-lg",
+    "w-full overflow-hidden rounded-[20px] border border-border/60",
+    "bg-muted/55 text-foreground",
   ],
 });
 
@@ -114,47 +118,47 @@ export function NotificationStackProvider({
 }
 
 const cardVariants: Variants = {
-  initial: { opacity: 0, y: -30, scale: 0.96 },
+  initial: { opacity: 0, y: -24, scale: 0.97 },
   animate: {
     opacity: 1,
     y: 0,
     scale: 1,
     transition: {
       type: "spring",
-      stiffness: 380,
-      damping: 26,
-      mass: 0.8,
+      stiffness: 360,
+      damping: 30,
+      mass: 0.86,
     },
   },
   exit: {
     opacity: 0,
-    y: -50,
-    scale: 0.93,
+    y: -34,
+    scale: 0.97,
     transition: {
-      duration: 0.25,
-      ease: [0.36, 0, 0.66, -0.56],
+      duration: 0.2,
+      ease: [0.32, 0, 0.67, 0],
     },
   },
 };
 
 const stackLayerVariants: Variants = {
-  initial: { opacity: 0, scale: 0.9, y: 0 },
+  initial: { opacity: 0, scale: 0.96, y: 0 },
   animate: (i: number) => ({
     opacity: 1,
-    scaleX: 1 - i * 0.04,
+    scaleX: 1 - i * 0.035,
     scaleY: 1,
-    y: i * 5,
+    y: i * 7,
     transition: {
       type: "spring",
       stiffness: 300,
-      damping: 24,
-      delay: i * 0.05,
+      damping: 28,
+      delay: i * 0.035,
     },
   }),
   exit: {
     opacity: 0,
-    scale: 0.9,
-    transition: { duration: 0.2 },
+    scale: 0.96,
+    transition: { duration: 0.18 },
   },
 };
 
@@ -173,12 +177,16 @@ export function NotificationStack({
   maxStackLayers = 3,
   ...props
 }: NotificationStackProps) {
+  const shouldReduceMotion = useReducedMotion();
   const topNotification = notifications[notifications.length - 1];
   const stackCount = Math.min(notifications.length - 1, maxStackLayers);
   const remainingCount = notifications.length - 1;
 
   function handleDragEnd(_: unknown, info: PanInfo) {
-    if (!topNotification) return;
+    if (!topNotification) {
+      return;
+    }
+
     if (Math.abs(info.offset.y) > 80 || Math.abs(info.offset.x) > 120) {
       onDismiss?.(topNotification.id);
     }
@@ -192,17 +200,18 @@ export function NotificationStack({
     >
       <div
         className="relative w-full"
-        style={{ paddingBottom: stackCount * 5 }}
+        style={{ paddingBottom: stackCount * 7 }}
       >
         <AnimatePresence>
           {Array.from({ length: stackCount }).map((_, i) => {
             const layerIndex = stackCount - i;
+
             return (
               <motion.div
                 key={`stack-layer-${layerIndex}`}
                 custom={layerIndex}
                 variants={stackLayerVariants}
-                initial="initial"
+                initial={shouldReduceMotion ? false : "initial"}
                 animate="animate"
                 exit="exit"
                 className="absolute inset-x-0 bottom-0 top-0 z-0 origin-bottom"
@@ -211,10 +220,12 @@ export function NotificationStack({
                 <div
                   className={twMerge(
                     notificationCardVariants(),
-                    "h-full w-full",
+                    "flex h-full w-full flex-col py-2.5",
                   )}
-                  style={{ opacity: 0.3 + i * 0.2 }}
-                />
+                  style={{ opacity: 0.4 + i * 0.16 }}
+                >
+                  <div className="mx-(--notification-panel-inset) min-h-16 flex-1 rounded-xl border border-border/50 bg-card/70" />
+                </div>
               </motion.div>
             );
           })}
@@ -225,126 +236,159 @@ export function NotificationStack({
             <motion.div
               key={topNotification.id}
               variants={cardVariants}
-              initial="initial"
+              initial={shouldReduceMotion ? false : "initial"}
               animate="animate"
               exit="exit"
               drag
               dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
-              dragElastic={0.5}
+              dragElastic={0.42}
               onDragEnd={handleDragEnd}
               className="relative cursor-grab active:cursor-grabbing"
               style={{ zIndex: stackCount + 1 }}
+              whileHover={shouldReduceMotion ? undefined : { y: -2 }}
+              whileTap={shouldReduceMotion ? undefined : { scale: 0.995 }}
+              transition={{ type: "spring", stiffness: 340, damping: 30 }}
             >
               <div className={notificationCardVariants()}>
-                <div
-                  className={twMerge(
-                    "flex items-center gap-2.5 overflow-hidden rounded-xl bg-card px-3 py-2 mx-1 mt-1",
-                    remainingCount === 0 && "mb-1",
-                  )}
-                >
-                  {topNotification.avatar && (
-                    <motion.div
-                      initial={{ scale: 0, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      transition={{
-                        type: "spring",
-                        stiffness: 400,
-                        damping: 20,
-                        delay: 0.12,
-                      }}
-                      className="flex size-7 shrink-0 items-center justify-center overflow-hidden rounded-full bg-muted"
-                    >
-                      {topNotification.avatar}
-                    </motion.div>
-                  )}
-
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-1.5">
-                      {topNotification.app && (
-                        <motion.span
-                          initial={{ opacity: 0 }}
+                <div className="flex items-center justify-between gap-3 px-4 pb-2 pt-3.5">
+                  <div className="flex min-w-0 items-center gap-2">
+                    <span
+                      className="size-1.5 shrink-0 rounded-full bg-primary"
+                      aria-hidden="true"
+                    />
+                    <div className="min-w-0">
+                      {topNotification.app ? (
+                        <motion.p
+                          initial={shouldReduceMotion ? false : { opacity: 0 }}
                           animate={{ opacity: 1 }}
-                          transition={{ delay: 0.1 }}
-                          className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground"
+                          transition={{ duration: 0.18 }}
+                          className="truncate text-[10px] font-medium uppercase text-muted-foreground"
                         >
                           {topNotification.app}
-                        </motion.span>
-                      )}
-                      <motion.p
-                        initial={{ opacity: 0, x: -6 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.08, duration: 0.25 }}
-                        className="truncate text-sm font-semibold leading-tight"
-                      >
-                        {topNotification.title}
-                      </motion.p>
+                        </motion.p>
+                      ) : null}
                     </div>
-
-                    {topNotification.description && (
-                      <motion.p
-                        initial={{ opacity: 0, x: -6 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.14, duration: 0.25 }}
-                        className="truncate text-xs leading-snug text-muted-foreground"
-                      >
-                        {topNotification.description}
-                      </motion.p>
-                    )}
                   </div>
 
-                  <div className="flex shrink-0 items-center gap-1.5">
-                    {topNotification.timestamp && (
+                  <div className="flex shrink-0 items-center gap-2">
+                    {topNotification.timestamp ? (
                       <motion.span
-                        initial={{ opacity: 0 }}
+                        initial={shouldReduceMotion ? false : { opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        transition={{ delay: 0.15 }}
-                        className="text-[10px] text-muted-foreground"
+                        transition={{ delay: 0.08, duration: 0.18 }}
+                        className="text-[11px] text-muted-foreground"
                       >
                         {topNotification.timestamp}
                       </motion.span>
-                    )}
-
-                    {topNotification.action && (
-                      <motion.button
-                        type="button"
-                        initial={{ opacity: 0, y: 4 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.22 }}
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.97 }}
-                        onClick={topNotification.action.onClick}
-                        className="rounded-md bg-primary px-2 py-0.5 text-[11px] font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                      >
-                        {topNotification.action.label}
-                      </motion.button>
-                    )}
+                    ) : null}
 
                     <motion.button
                       type="button"
-                      whileHover={{ scale: 1.15 }}
-                      whileTap={{ scale: 0.85 }}
+                      whileHover={
+                        shouldReduceMotion ? undefined : { scale: 1.04 }
+                      }
+                      whileTap={
+                        shouldReduceMotion ? undefined : { scale: 0.94 }
+                      }
                       onClick={() => onDismiss?.(topNotification.id)}
-                      aria-label="Dispensar notificação"
-                      className="flex size-5 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      aria-label="Dismiss notification"
+                      className="flex size-6 items-center justify-center rounded-lg border border-border/60 bg-background/60 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     >
-                      <X className="size-3" strokeWidth={2} />
+                      <X className="size-3.5" strokeWidth={2} />
                     </motion.button>
                   </div>
                 </div>
 
-                {remainingCount > 0 && (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.25 }}
-                    className="flex items-center px-3 pt-1.5 pb-2"
-                  >
-                    <span className="text-[11px] text-muted-foreground/80">
-                      {remainingCount} more notification
-                      {remainingCount > 1 ? "s" : ""}
-                    </span>
-                  </motion.div>
-                )}
+                <div className="mx-(--notification-panel-inset) overflow-hidden rounded-xl border border-border/60 bg-card text-card-foreground">
+                  <div className="flex items-start gap-3 px-3 py-3">
+                    {topNotification.avatar ? (
+                      <motion.div
+                        initial={
+                          shouldReduceMotion
+                            ? false
+                            : { scale: 0.88, opacity: 0 }
+                        }
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 360,
+                          damping: 24,
+                          delay: 0.06,
+                        }}
+                        className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border/60 bg-muted"
+                      >
+                        {topNotification.avatar}
+                      </motion.div>
+                    ) : null}
+
+                    <div className="min-w-0 flex-1 space-y-1">
+                      <motion.p
+                        initial={
+                          shouldReduceMotion ? false : { opacity: 0, y: 4 }
+                        }
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.07, duration: 0.22 }}
+                        className="truncate text-sm font-semibold leading-tight"
+                      >
+                        {topNotification.title}
+                      </motion.p>
+
+                      {topNotification.description ? (
+                        <motion.p
+                          initial={
+                            shouldReduceMotion ? false : { opacity: 0, y: 4 }
+                          }
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.11, duration: 0.22 }}
+                          className="line-clamp-2 text-muted-foreground text-xs leading-relaxed"
+                        >
+                          {topNotification.description}
+                        </motion.p>
+                      ) : null}
+                    </div>
+
+                    {topNotification.action ? (
+                      <motion.button
+                        type="button"
+                        initial={
+                          shouldReduceMotion ? false : { opacity: 0, y: 4 }
+                        }
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.14, duration: 0.2 }}
+                        whileHover={shouldReduceMotion ? undefined : { y: -1 }}
+                        whileTap={
+                          shouldReduceMotion ? undefined : { scale: 0.96 }
+                        }
+                        onClick={topNotification.action.onClick}
+                        className="shrink-0 rounded-lg border border-border/60 bg-background px-2.5 py-1 text-[11px] font-medium text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      >
+                        {topNotification.action.label}
+                      </motion.button>
+                    ) : null}
+                  </div>
+                </div>
+
+                <motion.div
+                  initial={shouldReduceMotion ? false : { opacity: 0, y: 3 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.18, duration: 0.2 }}
+                  className="flex items-center justify-between gap-3 px-4 pb-3 pt-2"
+                >
+                  <span className="text-[11px] text-muted-foreground">
+                    {remainingCount > 0
+                      ? `${remainingCount} more notification${
+                          remainingCount > 1 ? "s" : ""
+                        }`
+                      : "Swipe or close to dismiss"}
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 text-[11px] text-muted-foreground">
+                    <span
+                      className="size-1 rounded-full bg-muted-foreground/50"
+                      aria-hidden="true"
+                    />
+                    {notifications.length} active
+                  </span>
+                </motion.div>
               </div>
             </motion.div>
           ) : null}
