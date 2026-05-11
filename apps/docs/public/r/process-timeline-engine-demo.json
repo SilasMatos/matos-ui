@@ -1,0 +1,16 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "process-timeline-engine-demo",
+  "registryDependencies": [
+    "process-timeline-engine"
+  ],
+  "files": [
+    {
+      "path": "components/matos-ui/examples/process-timeline-engine-demo.tsx",
+      "content": "\"use client\";\n\nimport { Code2, PenLine, Rocket, Search } from \"lucide-react\";\nimport { useState } from \"react\";\nimport {\n  ProcessTimelineEngine,\n  type ProcessTimelineItem,\n} from \"@/components/matos-ui/process-timeline-engine\";\n\nconst timelineItems: ProcessTimelineItem[] = [\n  {\n    id: \"discover\",\n    title: \"Discover\",\n    description: \"Research & plan\",\n    status: \"complete\",\n    icon: <Search className=\"size-3.5\" strokeWidth={2.4} />,\n  },\n  {\n    id: \"design\",\n    title: \"Design\",\n    description: \"UX prototype\",\n    status: \"complete\",\n    icon: <PenLine className=\"size-3.5\" strokeWidth={2.4} />,\n  },\n  {\n    id: \"build\",\n    title: \"Build\",\n    description: \"Implement & test\",\n    status: \"active\",\n    icon: <Code2 className=\"size-3.5\" strokeWidth={2.4} />,\n  },\n  {\n    id: \"launch\",\n    title: \"Launch\",\n    description: \"Ship & iterate\",\n    status: \"pending\",\n    icon: <Rocket className=\"size-3.5\" strokeWidth={2.4} />,\n  },\n];\n\nexport default function ProcessTimelineEngineDemo() {\n  const [activeId, setActiveId] = useState(\"build\");\n\n  return (\n    <div className=\"flex w-full justify-center\">\n      <ProcessTimelineEngine\n        items={timelineItems}\n        activeId={activeId}\n        title=\"Process timeline\"\n        subtitle=\"Simple compact project flow\"\n        onItemSelect={(item) => setActiveId(item.id)}\n      />\n    </div>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/process-timeline-engine-demo.tsx"
+    }
+  ],
+  "type": "registry:example"
+}

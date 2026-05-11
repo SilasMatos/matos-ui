@@ -1,0 +1,67 @@
+---
+title: Process Timeline Engine
+description: Timeline operational para processos com progresso, status, metadados e selecao de etapas.
+---
+
+<ComponentPreview name="process-timeline-engine-demo" chromeless align="start" />
+
+## Usage
+
+```tsx
+import {
+  ProcessTimelineEngine,
+  type ProcessTimelineItem
+} from '@/components/matos-ui/process-timeline-engine'
+```
+
+```tsx
+const items: ProcessTimelineItem[] = [
+  {
+    id: 'intake',
+    title: 'Intake aprovado',
+    description: 'Briefing e escopo foram validados.',
+    status: 'complete',
+    timestamp: '09:10'
+  },
+  {
+    id: 'mapping',
+    title: 'Mapeamento em execucao',
+    status: 'active',
+    meta: 'Produto'
+  }
+]
+
+;<ProcessTimelineEngine
+  items={items}
+  activeId="mapping"
+  title="Process Timeline Engine"
+  onItemSelect={(item) => console.log(item)}
+/>
+```
+
+## Reference
+
+### ProcessTimelineEngine Props
+
+| Prop           | Type                              | Default              | Description                         |
+| -------------- | --------------------------------- | -------------------- | ----------------------------------- |
+| `items`        | `ProcessTimelineItem[]`           | -                    | Lista de etapas do processo.        |
+| `activeId`     | `string?`                         | -                    | Etapa visualmente selecionada.      |
+| `title`        | `string?`                         | `"Process Timeline"` | Titulo do painel.                   |
+| `subtitle`     | `string?`                         | -                    | Texto auxiliar abaixo do titulo.    |
+| `onItemSelect` | `(item: ProcessTimelineItem) => void` | -                 | Torna as etapas clicaveis.          |
+| `size`         | `"sm" \| "md" \| "lg"`           | `"md"`               | Largura maxima do componente.       |
+
+### ProcessTimelineItem
+
+| Field         | Type                                                                            | Description                    |
+| ------------- | ------------------------------------------------------------------------------- | ------------------------------ |
+| `id`          | `string`                                                                        | Identificador unico da etapa.  |
+| `title`       | `string`                                                                        | Nome da etapa.                 |
+| `description` | `string?`                                                                       | Detalhe da etapa.              |
+| `status`      | `"complete" \| "active" \| "pending" \| "blocked" \| "paused"`                | Estado visual da etapa.        |
+| `timestamp`   | `string?`                                                                       | Horario ou prazo.              |
+| `meta`        | `string?`                                                                       | Time, area ou metadado curto.  |
+| `icon`        | `ReactNode?`                                                                    | Icone customizado da etapa.    |
+
+Also exported: `processTimelineEngineVariants`, `ProcessTimelineEngineProps`, `ProcessTimelineItem` and `ProcessTimelineStatus`.

@@ -16,9 +16,9 @@ export default async function DocsLayout({ children, params }: Props) {
   const tree = source.getPageTree(locale);
 
   return (
-    <div className="container-wrapper flex flex-1 flex-col px-6 3xl:fixed:px-0 bg-background">
+    <div className="mx-auto flex h-full  items-center justify-between px-6">
       <SidebarProvider
-        className="min-h-min flex-1 items-start px-0 [--top-spacing:0] lg:grid lg:grid-cols-[var(--sidebar-width)_minmax(0,1fr)] lg:[--top-spacing:calc(var(--spacing)*4)] 3xl:fixed:container"
+        className="min-h-min w-full flex-1 items-start px-0 [--top-spacing:0] lg:grid lg:grid-cols-[var(--sidebar-width)_minmax(0,1fr)] lg:[--top-spacing:calc(var(--spacing)*4)]"
         style={
           {
             "--sidebar-width": "calc(var(--spacing) * 72)",

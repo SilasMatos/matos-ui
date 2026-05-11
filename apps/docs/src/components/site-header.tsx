@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import logoSrc from "@/assets/logo-white.png";
 import { CommandMenu } from "@/components/command-menu";
 import { GitHubLink } from "@/components/github-link";
+import { MatosUiLogo } from "@/components/icons/matos-ui-logo";
 import { MainNav } from "@/components/main-nav";
 import { MobileNav } from "@/components/mobile-nav";
 import { ModeSwitcher } from "@/components/mode-switcher";
@@ -27,10 +28,10 @@ export function SiteHeader({ pageTree }: { pageTree: DocsPageTree }) {
 
   return (
     <header
-      className={`sticky top-0 z-50 w-full py-2 transition-colors ${isHome ? "bg-transparent backdrop-blur-md" : "bg-background"}`}
+      className={`sticky top-0 z-50 h-(--header-height) w-full transition-colors ${isHome ? "bg-transparent backdrop-blur-md" : "bg-background"}`}
     >
-      <div className="container-wrapper px-6 3xl:fixed:px-0">
-        <div className="flex h-(--header-height) items-center **:data-[slot=separator]:h-4! 3xl:fixed:container">
+      <div className="mx-auto flex h-full  items-center justify-between px-6">
+        <div className="flex min-w-0 items-center">
           <MobileNav
             tree={pageTree}
             items={navItems}
@@ -55,6 +56,7 @@ export function SiteHeader({ pageTree }: { pageTree: DocsPageTree }) {
               </Link>
             }
           />
+
           <Link
             href="/"
             className="font-logo text-lg font-normal tracking-tight"
@@ -67,32 +69,29 @@ export function SiteHeader({ pageTree }: { pageTree: DocsPageTree }) {
           </Link>
           <div className="h-8 w-px bg-border mx-4"></div>
           <MainNav items={navItems} className="hidden lg:flex" />
-          <div className="ml-auto flex items-center gap-2 md:flex-1 md:justify-end">
-            <CommandMenu tree={pageTree} navItems={navItems} />
-            <Separator
-              orientation="vertical"
-              className="ml-2 hidden lg:block"
-            />
-            <GitHubLink />
-            <Button
-              variant="ghost"
-              size="icon"
-              nativeButton={false}
-              render={
-                <Link
-                  href={siteConfig.links.twitter}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <XformerlyTwitter className="" />
-                </Link>
-              }
-            >
-              <XformerlyTwitter className="" />
-            </Button>
-            <Separator orientation="vertical" className="hidden 3xl:flex" />
-            <ModeSwitcher />
-          </div>
+        </div>
+        <div className="flex items-center gap-2 **:data-[slot=separator]:h-4!">
+          <CommandMenu tree={pageTree} navItems={navItems} />
+          <Separator orientation="vertical" className="ml-2 hidden lg:block" />
+          <GitHubLink />
+          <Button
+            variant="ghost"
+            size="icon"
+            nativeButton={false}
+            render={
+              <Link
+                href={siteConfig.links.twitter}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <XformerlyTwitter className="" />
+              </Link>
+            }
+          >
+            <XformerlyTwitter className="" />
+          </Button>
+          <Separator orientation="vertical" className="hidden 3xl:flex" />
+          <ModeSwitcher />
         </div>
       </div>
     </header>
