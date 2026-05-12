@@ -30,7 +30,7 @@ export function ComponentPreviewTabs({
       data-slot="component-preview"
       data-chromeless-preview={chromeless ? "true" : undefined}
       className={cn(
-        "group relative mt-4 mb-12 flex flex-col overflow-hidden rounded-xl border",
+        "group relative mt-4 mb-12 flex flex-col gap-4 overflow-hidden rounded-xl  p-4 border",
         className,
       )}
       {...props}

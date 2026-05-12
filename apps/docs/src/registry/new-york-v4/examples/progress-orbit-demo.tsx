@@ -1,13 +1,14 @@
 "use client";
 
-import { Gauge, Rocket, ShieldCheck } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
+
 import { ProgressOrbit } from "@/registry/new-york-v4/ui/progress-orbit";
 
 export default function ProgressOrbitDemo() {
   return (
-    <div className=" w-full max-w-[760px]  ">
+    <div className="flex w-full justify-center p-2">
       <ProgressOrbit
-        size="sm"
+        className="max-w-56 shadow-sm"
         label="Security"
         description="Identity"
         value={72}

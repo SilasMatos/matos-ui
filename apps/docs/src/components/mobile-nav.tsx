@@ -32,10 +32,12 @@ export function MobileNav({
         render={
           <Button
             variant="ghost"
+            size="icon"
             className={cn(
-              "extend-touch-target h-8 touch-manipulation items-center justify-start gap-2.5 p-0! hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 active:bg-transparent dark:hover:bg-transparent",
+              "extend-touch-target size-8 touch-manipulation hover:bg-muted/60 focus-visible:ring-2 focus-visible:ring-ring active:bg-muted/70 dark:hover:bg-muted/50",
               className,
             )}
+            aria-label={t("menu")}
           >
             <div className="relative flex h-8 w-4 items-center justify-center">
               <div className="relative size-4">
@@ -54,9 +56,6 @@ export function MobileNav({
               </div>
               <span className="sr-only">{t("menu")}</span>
             </div>
-            <span className="flex h-8 items-center text-lg leading-none font-medium">
-              {t("menu")}
-            </span>
           </Button>
         }
       />

@@ -1,6 +1,6 @@
 {
   "name": "matos/ui",
-  "homepage": "https://matos-ui.com/",
+  "homepage": "http://localhost:4000/",
   "items": [
     {
       "name": "index",

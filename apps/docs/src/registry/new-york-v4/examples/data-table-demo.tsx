@@ -1,283 +1,215 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import {
-  BriefcaseBusiness,
-  Building2,
-  Check,
-  Hash,
-  Mail,
-  X,
-} from "lucide-react";
 
 import {
   DataTable,
-  DataTableBadge,
+  type DataTableAvatarItem,
+  DataTableAvatarStack,
   DataTableColumnHeader,
-  type DataTableRowState,
+  DataTableConfidence,
+  DataTableStatusBadge,
+  DataTableTaskCount,
 } from "@/registry/new-york-v4/ui/data-table";
 
-type Employee = {
-  id: string;
-  department: "Finance" | "HR" | "Marketing" | "Sales" | "Engineering";
-  email: string;
-  employment: "Active" | "Inactive";
-  firstName: string;
-  lastName: string;
-  deleted?: boolean;
-  subRows?: Employee[];
+type AgentStatus = "running" | "idle" | "error" | "scheduled";
+
+type Agent = {
+  agent: string;
+  status: AgentStatus;
+  confidence: number;
+  cost: string;
+  tasks: number;
+  assignee: DataTableAvatarItem[];
 };
 
-const employees: Employee[] = [
+const agents: Agent[] = [
   {
-    id: "#1024",
-    department: "Finance",
-    email: "liam.patel@globex.com",
-    employment: "Active",
-    firstName: "Liam",
-    lastName: "Patel",
-  },
-  {
-    id: "#1025",
-    department: "HR",
-    email: "priya.nakamura@globex.com",
-    employment: "Active",
-    firstName: "Priya",
-    lastName: "Nakamura",
-    subRows: [
+    agent: "Researcher",
+    status: "running",
+    confidence: 94,
+    cost: "$0.034",
+    tasks: 12,
+    assignee: [
       {
-        id: "#1025",
-        department: "Finance",
-        email: "pnakamura@gmail.com",
-        employment: "Active",
-        firstName: "Priya",
-        lastName: "Nakamura",
+        name: "Ana Silva",
+        image:
+          "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop&crop=face",
       },
     ],
   },
   {
-    id: "#1026",
-    department: "Marketing",
-    email: "tobias.engstrom@globex.com",
-    employment: "Active",
-    firstName: "Tobias",
-    lastName: "Engstrom",
-    subRows: [
+    agent: "Proposal Drafter",
+    status: "idle",
+    confidence: 87,
+    cost: "$0.018",
+    tasks: 3,
+    assignee: [
       {
-        id: "#1026",
-        department: "HR",
-        email: "tobias@globex.com",
-        employment: "Inactive",
-        firstName: "Tobias",
-        lastName: "Engstrom",
+        name: "Marina Costa",
+        image:
+          "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&h=80&fit=crop&crop=face",
       },
       {
-        id: "#1026",
-        department: "Marketing",
-        email: "t.engstrom@gmail.com",
-        employment: "Active",
-        firstName: "Tobias",
-        lastName: "Engstrom",
+        name: "Lucas Rocha",
+        image:
+          "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&crop=face",
+      },
+      { name: "João Lima", initials: "JL" },
+      { name: "Bia Torres", initials: "BT" },
+      { name: "Rafa Alves", initials: "RA" },
+    ],
+  },
+  {
+    agent: "Data Extractor",
+    status: "error",
+    confidence: 61,
+    cost: "$0.052",
+    tasks: 2,
+    assignee: [{ name: "Agent Group", initials: "AG" }],
+  },
+  {
+    agent: "UX Reviewer",
+    status: "running",
+    confidence: 91,
+    cost: "$0.027",
+    tasks: 7,
+    assignee: [
+      {
+        name: "Pedro Martins",
+        image:
+          "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=80&h=80&fit=crop&crop=face",
+      },
+      {
+        name: "Mateus Dias",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face",
+      },
+      {
+        name: "Carlos Freitas",
+        image:
+          "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=80&h=80&fit=crop&crop=face",
       },
     ],
   },
   {
-    id: "#1027",
-    department: "Sales",
-    email: "amara.osei@globex.com",
-    employment: "Inactive",
-    firstName: "Amara",
-    lastName: "Osei",
-    deleted: true,
-  },
-  {
-    id: "#1028",
-    department: "Sales",
-    email: "carlos.medina@globex.com",
-    employment: "Active",
-    firstName: "Carlos",
-    lastName: "Medina",
-  },
-  {
-    id: "#1029",
-    department: "Engineering",
-    email: "mei.zhang@globex.com",
-    employment: "Active",
-    firstName: "Mei",
-    lastName: "Zhang",
-  },
-  {
-    id: "#1030",
-    department: "Engineering",
-    email: "felix.andersson@globex.com",
-    employment: "Inactive",
-    firstName: "Felix",
-    lastName: "Andersson",
-    deleted: true,
-  },
-  {
-    id: "#1031",
-    department: "HR",
-    email: "sofia.reyes@globex.com",
-    employment: "Active",
-    firstName: "Sofia",
-    lastName: "Reyes",
-    subRows: [
+    agent: "Composer",
+    status: "running",
+    confidence: 88,
+    cost: "$0.011",
+    tasks: 5,
+    assignee: [
       {
-        id: "#1031",
-        department: "Engineering",
-        email: "sreyes@gmail.com",
-        employment: "Active",
-        firstName: "Sofia",
-        lastName: "Reyes",
+        name: "Laura Mendes",
+        image:
+          "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=face",
       },
+      {
+        name: "Felipe Souza",
+        image:
+          "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&crop=face",
+      },
+      { name: "Nina Reis", initials: "NR" },
+      { name: "Theo Ramos", initials: "TR" },
     ],
   },
   {
-    id: "#1032",
-    department: "Finance",
-    email: "idris.kouassi@globex.com",
-    employment: "Active",
-    firstName: "Idris",
-    lastName: "Kouassi",
-  },
-  {
-    id: "#1033",
-    department: "Finance",
-    email: "hana.watanabe@globex.com",
-    employment: "Active",
-    firstName: "Hana",
-    lastName: "Watanabe",
-  },
-  {
-    id: "#1034",
-    department: "Marketing",
-    email: "nora.klein@globex.com",
-    employment: "Inactive",
-    firstName: "Nora",
-    lastName: "Klein",
-  },
-  {
-    id: "#1035",
-    department: "Engineering",
-    email: "owen.clark@globex.com",
-    employment: "Active",
-    firstName: "Owen",
-    lastName: "Clark",
+    agent: "Code Reviewer",
+    status: "scheduled",
+    confidence: 96,
+    cost: "$0.041",
+    tasks: 21,
+    assignee: [
+      {
+        name: "Bruno Lopes",
+        image:
+          "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=80&h=80&fit=crop&crop=face",
+      },
+      {
+        name: "Gustavo Lima",
+        image:
+          "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&crop=face",
+      },
+      {
+        name: "Diego Nunes",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face",
+      },
+      { name: "Sofia Dias", initials: "SD" },
+      { name: "Luan Castro", initials: "LC" },
+      { name: "Eva Moraes", initials: "EM" },
+    ],
   },
 ];
 
-const departmentTone: Record<
-  Employee["department"],
-  React.ComponentProps<typeof DataTableBadge>["tone"]
-> = {
-  Finance: "finance",
-  HR: "hr",
-  Marketing: "marketing",
-  Sales: "sales",
-  Engineering: "engineering",
+const statusLabel: Record<AgentStatus, string> = {
+  running: "Running",
+  idle: "Idle",
+  error: "Error",
+  scheduled: "Scheduled",
 };
 
-const columns: ColumnDef<Employee>[] = [
+const columns: ColumnDef<Agent>[] = [
   {
-    accessorKey: "id",
+    accessorKey: "agent",
+    size: 190,
     header: ({ column }) => (
-      <DataTableColumnHeader
-        column={column}
-        title="ID"
-        icon={<Hash aria-hidden="true" />}
-      />
+      <DataTableColumnHeader column={column} title="Agent" />
     ),
     cell: ({ row }) => (
-      <span className="font-medium text-foreground tabular-nums">
-        {row.getValue("id")}
-      </span>
+      <span className="font-medium text-foreground">{row.original.agent}</span>
     ),
     enableSorting: true,
   },
   {
-    accessorKey: "department",
-    header: ({ column }) => (
-      <DataTableColumnHeader
-        column={column}
-        title="Department"
-        icon={<Building2 aria-hidden="true" />}
-      />
-    ),
-    cell: ({ row }) => {
-      const department = row.getValue<Employee["department"]>("department");
-
-      return (
-        <DataTableBadge tone={departmentTone[department]}>
-          {department}
-        </DataTableBadge>
-      );
-    },
-    enableSorting: true,
-  },
-  {
-    accessorKey: "email",
-    header: ({ column }) => (
-      <DataTableColumnHeader
-        column={column}
-        title="Email"
-        icon={<Mail aria-hidden="true" />}
-      />
-    ),
+    accessorKey: "status",
+    size: 140,
+    header: "Status",
     cell: ({ row }) => (
-      <span className="block truncate text-muted-foreground">
-        {row.getValue("email")}
-      </span>
+      <DataTableStatusBadge status={row.original.status}>
+        {statusLabel[row.original.status]}
+      </DataTableStatusBadge>
     ),
-    enableSorting: true,
   },
   {
-    accessorKey: "employment",
-    header: ({ column }) => (
-      <DataTableColumnHeader
-        column={column}
-        title="Employment"
-        icon={<BriefcaseBusiness aria-hidden="true" />}
+    accessorKey: "confidence",
+    size: 170,
+    header: "Confidence",
+    cell: ({ row }) => (
+      <DataTableConfidence
+        value={row.original.confidence}
+        showPercent={row.original.confidence > 70}
       />
     ),
-    cell: ({ row }) => {
-      const employment = row.getValue<Employee["employment"]>("employment");
-      const StatusIcon = employment === "Active" ? Check : X;
-
-      return (
-        <DataTableBadge
-          tone={employment === "Active" ? "active" : "inactive"}
-          dot={false}
-          className="gap-1.5 px-2.5"
-        >
-          <StatusIcon className="size-3.5" aria-hidden="true" />
-          {employment}
-        </DataTableBadge>
-      );
-    },
-    enableSorting: true,
+  },
+  {
+    accessorKey: "cost",
+    size: 110,
+    header: "Cost",
+    cell: ({ row }) => (
+      <span className="font-medium text-foreground/85">
+        {row.original.cost}
+      </span>
+    ),
+  },
+  {
+    accessorKey: "tasks",
+    size: 100,
+    header: "Tasks",
+    cell: ({ row }) => <DataTableTaskCount count={row.original.tasks} />,
+  },
+  {
+    accessorKey: "assignee",
+    size: 150,
+    header: "Assignee",
+    cell: ({ row }) => <DataTableAvatarStack users={row.original.assignee} />,
   },
 ];
-
-function getEmployeeRowState(employee: Employee): DataTableRowState {
-  if (employee.deleted) {
-    return "deleted";
-  }
-
-  if (employee.employment === "Inactive") {
-    return "inactive";
-  }
-
-  return "default";
-}
 
 export default function DataTableDemo() {
   return (
-    <DataTable
-      data={employees}
-      columns={columns}
-      pageSize={8}
-      getRowState={getEmployeeRowState}
-    />
+    <div className="w-full max-w-4xl">
+      <DataTable data={agents} columns={columns} pageSize={6} totalItems={35} />
+    </div>
   );
 }

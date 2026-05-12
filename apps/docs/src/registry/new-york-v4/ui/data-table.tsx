@@ -3,15 +3,11 @@
 import {
   type Column,
   type ColumnDef,
-  type ColumnFiltersState,
-  type ExpandedState,
   flexRender,
   getCoreRowModel,
-  getExpandedRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  type RowSelectionState,
   type SortingState,
   type Table as TanStackTable,
   useReactTable,
@@ -20,202 +16,47 @@ import {
   ArrowDown,
   ArrowUp,
   ArrowUpDown,
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
-  ChevronRightIcon,
-  GripVertical,
-  Inbox,
-  Search,
-  X,
 } from "lucide-react";
-import {
-  type ComponentProps,
-  type CSSProperties,
-  type ReactNode,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import type { ComponentProps } from "react";
+import { useState } from "react";
+import { twMerge } from "tailwind-merge";
+import { tv, type VariantProps } from "tailwind-variants";
 
-import { cn } from "@/lib/utils";
+export const dataTableVariants = tv({
+  base: "not-prose w-full text-foreground",
+});
 
-type MaybeNested<TData> = TData & {
-  subRows?: TData[];
-  children?: TData[];
-};
-
-export type DataTableRowState = "default" | "inactive" | "deleted";
-
-export type DataTableProps<TData, TValue> = ComponentProps<"div"> & {
-  data: TData[];
-  columns: ColumnDef<TData, TValue>[];
-  title?: string;
-  description?: string;
-  searchKey?: string;
-  searchPlaceholder?: string;
-  pageSize?: number;
-  pageSizeOptions?: number[];
-  loading?: boolean;
-  emptyTitle?: string;
-  emptyDescription?: string;
-  toolbarActions?: ReactNode;
-  getRowState?: (row: TData) => DataTableRowState | undefined;
-};
-
-function getInferredRowState<TData>(row: TData): DataTableRowState {
-  const record = row as Record<string, unknown>;
-
-  if (
-    record.deleted === true ||
-    record.status === "Deleted" ||
-    record.employment === "Deleted"
-  ) {
-    return "deleted";
-  }
-
-  if (
-    record.disabled === true ||
-    record.inactive === true ||
-    record.status === "Inactive" ||
-    record.employment === "Inactive"
-  ) {
-    return "inactive";
-  }
-
-  return "default";
-}
+export type DataTableProps<TData, TValue> = ComponentProps<"div"> &
+  VariantProps<typeof dataTableVariants> & {
+    data: TData[];
+    columns: ColumnDef<TData, TValue>[];
+    pageSize?: number;
+    totalItems?: number;
+    showingLabel?: string;
+    loading?: boolean;
+    footer?: boolean;
+  };
 
 export function DataTable<TData, TValue>({
   data,
   columns,
-  title,
-  description,
-  searchKey,
-  searchPlaceholder = "Search records...",
-  pageSize = 10,
-  pageSizeOptions = [5, 10, 20, 50],
+  pageSize = 7,
+  totalItems,
+  showingLabel = "SHOWING",
   loading = false,
-  emptyTitle,
-  emptyDescription,
-  toolbarActions,
-  getRowState,
+  footer = true,
   className,
   ...props
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
-  const [expanded, setExpanded] = useState<ExpandedState>({});
-  const resolveRowState = useMemo(
-    () => (row: TData) => getRowState?.(row) ?? getInferredRowState(row),
-    [getRowState],
-  );
-
-  const displayColumns = useMemo<ColumnDef<TData, unknown>[]>(
-    () => [
-      {
-        id: "expand",
-        size: 44,
-        enableHiding: false,
-        enableSorting: false,
-        header: () => <span className="sr-only">Expand rows</span>,
-        cell: ({ row }) => {
-          const canExpand = row.getCanExpand();
-          const depth = row.depth;
-
-          return (
-            <div
-              className="flex items-center justify-center gap-1.5"
-              style={
-                depth
-                  ? ({ "--data-table-depth": depth } as CSSProperties)
-                  : undefined
-              }
-            >
-              <span
-                className="block"
-                style={
-                  depth
-                    ? ({
-                        width: "calc(var(--data-table-depth) * 0.875rem)",
-                      } as CSSProperties)
-                    : undefined
-                }
-              />
-              {canExpand ? (
-                <button
-                  type="button"
-                  aria-label={
-                    row.getIsExpanded() ? "Collapse row" : "Expand row"
-                  }
-                  className="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  onClick={row.getToggleExpandedHandler()}
-                >
-                  <ChevronRightIcon
-                    className={cn(
-                      "size-4 transition-transform duration-200",
-                      row.getIsExpanded() && "rotate-90",
-                    )}
-                    aria-hidden="true"
-                  />
-                </button>
-              ) : depth > 0 ? (
-                <span className="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground/60">
-                  <GripVertical className="size-4" aria-hidden="true" />
-                </span>
-              ) : (
-                <span className="size-7" aria-hidden="true" />
-              )}
-            </div>
-          );
-        },
-      },
-      {
-        id: "select",
-        size: 44,
-        enableHiding: false,
-        enableSorting: false,
-        header: ({ table }) => (
-          <DataTableCheckbox
-            aria-label="Select all rows on this page"
-            checked={table.getIsAllPageRowsSelected()}
-            disabled={table.getRowModel().rows.length === 0}
-            indeterminate={table.getIsSomePageRowsSelected()}
-            onCheckedChange={(checked) =>
-              table.toggleAllPageRowsSelected(checked)
-            }
-          />
-        ),
-        cell: ({ row }) => {
-          const rowState = resolveRowState(row.original);
-
-          if (row.depth > 0) {
-            return <span className="block size-4" aria-hidden="true" />;
-          }
-
-          return (
-            <DataTableCheckbox
-              aria-label={`Select row ${row.id}`}
-              checked={row.getIsSelected()}
-              disabled={!row.getCanSelect() || rowState !== "default"}
-              onCheckedChange={(checked) => row.toggleSelected(checked)}
-            />
-          );
-        },
-      },
-      ...(columns as ColumnDef<TData, unknown>[]),
-    ],
-    [columns, resolveRowState],
-  );
 
   const table = useReactTable({
     data,
-    columns: displayColumns,
+    columns,
     state: {
-      columnFilters,
-      expanded,
-      rowSelection,
       sorting,
     },
     initialState: {
@@ -223,76 +64,49 @@ export function DataTable<TData, TValue>({
         pageSize,
       },
     },
-    enableRowSelection: (row) =>
-      row.depth === 0 && resolveRowState(row.original) === "default",
-    getSubRows: (row) => {
-      const nested = row as MaybeNested<TData>;
-      return nested.subRows ?? nested.children;
-    },
-    onColumnFiltersChange: setColumnFilters,
-    onExpandedChange: setExpanded,
-    onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
-    getExpandedRowModel: getExpandedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
   });
 
-  useEffect(() => {
-    table.setPageSize(pageSize);
-  }, [pageSize, table]);
-
-  const hasToolbar = Boolean(
-    title || description || searchKey || toolbarActions,
-  );
   const rows = table.getRowModel().rows;
-  const visibleColumnCount = table.getAllLeafColumns().length;
+  const filteredRows = table.getFilteredRowModel().rows.length;
+  const finalTotalItems = totalItems ?? filteredRows;
+  const currentPage = table.getState().pagination.pageIndex + 1;
+  const pageCount = table.getPageCount();
 
   return (
     <div
       data-slot="data-table"
-      className={cn("w-full text-foreground", className)}
+      className={twMerge(dataTableVariants(), className)}
       {...props}
     >
       <div
         data-slot="data-table-card"
-        className={cn(
-          "overflow-hidden rounded-[1.25rem] border border-border",
-          hasToolbar ? "bg-muted/40" : "bg-background",
-        )}
+        className="overflow-hidden rounded-[1.35rem] bg-muted/45 p-2 shadow-sm"
       >
-        {hasToolbar ? (
-          <DataTableToolbar
-            table={table}
-            title={title}
-            description={description}
-            searchKey={searchKey}
-            searchPlaceholder={searchPlaceholder}
-            toolbarActions={toolbarActions}
-          />
-        ) : null}
-
         <div
           data-slot="data-table-panel"
-          className={cn(
-            hasToolbar
-              ? "mx-2 overflow-hidden rounded-xl border border-border bg-background"
-              : "overflow-hidden rounded-t-[1.25rem] bg-background",
-          )}
+          className="overflow-hidden rounded-[1.05rem] border-border/60 bg-background shadow-xs"
         >
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id} className="hover:bg-transparent">
+                <TableRow
+                  key={headerGroup.id}
+                  className=" bg-muted/30 hover:bg-muted/30"
+                >
                   {headerGroup.headers.map((header) => (
                     <TableHead
                       key={header.id}
-                      className={cn(
-                        header.column.id === "select" && "w-11",
-                        header.column.id === "expand" && "w-11",
-                      )}
+                      style={{
+                        width:
+                          header.getSize() !== 150
+                            ? header.getSize()
+                            : undefined,
+                      }}
                     >
                       {header.isPlaceholder
                         ? null
@@ -305,67 +119,30 @@ export function DataTable<TData, TValue>({
                 </TableRow>
               ))}
             </TableHeader>
+
             <TableBody>
               {loading ? (
-                <DataTableSkeleton
-                  rows={Math.min(pageSize, 5)}
-                  columns={visibleColumnCount}
-                />
+                <DataTableSkeleton rows={pageSize} columns={columns.length} />
               ) : rows.length ? (
-                rows.map((row) => {
-                  const rowState = resolveRowState(row.original);
-
-                  return (
-                    <TableRow
-                      key={row.id}
-                      data-selected={row.getIsSelected() ? "" : undefined}
-                      data-disabled={
-                        rowState === "inactive" || rowState === "deleted"
-                          ? ""
-                          : undefined
-                      }
-                      data-deleted={rowState === "deleted" ? "" : undefined}
-                      data-depth={row.depth > 0 ? row.depth : undefined}
-                      data-subrow={row.depth > 0 ? "" : undefined}
-                    >
-                      {row.getVisibleCells().map((cell) => {
-                        const isControlCell =
-                          cell.column.id === "select" ||
-                          cell.column.id === "expand";
-
-                        return (
-                          <TableCell
-                            key={cell.id}
-                            className={cn(
-                              isControlCell ? "w-11" : "max-w-[260px]",
-                            )}
-                          >
-                            {isControlCell ? (
-                              flexRender(
-                                cell.column.columnDef.cell,
-                                cell.getContext(),
-                              )
-                            ) : (
-                              <div className="min-w-0 truncate">
-                                {flexRender(
-                                  cell.column.columnDef.cell,
-                                  cell.getContext(),
-                                )}
-                              </div>
-                            )}
-                          </TableCell>
-                        );
-                      })}
-                    </TableRow>
-                  );
-                })
+                rows.map((row) => (
+                  <TableRow key={row.id}>
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={visibleColumnCount} className="h-56">
-                    <DataTableEmpty
-                      title={emptyTitle}
-                      description={emptyDescription}
-                    />
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-32 text-center text-muted-foreground"
+                  >
+                    No results found.
                   </TableCell>
                 </TableRow>
               )}
@@ -373,91 +150,17 @@ export function DataTable<TData, TValue>({
           </Table>
         </div>
 
-        <DataTablePagination
-          table={table}
-          pageSizeOptions={pageSizeOptions}
-          loading={loading}
-        />
-      </div>
-    </div>
-  );
-}
-
-export function DataTableToolbar<TData>({
-  table,
-  title,
-  description,
-  searchKey,
-  searchPlaceholder,
-  toolbarActions,
-}: {
-  table: TanStackTable<TData>;
-  title?: string;
-  description?: string;
-  searchKey?: string;
-  searchPlaceholder?: string;
-  toolbarActions?: ReactNode;
-}) {
-  const searchColumn = searchKey ? table.getColumn(searchKey) : undefined;
-  const searchValue = (searchColumn?.getFilterValue() as string) ?? "";
-
-  return (
-    <div
-      data-slot="data-table-header"
-      className="flex flex-col gap-3 px-5 pt-4 pb-3 lg:flex-row lg:items-center lg:justify-between"
-    >
-      <div className="min-w-0">
-        {title ? (
-          <h3
-            data-slot="data-table-title"
-            className="truncate font-semibold text-base text-foreground leading-6"
-          >
-            {title}
-          </h3>
+        {footer ? (
+          <DataTablePagination
+            table={table}
+            showingLabel={showingLabel}
+            currentCount={rows.length}
+            totalItems={finalTotalItems}
+            currentPage={currentPage}
+            pageCount={pageCount}
+            loading={loading}
+          />
         ) : null}
-        {description ? (
-          <p
-            data-slot="data-table-description"
-            className="mt-0.5 max-w-2xl truncate text-muted-foreground text-sm"
-          >
-            {description}
-          </p>
-        ) : null}
-      </div>
-
-      <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center sm:justify-end lg:w-auto">
-        {searchKey ? (
-          <label
-            data-slot="data-table-search"
-            className="relative flex h-9 w-full items-center rounded-lg border border-border bg-background text-sm transition-colors focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/30 sm:w-72"
-          >
-            <Search
-              className="ml-3 size-3.5 text-muted-foreground"
-              aria-hidden="true"
-            />
-            <span className="sr-only">{searchPlaceholder}</span>
-            <input
-              value={searchValue}
-              disabled={!searchColumn}
-              placeholder={searchPlaceholder}
-              className="h-full min-w-0 flex-1 bg-transparent px-2 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-60"
-              onChange={(event) =>
-                searchColumn?.setFilterValue(event.target.value)
-              }
-            />
-            {searchValue ? (
-              <button
-                type="button"
-                aria-label="Clear search"
-                className="mr-1 inline-flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                onClick={() => searchColumn?.setFilterValue("")}
-              >
-                <X className="size-3.5" aria-hidden="true" />
-              </button>
-            ) : null}
-          </label>
-        ) : null}
-        {toolbarActions}
       </div>
     </div>
   );
@@ -465,191 +168,85 @@ export function DataTableToolbar<TData>({
 
 export function DataTablePagination<TData>({
   table,
-  pageSizeOptions,
+  showingLabel,
+  currentCount,
+  totalItems,
+  currentPage,
+  pageCount,
   loading,
   className,
 }: ComponentProps<"div"> & {
   table: TanStackTable<TData>;
-  pageSizeOptions: number[];
+  showingLabel: string;
+  currentCount: number;
+  totalItems: number;
+  currentPage: number;
+  pageCount: number;
   loading?: boolean;
 }) {
-  const pagination = table.getState().pagination;
-  const filteredCount = table.getFilteredRowModel().rows.length;
-  const selectedCount = table.getFilteredSelectedRowModel().rows.length;
-  const first =
-    filteredCount === 0 ? 0 : pagination.pageIndex * pagination.pageSize + 1;
-  const last = Math.min(
-    filteredCount,
-    (pagination.pageIndex + 1) * pagination.pageSize,
-  );
-
   return (
     <div
       data-slot="data-table-footer"
-      className={cn(
-        "flex flex-col gap-3 px-5 py-3 text-muted-foreground text-sm sm:flex-row sm:items-center sm:justify-between",
+      className={twMerge(
+        "flex h-9 items-center justify-between px-3 pt-2 text-muted-foreground",
         className,
       )}
     >
-      <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
-        <span className="truncate">
-          Showing {first}-{last} of {filteredCount} records
-        </span>
-        {selectedCount > 0 ? (
-          <span className="rounded-full border border-border bg-background px-2 py-0.5 text-xs">
-            {selectedCount} selected
-          </span>
-        ) : null}
-      </div>
+      <p className="font-mono text-[0.68rem] uppercase tracking-[0.16em]">
+        {showingLabel}: <span className="text-foreground">{currentCount}</span>{" "}
+        of <span className="text-foreground">{totalItems}</span> items
+      </p>
 
       <div
         data-slot="data-table-pagination"
         className="flex items-center gap-2"
       >
-        <label className="flex items-center gap-2 text-xs">
-          <span className="hidden text-muted-foreground sm:inline">
-            Rows per page
-          </span>
-          <select
-            aria-label="Rows per page"
-            value={pagination.pageSize}
-            disabled={loading}
-            className="h-8 rounded-md border border-border bg-background px-2 text-foreground outline-none transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30 disabled:cursor-not-allowed disabled:opacity-50"
-            onChange={(event) => table.setPageSize(Number(event.target.value))}
-          >
-            {pageSizeOptions.map((size) => (
-              <option key={size} value={size}>
-                {size}
-              </option>
-            ))}
-          </select>
-        </label>
         <button
           type="button"
+          aria-label="Previous page"
           disabled={!table.getCanPreviousPage() || loading}
-          className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-background px-2.5 font-medium text-foreground text-xs transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+          className="inline-flex size-6 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-background hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-35"
           onClick={() => table.previousPage()}
         >
-          <ChevronLeft className="size-3.5" aria-hidden="true" />
-          Previous
+          <ChevronLeft className="size-4" aria-hidden="true" />
         </button>
+
+        <span className="min-w-8 text-center font-medium text-xs text-foreground">
+          {currentPage}/{pageCount || 1}
+        </span>
+
         <button
           type="button"
+          aria-label="Next page"
           disabled={!table.getCanNextPage() || loading}
-          className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-background px-2.5 font-medium text-foreground text-xs transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+          className="inline-flex size-6 items-center justify-center rounded-md bg-background text-muted-foreground shadow-xs ring-1 ring-border/70 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-35"
           onClick={() => table.nextPage()}
         >
-          Next
-          <ChevronRight className="size-3.5" aria-hidden="true" />
+          <ChevronRight className="size-4" aria-hidden="true" />
         </button>
       </div>
     </div>
-  );
-}
-
-export function DataTableEmpty({
-  title = "No records found",
-  description = "Try adjusting your search or filters.",
-  className,
-}: ComponentProps<"div"> & {
-  title?: string;
-  description?: string;
-}) {
-  return (
-    <div
-      data-slot="data-table-empty"
-      className={cn(
-        "flex h-full min-h-44 flex-col items-center justify-center px-6 text-center",
-        className,
-      )}
-    >
-      <span className="flex size-10 items-center justify-center rounded-lg border border-border bg-muted/40 text-muted-foreground">
-        <Inbox className="size-4" aria-hidden="true" />
-      </span>
-      <p className="mt-3 font-medium text-foreground text-sm">{title}</p>
-      <p className="mt-1 max-w-sm text-muted-foreground text-sm">
-        {description}
-      </p>
-    </div>
-  );
-}
-
-type DataTableBadgeTone =
-  | "neutral"
-  | "active"
-  | "inactive"
-  | "finance"
-  | "hr"
-  | "marketing"
-  | "sales"
-  | "engineering";
-
-const dataTableBadgeTones: Record<DataTableBadgeTone, string> = {
-  neutral:
-    "border-border bg-background text-muted-foreground [--badge-dot:var(--color-muted-foreground)]",
-  active:
-    "border-transparent bg-emerald-500/10 text-emerald-600 dark:text-emerald-300 [--badge-dot:var(--color-emerald-500)]",
-  inactive:
-    "border-transparent bg-rose-500/10 text-rose-500 dark:text-rose-300 [--badge-dot:var(--color-rose-400)]",
-  finance:
-    "border-border bg-background text-foreground [--badge-dot:var(--color-emerald-500)]",
-  hr: "border-border bg-background text-foreground [--badge-dot:var(--color-amber-500)]",
-  marketing:
-    "border-border bg-background text-foreground [--badge-dot:var(--color-red-500)]",
-  sales:
-    "border-border bg-background text-foreground [--badge-dot:var(--color-blue-500)]",
-  engineering:
-    "border-border bg-background text-foreground [--badge-dot:var(--color-slate-500)]",
-};
-
-export function DataTableBadge({
-  tone = "neutral",
-  dot = true,
-  className,
-  children,
-  ...props
-}: ComponentProps<"span"> & {
-  tone?: DataTableBadgeTone;
-  dot?: boolean;
-}) {
-  return (
-    <span
-      data-slot="data-table-badge"
-      className={cn(
-        "inline-flex max-w-full items-center gap-1.5 rounded-full border px-2.5 py-1 font-medium text-xs",
-        dataTableBadgeTones[tone],
-        className,
-      )}
-      {...props}
-    >
-      {dot ? (
-        <span
-          className="size-2 shrink-0 rounded-full bg-(--badge-dot)"
-          aria-hidden="true"
-        />
-      ) : null}
-      <span className="truncate">{children}</span>
-    </span>
   );
 }
 
 export function DataTableColumnHeader<TData, TValue>({
   column,
   title,
-  icon,
   className,
 }: {
   column: Column<TData, TValue>;
   title: string;
-  icon?: ReactNode;
   className?: string;
 }) {
   if (!column.getCanSort()) {
     return (
-      <span className={cn("inline-flex items-center gap-1.5", className)}>
-        {icon ? (
-          <span className="text-foreground/75 [&_svg]:size-3.5">{icon}</span>
-        ) : null}
+      <span
+        data-slot="data-table-column-header"
+        className={twMerge(
+          "inline-flex items-center gap-1 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-muted-foreground",
+          className,
+        )}
+      >
         {title}
       </span>
     );
@@ -664,113 +261,174 @@ export function DataTableColumnHeader<TData, TValue>({
       type="button"
       data-slot="data-table-column-header"
       aria-label={`Sort by ${title}`}
-      className={cn(
-        "inline-flex items-center gap-1.5 rounded-md text-left font-medium outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring",
-        sorted ? "text-foreground" : "text-muted-foreground",
+      className={twMerge(
+        "inline-flex items-center gap-1 rounded-md font-mono text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        sorted && "text-foreground",
         className,
       )}
       onClick={column.getToggleSortingHandler()}
     >
-      {icon ? (
-        <span className="text-foreground/75 [&_svg]:size-3.5">{icon}</span>
-      ) : null}
-      <span className="truncate">{title}</span>
-      <SortIcon className="size-3.5" aria-hidden="true" />
+      <span>{title}</span>
+      <SortIcon className="size-3" aria-hidden="true" />
     </button>
   );
 }
 
-function DataTableCheckbox({
-  checked,
-  indeterminate,
+export const dataTableStatusBadgeVariants = tv({
+  base: "inline-flex h-6 items-center rounded-md px-2 font-medium text-xs",
+  variants: {
+    status: {
+      running: "bg-primary/15 text-primary",
+      idle: "bg-muted text-muted-foreground",
+      error: "bg-destructive/10 text-destructive",
+      scheduled: "bg-muted text-foreground/70",
+    },
+  },
+  defaultVariants: {
+    status: "idle",
+  },
+});
+
+export type DataTableStatusBadgeProps = ComponentProps<"span"> &
+  VariantProps<typeof dataTableStatusBadgeVariants>;
+
+export function DataTableStatusBadge({
+  status,
   className,
-  onCheckedChange,
   ...props
-}: Omit<ComponentProps<"input">, "type" | "checked" | "onChange"> & {
-  checked?: boolean;
-  indeterminate?: boolean;
-  onCheckedChange?: (checked: boolean) => void;
-}) {
-  const ref = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (ref.current) {
-      ref.current.indeterminate = Boolean(indeterminate && !checked);
-    }
-  }, [checked, indeterminate]);
-
+}: DataTableStatusBadgeProps) {
   return (
-    <input
-      ref={ref}
-      type="checkbox"
-      checked={checked}
-      aria-checked={indeterminate ? "mixed" : checked}
-      data-slot="data-table-checkbox"
-      className={cn(
-        "size-4 rounded-[5px] border border-border accent-primary outline-none transition-opacity focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-40",
-        className,
-      )}
-      onChange={(event) => onCheckedChange?.(event.target.checked)}
+    <span
+      data-slot="data-table-status-badge"
+      className={twMerge(dataTableStatusBadgeVariants({ status }), className)}
       {...props}
     />
   );
 }
 
-function DataTableSkeleton({
-  rows,
-  columns,
-}: {
-  rows: number;
-  columns: number;
+export function DataTableConfidence({
+  value,
+  bars = 10,
+  showPercent = true,
+  className,
+}: ComponentProps<"div"> & {
+  value: number;
+  bars?: number;
+  showPercent?: boolean;
 }) {
-  const skeletonRows = [
-    "loading-row-a",
-    "loading-row-b",
-    "loading-row-c",
-    "loading-row-d",
-    "loading-row-e",
-  ].slice(0, rows);
-  const skeletonColumns = [
-    "loading-column-a",
-    "loading-column-b",
-    "loading-column-c",
-    "loading-column-d",
-    "loading-column-e",
-    "loading-column-f",
-    "loading-column-g",
-    "loading-column-h",
-    "loading-column-i",
-    "loading-column-j",
-    "loading-column-k",
-    "loading-column-l",
-  ].slice(0, columns);
+  const activeBars = Math.round((value / 100) * bars);
+  const barItems = Array.from({ length: bars }, (_, item) => item + 1);
 
-  return skeletonRows.map((rowId) => (
-    <TableRow key={rowId}>
-      {skeletonColumns.map((columnId, columnIndex) => (
-        <TableCell key={`${rowId}-${columnId}`}>
+  return (
+    <div
+      data-slot="data-table-confidence"
+      className={twMerge("flex items-center gap-3", className)}
+    >
+      <div className="flex items-center gap-[2px]" aria-hidden="true">
+        {barItems.map((item) => (
           <span
-            className={cn(
-              "block h-4 animate-pulse rounded-md bg-muted",
-              columnIndex < 2 ? "w-4" : "w-full max-w-36",
+            key={`confidence-bar-${bars}-${item}`}
+            className={twMerge(
+              "h-4 w-[2px] rounded-full",
+              item <= activeBars ? "bg-foreground" : "bg-muted",
             )}
           />
-        </TableCell>
+        ))}
+      </div>
+
+      {showPercent ? (
+        <span className="font-medium text-xs text-foreground/75">{value}%</span>
+      ) : (
+        <span className="font-medium text-xs text-foreground/75">{value}</span>
+      )}
+    </div>
+  );
+}
+
+export function DataTableTaskCount({
+  count,
+  className,
+  ...props
+}: ComponentProps<"button"> & {
+  count: number;
+}) {
+  return (
+    <button
+      type="button"
+      data-slot="data-table-task-count"
+      className={twMerge(
+        "inline-flex items-center gap-1 rounded-md text-sm text-foreground transition-colors hover:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        className,
+      )}
+      {...props}
+    >
+      <span>{count}</span>
+      <ChevronDown className="size-3.5 text-muted-foreground" aria-hidden />
+    </button>
+  );
+}
+
+export type DataTableAvatarItem = {
+  name: string;
+  image?: string;
+  initials?: string;
+};
+
+export function DataTableAvatarStack({
+  users,
+  max = 3,
+  className,
+  ...props
+}: ComponentProps<"div"> & {
+  users: DataTableAvatarItem[];
+  max?: number;
+}) {
+  const visibleUsers = users.slice(0, max);
+  const remaining = users.length - visibleUsers.length;
+
+  return (
+    <div
+      data-slot="data-table-avatar-stack"
+      className={twMerge("flex items-center", className)}
+      {...props}
+    >
+      {visibleUsers.map((user) => (
+        <span
+          key={`${user.name}-${user.image ?? user.initials ?? "avatar"}`}
+          title={user.name}
+          className="-ml-1 first:ml-0 inline-flex size-7 items-center justify-center overflow-hidden rounded-full bg-muted text-[0.65rem] font-medium text-muted-foreground ring-2 ring-background"
+        >
+          {user.image ? (
+            <img
+              src={user.image}
+              alt={user.name}
+              className="size-full object-cover"
+            />
+          ) : (
+            (user.initials ?? getInitials(user.name))
+          )}
+        </span>
       ))}
-    </TableRow>
-  ));
+
+      {remaining > 0 ? (
+        <span className="-ml-1 inline-flex size-7 items-center justify-center rounded-full bg-muted text-[0.65rem] font-medium text-muted-foreground ring-2 ring-background">
+          +{remaining}
+        </span>
+      ) : null}
+    </div>
+  );
 }
 
 export function Table({ className, ...props }: ComponentProps<"table">) {
   return (
     <div
       data-slot="table-container"
-      className="relative w-full overflow-x-auto"
+      className="relative w-full overflow-x-auto overflow-y-hidden [scrollbar-gutter:auto] [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-muted-foreground/45 [&::-webkit-scrollbar-track]:bg-background"
     >
       <table
         data-slot="table"
-        className={cn(
-          "w-full min-w-[760px] table-fixed caption-bottom border-collapse text-sm",
+        className={twMerge(
+          "m-0 w-full min-w-[760px] caption-bottom border-collapse text-sm",
           className,
         )}
         {...props}
@@ -783,7 +441,7 @@ export function TableHeader({ className, ...props }: ComponentProps<"thead">) {
   return (
     <thead
       data-slot="table-header"
-      className={cn("bg-muted/65 [&_tr]:border-b", className)}
+      className={twMerge("bg-muted/30", className)}
       {...props}
     />
   );
@@ -793,17 +451,7 @@ export function TableBody({ className, ...props }: ComponentProps<"tbody">) {
   return (
     <tbody
       data-slot="table-body"
-      className={cn("[&_tr:last-child]:border-0", className)}
-      {...props}
-    />
-  );
-}
-
-export function TableFooter({ className, ...props }: ComponentProps<"tfoot">) {
-  return (
-    <tfoot
-      data-slot="table-footer"
-      className={cn("border-t bg-muted/50 font-medium", className)}
+      className={twMerge("bg-background [&_tr:last-child]:border-0", className)}
       {...props}
     />
   );
@@ -813,8 +461,8 @@ export function TableRow({ className, ...props }: ComponentProps<"tr">) {
   return (
     <tr
       data-slot="table-row"
-      className={cn(
-        "border-border/80 border-b transition-colors hover:bg-muted/25 data-[selected]:bg-primary/5 data-[disabled]:text-muted-foreground data-[disabled]:opacity-65 data-[disabled]:bg-[repeating-linear-gradient(45deg,transparent_0px,transparent_20px,rgba(148,163,184,0.09)_20px,rgba(148,163,184,0.09)_40px)] data-[subrow]:bg-[repeating-linear-gradient(45deg,transparent_0px,transparent_20px,rgba(148,163,184,0.08)_20px,rgba(148,163,184,0.08)_40px)] data-[deleted]:opacity-50",
+      className={twMerge(
+        "border-b border-border/70 transition-colors hover:bg-muted/25",
         className,
       )}
       {...props}
@@ -826,8 +474,8 @@ export function TableHead({ className, ...props }: ComponentProps<"th">) {
   return (
     <th
       data-slot="table-head"
-      className={cn(
-        "h-12 px-4 text-left align-middle font-semibold text-foreground/80 text-sm whitespace-nowrap [&:has([data-slot=data-table-checkbox])]:px-2",
+      className={twMerge(
+        "h-9 px-4 text-left align-middle font-medium whitespace-nowrap first:pl-5 last:pr-5",
         className,
       )}
       {...props}
@@ -839,8 +487,8 @@ export function TableCell({ className, ...props }: ComponentProps<"td">) {
   return (
     <td
       data-slot="table-cell"
-      className={cn(
-        "h-16 px-4 align-middle text-base [&:has([data-slot=data-table-checkbox])]:px-2",
+      className={twMerge(
+        "h-[3.25rem] px-4 align-middle text-sm text-foreground first:pl-5 last:pr-5",
         className,
       )}
       {...props}
@@ -855,8 +503,43 @@ export function TableCaption({
   return (
     <caption
       data-slot="table-caption"
-      className={cn("mt-4 text-muted-foreground text-sm", className)}
+      className={twMerge("mt-4 text-muted-foreground text-sm", className)}
       {...props}
     />
   );
+}
+
+function DataTableSkeleton({
+  rows,
+  columns,
+}: {
+  rows: number;
+  columns: number;
+}) {
+  const rowItems = Array.from({ length: rows }, (_, item) => item + 1);
+  const columnItems = Array.from({ length: columns }, (_, item) => item + 1);
+
+  return rowItems.map((rowItem) => (
+    <TableRow key={`skeleton-row-${rowItem}`}>
+      {columnItems.map((columnItem) => (
+        <TableCell key={`skeleton-cell-${rowItem}-${columnItem}`}>
+          <span
+            className={twMerge(
+              "block h-4 animate-pulse rounded-md bg-muted",
+              columnItem === 1 ? "w-28" : "w-16",
+            )}
+          />
+        </TableCell>
+      ))}
+    </TableRow>
+  ));
+}
+
+function getInitials(name: string) {
+  return name
+    .split(" ")
+    .map((item) => item[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
 }
