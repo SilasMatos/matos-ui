@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 import { Link } from "@/i18n/navigation";
 import { type DocsPageTree, getPagesFromFolder } from "@/lib/page-tree";
 import { cn } from "@/lib/utils";
-import { Divider } from "@/registry/new-york-v4/ui/divider";
 import { Sidebar, SidebarContent } from "@/registry/new-york-v4/ui/sidebar";
 
 const containerVariants: Variants = {
@@ -33,6 +32,40 @@ const sectionVariants: Variants = {
   },
 };
 
+const activeSpring = {
+  type: "spring" as const,
+  stiffness: 520,
+  damping: 36,
+  mass: 0.7,
+};
+
+function SidebarActiveIndicator() {
+  return (
+    <AnimatePresence>
+      <motion.span
+        layoutId="sidebar-active-bg"
+        className="absolute inset-0 overflow-hidden rounded-lg border border-foreground/10 bg-foreground/10 dark:border-white/10 dark:bg-white/20"
+        initial={{ opacity: 0, scale: 0.96 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.98 }}
+        transition={activeSpring}
+      >
+        <motion.span
+          className="absolute inset-y-1 left-1 w-1 rounded-full bg-foreground/55 dark:bg-white/70"
+          layoutId="sidebar-active-rail"
+          transition={activeSpring}
+        />
+        <motion.span
+          className="absolute inset-y-0 left-0 w-12 bg-linear-to-r from-foreground/12 to-transparent dark:from-white/16"
+          initial={{ x: -36, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 0.18, ease: [0.2, 0, 0, 1] }}
+        />
+      </motion.span>
+    </AnimatePresence>
+  );
+}
+
 export function DocsSidebar({
   tree,
   ...props
@@ -41,15 +74,17 @@ export function DocsSidebar({
 
   return (
     <Sidebar
-      className="sticky top-[calc(var(--header-height)+0.6rem)] z-30 hidden h-[calc(100svh-10rem)] overscroll-none bg-transparent [--sidebar-menu-width:--spacing(56)] lg:flex"
+      className="sticky top-[calc(var(--header-height)+0.75rem)] z-30 hidden h-[calc(100svh-var(--header-height)-1.5rem)] overscroll-none bg-transparent [--sidebar-menu-width:--spacing(60)] lg:flex"
       collapsible="none"
       {...props}
     >
-      <SidebarContent className="mx-auto w-(--sidebar-menu-width) overflow-x-hidden overflow-y-auto px-2 py-1 [scrollbar-color:color-mix(in_oklch,var(--muted-foreground)_28%,transparent)_transparent] [scrollbar-gutter:stable] [scrollbar-width:thin] [&::-webkit-scrollbar]:block [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:border-2 [&::-webkit-scrollbar-thumb]:border-transparent [&::-webkit-scrollbar-thumb]:bg-border/80 [&::-webkit-scrollbar-thumb]:bg-clip-content [&::-webkit-scrollbar-thumb:hover]:bg-muted-foreground/45">
+      <SidebarContent className="relative mx-auto w-(--sidebar-menu-width) overflow-hidden px-2 py-0">
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-8 bg-linear-to-b from-background via-background/90 to-transparent" />
         <motion.div
           variants={containerVariants}
           initial="hidden"
           animate="visible"
+          className="no-scrollbar h-full overflow-y-auto overflow-x-hidden py-5 pr-1"
         >
           {tree.children.map((item, index) => {
             const hasLink =
@@ -69,25 +104,22 @@ export function DocsSidebar({
                   <Link
                     href={item.url}
                     className={cn(
-                      "relative flex h-7 w-full items-center rounded-md px-2 text-[0.8rem] font-medium transition-colors",
+                      "relative flex h-8 w-full items-center rounded-lg px-3 text-[0.82rem] font-medium transition-colors",
                       isActive
-                        ? "text-background"
-                        : "text-muted-foreground hover:text-foreground",
+                        ? "text-foreground"
+                        : "text-foreground/70 hover:text-foreground",
                     )}
                   >
                     <AnimatePresence>
-                      {isActive && (
-                        <motion.span
-                          layoutId="sidebar-active-bg"
-                          className="absolute inset-0 rounded-md bg-foreground"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          exit={{ opacity: 0 }}
-                          transition={{ duration: 0.2 }}
-                        />
-                      )}
+                      {isActive && <SidebarActiveIndicator />}
                     </AnimatePresence>
-                    <span className="relative z-10">{item.name}</span>
+                    <motion.span
+                      className="relative z-10"
+                      animate={{ x: isActive ? 6 : 0 }}
+                      transition={activeSpring}
+                    >
+                      {item.name}
+                    </motion.span>
                   </Link>
                 </motion.div>
               );
@@ -111,21 +143,21 @@ export function DocsSidebar({
                     <Link
                       href={folderUrl}
                       className={cn(
-                        "flex h-6 w-full items-center px-2 text-[0.7rem] font-semibold uppercase tracking-wider transition-colors",
+                        "flex h-7 w-full items-center px-3 text-[0.78rem] font-semibold transition-colors",
                         isFolderActive
                           ? "text-foreground"
-                          : "text-muted-foreground/60 hover:text-muted-foreground",
+                          : "text-foreground/55 hover:text-foreground/80",
                       )}
                     >
                       {item.name}
                     </Link>
                   ) : (
-                    <p className="flex h-6 items-center px-2 text-[0.8rem] font-semibold uppercase tracking-wider text-muted-foreground/60">
+                    <p className="flex h-7 items-center px-3 text-[0.78rem] font-semibold text-foreground/45">
                       {item.name}
                     </p>
                   )}
                   <motion.div
-                    className="mt-0.5 flex flex-col gap-px"
+                    className="mt-1 flex flex-col gap-0.5"
                     variants={sectionVariants}
                   >
                     {pages.map((page) => {
@@ -135,33 +167,28 @@ export function DocsSidebar({
                           <Link
                             href={page.url}
                             className={cn(
-                              "relative flex h-7 w-full items-center rounded-md px-2 text-[0.8rem] transition-colors",
+                              "relative flex h-8 w-full items-center rounded-lg px-3 text-[0.82rem] font-medium transition-colors",
                               isActive
-                                ? "text-background"
-                                : "text-muted-foreground hover:text-foreground",
+                                ? "text-foreground"
+                                : "text-foreground/70 hover:text-foreground",
                             )}
                           >
                             <AnimatePresence>
-                              {isActive && (
-                                <motion.span
-                                  layoutId="sidebar-active-bg"
-                                  className="absolute inset-0 rounded-md bg-foreground"
-                                  initial={{ opacity: 0 }}
-                                  animate={{ opacity: 1 }}
-                                  exit={{ opacity: 0 }}
-                                  transition={{ duration: 0.15 }}
-                                />
-                              )}
+                              {isActive && <SidebarActiveIndicator />}
                             </AnimatePresence>
-                            <span className="relative z-10">{page.name}</span>
+                            <motion.span
+                              className="relative z-10"
+                              animate={{ x: isActive ? 6 : 0 }}
+                              transition={activeSpring}
+                            >
+                              {page.name}
+                            </motion.span>
                           </Link>
                         </motion.div>
                       );
                     })}
                   </motion.div>
-                  {!isLast && (
-                    <Divider variant="dotted" className="my-3 opacity-40" />
-                  )}
+                  {!isLast && <div className="h-2" aria-hidden="true" />}
                 </motion.div>
               );
             }
@@ -169,7 +196,7 @@ export function DocsSidebar({
             return null;
           })}
         </motion.div>
-        <div className="sticky -bottom-1 z-10 h-16 shrink-0 bg-linear-to-t from-background via-background/80 to-background/50 blur-xs" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-12 bg-linear-to-t from-background via-background/90 to-transparent" />
       </SidebarContent>
     </Sidebar>
   );

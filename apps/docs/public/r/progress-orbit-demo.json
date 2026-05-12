@@ -1,0 +1,16 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "progress-orbit-demo",
+  "registryDependencies": [
+    "progress-orbit"
+  ],
+  "files": [
+    {
+      "path": "components/matos-ui/examples/progress-orbit-demo.tsx",
+      "content": "\"use client\";\n\nimport { Gauge, Rocket, ShieldCheck } from \"lucide-react\";\nimport { ProgressOrbit } from \"@/components/matos-ui/progress-orbit\";\n\nexport default function ProgressOrbitDemo() {\n  return (\n    <div className=\"grid w-full max-w-[760px] gap-3 sm:grid-cols-3\">\n      <ProgressOrbit\n        size=\"sm\"\n        label=\"Launch\"\n        description=\"Checklist\"\n        value={86}\n        icon={<Rocket />}\n        milestones={[\n          { value: 25, label: \"Plan\" },\n          { value: 60, label: \"QA\" },\n          { value: 90, label: \"Ship\" },\n        ]}\n      />\n\n      <ProgressOrbit\n        size=\"sm\"\n        label=\"Security\"\n        description=\"Identity\"\n        value={72}\n        icon={<ShieldCheck />}\n        milestones={[\n          { value: 30, label: \"MFA\" },\n          { value: 55, label: \"SAML\" },\n          { value: 80, label: \"Audit\" },\n        ]}\n        footer=\"Milestones light up as your score crosses each threshold.\"\n      />\n\n      <ProgressOrbit\n        size=\"sm\"\n        label=\"Quality\"\n        description=\"Workspace\"\n        value={64}\n        icon={<Gauge />}\n        milestones={[\n          { value: 20, label: \"Data\" },\n          { value: 50, label: \"Usage\" },\n          { value: 75, label: \"Growth\" },\n        ]}\n      />\n    </div>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/progress-orbit-demo.tsx"
+    }
+  ],
+  "type": "registry:example"
+}

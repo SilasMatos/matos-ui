@@ -19,45 +19,48 @@ import { tv, type VariantProps } from "tailwind-variants";
 
 export const breadcrumbVariants = tv({
   slots: {
-    root: "w-full overflow-x-auto",
-    list: "flex min-w-max items-center gap-1 rounded-2xl border border-border bg-card/80 p-1 shadow-xs backdrop-blur",
+    root: "w-full overflow-x-auto [mask-image:linear-gradient(to_right,transparent,black_18px,black_calc(100%-18px),transparent)]",
+    list: [
+      "relative flex min-w-max items-center gap-1 rounded-lg border border-border bg-background/85 px-1.5 py-1 shadow-sm backdrop-blur",
+      "before:pointer-events-none before:absolute before:inset-x-3 before:bottom-0 before:h-px before:bg-linear-to-r before:from-transparent before:via-primary/30 before:to-transparent",
+    ],
     item: "relative flex items-center",
     control: [
-      "group relative inline-flex h-9 items-center gap-2 overflow-hidden rounded-xl px-3 text-sm outline-none",
+      "group relative inline-flex h-9 items-center gap-2 overflow-hidden rounded-md px-3 text-sm font-medium outline-none",
       "text-muted-foreground transition-colors duration-200",
       "hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
       "data-[current=true]:text-foreground",
       "data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50",
     ],
-    marker:
-      "size-1.5 rounded-full bg-muted-foreground/40 transition-colors duration-200 group-data-[current=true]:bg-primary",
-    label: "relative z-10 max-w-36 truncate",
+    marker: [
+      "relative z-10 size-1.5 rounded-full bg-muted-foreground/35 transition-all duration-200",
+      "group-hover:bg-foreground/50 group-data-[current=true]:h-4 group-data-[current=true]:w-1 group-data-[current=true]:rounded-full group-data-[current=true]:bg-primary",
+    ],
+    label: "relative z-10 max-w-40 truncate",
     meta: "relative z-10 hidden text-xs text-muted-foreground/70 sm:inline",
-    separator: "mx-0.5 text-muted-foreground/45",
+    separator: "mx-0.5 text-muted-foreground/35",
     surface:
-      "absolute inset-0 -z-10 rounded-xl border border-border bg-background shadow-xs",
+      "absolute inset-0 rounded-md border border-border bg-secondary/80 shadow-xs",
   },
   variants: {
     size: {
       sm: {
-        list: "rounded-xl p-0.5",
-        control: "h-8 rounded-lg px-2.5 text-xs",
-        surface: "rounded-lg",
+        list: "px-1 py-0.5",
+        control: "h-8 px-2.5 text-xs",
       },
       md: {},
       lg: {
-        list: "rounded-[20px] p-1.5",
-        control: "h-10 rounded-2xl px-3.5",
-        surface: "rounded-2xl",
+        list: "px-2 py-1.5",
+        control: "h-10 px-3.5",
       },
     },
     tone: {
       default: {},
       muted: {
-        list: "bg-muted/35",
+        list: "bg-muted/40 shadow-none",
       },
       floating: {
-        list: "bg-background/70 shadow-lg supports-[backdrop-filter]:bg-background/55",
+        list: "bg-background/75 shadow-lg shadow-foreground/5 supports-[backdrop-filter]:bg-background/60",
       },
     },
   },
@@ -193,7 +196,7 @@ export function Breadcrumb({
                 <span
                   className={twMerge(
                     styles.control(),
-                    "cursor-default px-2 text-muted-foreground/70",
+                    "cursor-default px-2 text-muted-foreground/65",
                   )}
                 >
                   <MoreHorizontal className="size-4" aria-hidden="true" />
@@ -263,7 +266,7 @@ export function Breadcrumb({
                 </AnimatePresence>
 
                 {entry.item.icon ? (
-                  <span className="relative z-10 text-muted-foreground transition-colors duration-200 group-hover:text-foreground">
+                  <span className="relative z-10 text-muted-foreground transition-colors duration-200 group-hover:text-foreground group-data-[current=true]:text-primary">
                     {entry.item.icon}
                   </span>
                 ) : (

@@ -159,7 +159,15 @@ const menuItems = {
   ),
 };
 
-export function DocsCopyPage({ page, url }: { page: string; url: string }) {
+export function DocsCopyPage({
+  page,
+  url,
+  copyLabel = "Copy Page",
+}: {
+  page: string;
+  url: string;
+  copyLabel?: string;
+}) {
   const { copyToClipboard, isCopied } = useCopyToClipboard();
 
   const trigger = (
@@ -182,7 +190,7 @@ export function DocsCopyPage({ page, url }: { page: string; url: string }) {
           onClick={() => copyToClipboard(page)}
         >
           {isCopied ? <CheckIcon /> : <CopyIcon />}
-          Copy Page
+          {copyLabel}
         </Button>
         <DropdownMenu>
           <DropdownMenuTrigger render={trigger} className="hidden sm:flex" />

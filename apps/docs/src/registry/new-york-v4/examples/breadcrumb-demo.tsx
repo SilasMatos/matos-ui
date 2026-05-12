@@ -1,6 +1,6 @@
 "use client";
 
-import { Boxes, FolderGit2, Home, Palette } from "lucide-react";
+import { Boxes, Code2, FolderGit2, Home, Palette } from "lucide-react";
 import { useState } from "react";
 import {
   Breadcrumb,
@@ -31,6 +31,7 @@ const items: BreadcrumbItem[] = [
   },
   {
     label: "Breadcrumb",
+    icon: <Code2 className="size-4" aria-hidden="true" />,
     meta: "current",
   },
 ];
@@ -53,6 +54,13 @@ export default function BreadcrumbDemo() {
         maxVisible={4}
         size="sm"
         tone="muted"
+        onNavigate={(_, index) => setActiveIndex(index)}
+      />
+
+      <Breadcrumb
+        items={items.slice(0, 4)}
+        activeIndex={2}
+        size="lg"
         onNavigate={(_, index) => setActiveIndex(index)}
       />
     </div>

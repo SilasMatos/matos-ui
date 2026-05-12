@@ -1,0 +1,85 @@
+---
+title: Progress Orbit
+description: Compact circular progress card with a minimal ring, subtle motion, and milestone chips.
+---
+
+<ComponentPreview name="progress-orbit-demo" chromeless align="start" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/progress-orbit.json" />
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the following dependencies:</Step>
+
+<CodeBlockCommand command="npm install framer-motion lucide-react tailwind-merge tailwind-variants" />
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="progress-orbit" title="components/matos-ui/progress-orbit.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { ProgressOrbit } from "@/components/matos-ui/progress-orbit"
+```
+
+```tsx
+<ProgressOrbit
+  label="Launch"
+  description="Checklist"
+  value={86}
+  milestones={[
+    { value: 25, label: "Plan" },
+    { value: 60, label: "QA" },
+    { value: 90, label: "Ship" },
+  ]}
+/>
+```
+
+## Reference
+
+### ProgressOrbit Props
+
+| Prop          | Type                                | Default     | Description                         |
+| ------------- | ----------------------------------- | ----------- | ----------------------------------- |
+| `value`       | `number`                            | -           | Current progress value.             |
+| `max`         | `number`                            | `100`       | Max value used to compute percent.  |
+| `label`       | `ReactNode`                         | -           | Card title and accessible label.    |
+| `description` | `ReactNode?`                        | -           | Optional short description.         |
+| `icon`        | `ReactNode?`                        | -           | Optional header icon.               |
+| `tone`        | `"neutral" \| "emerald" \| "blue" \| "violet" \| "amber"` | `"neutral"` | Subtle progress accent tone. |
+| `suffix`      | `string`                            | `"%"`       | Value suffix.                       |
+| `milestones`  | `ProgressOrbitMilestone[]`          | `[]`        | Threshold chips around the card.    |
+| `footer`      | `ReactNode?`                        | -           | Optional footer text or content.    |
+| `size`        | `"sm" \| "md" \| "lg"`             | `"md"`      | Max width preset.                   |
+
+### ProgressOrbitMilestone
+
+| Field   | Type        | Description                         |
+| ------- | ----------- | ----------------------------------- |
+| `value` | `number`    | Threshold value.                    |
+| `label` | `ReactNode` | Label shown in the milestone chip.  |
+
+Also exported: `AnimatedProgressValue`, `progressOrbitVariants`, and related types.

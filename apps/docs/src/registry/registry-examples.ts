@@ -35,6 +35,28 @@ export const examples: Registry["items"] = [
     ],
   },
   {
+    name: "data-table-demo",
+    type: "registry:example",
+    registryDependencies: ["data-table"],
+    files: [
+      {
+        path: "examples/data-table-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "activity-feed-demo",
+    type: "registry:example",
+    registryDependencies: ["activity-feed"],
+    files: [
+      {
+        path: "examples/activity-feed-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
     name: "divider-demo",
     type: "registry:example",
     registryDependencies: ["divider"],
@@ -134,12 +156,34 @@ export const examples: Registry["items"] = [
     ],
   },
   {
+    name: "motion-tabs-demo",
+    type: "registry:example",
+    registryDependencies: ["motion-tabs"],
+    files: [
+      {
+        path: "examples/motion-tabs-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
     name: "feedback-card-demo",
     type: "registry:example",
     registryDependencies: ["feedback-card"],
     files: [
       {
         path: "examples/feedback-card-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "progress-orbit-demo",
+    type: "registry:example",
+    registryDependencies: ["progress-orbit"],
+    files: [
+      {
+        path: "examples/progress-orbit-demo.tsx",
         type: "registry:example",
       },
     ],
@@ -162,6 +206,17 @@ export const examples: Registry["items"] = [
     files: [
       {
         path: "examples/kinetic-card-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "process-timeline-engine-demo",
+    type: "registry:example",
+    registryDependencies: ["process-timeline-engine"],
+    files: [
+      {
+        path: "examples/process-timeline-engine-demo.tsx",
         type: "registry:example",
       },
     ],

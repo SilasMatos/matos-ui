@@ -1,6 +1,6 @@
 {
   "name": "matos/ui",
-  "homepage": "http://localhost:4000/",
+  "homepage": "https://matos-ui.com/",
   "items": [
     {
       "name": "index",
@@ -52,6 +52,33 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/breadcrumb.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "data-table",
+      "type": "registry:ui",
+      "dependencies": ["@tanstack/react-table", "lucide-react"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/data-table.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "activity-feed",
+      "type": "registry:ui",
+      "dependencies": [
+        "framer-motion",
+        "lucide-react",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/activity-feed.tsx",
           "type": "registry:ui"
         }
       ]
@@ -192,6 +219,17 @@
       ]
     },
     {
+      "name": "motion-tabs",
+      "type": "registry:ui",
+      "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/motion-tabs.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "feedback-card",
       "type": "registry:ui",
       "dependencies": [
@@ -230,6 +268,38 @@
       ]
     },
     {
+      "name": "progress-orbit",
+      "type": "registry:ui",
+      "dependencies": [
+        "framer-motion",
+        "lucide-react",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/progress-orbit.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "process-timeline-engine",
+      "type": "registry:ui",
+      "dependencies": [
+        "framer-motion",
+        "lucide-react",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/process-timeline-engine.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "button-demo",
       "type": "registry:example",
       "registryDependencies": ["button"],
@@ -258,6 +328,28 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/breadcrumb-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "data-table-demo",
+      "type": "registry:example",
+      "registryDependencies": ["data-table"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/data-table-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "activity-feed-demo",
+      "type": "registry:example",
+      "registryDependencies": ["activity-feed"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/activity-feed-demo.tsx",
           "type": "registry:example"
         }
       ]
@@ -362,12 +454,34 @@
       ]
     },
     {
+      "name": "motion-tabs-demo",
+      "type": "registry:example",
+      "registryDependencies": ["motion-tabs"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/motion-tabs-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
       "name": "feedback-card-demo",
       "type": "registry:example",
       "registryDependencies": ["feedback-card"],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/feedback-card-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "progress-orbit-demo",
+      "type": "registry:example",
+      "registryDependencies": ["progress-orbit"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/progress-orbit-demo.tsx",
           "type": "registry:example"
         }
       ]
@@ -390,6 +504,17 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/kinetic-card-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "process-timeline-engine-demo",
+      "type": "registry:example",
+      "registryDependencies": ["process-timeline-engine"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/process-timeline-engine-demo.tsx",
           "type": "registry:example"
         }
       ]

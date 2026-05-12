@@ -1,0 +1,152 @@
+---
+title: Data Table
+description: Modern SaaS data table with TanStack Table, inset-card layout, selection, sorting, search, pagination, and expandable rows.
+---
+
+<ComponentPreview name="data-table-demo" chromeless align="start" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/data-table.json" />
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the following dependencies:</Step>
+
+<CodeBlockCommand command="npm install @tanstack/react-table lucide-react" />
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="data-table" title="components/matos-ui/data-table.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import type { ColumnDef } from "@tanstack/react-table"
+import {
+  DataTable,
+  DataTableBadge,
+  DataTableColumnHeader
+} from "@/components/matos-ui/data-table"
+import { BriefcaseBusiness, Building2, Hash, Mail } from "lucide-react"
+```
+
+```tsx
+type Employee = {
+  id: string
+  department: "Finance" | "HR" | "Marketing" | "Sales" | "Engineering"
+  email: string
+  employment: "Active" | "Inactive"
+  firstName: string
+  lastName: string
+}
+
+const columns: ColumnDef<Employee>[] = [
+  {
+    accessorKey: "id",
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        title="ID"
+        icon={<Hash aria-hidden="true" />}
+      />
+    )
+  },
+  {
+    accessorKey: "department",
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        title="Department"
+        icon={<Building2 aria-hidden="true" />}
+      />
+    ),
+    cell: ({ row }) => (
+      <DataTableBadge tone="engineering">
+        {row.getValue("department")}
+      </DataTableBadge>
+    )
+  },
+  {
+    accessorKey: "email",
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        title="Email"
+        icon={<Mail aria-hidden="true" />}
+      />
+    )
+  },
+  {
+    accessorKey: "employment",
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        title="Employment"
+        icon={<BriefcaseBusiness aria-hidden="true" />}
+      />
+    )
+  }
+]
+```
+
+```tsx
+<DataTable
+  data={employees}
+  columns={columns}
+/>
+```
+
+## Reference
+
+### DataTable Props
+
+| Prop                | Type                                      | Default                   | Description                                      |
+| ------------------- | ----------------------------------------- | ------------------------- | ------------------------------------------------ |
+| `data`              | `TData[]`                                 | -                         | Records rendered by TanStack Table.              |
+| `columns`           | `ColumnDef<TData, TValue>[]`              | -                         | Column definitions passed to TanStack Table.     |
+| `title`             | `string?`                                 | -                         | Loose header title.                              |
+| `description`       | `string?`                                 | -                         | Loose header description.                        |
+| `searchKey`         | `string?`                                 | -                         | Column id/accessor key used by the search input. |
+| `searchPlaceholder` | `string?`                                 | `"Search records..."`     | Placeholder for the search input.                |
+| `pageSize`          | `number?`                                 | `10`                      | Initial page size.                               |
+| `pageSizeOptions`   | `number[]?`                               | `[5, 10, 20, 50]`         | Options shown in the rows-per-page select.       |
+| `loading`           | `boolean?`                                | `false`                   | Shows table skeleton rows.                       |
+| `emptyTitle`        | `string?`                                 | `"No records found"`      | Empty state title.                               |
+| `emptyDescription`  | `string?`                                 | `"Try adjusting..."`      | Empty state description.                         |
+| `toolbarActions`    | `ReactNode?`                              | -                         | Optional actions rendered beside search.         |
+| `getRowState`       | `(row: TData) => DataTableRowState \| undefined` | Inferred from row fields | Controls inactive/deleted row visuals.           |
+
+### Row State
+
+`DataTable` can infer row state from `deleted`, `disabled`, `inactive`, `status`, or `employment` fields. You can override this with `getRowState`.
+
+| State        | Visual treatment                                  |
+| ------------ | ------------------------------------------------- |
+| `"default"`  | Normal row with subtle hover.                     |
+| `"inactive"` | Reduced opacity and muted text.                   |
+| `"deleted"`  | Reduced opacity plus a soft diagonal stripe fill. |
+
+### Exports
+
+Also exported: `DataTableToolbar`, `DataTablePagination`, `DataTableEmpty`, `DataTableBadge`, `DataTableColumnHeader`, `DataTableRowState`, and the semantic table primitives `Table`, `TableHeader`, `TableBody`, `TableFooter`, `TableRow`, `TableHead`, `TableCell`, and `TableCaption`.

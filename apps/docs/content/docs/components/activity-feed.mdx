@@ -1,0 +1,95 @@
+---
+title: Activity Feed
+description: Animated activity feed for product events, audit trails, workspace logs, and operational timelines.
+---
+
+<ComponentPreview name="activity-feed-demo" chromeless align="start" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/activity-feed.json" />
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the following dependencies:</Step>
+
+<CodeBlockCommand command="npm install framer-motion lucide-react tailwind-merge tailwind-variants" />
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="activity-feed" title="components/matos-ui/activity-feed.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { ActivityFeed } from "@/components/matos-ui/activity-feed"
+```
+
+```tsx
+<ActivityFeed
+  title="Activity"
+  description="Recent product events and operational changes."
+  items={[
+    {
+      id: "deploy",
+      title: "Production deploy completed",
+      description: "Release v2.8.0 is now serving all workspaces.",
+      time: "2 min ago",
+      badge: "Deploy",
+      tone: "success",
+      unread: true,
+    },
+  ]}
+/>
+```
+
+## Reference
+
+### ActivityFeed Props
+
+| Prop          | Type                 | Default             | Description                    |
+| ------------- | -------------------- | ------------------- | ------------------------------ |
+| `items`       | `ActivityFeedItem[]` | -                   | Feed items to render.          |
+| `title`       | `ReactNode?`         | -                   | Optional header title.         |
+| `description` | `ReactNode?`         | -                   | Optional header description.   |
+| `action`      | `ReactNode?`         | -                   | Optional header action.        |
+| `emptyText`   | `ReactNode?`         | `"No activity yet"` | Empty state content.           |
+| `compact`     | `boolean`            | `false`             | Reduces row padding.           |
+| `size`        | `"sm" \| "md" \| "lg"` | `"md"`            | Max width preset.              |
+
+### ActivityFeedItem
+
+| Field         | Type        | Description                                  |
+| ------------- | ----------- | -------------------------------------------- |
+| `id`          | `string`    | Unique item id.                              |
+| `title`       | `ReactNode` | Main row title.                              |
+| `description` | `ReactNode` | Optional supporting text.                    |
+| `time`        | `ReactNode` | Optional timestamp.                          |
+| `badge`       | `ReactNode` | Optional status badge.                       |
+| `meta`        | `ReactNode` | Optional secondary metadata.                 |
+| `actor`       | `object`    | Optional actor with `name` and `initials`.   |
+| `icon`        | `ReactNode` | Optional marker icon.                        |
+| `tone`        | `ActivityFeedTone` | `neutral`, `info`, `success`, `warning`, or `violet`. |
+| `unread`      | `boolean`   | Adds a subtle pulse and active row signal.   |
+
+Also exported: `ActivityFeedEmpty`, `activityFeedVariants`, and related types.

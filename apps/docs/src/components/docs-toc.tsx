@@ -55,8 +55,15 @@ const itemVariants: Variants = {
   visible: {
     opacity: 1,
     x: 0,
-    transition: { duration: 0.2, ease: "easeOut" },
+    transition: { duration: 0.18, ease: [0.2, 0, 0, 1] },
   },
+};
+
+const tocActiveSpring = {
+  type: "spring" as const,
+  stiffness: 480,
+  damping: 34,
+  mass: 0.72,
 };
 
 export function DocsTableOfContents({
@@ -114,66 +121,92 @@ export function DocsTableOfContents({
   }
 
   return (
-    <div
-      className={cn("flex flex-col pt-4 text-sm overflow-hidden", className)}
-    >
+    <div className={cn("flex flex-col pt-4 text-sm", className)}>
       <motion.p
-        className="mb-3 px-3 text-[0.8rem]  font-semibold uppercase tracking-wider text-muted-foreground/60"
+        className="mb-3 flex items-center gap-2 px-2 text-[0.78rem] font-semibold text-foreground/60"
         initial={{ opacity: 0, y: -4 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.25, ease: "easeOut" }}
       >
-        On this page
+        <motion.span
+          className="h-px w-4 bg-foreground/25"
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ duration: 0.22, ease: [0.2, 0, 0, 1] }}
+          style={{ transformOrigin: "left" }}
+          aria-hidden="true"
+        />
+        On This Page
       </motion.p>
 
-      <div className="border-l border-border">
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="flex flex-col"
-        >
-          {toc.map((item) => {
-            const isActive = item.url === `#${activeHeading}`;
-            return (
-              <motion.a
-                key={item.url}
-                href={item.url}
-                variants={itemVariants}
-                className={cn(
-                  "relative -ml-px flex items-center border-l-2 py-1 pr-3 text-[0.78rem] leading-snug no-underline transition-colors",
-                  item.depth === 3 && "pl-5",
-                  item.depth === 4 && "pl-7",
-                  item.depth <= 2 && "pl-3",
-                  isActive
-                    ? "font-medium text-foreground"
-                    : "border-transparent text-muted-foreground hover:text-foreground",
-                )}
-                whileHover={{ x: 2 }}
-                transition={{ duration: 0.15 }}
-              >
-                {/* Animated border indicator using layoutId */}
-                <AnimatePresence>
-                  {isActive && (
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="flex flex-col gap-0.5"
+      >
+        {toc.map((item) => {
+          const isActive = item.url === `#${activeHeading}`;
+          return (
+            <motion.a
+              key={item.url}
+              href={item.url}
+              variants={itemVariants}
+              className={cn(
+                "relative flex min-h-6 items-center rounded-md py-0.5 pr-2 text-[0.78rem] leading-snug no-underline transition-colors",
+                item.depth === 3 && "pl-6",
+                item.depth >= 4 && "pl-8",
+                item.depth <= 2 && "pl-3",
+                isActive
+                  ? "font-medium text-foreground"
+                  : "text-foreground/55 hover:text-foreground/85",
+              )}
+              animate={{ x: isActive ? 2 : 0 }}
+              whileHover={{ x: isActive ? 3 : 2 }}
+              transition={tocActiveSpring}
+            >
+              <AnimatePresence>
+                {isActive && (
+                  <>
                     <motion.span
-                      layoutId="toc-active-line"
-                      className="absolute -left-[2px] top-0 h-full w-[2px] rounded-full bg-foreground"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
+                      layoutId="toc-active-bg"
+                      className="absolute inset-0 rounded-md bg-foreground/5 dark:bg-white/8"
+                      initial={{ opacity: 0, scaleX: 0.96 }}
+                      animate={{ opacity: 1, scaleX: 1 }}
+                      exit={{ opacity: 0, scaleX: 0.98 }}
+                      transition={tocActiveSpring}
+                      style={{ transformOrigin: "left" }}
+                    />
+                    <motion.span
+                      layoutId="toc-active-pin"
+                      className="absolute left-1 top-1/2 size-1.5 -translate-y-1/2 rounded-full bg-foreground/70 dark:bg-white/75"
+                      initial={{ scale: 0.4, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0.6, opacity: 0 }}
                       transition={{
-                        layout: { type: "spring", stiffness: 380, damping: 32 },
-                        opacity: { duration: 0.15 },
+                        type: "spring",
+                        stiffness: 620,
+                        damping: 28,
+                        mass: 0.5,
                       }}
                     />
-                  )}
-                </AnimatePresence>
-                {item.title}
-              </motion.a>
-            );
-          })}
-        </motion.div>
-      </div>
+                    <motion.span
+                      layoutId="toc-active-line"
+                      className="absolute left-3 top-1/2 h-px w-2 -translate-y-1/2 bg-foreground/35 dark:bg-white/45"
+                      initial={{ scaleX: 0, opacity: 0 }}
+                      animate={{ scaleX: 1, opacity: 1 }}
+                      exit={{ scaleX: 0, opacity: 0 }}
+                      transition={{ duration: 0.16, ease: [0.2, 0, 0, 1] }}
+                      style={{ transformOrigin: "left" }}
+                    />
+                  </>
+                )}
+              </AnimatePresence>
+              <span className="relative z-10">{item.title}</span>
+            </motion.a>
+          );
+        })}
+      </motion.div>
     </div>
   );
 }

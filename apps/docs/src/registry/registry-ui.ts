@@ -40,6 +40,33 @@ export const ui: Registry["items"] = [
     ],
   },
   {
+    name: "data-table",
+    type: "registry:ui",
+    dependencies: ["@tanstack/react-table", "lucide-react"],
+    files: [
+      {
+        path: "ui/data-table.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "activity-feed",
+    type: "registry:ui",
+    dependencies: [
+      "framer-motion",
+      "lucide-react",
+      "tailwind-merge",
+      "tailwind-variants",
+    ],
+    files: [
+      {
+        path: "ui/activity-feed.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
     name: "divider",
     type: "registry:ui",
     dependencies: ["tailwind-merge", "tailwind-variants"],
@@ -170,6 +197,17 @@ export const ui: Registry["items"] = [
     ],
   },
   {
+    name: "motion-tabs",
+    type: "registry:ui",
+    dependencies: ["framer-motion", "tailwind-merge", "tailwind-variants"],
+    files: [
+      {
+        path: "ui/motion-tabs.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
     name: "feedback-card",
     type: "registry:ui",
     dependencies: [
@@ -203,6 +241,38 @@ export const ui: Registry["items"] = [
     files: [
       {
         path: "ui/kinetic-card.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "progress-orbit",
+    type: "registry:ui",
+    dependencies: [
+      "framer-motion",
+      "lucide-react",
+      "tailwind-merge",
+      "tailwind-variants",
+    ],
+    files: [
+      {
+        path: "ui/progress-orbit.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "process-timeline-engine",
+    type: "registry:ui",
+    dependencies: [
+      "framer-motion",
+      "lucide-react",
+      "tailwind-merge",
+      "tailwind-variants",
+    ],
+    files: [
+      {
+        path: "ui/process-timeline-engine.tsx",
         type: "registry:ui",
       },
     ],

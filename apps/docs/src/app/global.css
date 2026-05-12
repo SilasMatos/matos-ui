@@ -113,6 +113,10 @@
 }
 
 @layer components {
+  html {
+    scrollbar-gutter: stable;
+  }
+
   .steps {
     &:first-child {
       @apply !mt-0;

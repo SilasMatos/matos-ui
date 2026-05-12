@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { DocsCopyPage } from "@/components/docs-copy-page";
+import { DocsDeployCard } from "@/components/docs-deploy-card";
 import {
   DocsPageBody,
   DocsPageBottomNav,
@@ -13,6 +14,7 @@ import {
 } from "@/components/docs-page-animations";
 import { DocsTableOfContents } from "@/components/docs-toc";
 import { Link } from "@/i18n/navigation";
+import { getComponentSkillDoc } from "@/lib/component-skill-doc";
 import { getPageImage, source } from "@/lib/source";
 import { absoluteUrl } from "@/lib/utils";
 import { getMDXComponents } from "@/mdx-components";
@@ -39,11 +41,23 @@ export default async function Page(props: { params: Promise<PageParams> }) {
     ? { previous: null, next: null }
     : findNeighbour(pageTree, page.url);
   const raw = await page.data.getText("raw");
+  const pageUrl = absoluteUrl(page.url);
+  const skillDoc = getComponentSkillDoc({
+    title: doc.title,
+    description: doc.description,
+    slug: params.slug,
+    raw,
+    url: pageUrl,
+  });
 
   const actions = (
     <>
-      <div className="hidden sm:block">
-        <DocsCopyPage page={raw} url={absoluteUrl(page.url)} />
+      <div>
+        <DocsCopyPage
+          page={skillDoc ?? raw}
+          url={pageUrl}
+          copyLabel={skillDoc ? "Copy SKILL.md" : "Copy Page"}
+        />
       </div>
       {neighbours.previous && (
         <Button
@@ -77,11 +91,11 @@ export default async function Page(props: { params: Promise<PageParams> }) {
   return (
     <div
       data-slot="docs"
-      className="flex scroll-mt-24 items-stretch pb-8 text-[1.05rem] sm:text-[15px] xl:w-full"
+      className="grid w-full scroll-mt-24 grid-cols-1 items-stretch pb-8 text-[1.05rem] sm:text-[15px] xl:grid-cols-[minmax(0,1fr)_var(--sidebar-width)]"
     >
-      <div className="flex min-w-0 flex-1 flex-col">
+      <div className="flex min-w-0 flex-col">
         <div className="h-(--top-spacing) shrink-0" />
-        <div className="mx-auto flex w-full max-w-3xl min-w-0 flex-1 flex-col gap-5 px-4 py-5 text-neutral-800 md:px-0 lg:py-6 dark:text-neutral-300">
+        <div className="mx-auto flex w-full max-w-[768px] min-w-0 flex-1 flex-col gap-5 px-4 py-5 text-neutral-800 md:px-0 lg:py-6 dark:text-neutral-300">
           <DocsPageHeader
             title={doc.title}
             description={doc.description}
@@ -127,11 +141,12 @@ export default async function Page(props: { params: Promise<PageParams> }) {
       </div>
 
       {/* Right TOC */}
-      <div className="sticky top-[calc(var(--header-height)+1px)] z-30 ml-auto hidden h-[90svh] w-(--sidebar-width) flex-col gap-4 overflow-hidden overscroll-none pb-8 xl:flex">
+      <div className="sticky top-[calc(var(--header-height)+0.75rem)] z-30 hidden h-[calc(100svh-var(--header-height)-1.5rem)] w-(--sidebar-width) flex-col gap-6 overflow-hidden overscroll-none pb-8 xl:flex">
         <div className="h-(--top-spacing) shrink-0"></div>
         {doc.toc?.length ? (
-          <div className="no-scrollbar flex flex-col gap-8 overflow-y-auto">
+          <div className="no-scrollbar flex flex-1 flex-col gap-8 overflow-y-auto px-2">
             <DocsTableOfContents toc={doc.toc} />
+            <DocsDeployCard />
           </div>
         ) : null}
       </div>

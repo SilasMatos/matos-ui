@@ -15,6 +15,7 @@
   "dependencies": {
     "@base-ui/react": "^1.2.0",
     "@orama/orama": "^3.1.18",
+    "@tanstack/react-table": "^8.21.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.37.0",

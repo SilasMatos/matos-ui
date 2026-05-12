@@ -25,8 +25,8 @@
   },
   "hero": {
     "badge": "Open Source Component Library",
-    "titleLine1": "Interfaces que respiram",
-    "titleLine2": "precisao com",
+    "titleLine1": "A Smarter Way to",
+    "titleLine2": "Build with",
     "brand": "Matos UI",
     "description": "Powerful, accessible and styled components built on top of shadcn/ui. Built with powerful variants and fluid animations.",
     "getStarted": "Get Started",
@@ -71,27 +71,27 @@
     ]
   },
   "scrollCards": {
-    "badge": "Styled by design",
-    "title": "How Matos UI components are shaped",
-    "subtitle": "Every component starts from theme tokens, clean variants, and motion that supports the interface.",
+    "badge": "Pillars",
+    "title": "Secrets Behind Success",
+    "subtitle": "The foundations behind every design decision.",
     "cards": [
       {
         "id": "card-01",
         "number": "01",
-        "title": "Token-first surfaces",
-        "description": "Backgrounds, borders, text, and muted states use theme tokens so every component adapts to your brand."
+        "title": "Strategic Vision",
+        "description": "Connect your calendar. We handle all the cross-checking."
       },
       {
         "id": "card-02",
         "number": "02",
-        "title": "Readable variants",
-        "description": "Sizes, tones, and interaction states stay close to the component API with Tailwind Variants."
+        "title": "Deep Execution",
+        "description": "Translate vision into relentless, disciplined action — day after day, quarter after quarter."
       },
       {
         "id": "card-03",
         "number": "03",
-        "title": "Polished motion",
-        "description": "Framer Motion adds small transitions, layout feedback, and hover states without stealing focus."
+        "title": "Resilient Mindset",
+        "description": "Build the mental architecture that turns every setback into a stepping stone toward mastery."
       }
     ]
   },
@@ -128,28 +128,28 @@
   },
   "matosAspects": {
     "badge": "Product-ready details",
-    "title": "More of the Matos UI approach",
-    "subtitle": "A registry built to be copied, styled, and owned inside your application.",
+    "title": "More about the Matos UI approach",
+    "subtitle": "A registry made to copy, style, and maintain inside your application.",
     "items": [
       {
         "label": "Copy-first",
         "title": "Open registry",
-        "description": "Install only the components you need, inspect the source, and keep the code in your project."
+        "description": "Install only the components you need, inspect the code, and keep everything in your project."
       },
       {
-        "label": "Interaction-ready",
+        "label": "Ready interaction",
         "title": "Accessible states",
-        "description": "Focus rings, disabled states, loading feedback, and ARIA hooks are treated as part of the design."
+        "description": "Focus, disabled, loading, and ARIA hooks are part of the design from the start."
       },
       {
         "label": "Theme tokens",
-        "title": "No hardcoded styling",
-        "description": "Components lean on bg-card, border-border, text-muted-foreground, and primary tokens."
+        "title": "No fixed styles",
+        "description": "Components use bg-card, border-border, text-muted-foreground, and primary tokens."
       },
       {
         "label": "Motion-first",
         "title": "Subtle micro motion",
-        "description": "Hover, layout, and presence animations make the interface feel alive while staying fast."
+        "description": "Hover, layout, and presence make the interface feel alive without slowing it down."
       }
     ]
   }

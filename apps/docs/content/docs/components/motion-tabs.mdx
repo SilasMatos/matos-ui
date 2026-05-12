@@ -1,0 +1,92 @@
+---
+title: Motion Tabs
+description: Animated segmented tabs with a fluid active pill, keyboard support, badges, and content transitions.
+---
+
+<ComponentPreview name="motion-tabs-demo" chromeless align="start" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/motion-tabs.json" />
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the following dependencies:</Step>
+
+<CodeBlockCommand command="npm install framer-motion tailwind-merge tailwind-variants" />
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="motion-tabs" title="components/matos-ui/motion-tabs.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { MotionTabs } from "@/components/matos-ui/motion-tabs"
+```
+
+```tsx
+<MotionTabs
+  items={[
+    {
+      value: "overview",
+      label: "Overview",
+      badge: "Live",
+      content: <div>Overview content</div>,
+    },
+    {
+      value: "billing",
+      label: "Billing",
+      content: <div>Billing content</div>,
+    },
+  ]}
+/>
+```
+
+## Reference
+
+### MotionTabs Props
+
+| Prop            | Type                         | Default | Description                         |
+| --------------- | ---------------------------- | ------- | ----------------------------------- |
+| `items`         | `MotionTabItem[]`            | -       | Tabs and panel content.             |
+| `value`         | `string?`                    | -       | Controlled selected value.          |
+| `defaultValue`  | `string?`                    | -       | Initial uncontrolled value.         |
+| `onValueChange` | `(value: string) => void`    | -       | Called when a tab is selected.      |
+| `size`          | `"sm" \| "md" \| "lg"`      | `"md"`  | Max width preset.                   |
+| `listClassName` | `string?`                    | -       | Classes for the tab list.           |
+| `panelClassName`| `string?`                    | -       | Classes for the active panel.       |
+
+### MotionTabItem
+
+| Field         | Type        | Description                     |
+| ------------- | ----------- | ------------------------------- |
+| `value`       | `string`    | Unique tab value.               |
+| `label`       | `ReactNode` | Visible tab label.              |
+| `icon`        | `ReactNode` | Optional leading icon.          |
+| `badge`       | `ReactNode` | Optional compact badge.         |
+| `description` | `ReactNode` | Optional panel description.     |
+| `content`     | `ReactNode` | Panel content for the tab.      |
+| `disabled`    | `boolean`   | Disables the tab.               |
+
+Also exported: `motionTabsVariants`, `MotionTabItem`, and `MotionTabsProps`.
