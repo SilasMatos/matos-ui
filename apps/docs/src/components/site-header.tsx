@@ -6,6 +6,7 @@ import logoLightSrc from "@/assets/logo-black.png";
 import logoDarkSrc from "@/assets/logo-white.png";
 import { CommandMenu } from "@/components/command-menu";
 import { GitHubLink } from "@/components/github-link";
+import { LinkedIn } from "@/components/icons/linkedin";
 import { MainNav } from "@/components/main-nav";
 import { MobileNav } from "@/components/mobile-nav";
 import { ModeSwitcher } from "@/components/mode-switcher";
@@ -47,17 +48,17 @@ export function SiteHeader({ pageTree }: { pageTree: DocsPageTree }) {
               <Image
                 src={logoLightSrc}
                 alt=""
-                width={50}
-                height={50}
-                className="size-12 object-contain dark:hidden"
+                width={25}
+                height={25}
+                className=" object-contain dark:hidden"
                 priority
               />
               <Image
                 src={logoDarkSrc}
                 alt=""
-                width={50}
-                height={50}
-                className="hidden size-12 object-contain dark:block"
+                width={25}
+                height={25}
+                className="hidden  object-contain dark:block"
                 priority
               />
             </span>
@@ -79,18 +80,37 @@ export function SiteHeader({ pageTree }: { pageTree: DocsPageTree }) {
             variant="ghost"
             size="icon"
             nativeButton={false}
-            className="hidden sm:inline-flex"
+            className="hidden text-muted-foreground transition-colors hover:text-[#0A66C2] sm:inline-flex dark:hover:text-[#7ab7ff]"
+            render={
+              <Link
+                href={siteConfig.links.linkedin}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="LinkedIn"
+              >
+                <LinkedIn className="size-4" aria-hidden="true" />
+              </Link>
+            }
+          >
+            <LinkedIn className="size-4" aria-hidden="true" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            nativeButton={false}
+            className="hidden text-foreground/80 transition-colors hover:text-foreground sm:inline-flex"
             render={
               <Link
                 href={siteConfig.links.twitter}
                 target="_blank"
                 rel="noreferrer"
+                aria-label="X (Twitter)"
               >
-                <XformerlyTwitter className="" />
+                <XformerlyTwitter className="size-4" aria-hidden="true" />
               </Link>
             }
           >
-            <XformerlyTwitter className="" />
+            <XformerlyTwitter className="size-4" aria-hidden="true" />
           </Button>
           <Separator orientation="vertical" className="hidden 3xl:flex" />
           <ModeSwitcher />
