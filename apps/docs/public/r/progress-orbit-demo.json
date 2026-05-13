@@ -7,7 +7,7 @@
   "files": [
     {
       "path": "components/matos-ui/examples/progress-orbit-demo.tsx",
-      "content": "\"use client\";\n\nimport { ShieldCheck } from \"lucide-react\";\n\nimport { ProgressOrbit } from \"@/components/matos-ui/progress-orbit\";\n\nexport default function ProgressOrbitDemo() {\n  return (\n    <div className=\"flex w-full justify-center p-2\">\n      <ProgressOrbit\n        className=\"max-w-56 shadow-sm\"\n        label=\"Security\"\n        description=\"Identity\"\n        value={72}\n        icon={<ShieldCheck />}\n        milestones={[\n          { value: 30, label: \"MFA\" },\n          { value: 55, label: \"SAML\" },\n          { value: 80, label: \"Audit\" },\n        ]}\n        footer=\"Milestones light up as your score crosses each threshold.\"\n      />\n    </div>\n  );\n}\n",
+      "content": "\"use client\";\n\nimport { ShieldCheck } from \"lucide-react\";\n\nimport { ProgressOrbit } from \"@/components/matos-ui/progress-orbit\";\n\nexport default function ProgressOrbitDemo() {\n  return (\n    <div className=\"flex w-full justify-center p-2\">\n      <ProgressOrbit\n        className=\"max-w-72 shadow-sm\"\n        label=\"Security\"\n        description=\"Identity\"\n        value={72}\n        icon={<ShieldCheck />}\n        milestones={[\n          { value: 30, label: \"MFA\" },\n          { value: 55, label: \"SAML\" },\n          { value: 80, label: \"Audit\" },\n        ]}\n        footer=\"Milestones light up as your score crosses each threshold.\"\n      />\n    </div>\n  );\n}\n",
       "type": "registry:example",
       "target": "components/matos-ui/examples/progress-orbit-demo.tsx"
     }

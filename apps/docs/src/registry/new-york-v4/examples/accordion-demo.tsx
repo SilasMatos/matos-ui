@@ -9,24 +9,24 @@ export default function AccordionDemo() {
   return (
     <Accordion>
       <AccordionItem value="item-1">
-        <AccordionTrigger value="item-1">O que é o Matos UI?</AccordionTrigger>
+        <AccordionTrigger value="item-1">What is Matos UI?</AccordionTrigger>
         <AccordionContent value="item-1">
-          Uma biblioteca de componentes estilizados construída sobre shadcn/ui,
-          com variantes e animações prontas para uso em produção.
+          A styled component library built on top of shadcn/ui, with variants
+          and animations ready for production.
         </AccordionContent>
       </AccordionItem>
       <AccordionItem value="item-2">
-        <AccordionTrigger value="item-2">Como instalar?</AccordionTrigger>
+        <AccordionTrigger value="item-2">How do I install it?</AccordionTrigger>
         <AccordionContent value="item-2">
-          Use o CLI do shadcn: npx shadcn@latest add
+          Use the shadcn CLI: npx shadcn@latest add
           https://matos-ui.com/r/accordion.json
         </AccordionContent>
       </AccordionItem>
       <AccordionItem value="item-3">
-        <AccordionTrigger value="item-3">É gratuito?</AccordionTrigger>
+        <AccordionTrigger value="item-3">Is it free?</AccordionTrigger>
         <AccordionContent value="item-3">
-          Sim. Os componentes são open source e podem ser copiados ou instalados
-          no seu projeto.
+          Yes. The components are open source and can be copied or installed in
+          your project.
         </AccordionContent>
       </AccordionItem>
     </Accordion>

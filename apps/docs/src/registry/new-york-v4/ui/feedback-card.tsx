@@ -39,11 +39,11 @@ export type FeedbackCardProps = ComponentProps<"div"> &
   };
 
 const defaultOptions: FeedbackOption[] = [
-  { value: "terrible", emoji: "😡", label: "Péssimo" },
-  { value: "bad", emoji: "😕", label: "Ruim" },
+  { value: "terrible", emoji: "😡", label: "Terrible" },
+  { value: "bad", emoji: "😕", label: "Bad" },
   { value: "okay", emoji: "😐", label: "Ok" },
-  { value: "good", emoji: "😊", label: "Bom" },
-  { value: "amazing", emoji: "🤩", label: "Incrível" },
+  { value: "good", emoji: "😊", label: "Good" },
+  { value: "amazing", emoji: "🤩", label: "Amazing" },
 ];
 
 type Step = "rating" | "message" | "success";
@@ -70,7 +70,7 @@ function AnimatedCheck() {
         strokeLinecap="round"
         strokeLinejoin="round"
       >
-        <title>Sucesso</title>
+        <title>Success</title>
         <motion.path
           d="M5 13l4 4L19 7"
           initial={{ pathLength: 0 }}
@@ -145,12 +145,12 @@ function EmojiButton({
 export function FeedbackCard({
   className,
   size,
-  title = "Como foi sua experiência?",
-  subtitle = "Sua opinião nos ajuda a melhorar",
+  title = "How was your experience?",
+  subtitle = "Your feedback helps us improve",
   options = defaultOptions,
   onSubmit,
-  successTitle = "Obrigado pelo feedback!",
-  successDescription = "Sua avaliação foi enviada com sucesso.",
+  successTitle = "Thanks for your feedback!",
+  successDescription = "Your rating was sent successfully.",
   ...props
 }: FeedbackCardProps) {
   const [step, setStep] = useState<Step>("rating");
@@ -245,7 +245,7 @@ export function FeedbackCard({
                   transition={{ delay: 0.05 }}
                   className="text-base font-semibold"
                 >
-                  Conte-nos mais
+                  Tell us more
                 </motion.h3>
                 <motion.p
                   initial={{ opacity: 0, x: -6 }}
@@ -253,7 +253,7 @@ export function FeedbackCard({
                   transition={{ delay: 0.1 }}
                   className="text-sm text-muted-foreground"
                 >
-                  O que podemos melhorar?
+                  What can we improve?
                 </motion.p>
               </div>
 
@@ -279,7 +279,7 @@ export function FeedbackCard({
                 transition={{ delay: 0.12 }}
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                placeholder="Escreva seu feedback aqui... (opcional)"
+                placeholder="Write your feedback here... (optional)"
                 rows={3}
                 className={twMerge(
                   "w-full resize-none rounded-lg border border-border bg-secondary/50 px-3 py-2.5",
@@ -301,7 +301,7 @@ export function FeedbackCard({
                   }}
                   className="text-xs text-muted-foreground transition-colors hover:text-foreground"
                 >
-                  ← Voltar
+                  ← Back
                 </motion.button>
 
                 <motion.button
@@ -323,14 +323,14 @@ export function FeedbackCard({
                     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                   )}
                 >
-                  Enviar feedback
+                  Send feedback
                 </motion.button>
               </div>
             </div>
           </motion.div>
         )}
 
-        {/* ── Step 3: Success ── */}
+        {/* Step 3: Success */}
         {step === "success" && (
           <motion.div
             key="success"
@@ -370,7 +370,7 @@ export function FeedbackCard({
                 onClick={handleReset}
                 className="mt-1 text-xs text-muted-foreground/70 transition-colors hover:text-foreground border border-muted rounded-lg px-3 py-1 hover:border-foreground/30"
               >
-                Enviar outro feedback
+                Send another feedback
               </motion.button>
             </div>
           </motion.div>

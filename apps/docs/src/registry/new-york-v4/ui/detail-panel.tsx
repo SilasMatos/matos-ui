@@ -149,10 +149,10 @@ function DetailPanelHeader({
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.92 }}
           onClick={ctx.onClose}
-          aria-label="Fechar painel"
+          aria-label="Close panel"
           className="flex size-7 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
-          <span className="sr-only">Fechar</span>
+          <span className="sr-only">Close</span>
           <X className="size-4" strokeWidth={2} aria-hidden="true" />
         </motion.button>
       ) : null}
@@ -302,7 +302,7 @@ export type DetailPanelNoteProps = {
 };
 
 function DetailPanelNote({
-  label = "Nota",
+  label = "Note",
   children,
   className,
 }: DetailPanelNoteProps) {
@@ -333,7 +333,7 @@ function DetailPanelAttachments({
       className={twMerge("space-y-1.5", className)}
     >
       <p className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
-        Anexos
+        Attachments
       </p>
       {children}
     </motion.div>
@@ -383,10 +383,10 @@ function DetailPanelAttachment({
             e.stopPropagation();
             onMenuClick();
           }}
-          aria-label="Opções do anexo"
+          aria-label="Attachment options"
           className="flex size-6 shrink-0 items-center justify-center rounded text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
-          <span className="sr-only">Mais opções</span>
+          <span className="sr-only">More options</span>
           <MoreHorizontal
             className="size-4"
             strokeWidth={1.8}

@@ -324,12 +324,12 @@ export function DataTableConfidence({
       data-slot="data-table-confidence"
       className={twMerge("flex items-center gap-3", className)}
     >
-      <div className="flex items-center gap-[2px]" aria-hidden="true">
+      <div className="flex items-center gap-0.5" aria-hidden="true">
         {barItems.map((item) => (
           <span
             key={`confidence-bar-${bars}-${item}`}
             className={twMerge(
-              "h-4 w-[2px] rounded-full",
+              "h-4 w-0.5 rounded-full",
               item <= activeBars ? "bg-foreground" : "bg-muted",
             )}
           />
@@ -399,6 +399,7 @@ export function DataTableAvatarStack({
           className="-ml-1 first:ml-0 inline-flex size-7 items-center justify-center overflow-hidden rounded-full bg-muted text-[0.65rem] font-medium text-muted-foreground ring-2 ring-background"
         >
           {user.image ? (
+            // biome-ignore lint/performance/noImgElement: registry components must work outside Next.js.
             <img
               src={user.image}
               alt={user.name}
@@ -428,7 +429,7 @@ export function Table({ className, ...props }: ComponentProps<"table">) {
       <table
         data-slot="table"
         className={twMerge(
-          "m-0 w-full min-w-[760px] caption-bottom border-collapse text-sm",
+          "m-0 w-full min-w-190 caption-bottom border-collapse text-sm",
           className,
         )}
         {...props}
@@ -488,7 +489,7 @@ export function TableCell({ className, ...props }: ComponentProps<"td">) {
     <td
       data-slot="table-cell"
       className={twMerge(
-        "h-[3.25rem] px-4 align-middle text-sm text-foreground first:pl-5 last:pr-5",
+        "h-13 px-4 align-middle text-sm text-foreground first:pl-5 last:pr-5",
         className,
       )}
       {...props}

@@ -119,7 +119,7 @@ function AnimatedNumber({
     mass: 1,
   });
   const display = useTransform(spring, (v) => {
-    const formatted = v.toLocaleString("pt-BR", {
+    const formatted = v.toLocaleString("en-US", {
       minimumFractionDigits: decimals,
       maximumFractionDigits: decimals,
     });
@@ -235,7 +235,7 @@ function Sparkline({ data, trend = 0 }: SparklineProps) {
         className="w-full"
         preserveAspectRatio="none"
       >
-        <title>Gráfico sparkline de tendência</title>
+        <title>Trend sparkline chart</title>
         <defs>
           <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor={strokeColor} stopOpacity={0.12} />

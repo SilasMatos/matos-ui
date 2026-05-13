@@ -76,10 +76,10 @@ export function ActionBar(props: ActionBarProps) {
     description,
     icon,
 
-    ariaLabel = "Confirmar ação",
-    cancelLabel = "Cancelar",
-    confirmLabel = "Confirmar",
-    confirmLabelLoading = "Processando…",
+    ariaLabel = "Confirm action",
+    cancelLabel = "Cancel",
+    confirmLabel = "Confirm",
+    confirmLabelLoading = "Processing...",
     className,
     placement,
     tone,
@@ -100,7 +100,7 @@ export function ActionBar(props: ActionBarProps) {
 
   return (
     <>
-      {/* 🔥 BACKDROP COM BLUR */}
+      {/* Backdrop blur layer */}
       <div className="" aria-hidden />
 
       <div
@@ -121,8 +121,8 @@ export function ActionBar(props: ActionBarProps) {
             <span>
               {title ??
                 (subject
-                  ? `Confirmar ação em "${subject}"?`
-                  : "Tem certeza que deseja continuar?")}
+                  ? `Confirm action for "${subject}"?`
+                  : "Are you sure you want to continue?")}
             </span>
 
             {description && (

@@ -16,13 +16,14 @@ export default function SpotlightCardDemo() {
           </div>
         </SpotlightCardHeader>
         <SpotlightCardContent>
-          <h3 className="text-sm font-semibold">Rápido</h3>
+          <h3 className="text-sm font-semibold">Fast</h3>
           <p className="mt-1 text-xs text-muted-foreground">
-            Performance otimizada com lazy loading e code splitting automático.
+            Optimized performance with lazy loading and automatic code
+            splitting.
           </p>
         </SpotlightCardContent>
         <SpotlightCardFooter>
-          <span className="text-xs text-muted-foreground">→ Saiba mais</span>
+          <span className="text-xs text-muted-foreground">→ Learn more</span>
         </SpotlightCardFooter>
       </SpotlightCard>
 
@@ -33,13 +34,13 @@ export default function SpotlightCardDemo() {
           </div>
         </SpotlightCardHeader>
         <SpotlightCardContent>
-          <h3 className="text-sm font-semibold">Moderno</h3>
+          <h3 className="text-sm font-semibold">Modern</h3>
           <p className="mt-1 text-xs text-muted-foreground">
-            Design system construído com as melhores práticas de UI atuais.
+            A design system built with current UI best practices.
           </p>
         </SpotlightCardContent>
         <SpotlightCardFooter>
-          <span className="text-xs text-muted-foreground">→ Explorar</span>
+          <span className="text-xs text-muted-foreground">→ Explore</span>
         </SpotlightCardFooter>
       </SpotlightCard>
 
@@ -50,13 +51,13 @@ export default function SpotlightCardDemo() {
           </div>
         </SpotlightCardHeader>
         <SpotlightCardContent>
-          <h3 className="text-sm font-semibold">Composável</h3>
+          <h3 className="text-sm font-semibold">Composable</h3>
           <p className="mt-1 text-xs text-muted-foreground">
-            Componentes modulares que se encaixam como blocos de construção.
+            Modular components that fit together as building blocks.
           </p>
         </SpotlightCardContent>
         <SpotlightCardFooter>
-          <span className="text-xs text-muted-foreground">→ Componentes</span>
+          <span className="text-xs text-muted-foreground">→ Components</span>
         </SpotlightCardFooter>
       </SpotlightCard>
     </div>

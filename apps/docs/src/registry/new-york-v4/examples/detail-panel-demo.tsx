@@ -42,15 +42,15 @@ export default function DetailPanelDemo() {
         size="sm"
         onClick={() => setOpen((v) => !v)}
       >
-        {open ? "Ocultar painel" : "Mostrar painel"}
+        {open ? "Hide panel" : "Show panel"}
       </Button>
 
       <DetailPanel open={open} onClose={() => setOpen(false)}>
-        <DetailPanelHeader>Detalhes da inscrição</DetailPanelHeader>
+        <DetailPanelHeader>Registration details</DetailPanelHeader>
 
         <DetailPanelContent>
           <DetailPanelHighlight
-            label="Sessão"
+            label="Session"
             primary="Design"
             secondary=" Systems"
           />
@@ -60,7 +60,7 @@ export default function DetailPanelDemo() {
           <DetailPanelRows>
             <DetailPanelRow
               icon={<Hash className="size-3.5" strokeWidth={1.7} />}
-              label="Código da reserva"
+              label="Booking code"
               value={
                 <span className="font-mono text-[11px] text-muted-foreground">
                   WS-2026-8841
@@ -69,8 +69,8 @@ export default function DetailPanelDemo() {
             />
             <DetailPanelRow
               icon={<CircleDashed className="size-3.5" strokeWidth={1.7} />}
-              label="Modalidade"
-              value="Presencial"
+              label="Format"
+              value="In person"
             />
             <DetailPanelRow
               icon={<CircleDashed className="size-3.5" strokeWidth={1.7} />}
@@ -78,13 +78,13 @@ export default function DetailPanelDemo() {
               value={
                 <span className="inline-flex items-center gap-1 rounded-full border border-chart-2/40 bg-chart-2/15 px-2 py-0.5 text-[10px] font-medium text-chart-2">
                   <Check className="size-2.5" strokeWidth={2.5} aria-hidden />
-                  Confirmada
+                  Confirmed
                 </span>
               }
             />
             <DetailPanelRow
               icon={<UserRound className="size-3.5" strokeWidth={1.7} />}
-              label="Participante"
+              label="Attendee"
               value={
                 <span className="inline-flex items-center gap-1.5">
                   <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-primary text-[9px] font-bold text-primary-foreground">
@@ -105,12 +105,12 @@ export default function DetailPanelDemo() {
             />
             <DetailPanelRow
               icon={<MapPin className="size-3.5" strokeWidth={1.7} />}
-              label="Local"
-              value="Auditório Central"
+              label="Location"
+              value="Main Auditorium"
             />
             <DetailPanelRow
               icon={<CalendarDays className="size-3.5" strokeWidth={1.7} />}
-              label="Data"
+              label="Date"
               value={
                 <span className="inline-flex items-center gap-1.5">
                   <span>18 mar 2026, 14:00</span>
@@ -122,19 +122,18 @@ export default function DetailPanelDemo() {
             />
             <DetailPanelRow
               icon={<Clock className="size-3.5" strokeWidth={1.7} />}
-              label="Duração"
+              label="Duration"
               value="3 h"
             />
           </DetailPanelRows>
 
-          <DetailPanelNote label="Observações">
-            Acesso com QR no credenciamento. Chegada recomendada 20 minutos
-            antes para check-in.
+          <DetailPanelNote label="Notes">
+            QR access at accreditation. Arrive 20 minutes early for check-in.
           </DetailPanelNote>
 
           <DetailPanelAttachments>
             <DetailPanelAttachment
-              name="programa-workshop.pdf"
+              name="workshop-program.pdf"
               meta="128 KB"
               icon={<FileText className="size-7 text-muted-foreground" />}
               onMenuClick={() => {}}
@@ -144,15 +143,15 @@ export default function DetailPanelDemo() {
 
         <DetailPanelFooter>
           <DetailPanelFooterAction
-            ariaLabel="Mais opções"
+            ariaLabel="More options"
             icon={<MoreHorizontal className="size-4" strokeWidth={1.8} />}
           />
           <DetailPanelFooterAction
-            ariaLabel="Compartilhar"
+            ariaLabel="Share"
             icon={<Share2 className="size-4" strokeWidth={1.8} />}
           />
           <DetailPanelFooterAction
-            ariaLabel="Baixar"
+            ariaLabel="Download"
             icon={<Download className="size-4" strokeWidth={1.8} />}
           />
         </DetailPanelFooter>

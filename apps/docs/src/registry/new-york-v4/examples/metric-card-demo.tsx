@@ -16,40 +16,38 @@ export default function MetricCardDemo() {
   return (
     <div className="flex flex-wrap items-start justify-center gap-4">
       <MetricCard
-        label="Receita Mensal"
+        label="Monthly Revenue"
         value={42850}
-        prefix="R$ "
-        trend={{ value: 12, label: "vs mês anterior" }}
+        prefix="$"
+        trend={{ value: 12, label: "vs last month" }}
         sparkline={revenueData}
         footer={
           <span className="text-xs text-muted-foreground/80">
-            Atualizado agora
+            Updated just now
           </span>
         }
       />
 
       <MetricCard
-        label="Usuários Ativos"
+        label="Active Users"
         value={1284}
         trend={{ value: 24 }}
         sparkline={usersData}
         footer={
-          <span className="text-xs text-muted-foreground/80">
-            Últimos 30 dias
-          </span>
+          <span className="text-xs text-muted-foreground/80">Last 30 days</span>
         }
       />
 
       <MetricCard
-        label="Taxa de Conversão"
+        label="Conversion Rate"
         value={4.2}
         suffix="%"
         decimals={1}
-        trend={{ value: -2, label: "vs semana anterior" }}
+        trend={{ value: -2, label: "vs last week" }}
         sparkline={conversionData}
         footer={
           <span className="text-xs text-muted-foreground/80">
-            Média semanal
+            Weekly average
           </span>
         }
       />

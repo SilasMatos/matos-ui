@@ -55,7 +55,7 @@ const agents: Agent[] = [
         image:
           "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&crop=face",
       },
-      { name: "João Lima", initials: "JL" },
+      { name: "John Lima", initials: "JL" },
       { name: "Bia Torres", initials: "BT" },
       { name: "Rafa Alves", initials: "RA" },
     ],

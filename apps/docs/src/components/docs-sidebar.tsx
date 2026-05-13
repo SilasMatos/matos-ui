@@ -149,7 +149,7 @@ export function DocsSidebar({
                     <Link
                       href={folderUrl}
                       className={cn(
-                        "relative flex h-7 w-full items-center rounded-md px-3 text-[0.75rem] font-semibold outline-none transition-colors duration-75 ease-out focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+                        "relative flex h-7 w-full uppercase items-center rounded-md px-3 text-[0.80rem] font-semibold outline-none transition-colors duration-75 ease-out focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
                         isFolderActive
                           ? "text-foreground"
                           : "text-muted-foreground/70 hover:text-foreground",

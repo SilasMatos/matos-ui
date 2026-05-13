@@ -24,6 +24,35 @@ const siteUrl = getSiteUrl();
 // copied most of the functions from:
 // https://github.com/creativetimofficial/ui/blob/main/apps/www/scripts/build-registry.mts
 
+function runCommand(command: string) {
+  return new Promise<void>((resolve, reject) => {
+    exec(command, (error, stdout, stderr) => {
+      if (stdout) {
+        console.log(stdout);
+      }
+
+      if (stderr) {
+        console.error(stderr);
+      }
+
+      if (error) {
+        reject(error);
+        return;
+      }
+
+      resolve();
+    });
+  });
+}
+
+function normalizeLineEndings(content: string) {
+  return content.replace(/\r\n/g, "\n");
+}
+
+async function formatGeneratedFiles(...files: string[]) {
+  await runCommand(`bunx biome format --write ${files.join(" ")}`);
+}
+
 async function buildRegistryIndex() {
   let index = `/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -81,6 +110,7 @@ export const Index: Record<string, any> = {`;
   // Write style index.
   rimraf.sync(path.join(process.cwd(), "registry/__index__.tsx"));
   await fs.writeFile(path.join(process.cwd(), "registry/__index__.tsx"), index);
+  await formatGeneratedFiles("registry/__index__.tsx");
 }
 
 async function buildRegistryJsonFile() {
@@ -110,9 +140,9 @@ async function buildRegistryJsonFile() {
   );
 
   // 3. Format the registry.json file.
-  await exec(`prettier --write registry.json`);
+  await formatGeneratedFiles("registry.json");
 
-  // 3. Copy the registry.json to the www/public/r/styles/new-york-v4 directory.
+  // 4. Copy the registry.json to the www/public/r/styles/new-york-v4 directory.
   await fs.cp(
     path.join(process.cwd(), "registry.json"),
     path.join(
@@ -197,7 +227,9 @@ async function cleanupGeneratedPaths() {
 
           // Clean up imports in the content field using the path mappings
           if (file.content) {
-            file.content = rewriteImports(file.content, pathMappings);
+            file.content = normalizeLineEndings(
+              rewriteImports(file.content, pathMappings),
+            );
           }
         }
         return file;
@@ -305,7 +337,9 @@ async function buildPackageJson(
         // Read file content
         let content = "";
         if (existsSync(absolutePath)) {
-          content = await fs.readFile(absolutePath, "utf-8");
+          content = normalizeLineEndings(
+            await fs.readFile(absolutePath, "utf-8"),
+          );
         }
 
         // Clean path - remove registry/new-york-v4/ prefix for UI components
@@ -382,7 +416,9 @@ async function buildAllJson() {
 
         let content = "";
         if (existsSync(absolutePath)) {
-          content = await fs.readFile(absolutePath, "utf-8");
+          content = normalizeLineEndings(
+            await fs.readFile(absolutePath, "utf-8"),
+          );
         }
 
         let cleanPath = file.path;

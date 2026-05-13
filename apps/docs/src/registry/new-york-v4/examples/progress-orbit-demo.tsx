@@ -8,7 +8,7 @@ export default function ProgressOrbitDemo() {
   return (
     <div className="flex w-full justify-center p-2">
       <ProgressOrbit
-        className="max-w-56 shadow-sm"
+        className="max-w-72 shadow-sm"
         label="Security"
         description="Identity"
         value={72}

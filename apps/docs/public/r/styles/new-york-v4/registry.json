@@ -1,43 +1,27 @@
 {
   "name": "matos/ui",
-  "homepage": "http://localhost:4000/",
+  "homepage": "https://matos-ui.com/",
   "items": [
     {
       "name": "index",
       "type": "registry:style",
-      "dependencies": [
-        "class-variance-authority",
-        "lucide-react"
-      ],
-      "devDependencies": [
-        "tw-animate-css"
-      ],
-      "registryDependencies": [
-        "utils"
-      ],
+      "dependencies": ["class-variance-authority", "lucide-react"],
+      "devDependencies": ["tw-animate-css"],
+      "registryDependencies": ["utils"],
       "files": []
     },
     {
       "name": "style",
       "type": "registry:style",
-      "dependencies": [
-        "class-variance-authority",
-        "lucide-react"
-      ],
-      "devDependencies": [
-        "tw-animate-css"
-      ],
-      "registryDependencies": [
-        "utils"
-      ],
+      "dependencies": ["class-variance-authority", "lucide-react"],
+      "devDependencies": ["tw-animate-css"],
+      "registryDependencies": ["utils"],
       "files": []
     },
     {
       "name": "button",
       "type": "registry:ui",
-      "dependencies": [
-        "@base-ui/react"
-      ],
+      "dependencies": ["@base-ui/react"],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/button.tsx",
@@ -48,10 +32,7 @@
     {
       "name": "badge",
       "type": "registry:ui",
-      "dependencies": [
-        "tailwind-merge",
-        "tailwind-variants"
-      ],
+      "dependencies": ["tailwind-merge", "tailwind-variants"],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/badge.tsx",
@@ -78,10 +59,7 @@
     {
       "name": "data-table",
       "type": "registry:ui",
-      "dependencies": [
-        "@tanstack/react-table",
-        "lucide-react"
-      ],
+      "dependencies": ["@tanstack/react-table", "lucide-react"],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/data-table.tsx",
@@ -108,10 +86,7 @@
     {
       "name": "divider",
       "type": "registry:ui",
-      "dependencies": [
-        "tailwind-merge",
-        "tailwind-variants"
-      ],
+      "dependencies": ["tailwind-merge", "tailwind-variants"],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/divider.tsx",
@@ -154,14 +129,8 @@
     {
       "name": "action-bar",
       "type": "registry:ui",
-      "dependencies": [
-        "lucide-react",
-        "tailwind-merge",
-        "tailwind-variants"
-      ],
-      "registryDependencies": [
-        "button"
-      ],
+      "dependencies": ["lucide-react", "tailwind-merge", "tailwind-variants"],
+      "registryDependencies": ["button"],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/action-bar.tsx",
@@ -252,11 +221,7 @@
     {
       "name": "motion-tabs",
       "type": "registry:ui",
-      "dependencies": [
-        "framer-motion",
-        "tailwind-merge",
-        "tailwind-variants"
-      ],
+      "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/motion-tabs.tsx",
@@ -283,11 +248,7 @@
     {
       "name": "spotlight-card",
       "type": "registry:ui",
-      "dependencies": [
-        "framer-motion",
-        "tailwind-merge",
-        "tailwind-variants"
-      ],
+      "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/spotlight-card.tsx",
@@ -298,11 +259,7 @@
     {
       "name": "kinetic-card",
       "type": "registry:ui",
-      "dependencies": [
-        "framer-motion",
-        "tailwind-merge",
-        "tailwind-variants"
-      ],
+      "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/kinetic-card.tsx",
@@ -345,9 +302,7 @@
     {
       "name": "button-demo",
       "type": "registry:example",
-      "registryDependencies": [
-        "button"
-      ],
+      "registryDependencies": ["button"],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/button-demo.tsx",
@@ -358,9 +313,7 @@
     {
       "name": "badge-demo",
       "type": "registry:example",
-      "registryDependencies": [
-        "badge"
-      ],
+      "registryDependencies": ["badge"],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/badge-demo.tsx",
@@ -371,9 +324,7 @@
     {
       "name": "breadcrumb-demo",
       "type": "registry:example",
-      "registryDependencies": [
-        "breadcrumb"
-      ],
+      "registryDependencies": ["breadcrumb"],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/breadcrumb-demo.tsx",
@@ -384,9 +335,7 @@
     {
       "name": "data-table-demo",
       "type": "registry:example",
-      "registryDependencies": [
-        "data-table"
-      ],
+      "registryDependencies": ["data-table"],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/data-table-demo.tsx",
@@ -397,9 +346,7 @@
     {
       "name": "activity-feed-demo",
       "type": "registry:example",
-      "registryDependencies": [
-        "activity-feed"
-      ],
+      "registryDependencies": ["activity-feed"],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/activity-feed-demo.tsx",
@@ -410,9 +357,7 @@
     {
       "name": "divider-demo",
       "type": "registry:example",
-      "registryDependencies": [
-        "divider"
-      ],
+      "registryDependencies": ["divider"],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/divider-demo.tsx",
@@ -423,9 +368,7 @@
     {
       "name": "dynamic-island-demo",
       "type": "registry:example",
-      "registryDependencies": [
-        "dynamic-island"
-      ],
+      "registryDependencies": ["dynamic-island"],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/dynamic-island-demo.tsx",
@@ -436,9 +379,7 @@
     {
       "name": "accordion-demo",
       "type": "registry:example",
-      "registryDependencies": [
-        "accordion"
-      ],
+      "registryDependencies": ["accordion"],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/accordion-demo.tsx",
@@ -449,9 +390,7 @@
     {
       "name": "action-bar-demo",
       "type": "registry:example",
-      "registryDependencies": [
-        "action-bar"
-      ],
+      "registryDependencies": ["action-bar"],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/action-bar-demo.tsx",
@@ -462,10 +401,7 @@
     {
       "name": "detail-panel-demo",
       "type": "registry:example",
-      "registryDependencies": [
-        "detail-panel",
-        "button"
-      ],
+      "registryDependencies": ["detail-panel", "button"],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/detail-panel-demo.tsx",
@@ -476,9 +412,7 @@
     {
       "name": "command-dock-demo",
       "type": "registry:example",
-      "registryDependencies": [
-        "command-dock"
-      ],
+      "registryDependencies": ["command-dock"],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/command-dock-demo.tsx",
@@ -489,9 +423,7 @@
     {
       "name": "file-upload-demo",
       "type": "registry:example",
-      "registryDependencies": [
-        "file-upload"
-      ],
+      "registryDependencies": ["file-upload"],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/file-upload-demo.tsx",
@@ -502,10 +434,7 @@
     {
       "name": "notification-stack-demo",
       "type": "registry:example",
-      "registryDependencies": [
-        "notification-stack",
-        "button"
-      ],
+      "registryDependencies": ["notification-stack", "button"],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/notification-stack-demo.tsx",
@@ -516,9 +445,7 @@
     {
       "name": "metric-card-demo",
       "type": "registry:example",
-      "registryDependencies": [
-        "metric-card"
-      ],
+      "registryDependencies": ["metric-card"],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/metric-card-demo.tsx",
@@ -529,9 +456,7 @@
     {
       "name": "motion-tabs-demo",
       "type": "registry:example",
-      "registryDependencies": [
-        "motion-tabs"
-      ],
+      "registryDependencies": ["motion-tabs"],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/motion-tabs-demo.tsx",
@@ -542,9 +467,7 @@
     {
       "name": "feedback-card-demo",
       "type": "registry:example",
-      "registryDependencies": [
-        "feedback-card"
-      ],
+      "registryDependencies": ["feedback-card"],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/feedback-card-demo.tsx",
@@ -555,9 +478,7 @@
     {
       "name": "progress-orbit-demo",
       "type": "registry:example",
-      "registryDependencies": [
-        "progress-orbit"
-      ],
+      "registryDependencies": ["progress-orbit"],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/progress-orbit-demo.tsx",
@@ -568,9 +489,7 @@
     {
       "name": "spotlight-card-demo",
       "type": "registry:example",
-      "registryDependencies": [
-        "spotlight-card"
-      ],
+      "registryDependencies": ["spotlight-card"],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/spotlight-card-demo.tsx",
@@ -581,9 +500,7 @@
     {
       "name": "kinetic-card-demo",
       "type": "registry:example",
-      "registryDependencies": [
-        "kinetic-card"
-      ],
+      "registryDependencies": ["kinetic-card"],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/kinetic-card-demo.tsx",
@@ -594,9 +511,7 @@
     {
       "name": "process-timeline-engine-demo",
       "type": "registry:example",
-      "registryDependencies": [
-        "process-timeline-engine"
-      ],
+      "registryDependencies": ["process-timeline-engine"],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/process-timeline-engine-demo.tsx",

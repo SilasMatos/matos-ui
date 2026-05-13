@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Allerta, Inter } from "next/font/google";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
@@ -6,6 +7,7 @@ import { getMessages, setRequestLocale } from "next-intl/server";
 import { Provider } from "@/components/provider";
 import { SiteHeader } from "@/components/site-header";
 import { routing } from "@/i18n/routing";
+import { siteConfig } from "@/lib/config";
 import { source } from "@/lib/source";
 
 const inter = Inter({
@@ -17,6 +19,15 @@ const allerta = Allerta({
   weight: "400",
   variable: "--font-allerta",
 });
+
+export const metadata: Metadata = {
+  metadataBase: new URL(siteConfig.url),
+  title: {
+    default: siteConfig.name,
+    template: `%s - ${siteConfig.name}`,
+  },
+  description: siteConfig.description,
+};
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));

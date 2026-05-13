@@ -214,7 +214,7 @@ export function FileUpload({
   const validateFile = useCallback(
     (file: File): string | undefined => {
       if (maxSize && file.size > maxSize) {
-        return `Arquivo excede ${formatFileSize(maxSize)}`;
+        return `File exceeds ${formatFileSize(maxSize)}`;
       }
 
       return undefined;
@@ -323,20 +323,18 @@ export function FileUpload({
     disabled,
   });
 
-  const defaultTitle = dragging
-    ? "Solte os arquivos aqui"
-    : "Arraste seus arquivos";
+  const defaultTitle = dragging ? "Drop files here" : "Drag your files";
 
   const defaultDescription = multiple
-    ? "ou clique para selecionar varios arquivos"
-    : "ou clique para selecionar um arquivo";
+    ? "or click to select multiple files"
+    : "or click to select a file";
 
   return (
     <div data-slot="file-upload" className="w-full">
       <motion.div
         role="button"
         tabIndex={disabled ? -1 : 0}
-        aria-label="Area de upload de arquivos"
+        aria-label="File upload area"
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
@@ -453,7 +451,7 @@ export function FileUpload({
 
                   <button
                     type="button"
-                    aria-label={`Remover ${entry.file.name}`}
+                    aria-label={`Remove ${entry.file.name}`}
                     className={styles.removeButton()}
                     onClick={(event) => {
                       event.stopPropagation();
