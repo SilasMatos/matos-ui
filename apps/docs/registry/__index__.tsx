@@ -125,6 +125,7 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
   },
+<<<<<<< HEAD
   "status-pulse-card": {
     name: "status-pulse-card",
     type: "registry:ui",
@@ -172,6 +173,9 @@ export const Index: Record<string, any> = {
     }),
   },
   divider: {
+=======
+  "divider": {
+>>>>>>> ab98716 (.)
     name: "divider",
     type: "registry:ui",
     registryDependencies: undefined,
