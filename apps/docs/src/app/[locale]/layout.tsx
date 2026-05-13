@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
@@ -9,11 +8,6 @@ import { SiteHeader } from "@/components/site-header";
 import { routing } from "@/i18n/routing";
 import { siteConfig } from "@/lib/config";
 import { source } from "@/lib/source";
-
-const geist = Geist({
-  subsets: ["latin"],
-  variable: "--font-geist",
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -45,23 +39,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   const pageTree = source.getPageTree(locale);
 
   return (
-    <html
-      lang={locale}
-      className={`${geist.className} ${geist.variable}`}
-      suppressHydrationWarning
-    >
-      <head>
-        <link
-          rel="icon"
-          href="/logo-black-fiv.png"
-          media="(prefers-color-scheme: light)"
-        />
-        <link
-          rel="icon"
-          href="/logo-white-fiv.png"
-          media="(prefers-color-scheme: dark)"
-        />
-      </head>
+    <html lang={locale} suppressHydrationWarning>
       <body
         className="flex flex-col min-h-screen [--header-height:calc(var(--spacing)*13)]"
         cz-shortcut-listen="true"

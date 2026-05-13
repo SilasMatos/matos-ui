@@ -1,5 +1,4 @@
 .git
-.gitignore
 .husky
 node_modules
 **/node_modules

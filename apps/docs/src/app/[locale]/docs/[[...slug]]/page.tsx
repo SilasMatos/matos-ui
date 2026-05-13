@@ -15,6 +15,7 @@ import {
 import { DocsTableOfContents } from "@/components/docs-toc";
 import { Link } from "@/i18n/navigation";
 import { getComponentSkillDoc } from "@/lib/component-skill-doc";
+import { getSiteUrl } from "@/lib/site-url";
 import { getPageImage, source } from "@/lib/source";
 import { absoluteUrl } from "@/lib/utils";
 import { getMDXComponents } from "@/mdx-components";
@@ -167,6 +168,7 @@ export async function generateMetadata(props: {
   if (!page) notFound();
 
   return {
+    metadataBase: new URL(getSiteUrl()),
     title: page.data.title,
     description: page.data.description,
     openGraph: {
