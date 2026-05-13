@@ -3,6 +3,7 @@
 import {
   AnimatePresence,
   motion,
+  type Transition,
   useReducedMotion,
   type Variants,
 } from "framer-motion";
@@ -12,6 +13,7 @@ import {
   CheckCircle2,
   Clock3,
   Mic,
+  Music2,
   Pause,
   Phone,
   PhoneOff,
@@ -20,112 +22,116 @@ import {
   UploadCloud,
   X,
 } from "lucide-react";
-import type { ComponentProps, ReactNode } from "react";
+import {
+  type ComponentProps,
+  type KeyboardEvent,
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
 
 export const dynamicIslandVariants = tv({
   slots: {
-    root: "flex w-full justify-center px-2",
+    root: "not-prose flex w-full justify-center px-2",
+    splitGroup: "flex max-w-full items-center justify-center gap-2",
     island: [
-      "relative isolate flex max-w-full items-center overflow-hidden rounded-[2rem] border border-border/50",
-      "bg-card/80 text-card-foreground shadow-sm backdrop-blur-xl ring-1 ring-foreground/5",
-      "supports-[backdrop-filter]:bg-card/70",
+      "relative isolate flex max-w-full transform-gpu cursor-pointer select-none items-center overflow-hidden will-change-transform",
+      "border border-border/30 bg-foreground text-background shadow-sm",
+      "transition-colors dark:bg-card dark:text-foreground",
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
     ],
-    glow: "pointer-events-none absolute inset-x-8 -top-10 -z-10 h-20 rounded-full bg-primary/10 blur-2xl",
-    topLight:
-      "pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent",
-    content: "relative flex min-w-0 items-center",
+    compact: "h-10 min-w-40 gap-2.5 rounded-full px-3 py-1.5",
+    minimal: "h-9 w-16 justify-center rounded-full px-2 py-1",
+    expanded: "min-h-24 w-[min(94vw,25rem)] rounded-[2rem] px-3.5 py-3",
+    transient: "min-h-20 w-[min(94vw,23rem)] rounded-[2rem] px-3.5 py-2.5",
+    liveActivity: "min-h-24 w-[min(94vw,26rem)] rounded-[2rem] px-3.5 py-3",
+    splitPrimary: "h-10 min-w-44 gap-2.5 rounded-full px-3 py-1.5",
+    splitSecondary: "h-10 w-20 justify-center rounded-full px-2.5 py-1.5",
+    compactContent: "flex min-w-0 items-center gap-2",
+    expandedContent: "flex w-full min-w-0 items-center gap-3",
     media: [
-      "relative grid shrink-0 place-items-center overflow-hidden rounded-full border border-border/60",
-      "bg-background text-muted-foreground shadow-xs",
+      "relative grid shrink-0 place-items-center overflow-hidden rounded-full",
+      "bg-background/10 text-background dark:bg-muted dark:text-foreground",
     ],
-    mediaRing:
-      "pointer-events-none absolute inset-0 rounded-full border border-primary/20",
+    mediaCompact: "size-6",
+    mediaExpanded: "size-11",
+    mediaLarge: "size-12",
     copy: "min-w-0 flex-1",
     eyebrow:
-      "mb-0.5 flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-widest text-muted-foreground",
-    title: "block truncate font-semibold tracking-tight text-foreground",
-    description: "block truncate leading-5 text-muted-foreground",
-    actions: "flex shrink-0 items-center gap-2",
-    button: [
-      "inline-flex shrink-0 items-center justify-center rounded-full border border-border/70",
-      "bg-background/80 text-muted-foreground shadow-xs transition-colors duration-200",
-      "hover:bg-muted hover:text-foreground",
-      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+      "m-0 mb-1 truncate text-[10px] font-medium uppercase leading-none tracking-wide text-background/60 dark:text-muted-foreground",
+    title:
+      "m-0 truncate text-sm font-medium leading-none text-background dark:text-foreground",
+    description:
+      "m-0 mt-1 truncate text-xs leading-tight text-background/70 dark:text-muted-foreground",
+    timerTitle:
+      "m-0 truncate font-medium tabular-nums text-[22px] leading-none text-background dark:text-foreground",
+    actions: "flex shrink-0 items-center gap-1.5",
+    actionButton: [
+      "inline-flex size-8 shrink-0 items-center justify-center rounded-full",
+      "bg-background text-foreground shadow-xs transition-colors hover:bg-muted",
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
       "disabled:pointer-events-none disabled:opacity-50",
     ],
-    pill: "inline-flex shrink-0 items-center gap-1.5 rounded-full border border-border/60 bg-background/70 px-2.5 py-1 text-muted-foreground text-xs",
+    compactPill:
+      "inline-flex min-w-0 items-center gap-1.5 truncate text-xs font-medium leading-none text-background dark:text-foreground",
+    mutedText:
+      "truncate text-[11px] leading-none text-background/65 dark:text-muted-foreground",
     progressTrack:
-      "relative h-2 overflow-hidden rounded-full bg-muted shadow-inner",
-    progressFill: "relative h-full rounded-full bg-primary",
-    statusDot: "size-2.5 rounded-full bg-muted-foreground",
+      "relative h-1.5 overflow-hidden rounded-full bg-background/15 dark:bg-muted",
+    progressFill: "h-full rounded-full bg-background dark:bg-primary",
+    statusDot: "size-1.5 shrink-0 rounded-full bg-background dark:bg-primary",
   },
   variants: {
-    variant: {
-      music: {
-        island: "w-[min(94vw,35rem)]",
-        content: "w-full gap-3.5 sm:gap-4",
-      },
-      timer: {
-        island: "w-[min(94vw,26rem)]",
-        content: "w-full gap-3",
-      },
-      recording: {
-        island: "w-[min(94vw,29rem)] border-destructive/30",
-        glow: "bg-destructive/10",
-        media: "border-destructive/25 bg-destructive/10 text-destructive",
-        mediaRing: "border-destructive/20",
-        statusDot: "bg-destructive",
-        content: "w-full gap-3",
-      },
-      confirm: {
-        island: "w-[min(94vw,36rem)]",
-        content: "w-full gap-3.5",
-      },
-      notification: {
-        island: "w-[min(94vw,31rem)]",
-        content: "w-full gap-3",
-      },
-      progress: {
-        island: "w-[min(94vw,34rem)]",
-        content: "w-full gap-3.5",
-      },
-      call: {
-        island: "w-[min(94vw,34rem)]",
-        media: "border-primary/25 bg-primary/10 text-primary",
-        content: "w-full gap-3",
-      },
-    },
     size: {
       sm: {
-        island: "min-h-14 px-3 py-2",
-        media: "size-10",
-        title: "text-sm",
-        description: "text-xs",
-        button: "size-9",
+        compact: "h-9 min-w-32 px-2.5",
+        minimal: "h-8 w-14",
+        expanded: "min-h-20 w-[min(94vw,21rem)] px-3 py-2.5",
+        transient: "min-h-18 w-[min(94vw,20rem)] px-3 py-2",
+        liveActivity: "min-h-20 w-[min(94vw,22rem)] px-3 py-2.5",
+        splitPrimary: "h-9 min-w-36 px-2.5",
+        splitSecondary: "h-9 w-16",
+        mediaCompact: "size-5",
+        mediaExpanded: "size-9",
+        mediaLarge: "size-10",
+        actionButton: "size-7",
+        title: "text-[13px]",
+        description: "text-[11px]",
       },
-      md: {
-        island: "min-h-16 px-4 py-3",
-        media: "size-12",
-        title: "text-[15px]",
-        description: "text-xs",
-        button: "size-10",
-      },
+      md: {},
       lg: {
-        island: "min-h-[4.75rem] px-5 py-3.5",
-        media: "size-14",
-        title: "text-base",
-        description: "text-sm",
-        button: "size-11",
+        compact: "h-11 min-w-48 px-3.5",
+        minimal: "h-10 w-18",
+        expanded: "min-h-28 w-[min(94vw,30rem)] px-4 py-3.5",
+        transient: "min-h-24 w-[min(94vw,28rem)] px-4 py-3",
+        liveActivity: "min-h-28 w-[min(94vw,31rem)] px-4 py-3.5",
+        splitPrimary: "h-11 min-w-52 px-3.5",
+        splitSecondary: "h-11 w-22",
+        mediaCompact: "size-7",
+        mediaExpanded: "size-12",
+        mediaLarge: "size-14",
+        actionButton: "size-9",
+        title: "text-[15px]",
       },
     },
   },
   defaultVariants: {
-    variant: "notification",
     size: "md",
   },
 });
+
+export type DynamicIslandMode =
+  | "compact"
+  | "minimal"
+  | "expanded"
+  | "split"
+  | "transient"
+  | "liveActivity";
 
 export type DynamicIslandVariant =
   | "music"
@@ -139,6 +145,12 @@ export type DynamicIslandVariant =
 export type DynamicIslandProps = ComponentProps<"div"> &
   VariantProps<typeof dynamicIslandVariants> & {
     variant?: DynamicIslandVariant;
+    mode?: DynamicIslandMode;
+    defaultMode?: DynamicIslandMode;
+    autoCollapse?: boolean;
+    autoCollapseDelay?: number;
+    secondaryActivity?: DynamicIslandProps;
+    onModeChange?: (mode: DynamicIslandMode) => void;
     title?: string;
     description?: string;
     time?: string;
@@ -154,50 +166,82 @@ export type DynamicIslandProps = ComponentProps<"div"> &
     icon?: ReactNode;
   };
 
-const smoothEase = [0.22, 1, 0.36, 1] as const;
-const morphTransition = {
+type IslandStyles = ReturnType<typeof dynamicIslandVariants>;
+type FeedbackState = "success" | null;
+
+type DynamicIslandActivity = {
+  variant: DynamicIslandVariant;
+  title?: string;
+  description?: string;
+  time?: string;
+  progress?: number;
+  image?: string;
+  isPlaying?: boolean;
+  isActive?: boolean;
+  onPlayPause?: () => void;
+  onConfirm?: () => void;
+  onCancel?: () => void;
+  onStop?: () => void;
+  actions?: ReactNode;
+  icon?: ReactNode;
+};
+
+const islandTransition = {
   type: "spring",
-  stiffness: 330,
-  damping: 34,
-  mass: 0.9,
-} as const;
+  stiffness: 480,
+  damping: 44,
+  mass: 0.74,
+} satisfies Transition;
+
+const reducedTransition = { duration: 0 } satisfies Transition;
 
 const contentVariants: Variants = {
-  hidden: { opacity: 0, y: 8, scale: 0.985, filter: "blur(6px)" },
+  hidden: { opacity: 0, y: 3 },
   visible: {
     opacity: 1,
     y: 0,
-    scale: 1,
-    filter: "blur(0px)",
-    transition: {
-      duration: 0.26,
-      ease: smoothEase,
-      staggerChildren: 0.035,
-      delayChildren: 0.035,
-    },
+    transition: { duration: 0.14, ease: [0.22, 1, 0.36, 1] },
   },
   exit: {
     opacity: 0,
-    y: -6,
-    scale: 0.99,
-    filter: "blur(4px)",
-    transition: { duration: 0.16, ease: smoothEase },
+    y: -3,
+    transition: { duration: 0.1, ease: [0.32, 0, 0.67, 0] },
   },
 };
 
-const childVariants: Variants = {
-  hidden: { opacity: 0, y: 6, scale: 0.98 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { duration: 0.24, ease: smoothEase },
+const defaults: Record<
+  DynamicIslandVariant,
+  { title: string; description: string; time?: string }
+> = {
+  music: {
+    title: "Midnight City",
+    description: "M83",
   },
-  exit: {
-    opacity: 0,
-    y: -4,
-    scale: 0.99,
-    transition: { duration: 0.14, ease: smoothEase },
+  timer: {
+    title: "24:18",
+    description: "Focus session",
+  },
+  recording: {
+    title: "Screen Recording",
+    description: "Recording in progress",
+    time: "01:32",
+  },
+  confirm: {
+    title: "Apply changes?",
+    description: "Review and publish this update.",
+  },
+  notification: {
+    title: "Workspace updated",
+    description: "Design tokens synced successfully.",
+    time: "Now",
+  },
+  progress: {
+    title: "Uploading files",
+    description: "Syncing registry assets",
+  },
+  call: {
+    title: "Sarah Chen",
+    description: "Incoming call",
   },
 };
 
@@ -205,200 +249,296 @@ function clampProgress(progress = 0) {
   return Math.min(100, Math.max(0, progress));
 }
 
-function IslandActionButton({
-  children,
-  label,
-  onClick,
-  tone = "default",
-  disabled,
-  className,
-}: {
-  children: ReactNode;
-  label: string;
-  onClick?: () => void;
-  tone?: "default" | "primary" | "destructive";
-  disabled?: boolean;
-  className?: string;
-}) {
-  const shouldReduceMotion = useReducedMotion();
-  const toneClassName = {
-    default: "",
-    primary: "border-primary/25 bg-primary/10 text-primary hover:bg-primary/15",
-    destructive:
-      "border-destructive/25 bg-destructive/10 text-destructive hover:bg-destructive/15",
-  }[tone];
-
-  return (
-    <motion.button
-      type="button"
-      aria-label={label}
-      disabled={disabled}
-      onClick={onClick}
-      className={twMerge(
-        dynamicIslandVariants().button(),
-        toneClassName,
-        className,
-      )}
-      variants={childVariants}
-      whileHover={shouldReduceMotion ? undefined : { y: -1, scale: 1.035 }}
-      whileTap={shouldReduceMotion ? undefined : { scale: 0.955, y: 0 }}
-      transition={morphTransition}
-    >
-      {children}
-    </motion.button>
-  );
+function normalizeActivity(
+  activity?: Partial<DynamicIslandProps>,
+): DynamicIslandActivity {
+  return {
+    variant: activity?.variant ?? "notification",
+    title: activity?.title,
+    description: activity?.description,
+    time: activity?.time,
+    progress: activity?.progress,
+    image: activity?.image,
+    isPlaying: activity?.isPlaying,
+    isActive: activity?.isActive,
+    onPlayPause: activity?.onPlayPause,
+    onConfirm: activity?.onConfirm,
+    onCancel: activity?.onCancel,
+    onStop: activity?.onStop,
+    actions: activity?.actions,
+    icon: activity?.icon,
+  };
 }
 
-function MediaFrame({
-  children,
-  image,
-  title,
+function getActivityCopy(activity: DynamicIslandActivity) {
+  const fallback = defaults[activity.variant];
+  const progress = clampProgress(activity.progress);
+
+  if (activity.variant === "progress" && progress >= 100) {
+    return {
+      title: "Upload complete",
+      description: activity.description ?? "All files are synced.",
+      time: activity.time,
+    };
+  }
+
+  return {
+    title: activity.title ?? fallback.title,
+    description: activity.description ?? fallback.description,
+    time: activity.time ?? fallback.time,
+  };
+}
+
+function getModeClassName(mode: DynamicIslandMode, styles: IslandStyles) {
+  if (mode === "minimal") {
+    return styles.minimal();
+  }
+
+  if (mode === "expanded") {
+    return styles.expanded();
+  }
+
+  if (mode === "transient") {
+    return styles.transient();
+  }
+
+  if (mode === "liveActivity") {
+    return styles.liveActivity();
+  }
+
+  return styles.compact();
+}
+
+function getAriaLabel(
+  activity: DynamicIslandActivity,
+  mode: DynamicIslandMode,
+) {
+  const copy = getActivityCopy(activity);
+  const modeLabel =
+    mode === "liveActivity" ? "live activity" : mode.toLowerCase();
+
+  return `${copy.title}, ${modeLabel} dynamic island`;
+}
+
+function isDetailedMode(mode: DynamicIslandMode) {
+  return mode === "expanded" || mode === "transient" || mode === "liveActivity";
+}
+
+function ActivityIcon({
+  activity,
   className,
-  ringClassName,
-  pulse = false,
 }: {
-  children?: ReactNode;
-  image?: string;
-  title?: string;
+  activity: DynamicIslandActivity;
   className?: string;
-  ringClassName?: string;
+}) {
+  if (activity.icon) {
+    return <span className={className}>{activity.icon}</span>;
+  }
+
+  const iconClassName = twMerge("size-4", className);
+
+  if (activity.variant === "music") {
+    return <Music2 className={iconClassName} aria-hidden="true" />;
+  }
+
+  if (activity.variant === "timer") {
+    return <Clock3 className={iconClassName} aria-hidden="true" />;
+  }
+
+  if (activity.variant === "recording") {
+    return <Mic className={iconClassName} aria-hidden="true" />;
+  }
+
+  if (activity.variant === "confirm") {
+    return <CheckCircle2 className={iconClassName} aria-hidden="true" />;
+  }
+
+  if (activity.variant === "progress") {
+    return <UploadCloud className={iconClassName} aria-hidden="true" />;
+  }
+
+  if (activity.variant === "call") {
+    return <Phone className={iconClassName} aria-hidden="true" />;
+  }
+
+  return <Bell className={iconClassName} aria-hidden="true" />;
+}
+
+function MediaOrb({
+  activity,
+  styles,
+  layoutId,
+  expanded,
+  pulse,
+  children,
+}: {
+  activity: DynamicIslandActivity;
+  styles: IslandStyles;
+  layoutId: string;
+  expanded?: boolean;
   pulse?: boolean;
+  children?: ReactNode;
 }) {
   const shouldReduceMotion = useReducedMotion();
 
   return (
     <motion.span
-      layoutId="dynamic-island-media"
+      layout
+      layoutId={layoutId}
       className={twMerge(
-        dynamicIslandVariants().media(),
-        image ? "bg-cover bg-center" : undefined,
-        className,
+        styles.media(),
+        expanded ? styles.mediaExpanded() : styles.mediaCompact(),
+        activity.variant === "recording"
+          ? "bg-destructive/15 text-destructive dark:bg-destructive/20"
+          : undefined,
+        activity.variant === "call"
+          ? "bg-background/15 text-background dark:bg-primary/15 dark:text-primary"
+          : undefined,
+        activity.image ? "bg-cover bg-center" : undefined,
       )}
-      style={image ? { backgroundImage: `url(${image})` } : undefined}
-      role={image ? "img" : undefined}
-      aria-label={image && title ? `${title} artwork` : undefined}
-      variants={childVariants}
-      transition={morphTransition}
+      style={
+        activity.image
+          ? { backgroundImage: `url(${activity.image})` }
+          : undefined
+      }
+      transition={shouldReduceMotion ? reducedTransition : islandTransition}
+      role={activity.image ? "img" : undefined}
+      aria-label={
+        activity.image
+          ? `${getActivityCopy(activity).title} artwork`
+          : undefined
+      }
     >
       {pulse ? (
         <motion.span
           className={twMerge(
-            dynamicIslandVariants().mediaRing(),
-            ringClassName,
+            "absolute inset-0 rounded-full",
+            activity.variant === "recording"
+              ? "bg-destructive/25"
+              : "bg-background/20 dark:bg-primary/20",
           )}
           animate={
             shouldReduceMotion
               ? undefined
-              : { scale: [1, 1.18, 1], opacity: [0.55, 0.18, 0.55] }
+              : { scale: [0.86, 1.45, 0.86], opacity: [0.6, 0, 0.6] }
           }
-          transition={{
-            duration: 1.6,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
+          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
           aria-hidden="true"
         />
       ) : null}
-      {image ? null : children}
+      {activity.image
+        ? null
+        : (children ?? <ActivityIcon activity={activity} />)}
     </motion.span>
   );
 }
 
-function Equalizer({ active = true }: { active?: boolean }) {
+function Equalizer({ active }: { active?: boolean }) {
   const shouldReduceMotion = useReducedMotion();
-  const bars = [0.42, 0.78, 0.55, 0.92, 0.66];
+  const bars = [
+    { id: "low", height: 0.4 },
+    { id: "peak", height: 0.8 },
+    { id: "mid", height: 0.56 },
+    { id: "high", height: 0.95 },
+  ];
 
   return (
-    <motion.span
-      className="flex h-5 shrink-0 items-end gap-0.5"
-      variants={childVariants}
-      aria-hidden="true"
-    >
-      {bars.map((height, index) => (
+    <span className="flex h-4 shrink-0 items-end gap-0.5" aria-hidden="true">
+      {bars.map((bar) => (
         <motion.span
-          key={height}
-          className="w-0.5 rounded-full bg-primary"
+          key={bar.id}
+          className="w-0.5 rounded-full bg-background dark:bg-primary"
           animate={
             shouldReduceMotion || !active
-              ? { height: `${height * 58}%`, opacity: active ? 1 : 0.45 }
+              ? { height: `${bar.height * 54}%`, opacity: active ? 1 : 0.42 }
               : {
                   height: [
-                    `${height * 42}%`,
-                    `${height * 100}%`,
-                    `${height * 58}%`,
+                    `${bar.height * 42}%`,
+                    `${bar.height * 100}%`,
+                    `${bar.height * 58}%`,
                   ],
-                  opacity: [0.68, 1, 0.78],
+                  opacity: [0.65, 1, 0.75],
                 }
           }
           transition={{
-            duration: 0.72 + index * 0.08,
+            duration:
+              bar.id === "low"
+                ? 0.7
+                : bar.id === "peak"
+                  ? 0.78
+                  : bar.id === "mid"
+                    ? 0.86
+                    : 0.94,
             repeat: active ? Infinity : 0,
             repeatType: "mirror",
             ease: "easeInOut",
           }}
         />
       ))}
-    </motion.span>
+    </span>
   );
 }
 
-function CopyBlock({
-  eyebrow,
-  title,
-  description,
-  time,
-  titleClassName,
-}: {
-  eyebrow?: string;
-  title?: string;
-  description?: string;
-  time?: string;
-  titleClassName?: string;
-}) {
+function RecordingDot({ compact = false }: { compact?: boolean }) {
+  const shouldReduceMotion = useReducedMotion();
+
   return (
-    <motion.span
-      layoutId="dynamic-island-copy"
-      className={dynamicIslandVariants().copy()}
-      variants={childVariants}
+    <span
+      className={twMerge(
+        "relative grid place-items-center",
+        compact ? "size-4" : "size-5",
+      )}
+      aria-hidden="true"
     >
-      {eyebrow ? (
-        <span className={dynamicIslandVariants().eyebrow()}>
-          <span className="size-1 rounded-full bg-primary" aria-hidden="true" />
-          {eyebrow}
-        </span>
-      ) : null}
-      <span
-        className={twMerge(dynamicIslandVariants().title(), titleClassName)}
-      >
-        {title}
-        {time ? (
-          <span className="ml-2 font-normal text-muted-foreground">{time}</span>
-        ) : null}
-      </span>
-      {description ? (
-        <span className={dynamicIslandVariants().description()}>
-          {description}
-        </span>
-      ) : null}
-    </motion.span>
+      <motion.span
+        className="absolute size-full rounded-full bg-destructive/20"
+        animate={
+          shouldReduceMotion
+            ? undefined
+            : { scale: [0.76, 1.45, 0.76], opacity: [0.62, 0, 0.62] }
+        }
+        transition={{ duration: 1.35, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.span
+        className={twMerge(
+          "relative rounded-full bg-destructive",
+          compact ? "size-2" : "size-2.5",
+        )}
+        animate={
+          shouldReduceMotion
+            ? undefined
+            : { scale: [1, 1.12, 1], opacity: [1, 0.72, 1] }
+        }
+        transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
+      />
+    </span>
   );
 }
 
-function TimerRing({ active }: { active?: boolean }) {
+function TimerRing({
+  active,
+  compact,
+}: {
+  active?: boolean;
+  compact?: boolean;
+}) {
   const shouldReduceMotion = useReducedMotion();
 
   return (
     <span className="relative grid size-full place-items-center">
-      <Clock3 className="size-4" aria-hidden="true" />
+      <Clock3
+        className={twMerge(compact ? "size-3.5" : "size-4")}
+        aria-hidden="true"
+      />
       <svg
-        className="-rotate-90 pointer-events-none absolute inset-0 size-full text-primary"
+        className="-rotate-90 pointer-events-none absolute inset-0 size-full"
         viewBox="0 0 48 48"
         aria-hidden="true"
       >
         <circle
           cx="24"
           cy="24"
-          r="21"
+          r="20"
           fill="none"
           stroke="currentColor"
           strokeOpacity="0.16"
@@ -407,56 +547,23 @@ function TimerRing({ active }: { active?: boolean }) {
         <motion.circle
           cx="24"
           cy="24"
-          r="21"
+          r="20"
           fill="none"
           stroke="currentColor"
           strokeLinecap="round"
           strokeWidth="3"
           initial={{ pathLength: 0 }}
           animate={{
-            pathLength: active ? 0.76 : 0.34,
-            opacity: active ? 1 : 0.52,
+            pathLength: active ? 0.78 : 0.28,
+            opacity: active ? 1 : 0.5,
           }}
           transition={
             shouldReduceMotion
-              ? { duration: 0 }
-              : { duration: 0.7, ease: smoothEase }
+              ? reducedTransition
+              : { duration: 0.7, ease: [0.22, 1, 0.36, 1] }
           }
         />
       </svg>
-    </span>
-  );
-}
-
-function RecordingDot({ className }: { className?: string }) {
-  const shouldReduceMotion = useReducedMotion();
-
-  return (
-    <span
-      className="relative grid size-5 place-items-center"
-      aria-hidden="true"
-    >
-      <motion.span
-        className={twMerge(
-          "absolute size-5 rounded-full bg-destructive/20",
-          className,
-        )}
-        animate={
-          shouldReduceMotion
-            ? undefined
-            : { scale: [0.78, 1.45, 0.78], opacity: [0.6, 0, 0.6] }
-        }
-        transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.span
-        className="relative size-2.5 rounded-full bg-destructive"
-        animate={
-          shouldReduceMotion
-            ? undefined
-            : { scale: [1, 1.12, 1], opacity: [1, 0.72, 1] }
-        }
-        transition={{ duration: 0.9, repeat: Infinity, ease: "easeInOut" }}
-      />
     </span>
   );
 }
@@ -468,11 +575,11 @@ function ProgressNumber({ value }: { value: number }) {
     <AnimatePresence mode="popLayout" initial={false}>
       <motion.span
         key={value}
-        className="tabular-nums text-foreground text-sm font-semibold"
-        initial={shouldReduceMotion ? false : { opacity: 0, y: 5 }}
+        className="shrink-0 tabular-nums"
+        initial={shouldReduceMotion ? false : { opacity: 0, y: 4 }}
         animate={{ opacity: 1, y: 0 }}
-        exit={shouldReduceMotion ? undefined : { opacity: 0, y: -5 }}
-        transition={{ duration: 0.18, ease: smoothEase }}
+        exit={shouldReduceMotion ? undefined : { opacity: 0, y: -4 }}
+        transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
       >
         {value}%
       </motion.span>
@@ -480,9 +587,646 @@ function ProgressNumber({ value }: { value: number }) {
   );
 }
 
+function IslandActionButton({
+  label,
+  children,
+  onClick,
+  tone = "default",
+  styles,
+}: {
+  label: string;
+  children: ReactNode;
+  onClick?: () => void;
+  tone?: "default" | "primary" | "destructive";
+  styles: IslandStyles;
+}) {
+  const shouldReduceMotion = useReducedMotion();
+  const toneClassName = {
+    default: "",
+    primary: "bg-primary text-primary-foreground hover:bg-primary/90",
+    destructive:
+      "bg-destructive text-primary-foreground hover:bg-destructive/90",
+  }[tone];
+
+  return (
+    <motion.button
+      type="button"
+      aria-label={label}
+      onClick={(event) => {
+        event.stopPropagation();
+        onClick?.();
+      }}
+      className={twMerge(styles.actionButton(), toneClassName)}
+      whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }}
+      whileTap={shouldReduceMotion ? undefined : { scale: 0.94 }}
+      transition={shouldReduceMotion ? reducedTransition : islandTransition}
+    >
+      {children}
+    </motion.button>
+  );
+}
+
+function CopyBlock({
+  activity,
+  styles,
+  timer,
+  eyebrow,
+}: {
+  activity: DynamicIslandActivity;
+  styles: IslandStyles;
+  timer?: boolean;
+  eyebrow?: string;
+}) {
+  const copy = getActivityCopy(activity);
+
+  return (
+    <motion.span
+      layout
+      layoutId={`dynamic-island-${activity.variant}-copy`}
+      className={styles.copy()}
+      transition={islandTransition}
+    >
+      {eyebrow ? <p className={styles.eyebrow()}>{eyebrow}</p> : null}
+      <p className={timer ? styles.timerTitle() : styles.title()}>
+        {activity.variant === "recording"
+          ? (activity.time ?? copy.time)
+          : copy.title}
+      </p>
+      <p className={styles.description()}>
+        {activity.variant === "recording" ? copy.title : copy.description}
+      </p>
+    </motion.span>
+  );
+}
+
+function CompactContent({
+  activity,
+  mode,
+  styles,
+  scope,
+  feedback,
+}: {
+  activity: DynamicIslandActivity;
+  mode: "compact" | "minimal";
+  styles: IslandStyles;
+  scope: string;
+  feedback: FeedbackState;
+}) {
+  const copy = getActivityCopy(activity);
+  const progress = clampProgress(activity.progress);
+
+  if (mode === "minimal") {
+    return (
+      <motion.div
+        key={`${scope}-minimal-${feedback ?? activity.variant}`}
+        layout
+        className="flex items-center justify-center"
+        variants={contentVariants}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
+      >
+        {feedback === "success" || progress >= 100 ? (
+          <Check className="size-4" aria-hidden="true" />
+        ) : activity.variant === "recording" ? (
+          <RecordingDot compact />
+        ) : (
+          <ActivityIcon activity={activity} className="size-4" />
+        )}
+      </motion.div>
+    );
+  }
+
+  return (
+    <motion.div
+      key={`${scope}-compact-${feedback ?? activity.variant}`}
+      layout
+      className={styles.compactContent()}
+      variants={contentVariants}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+    >
+      {feedback === "success" || progress >= 100 ? (
+        <>
+          <Check className="size-4 shrink-0" aria-hidden="true" />
+          <span className={styles.compactPill()}>Done</span>
+        </>
+      ) : null}
+
+      {feedback !== "success" && activity.variant === "music" ? (
+        <>
+          <MediaOrb
+            activity={activity}
+            styles={styles}
+            layoutId={`${scope}-media`}
+          >
+            <ActivityIcon activity={activity} className="size-3.5" />
+          </MediaOrb>
+          <Equalizer active={activity.isPlaying} />
+        </>
+      ) : null}
+
+      {feedback !== "success" && activity.variant === "timer" ? (
+        <>
+          <MediaOrb
+            activity={activity}
+            styles={styles}
+            layoutId={`${scope}-media`}
+          >
+            <TimerRing active={activity.isActive} compact />
+          </MediaOrb>
+          <span className={styles.compactPill()}>
+            {activity.time ?? copy.title}
+          </span>
+        </>
+      ) : null}
+
+      {feedback !== "success" && activity.variant === "recording" ? (
+        <>
+          <RecordingDot compact />
+          <span className={styles.compactPill()}>
+            {activity.time ?? copy.time ?? "00:00"}
+          </span>
+        </>
+      ) : null}
+
+      {feedback !== "success" && activity.variant === "call" ? (
+        <>
+          <MediaOrb
+            activity={activity}
+            styles={styles}
+            layoutId={`${scope}-media`}
+            pulse
+          >
+            <ActivityIcon activity={activity} className="size-3.5" />
+          </MediaOrb>
+          <span className={styles.compactPill()}>{copy.title}</span>
+        </>
+      ) : null}
+
+      {feedback !== "success" && activity.variant === "progress" ? (
+        <>
+          <ActivityIcon activity={activity} className="size-4 shrink-0" />
+          <span className={styles.compactPill()}>
+            <ProgressNumber value={progress} />
+          </span>
+        </>
+      ) : null}
+
+      {feedback !== "success" &&
+      (activity.variant === "notification" ||
+        activity.variant === "confirm") ? (
+        <>
+          <ActivityIcon activity={activity} className="size-4 shrink-0" />
+          <span className={styles.statusDot()} aria-hidden="true" />
+        </>
+      ) : null}
+    </motion.div>
+  );
+}
+
+function ExpandedContent({
+  activity,
+  styles,
+  scope,
+  feedback,
+  onConfirmSuccess,
+}: {
+  activity: DynamicIslandActivity;
+  styles: IslandStyles;
+  scope: string;
+  feedback: FeedbackState;
+  onConfirmSuccess: () => void;
+}) {
+  const shouldReduceMotion = useReducedMotion();
+  const copy = getActivityCopy(activity);
+  const progress = clampProgress(activity.progress);
+  const showSuccess = feedback === "success" || progress >= 100;
+
+  if (showSuccess) {
+    return (
+      <motion.div
+        key={`${scope}-success`}
+        layout
+        className={styles.expandedContent()}
+        variants={contentVariants}
+        initial={shouldReduceMotion ? false : "hidden"}
+        animate="visible"
+        exit="exit"
+      >
+        <MediaOrb
+          activity={{ ...activity, variant: "confirm" }}
+          styles={styles}
+          layoutId={`${scope}-media`}
+          expanded
+        >
+          <Check className="size-5" aria-hidden="true" />
+        </MediaOrb>
+        <span className={styles.copy()}>
+          <p className={styles.title()}>Completed</p>
+          <p className={styles.description()}>{copy.description}</p>
+        </span>
+      </motion.div>
+    );
+  }
+
+  return (
+    <motion.div
+      key={`${scope}-expanded-${activity.variant}`}
+      layout
+      className={styles.expandedContent()}
+      variants={contentVariants}
+      initial={shouldReduceMotion ? false : "hidden"}
+      animate="visible"
+      exit="exit"
+    >
+      {activity.variant === "music" ? (
+        <>
+          <MediaOrb
+            activity={activity}
+            styles={styles}
+            layoutId={`${scope}-media`}
+            expanded
+          >
+            <ActivityIcon activity={activity} className="size-5" />
+          </MediaOrb>
+          <span className={styles.copy()}>
+            <p className={styles.eyebrow()}>
+              {activity.isPlaying ? "Now playing" : "Paused"}
+            </p>
+            <p className={styles.title()}>{copy.title}</p>
+            <p className={styles.description()}>{copy.description}</p>
+            <span className="mt-2 block">
+              <span className={styles.progressTrack()}>
+                <motion.span
+                  className={styles.progressFill()}
+                  initial={{ width: "24%" }}
+                  animate={{ width: activity.isPlaying ? "64%" : "42%" }}
+                  transition={{
+                    duration: activity.isPlaying ? 5.5 : 0.35,
+                    ease: "easeInOut",
+                  }}
+                />
+              </span>
+            </span>
+          </span>
+          <IslandActionButton
+            label={activity.isPlaying ? "Pause music" : "Play music"}
+            onClick={activity.onPlayPause}
+            tone="primary"
+            styles={styles}
+          >
+            {activity.isPlaying ? (
+              <Pause className="size-4" aria-hidden="true" />
+            ) : (
+              <Play className="size-4 fill-current" aria-hidden="true" />
+            )}
+          </IslandActionButton>
+        </>
+      ) : null}
+
+      {activity.variant === "timer" ? (
+        <>
+          <MediaOrb
+            activity={activity}
+            styles={styles}
+            layoutId={`${scope}-media`}
+            expanded
+            pulse={activity.isActive}
+          >
+            <TimerRing active={activity.isActive} />
+          </MediaOrb>
+          <CopyBlock
+            activity={activity}
+            styles={styles}
+            timer
+            eyebrow={activity.isActive ? "Timer running" : "Timer paused"}
+          />
+          <span className={styles.mutedText()}>
+            {activity.isActive ? "Running" : "Paused"}
+          </span>
+        </>
+      ) : null}
+
+      {activity.variant === "recording" ? (
+        <>
+          <MediaOrb
+            activity={activity}
+            styles={styles}
+            layoutId={`${scope}-media`}
+            expanded
+          >
+            <RecordingDot />
+          </MediaOrb>
+          <CopyBlock activity={activity} styles={styles} timer eyebrow="Live" />
+          <IslandActionButton
+            label="Stop recording"
+            onClick={activity.onStop}
+            tone="destructive"
+            styles={styles}
+          >
+            <Square className="size-3.5 fill-current" aria-hidden="true" />
+          </IslandActionButton>
+        </>
+      ) : null}
+
+      {activity.variant === "call" ? (
+        <>
+          <MediaOrb
+            activity={activity}
+            styles={styles}
+            layoutId={`${scope}-media`}
+            expanded
+            pulse
+          >
+            <ActivityIcon activity={activity} className="size-5" />
+          </MediaOrb>
+          <CopyBlock
+            activity={activity}
+            styles={styles}
+            eyebrow="Incoming call"
+          />
+          <span className={styles.actions()}>
+            <IslandActionButton
+              label="Decline call"
+              onClick={activity.onCancel}
+              tone="destructive"
+              styles={styles}
+            >
+              <PhoneOff className="size-4" aria-hidden="true" />
+            </IslandActionButton>
+            <IslandActionButton
+              label="Accept call"
+              onClick={activity.onConfirm}
+              tone="primary"
+              styles={styles}
+            >
+              <Phone className="size-4" aria-hidden="true" />
+            </IslandActionButton>
+          </span>
+        </>
+      ) : null}
+
+      {activity.variant === "progress" ? (
+        <>
+          <MediaOrb
+            activity={activity}
+            styles={styles}
+            layoutId={`${scope}-media`}
+            expanded
+            pulse={progress < 100}
+          >
+            <ActivityIcon activity={activity} className="size-5" />
+          </MediaOrb>
+          <span className={styles.copy()}>
+            <span className="mb-1.5 flex min-w-0 items-center justify-between gap-3">
+              <p className={styles.title()}>{copy.title}</p>
+              <span className={twMerge(styles.mutedText(), "font-medium")}>
+                <ProgressNumber value={progress} />
+              </span>
+            </span>
+            <span className={styles.progressTrack()}>
+              <motion.span
+                className={styles.progressFill()}
+                initial={{ width: 0 }}
+                animate={{ width: `${progress}%` }}
+                transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+              />
+            </span>
+          </span>
+        </>
+      ) : null}
+
+      {activity.variant === "notification" ? (
+        <>
+          <MediaOrb
+            activity={activity}
+            styles={styles}
+            layoutId={`${scope}-media`}
+            expanded
+          >
+            <ActivityIcon activity={activity} className="size-5" />
+          </MediaOrb>
+          <CopyBlock activity={activity} styles={styles} eyebrow={copy.time} />
+          {activity.actions ? (
+            <span className={styles.actions()}>{activity.actions}</span>
+          ) : (
+            <span className={styles.statusDot()} aria-hidden="true" />
+          )}
+        </>
+      ) : null}
+
+      {activity.variant === "confirm" ? (
+        <>
+          <MediaOrb
+            activity={activity}
+            styles={styles}
+            layoutId={`${scope}-media`}
+            expanded
+          >
+            <ActivityIcon activity={activity} className="size-5" />
+          </MediaOrb>
+          <CopyBlock activity={activity} styles={styles} eyebrow="Confirm" />
+          <span className={styles.actions()}>
+            <IslandActionButton
+              label="Cancel"
+              onClick={activity.onCancel}
+              styles={styles}
+            >
+              <X className="size-4" aria-hidden="true" />
+            </IslandActionButton>
+            <IslandActionButton
+              label="Confirm"
+              onClick={onConfirmSuccess}
+              tone="primary"
+              styles={styles}
+            >
+              <Check className="size-4" aria-hidden="true" />
+            </IslandActionButton>
+          </span>
+        </>
+      ) : null}
+    </motion.div>
+  );
+}
+
+function IslandSurface({
+  activity,
+  mode,
+  styles,
+  scope,
+  feedback,
+  onToggle,
+  onExpandFromSplit,
+  onConfirmSuccess,
+  onTransientBlur,
+  primarySplit,
+  secondarySplit,
+}: {
+  activity: DynamicIslandActivity;
+  mode: DynamicIslandMode;
+  styles: IslandStyles;
+  scope: string;
+  feedback: FeedbackState;
+  onToggle: () => void;
+  onExpandFromSplit?: () => void;
+  onConfirmSuccess: () => void;
+  onTransientBlur: () => void;
+  primarySplit?: boolean;
+  secondarySplit?: boolean;
+}) {
+  const shouldReduceMotion = useReducedMotion();
+  const pressTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const longPressTriggeredRef = useRef(false);
+  const hoverExpandedRef = useRef(false);
+  const detailed = isDetailedMode(mode);
+  const surfaceMode = mode === "split" ? "compact" : mode;
+
+  const clearPressTimer = useCallback(() => {
+    if (pressTimerRef.current) {
+      clearTimeout(pressTimerRef.current);
+      pressTimerRef.current = null;
+    }
+  }, []);
+
+  const clearHoverTimer = useCallback(() => {
+    if (hoverTimerRef.current) {
+      clearTimeout(hoverTimerRef.current);
+      hoverTimerRef.current = null;
+    }
+  }, []);
+
+  const requestLongExpand = useCallback(() => {
+    longPressTriggeredRef.current = true;
+    onExpandFromSplit?.();
+    if (!(onExpandFromSplit || detailed)) {
+      onToggle();
+    }
+  }, [detailed, onExpandFromSplit, onToggle]);
+
+  const handleClick = useCallback(() => {
+    if (longPressTriggeredRef.current) {
+      longPressTriggeredRef.current = false;
+      return;
+    }
+
+    hoverExpandedRef.current = false;
+
+    if (onExpandFromSplit) {
+      onExpandFromSplit();
+      return;
+    }
+
+    onToggle();
+  }, [onExpandFromSplit, onToggle]);
+
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent<HTMLDivElement>) => {
+      if (event.key !== "Enter" && event.key !== " ") {
+        return;
+      }
+
+      event.preventDefault();
+      handleClick();
+    },
+    [handleClick],
+  );
+
+  useEffect(() => {
+    return () => {
+      clearPressTimer();
+      clearHoverTimer();
+    };
+  }, [clearHoverTimer, clearPressTimer]);
+
+  return (
+    <motion.div
+      layout
+      layoutId={`${scope}-surface`}
+      role="button"
+      tabIndex={0}
+      aria-expanded={detailed}
+      aria-label={getAriaLabel(activity, surfaceMode)}
+      className={twMerge(
+        styles.island(),
+        getModeClassName(surfaceMode, styles),
+        primarySplit ? styles.splitPrimary() : undefined,
+        secondarySplit ? styles.splitSecondary() : undefined,
+      )}
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
+      onPointerDown={() => {
+        clearPressTimer();
+        pressTimerRef.current = setTimeout(requestLongExpand, 420);
+      }}
+      onPointerUp={clearPressTimer}
+      onPointerCancel={clearPressTimer}
+      onMouseEnter={() => {
+        if (detailed || onExpandFromSplit) {
+          return;
+        }
+        clearHoverTimer();
+        hoverTimerRef.current = setTimeout(() => {
+          hoverExpandedRef.current = true;
+          onToggle();
+        }, 220);
+      }}
+      onMouseLeave={() => {
+        clearHoverTimer();
+
+        if (hoverExpandedRef.current && isDetailedMode(surfaceMode)) {
+          hoverExpandedRef.current = false;
+          onToggle();
+        }
+      }}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) {
+          hoverExpandedRef.current = false;
+          onTransientBlur();
+        }
+      }}
+      initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.96, y: 8 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      exit={shouldReduceMotion ? undefined : { opacity: 0, scale: 0.96, y: -6 }}
+      whileTap={shouldReduceMotion ? undefined : { scale: 0.992 }}
+      transition={shouldReduceMotion ? reducedTransition : islandTransition}
+    >
+      <AnimatePresence mode="popLayout" initial={false}>
+        {isDetailedMode(surfaceMode) ? (
+          <ExpandedContent
+            key={`${scope}-expanded-${feedback ?? activity.variant}`}
+            activity={activity}
+            styles={styles}
+            scope={scope}
+            feedback={feedback}
+            onConfirmSuccess={onConfirmSuccess}
+          />
+        ) : (
+          <CompactContent
+            key={`${scope}-${surfaceMode}-${feedback ?? activity.variant}`}
+            activity={activity}
+            mode={surfaceMode}
+            styles={styles}
+            scope={scope}
+            feedback={feedback}
+          />
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+}
+
 export function DynamicIsland({
   variant = "notification",
   size = "md",
+  mode,
+  defaultMode = "compact",
+  autoCollapse = true,
+  autoCollapseDelay = 3200,
+  secondaryActivity,
+  onModeChange,
   title,
   description,
   time,
@@ -499,33 +1243,138 @@ export function DynamicIsland({
   className,
   ...props
 }: DynamicIslandProps) {
-  const styles = dynamicIslandVariants({ variant, size });
-  const shouldReduceMotion = useReducedMotion();
-  const value = clampProgress(progress);
+  const styles = dynamicIslandVariants({ size });
+  const [internalMode, setInternalMode] =
+    useState<DynamicIslandMode>(defaultMode);
+  const [activeSource, setActiveSource] = useState<"primary" | "secondary">(
+    "primary",
+  );
+  const [feedback, setFeedback] = useState<FeedbackState>(null);
+  const collapseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const progressCompleteRef = useRef(false);
+  const currentMode = mode ?? internalMode;
 
-  const resolvedTitle =
-    title ??
-    {
-      music: "Midnight City",
-      timer: "24:18",
-      recording: "Recording",
-      confirm: "Apply changes?",
-      notification: "Workspace updated",
-      progress: "Uploading files",
-      call: "Sarah Chen",
-    }[variant];
+  const primaryActivity = useMemo(
+    () =>
+      normalizeActivity({
+        variant,
+        title,
+        description,
+        time,
+        progress,
+        image,
+        isPlaying,
+        isActive,
+        onPlayPause,
+        onConfirm,
+        onCancel,
+        onStop,
+        actions,
+        icon,
+      }),
+    [
+      actions,
+      description,
+      icon,
+      image,
+      isActive,
+      isPlaying,
+      onCancel,
+      onConfirm,
+      onPlayPause,
+      onStop,
+      progress,
+      time,
+      title,
+      variant,
+    ],
+  );
 
-  const resolvedDescription =
-    description ??
-    {
-      music: "M83",
-      timer: isActive ? "Focus session running" : "Timer paused",
-      recording: "Screen capture",
-      confirm: "Review and publish this update.",
-      notification: "Design tokens synced successfully.",
-      progress: "Syncing registry assets",
-      call: "Incoming call",
-    }[variant];
+  const secondary = useMemo(
+    () => normalizeActivity(secondaryActivity),
+    [secondaryActivity],
+  );
+
+  const activeActivity =
+    activeSource === "secondary" && secondaryActivity
+      ? secondary
+      : primaryActivity;
+
+  const requestMode = useCallback(
+    (nextMode: DynamicIslandMode) => {
+      if (!mode) {
+        setInternalMode(nextMode);
+      }
+
+      if (nextMode !== currentMode) {
+        onModeChange?.(nextMode);
+      }
+    },
+    [currentMode, mode, onModeChange],
+  );
+
+  const collapseTransient = useCallback(() => {
+    if (currentMode === "transient") {
+      requestMode("compact");
+    }
+  }, [currentMode, requestMode]);
+
+  const toggleMode = useCallback(() => {
+    setFeedback(null);
+    requestMode(isDetailedMode(currentMode) ? "compact" : "expanded");
+  }, [currentMode, requestMode]);
+
+  const confirmWithSuccess = useCallback(() => {
+    activeActivity.onConfirm?.();
+    setFeedback("success");
+    requestMode("transient");
+  }, [activeActivity, requestMode]);
+
+  useEffect(() => {
+    if (!autoCollapse || currentMode !== "transient") {
+      return;
+    }
+
+    if (collapseTimerRef.current) {
+      clearTimeout(collapseTimerRef.current);
+    }
+
+    collapseTimerRef.current = setTimeout(() => {
+      setFeedback(null);
+      requestMode("compact");
+    }, autoCollapseDelay);
+
+    return () => {
+      if (collapseTimerRef.current) {
+        clearTimeout(collapseTimerRef.current);
+      }
+    };
+  }, [autoCollapse, autoCollapseDelay, currentMode, requestMode]);
+
+  useEffect(() => {
+    if (activeActivity.variant !== "progress") {
+      progressCompleteRef.current = false;
+      return;
+    }
+
+    const value = clampProgress(activeActivity.progress);
+
+    if (value < 100) {
+      progressCompleteRef.current = false;
+      if (feedback === "success") {
+        setFeedback(null);
+      }
+      return;
+    }
+
+    if (!progressCompleteRef.current) {
+      progressCompleteRef.current = true;
+      setFeedback("success");
+      requestMode("transient");
+    }
+  }, [activeActivity, feedback, requestMode]);
+
+  const showSplit = currentMode === "split" && Boolean(secondaryActivity);
 
   return (
     <div
@@ -533,298 +1382,61 @@ export function DynamicIsland({
       className={twMerge(styles.root(), className)}
       {...props}
     >
-      <motion.div
-        layout
-        className={styles.island()}
-        initial={
-          shouldReduceMotion
-            ? { opacity: 0 }
-            : { opacity: 0, scale: 0.94, y: 10 }
-        }
-        animate={
-          shouldReduceMotion
-            ? { opacity: 1 }
-            : { opacity: 1, scale: 1, y: [0, -1.5, 0] }
-        }
-        transition={
-          shouldReduceMotion
-            ? { duration: 0.2 }
-            : {
-                ...morphTransition,
-                y: {
-                  duration: 4.8,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                },
-              }
-        }
-      >
-        <motion.span
-          className={styles.glow()}
-          animate={
-            shouldReduceMotion
-              ? undefined
-              : { opacity: [0.34, 0.62, 0.34], scale: [0.94, 1.06, 0.94] }
-          }
-          transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut" }}
-          aria-hidden="true"
-        />
-        <span className={styles.topLight()} aria-hidden="true" />
-
-        <AnimatePresence mode="popLayout" initial={false}>
+      <AnimatePresence mode="popLayout" initial={false}>
+        {showSplit ? (
           <motion.div
-            key={variant}
+            key="split"
             layout
-            className={styles.content()}
-            variants={contentVariants}
-            initial={shouldReduceMotion ? false : "hidden"}
-            animate="visible"
-            exit="exit"
+            className={styles.splitGroup()}
+            transition={islandTransition}
           >
-            {variant === "music" ? (
-              <>
-                <MediaFrame
-                  image={image}
-                  title={resolvedTitle}
-                  className={styles.media()}
-                  pulse={isPlaying}
-                >
-                  {icon ?? <Mic className="size-5" aria-hidden="true" />}
-                </MediaFrame>
-                <CopyBlock
-                  eyebrow={isPlaying ? "Now playing" : "Paused"}
-                  title={resolvedTitle}
-                  description={resolvedDescription}
-                />
-                <motion.span
-                  className="hidden min-w-24 sm:block"
-                  variants={childVariants}
-                >
-                  <span className="mb-1 flex items-center justify-between gap-2">
-                    <Equalizer active={isPlaying} />
-                    <span className="text-muted-foreground text-[10px]">
-                      2:14
-                    </span>
-                  </span>
-                  <span className={styles.progressTrack()}>
-                    <motion.span
-                      className={styles.progressFill()}
-                      initial={{ width: "26%" }}
-                      animate={{ width: isPlaying ? "62%" : "42%" }}
-                      transition={{
-                        duration: isPlaying ? 4.8 : 0.45,
-                        ease: "easeInOut",
-                      }}
-                    />
-                  </span>
-                </motion.span>
-                <IslandActionButton
-                  label={isPlaying ? "Pause music" : "Play music"}
-                  onClick={onPlayPause}
-                  tone="primary"
-                  className={styles.button()}
-                >
-                  {isPlaying ? (
-                    <Pause className="size-4" aria-hidden="true" />
-                  ) : (
-                    <Play className="size-4 fill-current" aria-hidden="true" />
-                  )}
-                </IslandActionButton>
-              </>
-            ) : null}
-
-            {variant === "timer" ? (
-              <>
-                <MediaFrame
-                  className={twMerge(
-                    styles.media(),
-                    isActive ? "text-primary" : undefined,
-                  )}
-                  pulse={isActive}
-                >
-                  {icon ?? <TimerRing active={isActive} />}
-                </MediaFrame>
-                <CopyBlock
-                  eyebrow={isActive ? "Timer active" : "Timer paused"}
-                  title={time ?? resolvedTitle}
-                  description={resolvedDescription}
-                  titleClassName="text-xl tabular-nums"
-                />
-                <motion.span className={styles.pill()} variants={childVariants}>
-                  <span
-                    className={twMerge(
-                      "size-1.5 rounded-full",
-                      isActive ? "bg-primary" : "bg-muted-foreground/45",
-                    )}
-                    aria-hidden="true"
-                  />
-                  {isActive ? "Running" : "Paused"}
-                </motion.span>
-              </>
-            ) : null}
-
-            {variant === "recording" ? (
-              <>
-                <MediaFrame className={styles.media()} pulse>
-                  <RecordingDot />
-                </MediaFrame>
-                <CopyBlock
-                  eyebrow="Screen recording"
-                  title={time ?? "01:32"}
-                  description={resolvedTitle}
-                  titleClassName="text-lg tabular-nums"
-                />
-                <IslandActionButton
-                  label="Stop recording"
-                  onClick={onStop}
-                  tone="destructive"
-                  className={styles.button()}
-                >
-                  <Square
-                    className="size-3.5 fill-current"
-                    aria-hidden="true"
-                  />
-                </IslandActionButton>
-              </>
-            ) : null}
-
-            {variant === "confirm" ? (
-              <>
-                <MediaFrame className={styles.media()}>
-                  {icon ?? (
-                    <CheckCircle2 className="size-5" aria-hidden="true" />
-                  )}
-                </MediaFrame>
-                <CopyBlock
-                  eyebrow="Confirmation"
-                  title={resolvedTitle}
-                  description={resolvedDescription}
-                />
-                <motion.span
-                  className={styles.actions()}
-                  variants={childVariants}
-                  initial={shouldReduceMotion ? false : "hidden"}
-                  animate="visible"
-                  transition={{ staggerChildren: 0.045, delayChildren: 0.08 }}
-                >
-                  <IslandActionButton
-                    label="Cancel"
-                    onClick={onCancel}
-                    className={styles.button()}
-                  >
-                    <X className="size-4" aria-hidden="true" />
-                  </IslandActionButton>
-                  <IslandActionButton
-                    label="Confirm"
-                    onClick={onConfirm}
-                    tone="primary"
-                    className={styles.button()}
-                  >
-                    <Check className="size-4" aria-hidden="true" />
-                  </IslandActionButton>
-                </motion.span>
-              </>
-            ) : null}
-
-            {variant === "notification" ? (
-              <>
-                <MediaFrame className={twMerge(styles.media(), "text-primary")}>
-                  {icon ?? <Bell className="size-5" aria-hidden="true" />}
-                </MediaFrame>
-                <CopyBlock
-                  eyebrow={time ?? "Just now"}
-                  title={resolvedTitle}
-                  description={resolvedDescription}
-                />
-                <motion.span
-                  className={styles.statusDot()}
-                  variants={childVariants}
-                />
-                {actions}
-              </>
-            ) : null}
-
-            {variant === "progress" ? (
-              <>
-                <MediaFrame
-                  className={twMerge(styles.media(), "text-primary")}
-                  pulse={value < 100}
-                >
-                  {icon ?? (
-                    <UploadCloud className="size-5" aria-hidden="true" />
-                  )}
-                </MediaFrame>
-                <motion.span
-                  className="min-w-0 flex-1"
-                  variants={childVariants}
-                >
-                  <span className="mb-1.5 flex items-center justify-between gap-4">
-                    <span className={styles.title()}>{resolvedTitle}</span>
-                    <ProgressNumber value={value} />
-                  </span>
-                  <span className={styles.progressTrack()}>
-                    <motion.span
-                      className={styles.progressFill()}
-                      initial={{ width: 0 }}
-                      animate={{ width: `${value}%` }}
-                      transition={{ duration: 0.72, ease: smoothEase }}
-                    >
-                      <motion.span
-                        className="absolute inset-y-0 w-8 bg-primary/25 blur-sm"
-                        animate={
-                          shouldReduceMotion
-                            ? undefined
-                            : { x: ["-120%", "360%"] }
-                        }
-                        transition={{
-                          duration: 1.6,
-                          repeat: Infinity,
-                          ease: "easeInOut",
-                        }}
-                        aria-hidden="true"
-                      />
-                    </motion.span>
-                  </span>
-                </motion.span>
-              </>
-            ) : null}
-
-            {variant === "call" ? (
-              <>
-                <MediaFrame
-                  image={image}
-                  title={resolvedTitle}
-                  className={styles.media()}
-                  pulse
-                >
-                  {icon ?? <Phone className="size-5" aria-hidden="true" />}
-                </MediaFrame>
-                <CopyBlock
-                  eyebrow="Incoming call"
-                  title={resolvedTitle}
-                  description={resolvedDescription}
-                />
-                <IslandActionButton
-                  label="Decline call"
-                  onClick={onCancel}
-                  tone="destructive"
-                  className={styles.button()}
-                >
-                  <PhoneOff className="size-4" aria-hidden="true" />
-                </IslandActionButton>
-                <IslandActionButton
-                  label="Accept call"
-                  onClick={onConfirm}
-                  tone="primary"
-                  className={styles.button()}
-                >
-                  <Phone className="size-4" aria-hidden="true" />
-                </IslandActionButton>
-              </>
-            ) : null}
+            <IslandSurface
+              activity={primaryActivity}
+              mode="compact"
+              styles={styles}
+              scope="dynamic-island-primary"
+              feedback={feedback}
+              primarySplit
+              onToggle={toggleMode}
+              onExpandFromSplit={() => {
+                setActiveSource("primary");
+                setFeedback(null);
+                requestMode("expanded");
+              }}
+              onConfirmSuccess={confirmWithSuccess}
+              onTransientBlur={collapseTransient}
+            />
+            <IslandSurface
+              activity={secondary}
+              mode="minimal"
+              styles={styles}
+              scope="dynamic-island-secondary"
+              feedback={null}
+              secondarySplit
+              onToggle={toggleMode}
+              onExpandFromSplit={() => {
+                setActiveSource("secondary");
+                setFeedback(null);
+                requestMode("expanded");
+              }}
+              onConfirmSuccess={confirmWithSuccess}
+              onTransientBlur={collapseTransient}
+            />
           </motion.div>
-        </AnimatePresence>
-      </motion.div>
+        ) : (
+          <IslandSurface
+            key={`${activeSource}-single`}
+            activity={activeActivity}
+            mode={currentMode}
+            styles={styles}
+            scope={`dynamic-island-${activeSource}`}
+            feedback={feedback}
+            onToggle={toggleMode}
+            onConfirmSuccess={confirmWithSuccess}
+            onTransientBlur={collapseTransient}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

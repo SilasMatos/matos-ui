@@ -21,7 +21,7 @@ import { tv, type VariantProps } from "tailwind-variants";
 
 export const activityFeedVariants = tv({
   base: [
-    "w-full overflow-hidden rounded-[1.25rem] border border-border",
+    "not-prose w-full overflow-hidden rounded-[1.25rem] border border-border",
     "bg-secondary text-foreground",
   ],
   variants: {

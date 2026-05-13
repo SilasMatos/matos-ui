@@ -136,7 +136,7 @@ export const examples: Registry["items"] = [
   {
     name: "notification-stack-demo",
     type: "registry:example",
-    registryDependencies: ["notification-stack", "button"],
+    registryDependencies: ["notification-stack"],
     files: [
       {
         path: "examples/notification-stack-demo.tsx",

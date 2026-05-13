@@ -1,6 +1,6 @@
 {
   "name": "matos/ui",
-  "homepage": "https://matos-ui.com/",
+  "homepage": "http://localhost:4000/",
   "items": [
     {
       "name": "index",
@@ -503,8 +503,7 @@
       "name": "notification-stack-demo",
       "type": "registry:example",
       "registryDependencies": [
-        "notification-stack",
-        "button"
+        "notification-stack"
       ],
       "files": [
         {

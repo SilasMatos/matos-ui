@@ -723,7 +723,7 @@ export const Index: Record<string, any> = {
   "notification-stack-demo": {
     name: "notification-stack-demo",
     type: "registry:example",
-    registryDependencies: ["notification-stack", "button"],
+    registryDependencies: ["notification-stack"],
     files: [
       {
         path: "src/registry/new-york-v4/examples/notification-stack-demo.tsx",

@@ -36,7 +36,7 @@ export type ProcessTimelineItem = {
 
 export const processTimelineEngineVariants = tv({
   base: [
-    "relative w-full overflow-hidden rounded-xl border border-zinc-200",
+    "relative not-prose w-full overflow-hidden rounded-xl border border-zinc-200",
     "bg-zinc-50 p-1 text-zinc-950 shadow-sm",
     "dark:border-white/10 dark:bg-[#171717] dark:text-zinc-100",
   ],
@@ -192,7 +192,7 @@ export function ProcessTimelineEngine({
         animate="visible"
       >
         {(title || subtitle) && (
-          <div className=" flex justify-between  items-center gap-2 px-2 pb">
+          <div className=" flex justify-between py-2.5 items-center gap-2 px-2 pb">
             <p className="m-0 truncate text-[13px] font-medium leading-none text-zinc-950 dark:text-zinc-100">
               {title}
             </p>
@@ -264,7 +264,7 @@ function ProcessTimelineStep({
 
   const row = (
     <>
-      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2">
+      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center py-2 gap-2">
         <p className="flex min-h-5 min-w-0 items-center truncate text-xs leading-5 text-zinc-500 dark:text-zinc-400">
           <span className="truncate">
             {metricLabel}:{" "}
@@ -337,7 +337,7 @@ function ProcessTimelineStep({
         aria-valuemin={0}
         aria-valuenow={Math.round(progress)}
         className={twMerge(
-          "mt-2 grid h-6 grid-cols-[repeat(48,minmax(2px,1fr))] items-center gap-0.5 rounded-md px-1 ring-1 ring-inset",
+          "mt-2 grid h-8 grid-cols-[repeat(48,minmax(2px,1fr))] items-center gap-0.5 rounded-md px-1 ring-1 ring-inset",
           styles.track,
         )}
       >
@@ -351,7 +351,7 @@ function ProcessTimelineStep({
             <motion.span
               key={id}
               className={twMerge(
-                "relative h-4 rounded-[2px]",
+                "relative h-5 rounded-[2px]",
                 filled ? styles.segment : "bg-zinc-200 dark:bg-[#2f2f2f]",
                 filled && styles.segmentGlow,
               )}

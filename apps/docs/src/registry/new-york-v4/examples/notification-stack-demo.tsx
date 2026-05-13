@@ -2,11 +2,16 @@
 
 import { useCallback, useRef, useState } from "react";
 
-import { Button } from "@/registry/new-york-v4/ui/button";
 import {
   type NotificationData,
   NotificationStack,
 } from "@/registry/new-york-v4/ui/notification-stack";
+
+const controlButtonClassName =
+  "inline-flex h-7 items-center justify-center rounded-lg border border-border bg-secondary px-2.5 text-[12px] font-medium text-foreground shadow-sm transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none disabled:opacity-45";
+
+const mutedControlButtonClassName =
+  "inline-flex h-7 items-center justify-center rounded-lg border border-border bg-card px-2.5 text-[12px] font-medium text-muted-foreground shadow-sm transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none disabled:opacity-45";
 
 const sampleNotifications: Omit<NotificationData, "id">[] = [
   {
@@ -19,7 +24,7 @@ const sampleNotifications: Omit<NotificationData, "id">[] = [
       onClick: () => {},
     },
     avatar: (
-      <span className="flex size-full items-center justify-center rounded-xl bg-primary text-primary-foreground text-xs font-semibold">
+      <span className="flex size-full items-center justify-center rounded-lg bg-secondary text-[11px] font-medium text-foreground">
         GH
       </span>
     ),
@@ -30,7 +35,7 @@ const sampleNotifications: Omit<NotificationData, "id">[] = [
     description: "Fix mobile spacing on the notification stack preview.",
     timestamp: "5m ago",
     avatar: (
-      <span className="flex size-full items-center justify-center rounded-xl bg-muted text-foreground text-xs font-semibold">
+      <span className="flex size-full items-center justify-center rounded-lg bg-muted text-[11px] font-medium text-muted-foreground">
         LN
       </span>
     ),
@@ -41,7 +46,7 @@ const sampleNotifications: Omit<NotificationData, "id">[] = [
     description: "matos-ui.com was deployed successfully to production.",
     timestamp: "8m ago",
     avatar: (
-      <span className="flex size-full items-center justify-center rounded-xl bg-foreground text-background text-xs font-semibold">
+      <span className="flex size-full items-center justify-center rounded-lg bg-secondary text-[11px] font-medium text-foreground">
         V
       </span>
     ),
@@ -52,7 +57,7 @@ const sampleNotifications: Omit<NotificationData, "id">[] = [
     description: "The inset card direction feels cleaner and easier to scan.",
     timestamp: "12m ago",
     avatar: (
-      <span className="flex size-full items-center justify-center rounded-xl bg-muted text-foreground text-xs font-semibold">
+      <span className="flex size-full items-center justify-center rounded-lg bg-muted text-[11px] font-medium text-muted-foreground">
         SL
       </span>
     ),
@@ -63,7 +68,7 @@ const sampleNotifications: Omit<NotificationData, "id">[] = [
     description: "Ana sent the updated component flow for final review.",
     timestamp: "15m ago",
     avatar: (
-      <span className="flex size-full items-center justify-center rounded-xl bg-primary text-primary-foreground text-xs font-semibold">
+      <span className="flex size-full items-center justify-center rounded-lg bg-secondary text-[11px] font-medium text-foreground">
         AC
       </span>
     ),
@@ -107,33 +112,31 @@ export default function NotificationStackDemo() {
   }, []);
 
   return (
-    <div className="flex flex-col items-center gap-7">
+    <div className="flex flex-col items-center gap-4">
       <div className="flex flex-wrap items-center justify-center gap-2">
-        <Button
+        <button
           type="button"
-          variant="default"
-          size="sm"
           onClick={addNotification}
+          className={controlButtonClassName}
         >
           Add notification
-        </Button>
-        <Button
+        </button>
+        <button
           type="button"
-          variant="outline"
-          size="sm"
           onClick={dismissAll}
           disabled={notifications.length === 0}
+          className={mutedControlButtonClassName}
         >
           Clear all
-        </Button>
+        </button>
       </div>
 
-      <p className="max-w-sm text-center text-muted-foreground text-xs">
+      <p className="max-w-[300px] text-center text-[11px] leading-snug text-muted-foreground">
         Drag the top card to dismiss it, or use the close control in the loose
         header.
       </p>
 
-      <div className="flex min-h-44 items-center justify-center py-2">
+      <div className="flex min-h-36 items-center justify-center py-1">
         <NotificationStack
           notifications={notifications}
           onDismiss={dismiss}

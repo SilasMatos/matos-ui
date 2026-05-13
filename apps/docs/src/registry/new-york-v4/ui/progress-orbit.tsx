@@ -20,7 +20,7 @@ import { tv, type VariantProps } from "tailwind-variants";
 
 export const progressOrbitVariants = tv({
   base: [
-    "group/progress-orbit relative w-full overflow-hidden rounded-2xl border border-border bg-card p-(--orbit-padding)",
+    "not-prose group/progress-orbit relative w-full overflow-hidden rounded-2xl border border-border bg-card p-(--orbit-padding)",
     "text-foreground shadow-sm",
   ],
   variants: {
