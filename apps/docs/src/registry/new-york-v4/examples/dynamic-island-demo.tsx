@@ -1,14 +1,6 @@
 "use client";
 
-import {
-  Bell,
-  CheckCircle2,
-  Clock3,
-  Cloud,
-  Mic,
-  Music2,
-  Phone,
-} from "lucide-react";
+import { Bell, CheckCircle2, Clock3, Cloud, Mic, Music2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import {
   DynamicIsland,
@@ -27,7 +19,6 @@ const activities: Array<{
   { id: "recording", label: "Recording", icon: Mic },
   { id: "notification", label: "Notification", icon: Bell },
   { id: "progress", label: "Progress", icon: Cloud },
-  { id: "call", label: "Call", icon: Phone },
   { id: "confirm", label: "Confirm", icon: CheckCircle2 },
 ];
 
@@ -99,13 +90,6 @@ export default function DynamicIslandDemo() {
         description: "Syncing registry assets",
         progress,
         icon: <Cloud className="size-4" aria-hidden="true" />,
-      },
-      call: {
-        variant: "call",
-        title: "Alex Morgan",
-        description: "Design review call",
-        onCancel: () => setMode("compact"),
-        onConfirm: () => setMode("liveActivity"),
       },
       confirm: {
         variant: "confirm",

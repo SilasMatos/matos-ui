@@ -15,8 +15,6 @@ import {
   Mic,
   Music2,
   Pause,
-  Phone,
-  PhoneOff,
   Play,
   Square,
   UploadCloud,
@@ -46,7 +44,7 @@ export const dynamicIslandVariants = tv({
       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
     ],
     compact: "h-10 min-w-40 gap-2.5 rounded-full px-3 py-1.5",
-    minimal: "h-9 w-16 justify-center rounded-full px-2 py-1",
+    minimal: "h-9 w-12 justify-center rounded-full px-1.5 py-1",
     expanded: "min-h-24 w-[min(94vw,25rem)] rounded-[2rem] px-3.5 py-3",
     transient: "min-h-20 w-[min(94vw,23rem)] rounded-[2rem] px-3.5 py-2.5",
     liveActivity: "min-h-24 w-[min(94vw,26rem)] rounded-[2rem] px-3.5 py-3",
@@ -82,15 +80,23 @@ export const dynamicIslandVariants = tv({
     mutedText:
       "truncate text-[11px] leading-none text-background/65 dark:text-muted-foreground",
     progressTrack:
-      "relative h-1.5 overflow-hidden rounded-full bg-background/15 dark:bg-muted",
+      "relative h-2 overflow-hidden rounded-full bg-background/15 dark:bg-muted",
+    progressTrackSuccess:
+      "relative h-2 overflow-hidden rounded-full bg-green-500/15",
     progressFill: "h-full rounded-full bg-background dark:bg-primary",
+    progressFillSuccess:
+      "h-full rounded-full bg-green-500/70 dark:bg-green-400/80",
     statusDot: "size-1.5 shrink-0 rounded-full bg-background dark:bg-primary",
+    successMedia:
+      "bg-green-500/15 text-green-500 dark:bg-green-500/10 dark:text-green-400",
+    successText: "text-green-500 dark:text-green-400",
+    successDot: "bg-green-500 dark:bg-green-400",
   },
   variants: {
     size: {
       sm: {
         compact: "h-9 min-w-32 px-2.5",
-        minimal: "h-8 w-14",
+        minimal: "h-8 w-10",
         expanded: "min-h-20 w-[min(94vw,21rem)] px-3 py-2.5",
         transient: "min-h-18 w-[min(94vw,20rem)] px-3 py-2",
         liveActivity: "min-h-20 w-[min(94vw,22rem)] px-3 py-2.5",
@@ -106,7 +112,7 @@ export const dynamicIslandVariants = tv({
       md: {},
       lg: {
         compact: "h-11 min-w-48 px-3.5",
-        minimal: "h-10 w-18",
+        minimal: "h-10 w-14",
         expanded: "min-h-28 w-[min(94vw,30rem)] px-4 py-3.5",
         transient: "min-h-24 w-[min(94vw,28rem)] px-4 py-3",
         liveActivity: "min-h-28 w-[min(94vw,31rem)] px-4 py-3.5",
@@ -139,8 +145,7 @@ export type DynamicIslandVariant =
   | "recording"
   | "confirm"
   | "notification"
-  | "progress"
-  | "call";
+  | "progress";
 
 export type DynamicIslandProps = ComponentProps<"div"> &
   VariantProps<typeof dynamicIslandVariants> & {
@@ -188,24 +193,26 @@ type DynamicIslandActivity = {
 
 const islandTransition = {
   type: "spring",
-  stiffness: 480,
-  damping: 44,
-  mass: 0.74,
+  stiffness: 280,
+  damping: 32,
+  mass: 0.92,
 } satisfies Transition;
 
 const reducedTransition = { duration: 0 } satisfies Transition;
 
 const contentVariants: Variants = {
-  hidden: { opacity: 0, y: 3 },
+  hidden: { opacity: 0, y: 2, scale: 0.992 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.14, ease: [0.22, 1, 0.36, 1] },
+    scale: 1,
+    transition: { duration: 0.22, ease: [0.22, 1, 0.36, 1] },
   },
   exit: {
     opacity: 0,
-    y: -3,
-    transition: { duration: 0.1, ease: [0.32, 0, 0.67, 0] },
+    y: -2,
+    scale: 0.995,
+    transition: { duration: 0.16, ease: [0.32, 0, 0.67, 0] },
   },
 };
 
@@ -238,10 +245,6 @@ const defaults: Record<
   progress: {
     title: "Uploading files",
     description: "Syncing registry assets",
-  },
-  call: {
-    title: "Sarah Chen",
-    description: "Incoming call",
   },
 };
 
@@ -357,10 +360,6 @@ function ActivityIcon({
     return <UploadCloud className={iconClassName} aria-hidden="true" />;
   }
 
-  if (activity.variant === "call") {
-    return <Phone className={iconClassName} aria-hidden="true" />;
-  }
-
   return <Bell className={iconClassName} aria-hidden="true" />;
 }
 
@@ -371,6 +370,7 @@ function MediaOrb({
   expanded,
   pulse,
   children,
+  className,
 }: {
   activity: DynamicIslandActivity;
   styles: IslandStyles;
@@ -378,6 +378,7 @@ function MediaOrb({
   expanded?: boolean;
   pulse?: boolean;
   children?: ReactNode;
+  className?: string;
 }) {
   const shouldReduceMotion = useReducedMotion();
 
@@ -391,10 +392,8 @@ function MediaOrb({
         activity.variant === "recording"
           ? "bg-destructive/15 text-destructive dark:bg-destructive/20"
           : undefined,
-        activity.variant === "call"
-          ? "bg-background/15 text-background dark:bg-primary/15 dark:text-primary"
-          : undefined,
         activity.image ? "bg-cover bg-center" : undefined,
+        className,
       )}
       style={
         activity.image
@@ -515,6 +514,43 @@ function RecordingDot({ compact = false }: { compact?: boolean }) {
   );
 }
 
+function SuccessMark({ styles }: { styles: IslandStyles }) {
+  const shouldReduceMotion = useReducedMotion();
+
+  return (
+    <motion.span
+      className="relative grid size-full place-items-center"
+      initial={shouldReduceMotion ? false : { scale: 0.72, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      transition={
+        shouldReduceMotion
+          ? reducedTransition
+          : { type: "spring", stiffness: 520, damping: 28, mass: 0.62 }
+      }
+    >
+      <motion.span
+        className="absolute size-full rounded-full bg-green-500/10"
+        initial={shouldReduceMotion ? false : { scale: 0.65, opacity: 0.7 }}
+        animate={
+          shouldReduceMotion
+            ? { opacity: 0.35 }
+            : { scale: [0.72, 1.28], opacity: [0.42, 0] }
+        }
+        transition={
+          shouldReduceMotion
+            ? reducedTransition
+            : { duration: 0.58, ease: [0.22, 1, 0.36, 1] }
+        }
+        aria-hidden="true"
+      />
+      <Check
+        className={twMerge("relative size-5", styles.successText())}
+        aria-hidden="true"
+      />
+    </motion.span>
+  );
+}
+
 function TimerRing({
   active,
   compact,
@@ -530,10 +566,20 @@ function TimerRing({
         className={twMerge(compact ? "size-3.5" : "size-4")}
         aria-hidden="true"
       />
-      <svg
-        className="-rotate-90 pointer-events-none absolute inset-0 size-full"
+      <motion.svg
+        className="pointer-events-none absolute inset-0 size-full"
         viewBox="0 0 48 48"
         aria-hidden="true"
+        animate={
+          shouldReduceMotion || !active
+            ? { rotate: -90 }
+            : { rotate: [-90, 270] }
+        }
+        transition={
+          shouldReduceMotion || !active
+            ? reducedTransition
+            : { duration: 18, repeat: Infinity, ease: "linear" }
+        }
       >
         <circle
           cx="24"
@@ -553,17 +599,22 @@ function TimerRing({
           strokeLinecap="round"
           strokeWidth="3"
           initial={{ pathLength: 0 }}
-          animate={{
-            pathLength: active ? 0.78 : 0.28,
-            opacity: active ? 1 : 0.5,
-          }}
+          animate={
+            active
+              ? { pathLength: [0.64, 0.82, 0.64], opacity: [0.76, 1, 0.76] }
+              : { pathLength: 0.28, opacity: 0.5 }
+          }
           transition={
             shouldReduceMotion
               ? reducedTransition
-              : { duration: 0.7, ease: [0.22, 1, 0.36, 1] }
+              : {
+                  duration: active ? 2.8 : 0.7,
+                  repeat: active ? Infinity : 0,
+                  ease: "easeInOut",
+                }
           }
         />
-      </svg>
+      </motion.svg>
     </span>
   );
 }
@@ -687,7 +738,10 @@ function CompactContent({
         exit="exit"
       >
         {feedback === "success" || progress >= 100 ? (
-          <Check className="size-4" aria-hidden="true" />
+          <Check
+            className={twMerge("size-4", styles.successText())}
+            aria-hidden="true"
+          />
         ) : activity.variant === "recording" ? (
           <RecordingDot compact />
         ) : (
@@ -709,8 +763,13 @@ function CompactContent({
     >
       {feedback === "success" || progress >= 100 ? (
         <>
-          <Check className="size-4 shrink-0" aria-hidden="true" />
-          <span className={styles.compactPill()}>Done</span>
+          <Check
+            className={twMerge("size-4 shrink-0", styles.successText())}
+            aria-hidden="true"
+          />
+          <span className={twMerge(styles.compactPill(), styles.successText())}>
+            Done
+          </span>
         </>
       ) : null}
 
@@ -751,23 +810,15 @@ function CompactContent({
         </>
       ) : null}
 
-      {feedback !== "success" && activity.variant === "call" ? (
+      {feedback !== "success" && activity.variant === "progress" ? (
         <>
           <MediaOrb
             activity={activity}
             styles={styles}
             layoutId={`${scope}-media`}
-            pulse
           >
             <ActivityIcon activity={activity} className="size-3.5" />
           </MediaOrb>
-          <span className={styles.compactPill()}>{copy.title}</span>
-        </>
-      ) : null}
-
-      {feedback !== "success" && activity.variant === "progress" ? (
-        <>
-          <ActivityIcon activity={activity} className="size-4 shrink-0" />
           <span className={styles.compactPill()}>
             <ProgressNumber value={progress} />
           </span>
@@ -820,12 +871,34 @@ function ExpandedContent({
           styles={styles}
           layoutId={`${scope}-media`}
           expanded
+          className={styles.successMedia()}
         >
-          <Check className="size-5" aria-hidden="true" />
+          <SuccessMark styles={styles} />
         </MediaOrb>
         <span className={styles.copy()}>
-          <p className={styles.title()}>Completed</p>
+          <motion.p
+            className={twMerge(styles.title(), styles.successText())}
+            initial={shouldReduceMotion ? false : { opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.06, duration: 0.16 }}
+          >
+            Completed
+          </motion.p>
           <p className={styles.description()}>{copy.description}</p>
+          <span className="mt-2 block">
+            <span className={styles.progressTrackSuccess()}>
+              <motion.span
+                className={styles.progressFillSuccess()}
+                initial={{ width: "0%" }}
+                animate={{ width: "100%" }}
+                transition={
+                  shouldReduceMotion
+                    ? reducedTransition
+                    : { duration: 0.42, ease: [0.22, 1, 0.36, 1] }
+                }
+              />
+            </span>
+          </span>
         </span>
       </motion.div>
     );
@@ -931,43 +1004,6 @@ function ExpandedContent({
         </>
       ) : null}
 
-      {activity.variant === "call" ? (
-        <>
-          <MediaOrb
-            activity={activity}
-            styles={styles}
-            layoutId={`${scope}-media`}
-            expanded
-            pulse
-          >
-            <ActivityIcon activity={activity} className="size-5" />
-          </MediaOrb>
-          <CopyBlock
-            activity={activity}
-            styles={styles}
-            eyebrow="Incoming call"
-          />
-          <span className={styles.actions()}>
-            <IslandActionButton
-              label="Decline call"
-              onClick={activity.onCancel}
-              tone="destructive"
-              styles={styles}
-            >
-              <PhoneOff className="size-4" aria-hidden="true" />
-            </IslandActionButton>
-            <IslandActionButton
-              label="Accept call"
-              onClick={activity.onConfirm}
-              tone="primary"
-              styles={styles}
-            >
-              <Phone className="size-4" aria-hidden="true" />
-            </IslandActionButton>
-          </span>
-        </>
-      ) : null}
-
       {activity.variant === "progress" ? (
         <>
           <MediaOrb
@@ -976,22 +1012,35 @@ function ExpandedContent({
             layoutId={`${scope}-media`}
             expanded
             pulse={progress < 100}
+            className="text-background/90 dark:text-primary"
           >
             <ActivityIcon activity={activity} className="size-5" />
           </MediaOrb>
           <span className={styles.copy()}>
             <span className="mb-1.5 flex min-w-0 items-center justify-between gap-3">
               <p className={styles.title()}>{copy.title}</p>
-              <span className={twMerge(styles.mutedText(), "font-medium")}>
+              <span
+                className={twMerge(
+                  styles.mutedText(),
+                  "font-medium text-background dark:text-primary",
+                )}
+              >
                 <ProgressNumber value={progress} />
               </span>
             </span>
+            <p className={twMerge(styles.description(), "mb-2")}>
+              {copy.description}
+            </p>
             <span className={styles.progressTrack()}>
               <motion.span
                 className={styles.progressFill()}
                 initial={{ width: 0 }}
                 animate={{ width: `${progress}%` }}
-                transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+                transition={
+                  shouldReduceMotion
+                    ? reducedTransition
+                    : { type: "spring", stiffness: 420, damping: 36, mass: 0.8 }
+                }
               />
             </span>
           </span>
@@ -1171,14 +1220,16 @@ function IslandSurface({
         hoverTimerRef.current = setTimeout(() => {
           hoverExpandedRef.current = true;
           onToggle();
-        }, 220);
+        }, 260);
       }}
       onMouseLeave={() => {
         clearHoverTimer();
 
         if (hoverExpandedRef.current && isDetailedMode(surfaceMode)) {
-          hoverExpandedRef.current = false;
-          onToggle();
+          hoverTimerRef.current = setTimeout(() => {
+            hoverExpandedRef.current = false;
+            onToggle();
+          }, 140);
         }
       }}
       onBlur={(event) => {
@@ -1187,13 +1238,15 @@ function IslandSurface({
           onTransientBlur();
         }
       }}
-      initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.96, y: 8 }}
+      initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.985, y: 4 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
-      exit={shouldReduceMotion ? undefined : { opacity: 0, scale: 0.96, y: -6 }}
-      whileTap={shouldReduceMotion ? undefined : { scale: 0.992 }}
+      exit={
+        shouldReduceMotion ? undefined : { opacity: 0, scale: 0.985, y: -4 }
+      }
+      whileTap={shouldReduceMotion ? undefined : { scale: 0.996 }}
       transition={shouldReduceMotion ? reducedTransition : islandTransition}
     >
-      <AnimatePresence mode="popLayout" initial={false}>
+      <AnimatePresence mode="wait" initial={false}>
         {isDetailedMode(surfaceMode) ? (
           <ExpandedContent
             key={`${scope}-expanded-${feedback ?? activity.variant}`}
