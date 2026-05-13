@@ -60,6 +60,22 @@
       ]
     },
     {
+      "name": "breadcrumb",
+      "type": "registry:ui",
+      "dependencies": [
+        "framer-motion",
+        "lucide-react",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/breadcrumb.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "data-table",
       "type": "registry:ui",
       "dependencies": [
@@ -117,6 +133,20 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/inset-command-dock.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "divider",
+      "type": "registry:ui",
+      "dependencies": [
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/divider.tsx",
           "type": "registry:ui"
         }
       ]
@@ -371,6 +401,19 @@
       ]
     },
     {
+      "name": "breadcrumb-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "breadcrumb"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/breadcrumb-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
       "name": "data-table-demo",
       "type": "registry:example",
       "registryDependencies": [
@@ -418,6 +461,19 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/inset-command-dock-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "divider-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "divider"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/divider-demo.tsx",
           "type": "registry:example"
         }
       ]
