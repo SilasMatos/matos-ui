@@ -66,6 +66,9 @@ export function SiteHeader({ pageTree }: { pageTree: DocsPageTree }) {
               <span className="font-bold">matos</span>
               <span className="text-muted-foreground/55">ui</span>
             </span>
+            <span className="hidden rounded-full border border-border bg-muted px-1.5 py-0.5 font-medium text-[10px] text-muted-foreground leading-none tracking-normal sm:inline-flex">
+              beta
+            </span>
           </Link>
           <div className="mx-3 hidden h-8 w-px bg-border lg:block" />
           <MainNav items={navItems} className="hidden lg:flex" />

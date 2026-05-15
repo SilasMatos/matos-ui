@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Allerta, Inter } from "next/font/google";
+import { Geist } from "next/font/google";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
@@ -10,14 +10,9 @@ import { routing } from "@/i18n/routing";
 import { siteConfig } from "@/lib/config";
 import { source } from "@/lib/source";
 
-const inter = Inter({
+const geist = Geist({
   subsets: ["latin"],
-});
-
-const allerta = Allerta({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--font-allerta",
+  variable: "--font-geist",
 });
 
 export const metadata: Metadata = {
@@ -52,7 +47,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   return (
     <html
       lang={locale}
-      className={`${inter.className} ${allerta.variable}`}
+      className={`${geist.className} ${geist.variable}`}
       suppressHydrationWarning
     >
       <body

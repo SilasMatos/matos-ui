@@ -97,7 +97,7 @@ export function SiteFooter() {
           whileInView={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
           viewport={{ once: true, margin: "-30px" }}
           transition={{ duration: 1.2, ease: [0.25, 0.4, 0.25, 1] }}
-          className="mt-16 mb-12 select-none text-center"
+          className="mt-14 mb-8 select-none text-center"
         >
           <h2 className="font-logo text-6xl font-bold tracking-tighter text-foreground/5 sm:text-8xl md:text-9xl">
             matos<span className="text-foreground/10">ui</span>
