@@ -53,12 +53,12 @@ export default async function LocaleLayout({ children, params }: Props) {
       <head>
         <link
           rel="icon"
-          href="/favicon-light.png"
+          href="/logo-black-fiv.png"
           media="(prefers-color-scheme: light)"
         />
         <link
           rel="icon"
-          href="/favicon-dark.png"
+          href="/logo-white-fiv.png"
           media="(prefers-color-scheme: dark)"
         />
       </head>
