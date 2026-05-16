@@ -1,6 +1,6 @@
 {
   "name": "matos/ui",
-  "homepage": "http://localhost:4000/",
+  "homepage": "https://matos-ui.com/",
   "items": [
     {
       "name": "index",
@@ -79,6 +79,38 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/activity-feed.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "status-pulse-card",
+      "type": "registry:ui",
+      "dependencies": [
+        "framer-motion",
+        "lucide-react",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/status-pulse-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "inset-command-dock",
+      "type": "registry:ui",
+      "dependencies": [
+        "framer-motion",
+        "lucide-react",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/inset-command-dock.tsx",
           "type": "registry:ui"
         }
       ]
@@ -350,6 +382,28 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/activity-feed-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "status-pulse-card-demo",
+      "type": "registry:example",
+      "registryDependencies": ["status-pulse-card"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/status-pulse-card-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "inset-command-dock-demo",
+      "type": "registry:example",
+      "registryDependencies": ["inset-command-dock"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/inset-command-dock-demo.tsx",
           "type": "registry:example"
         }
       ]

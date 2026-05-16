@@ -125,6 +125,52 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
   },
+  "status-pulse-card": {
+    name: "status-pulse-card",
+    type: "registry:ui",
+    registryDependencies: undefined,
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/status-pulse-card.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/ui/status-pulse-card.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "inset-command-dock": {
+    name: "inset-command-dock",
+    type: "registry:ui",
+    registryDependencies: undefined,
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/inset-command-dock.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/ui/inset-command-dock.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
   divider: {
     name: "divider",
     type: "registry:ui",
@@ -550,6 +596,52 @@ export const Index: Record<string, any> = {
     component: React.lazy(async () => {
       const mod = await import(
         "@/registry/new-york-v4/examples/activity-feed-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "status-pulse-card-demo": {
+    name: "status-pulse-card-demo",
+    type: "registry:example",
+    registryDependencies: ["status-pulse-card"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/status-pulse-card-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/status-pulse-card-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "inset-command-dock-demo": {
+    name: "inset-command-dock-demo",
+    type: "registry:example",
+    registryDependencies: ["inset-command-dock"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/inset-command-dock-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/inset-command-dock-demo.tsx"
       );
       const exportName =
         Object.keys(mod).find(

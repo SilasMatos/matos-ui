@@ -7,7 +7,7 @@ import { tv, type VariantProps } from "tailwind-variants";
 
 export const feedbackCardVariants = tv({
   base: [
-    "w-full overflow-hidden rounded-[20px] border border-border",
+    "not-prose w-full overflow-hidden rounded-[20px] border border-border",
     "bg-secondary text-foreground",
   ],
   variants: {
@@ -138,10 +138,6 @@ function EmojiButton({
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  Component                                                          */
-/* ------------------------------------------------------------------ */
-
 export function FeedbackCard({
   className,
   size,
@@ -189,12 +185,13 @@ export function FeedbackCard({
         {step === "rating" && (
           <motion.div
             key="rating"
+            className=""
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.96 }}
             transition={{ duration: 0.25 }}
           >
-            <div className="space-y-1 px-5  ">
+            <div className=" px-4 py-2  ">
               <motion.h3
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -237,7 +234,7 @@ export function FeedbackCard({
             exit={{ opacity: 0, scale: 0.96 }}
             transition={{ duration: 0.25 }}
           >
-            <div className="flex items-center justify-between px-5  ">
+            <div className="flex items-center justify-between px-5 py-2  ">
               <div className="">
                 <motion.h3
                   initial={{ opacity: 0, x: -6 }}

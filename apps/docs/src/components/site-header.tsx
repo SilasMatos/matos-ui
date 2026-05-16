@@ -42,22 +42,22 @@ export function SiteHeader({ pageTree }: { pageTree: DocsPageTree }) {
           <Link
             href="/"
             aria-label={siteConfig.name}
-            className="group/brand flex min-w-0 items-center gap-2 rounded-lg outline-none transition-opacity hover:opacity-85 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            className="group/brand flex min-w-0 items-center  rounded-lg outline-none transition-opacity hover:opacity-85 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             <span className="relative flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-lg">
               <Image
                 src={logoLightSrc}
                 alt=""
-                width={25}
-                height={25}
+                width={20}
+                height={20}
                 className=" object-contain dark:hidden"
                 priority
               />
               <Image
                 src={logoDarkSrc}
                 alt=""
-                width={25}
-                height={25}
+                width={20}
+                height={20}
                 className="hidden  object-contain dark:block"
                 priority
               />
@@ -66,7 +66,7 @@ export function SiteHeader({ pageTree }: { pageTree: DocsPageTree }) {
               <span className="font-bold">matos</span>
               <span className="text-muted-foreground/55">ui</span>
             </span>
-            <span className="hidden rounded-full border border-border bg-muted px-1.5 py-0.5 font-medium text-[10px] text-muted-foreground leading-none tracking-normal sm:inline-flex">
+            <span className="hidden rounded-full border ml-2 border-border bg-muted px-1.5 py-0.5 font-medium text-[10px] text-muted-foreground leading-none tracking-normal sm:inline-flex">
               beta
             </span>
           </Link>

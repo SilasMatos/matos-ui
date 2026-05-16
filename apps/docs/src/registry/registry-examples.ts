@@ -57,6 +57,28 @@ export const examples: Registry["items"] = [
     ],
   },
   {
+    name: "status-pulse-card-demo",
+    type: "registry:example",
+    registryDependencies: ["status-pulse-card"],
+    files: [
+      {
+        path: "examples/status-pulse-card-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "inset-command-dock-demo",
+    type: "registry:example",
+    registryDependencies: ["inset-command-dock"],
+    files: [
+      {
+        path: "examples/inset-command-dock-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
     name: "divider-demo",
     type: "registry:example",
     registryDependencies: ["divider"],

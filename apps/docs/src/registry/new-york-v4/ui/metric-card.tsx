@@ -8,7 +8,7 @@ import { tv, type VariantProps } from "tailwind-variants";
 
 export const metricCardVariants = tv({
   base: [
-    "w-full overflow-hidden rounded-[20px] border border-border",
+    " not-prose w-full overflow-hidden rounded-[20px] border border-border",
     "bg-secondary text-foreground",
   ],
   variants: {
@@ -71,14 +71,14 @@ export function MetricCard({
       <div className="px-4 py-2 ">
         <motion.span
           {...fadeUp(0)}
-          className="text-[11px] font-medium uppercase tracking-widest text-muted-foreground"
+          className="text-xs font-medium uppercase tracking-widest text-muted-foreground"
         >
           {label}
         </motion.span>
       </div>
 
-      <div className="mx-2 mb-2 overflow-hidden rounded-xl bg-card">
-        <div className="space-y-3 p-4 pb-2">
+      <div className="mx-1.5 mb-1.5 overflow-hidden rounded-xl bg-card">
+        <div className="space-y-3 p-4 pb-1">
           <div className="flex items-baseline justify-between gap-1.5">
             <AnimatedNumber
               value={value}

@@ -14,57 +14,61 @@ import {
 
 const activityItems: ActivityFeedItem[] = [
   {
-    id: "deploy",
-    title: "Production deploy completed",
-    description: "Release v2.8.0 is now serving all US workspaces.",
-    time: "2 min ago",
-    badge: "Deploy",
-    actor: { name: "Matos Bot", initials: "MB" },
+    id: "release",
+    title: "Production release shipped",
+    description: "Version 3.12.0 is live for all enterprise workspaces.",
+    time: "4 min ago",
+    badge: "Release",
+    actor: { name: "Matos Deploy", initials: "MD" },
     icon: <Zap />,
     tone: "success",
     unread: true,
-    meta: "12 checks",
+    checks: "18 checks",
   },
   {
     id: "review",
-    title: "Pricing table review requested",
-    description: "Ana moved the billing page into final design review.",
-    time: "18 min ago",
+    title: "Checkout flow review requested",
+    description: "The billing team opened a final review for plan upgrades.",
+    time: "22 min ago",
     badge: "Review",
     actor: { name: "Ana Lima", initials: "AL" },
     icon: <GitPullRequestArrow />,
     tone: "info",
+    checks: "9 checks",
   },
   {
-    id: "ai",
-    title: "AI summary generated",
-    description: "A new customer health summary is ready for the sales team.",
-    time: "41 min ago",
+    id: "summary",
+    title: "Customer health summary generated",
+    description: "New expansion risks were added to the QBR workspace brief.",
+    time: "46 min ago",
     badge: "AI",
     actor: { name: "Workspace AI", initials: "AI" },
     icon: <Sparkles />,
     tone: "violet",
     unread: true,
+    checks: "6 checks",
   },
   {
     id: "alert",
-    title: "Invoice retry scheduled",
-    description: "The payment retry will run automatically tomorrow.",
+    title: "Usage threshold notification sent",
+    description: "Acme Labs crossed 80% of their monthly automation quota.",
     time: "1 h ago",
-    badge: "Billing",
-    actor: { name: "Finance", initials: "FN" },
+    badge: "Usage",
+    actor: { name: "Revenue Ops", initials: "RO" },
     icon: <Bell />,
     tone: "warning",
+    checks: "4 checks",
   },
   {
-    id: "done",
-    title: "Workspace security audit passed",
-    description: "All critical identity policies are compliant.",
+    id: "audit",
+    title: "Security audit passed",
+    description: "SSO enforcement and approvals are compliant.",
     time: "3 h ago",
     badge: "Audit",
     actor: { name: "Security", initials: "SC" },
     icon: <CheckCircle2 />,
     tone: "success",
+    checks: "12 checks",
   },
 ];
 
@@ -72,17 +76,11 @@ export default function ActivityFeedDemo() {
   return (
     <div className="flex w-full justify-center">
       <ActivityFeed
+        className="max-w-[420px]"
+        compact
         title="Activity"
-        description="Recent product events and operational changes."
+        description="Latest workspace changes."
         items={activityItems}
-        action={
-          <button
-            type="button"
-            className="rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs font-medium transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            View all
-          </button>
-        }
       />
     </div>
   );

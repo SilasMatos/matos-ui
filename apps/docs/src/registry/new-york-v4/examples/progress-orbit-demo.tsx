@@ -6,19 +6,20 @@ import { ProgressOrbit } from "@/registry/new-york-v4/ui/progress-orbit";
 
 export default function ProgressOrbitDemo() {
   return (
-    <div className="flex w-full justify-center p-2">
+    <div className="flex w-full justify-center">
       <ProgressOrbit
-        className="max-w-72 shadow-sm"
+        className="max-w-[360px]"
         label="Security"
-        description="Identity"
+        description="Identity posture"
         value={72}
+        tone="primary"
         icon={<ShieldCheck />}
         milestones={[
           { value: 30, label: "MFA" },
           { value: 55, label: "SAML" },
           { value: 80, label: "Audit" },
         ]}
-        footer="Milestones light up as your score crosses each threshold."
+        footer="3 checks verified"
       />
     </div>
   );

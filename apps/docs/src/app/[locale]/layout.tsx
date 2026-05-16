@@ -50,6 +50,18 @@ export default async function LocaleLayout({ children, params }: Props) {
       className={`${geist.className} ${geist.variable}`}
       suppressHydrationWarning
     >
+      <head>
+        <link
+          rel="icon"
+          href="/favicon-light.png"
+          media="(prefers-color-scheme: light)"
+        />
+        <link
+          rel="icon"
+          href="/favicon-dark.png"
+          media="(prefers-color-scheme: dark)"
+        />
+      </head>
       <body
         className="flex flex-col min-h-screen [--header-height:calc(var(--spacing)*13)]"
         cz-shortcut-listen="true"

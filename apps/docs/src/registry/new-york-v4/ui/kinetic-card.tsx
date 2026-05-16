@@ -1,20 +1,20 @@
 "use client";
 
-import { motion } from "framer-motion";
-import type { ComponentProps, CSSProperties, ReactNode } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import type { ComponentProps, ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
 
 export const kineticCardVariants = tv({
   base: [
-    "group relative isolate w-full overflow-hidden rounded-[20px] border border-border",
-    "bg-card text-card-foreground shadow-xs transition-colors",
+    "not-prose w-full overflow-hidden rounded-2xl border border-border",
+    "bg-secondary p-2 text-foreground",
   ],
   variants: {
     size: {
-      sm: "max-w-[320px]",
-      md: "max-w-[420px]",
-      lg: "max-w-[520px]",
+      sm: "max-w-[300px]",
+      md: "max-w-[360px]",
+      lg: "max-w-[440px]",
       full: "max-w-full",
     },
     tone: {
@@ -25,69 +25,41 @@ export const kineticCardVariants = tv({
     },
   },
   defaultVariants: {
-    size: "md",
+    size: undefined,
     tone: "default",
   },
 });
 
 export const kineticCardHeaderVariants = tv({
-  base: "relative z-10 flex items-start justify-between gap-4 px-5 pt-5",
+  base: "relative z-10 flex items-start justify-between gap-3 px-4 pt-4",
 });
 
 export const kineticCardContentVariants = tv({
-  base: "relative z-10 px-5 py-4",
+  base: "relative z-10 px-4 py-3",
 });
 
 export const kineticCardFooterVariants = tv({
-  base: "relative z-10 flex items-center justify-between gap-3 px-5 pt-1 pb-5",
+  base: "relative z-10 flex items-center justify-between gap-3 px-4 pb-4 text-xs",
 });
 
-type KineticCardStyle = CSSProperties & {
-  "--kinetic-color": string;
-  "--kinetic-soft": string;
-  "--kinetic-line": string;
-};
-
-const toneVars = {
+const toneStyles = {
   default: {
-    "--kinetic-color": "var(--muted-foreground)",
-    "--kinetic-soft":
-      "color-mix(in oklch, var(--muted-foreground) 18%, transparent)",
-    "--kinetic-line":
-      "color-mix(in oklch, var(--muted-foreground) 26%, transparent)",
+    rail: "bg-muted-foreground",
+    badge: "border-border/70 bg-secondary text-muted-foreground",
   },
   primary: {
-    "--kinetic-color": "var(--primary)",
-    "--kinetic-soft": "color-mix(in oklch, var(--primary) 18%, transparent)",
-    "--kinetic-line": "color-mix(in oklch, var(--primary) 30%, transparent)",
+    rail: "bg-primary",
+    badge: "border-primary/20 bg-primary/10 text-primary",
   },
   accent: {
-    "--kinetic-color": "var(--chart-2)",
-    "--kinetic-soft": "color-mix(in oklch, var(--chart-2) 20%, transparent)",
-    "--kinetic-line": "color-mix(in oklch, var(--chart-2) 32%, transparent)",
+    rail: "bg-foreground",
+    badge: "border-border/70 bg-muted text-foreground",
   },
   destructive: {
-    "--kinetic-color": "var(--destructive)",
-    "--kinetic-soft":
-      "color-mix(in oklch, var(--destructive) 16%, transparent)",
-    "--kinetic-line":
-      "color-mix(in oklch, var(--destructive) 28%, transparent)",
+    rail: "bg-destructive",
+    badge: "border-destructive/20 bg-destructive/10 text-destructive",
   },
-} satisfies Record<string, KineticCardStyle>;
-
-const beamVariants = {
-  initial: { pathLength: 0, opacity: 0 },
-  animate: (delay: number) => ({
-    pathLength: [0, 1, 1],
-    opacity: [0, 1, 0],
-    transition: {
-      duration: 3.2,
-      repeat: Infinity,
-      ease: [0.16, 1, 0.3, 1] as const,
-      delay,
-    },
-  }),
-};
+} as const;
 
 export type KineticCardProps = ComponentProps<"div"> &
   VariantProps<typeof kineticCardVariants> & {
@@ -101,76 +73,57 @@ export function KineticCard({
   tone = "default",
   badge,
   children,
-  style,
   ...props
 }: KineticCardProps) {
+  const shouldReduceMotion = useReducedMotion();
+  const toneStyle = toneStyles[tone ?? "default"];
+
   return (
     <div
       data-slot="kinetic-card"
       className={twMerge(kineticCardVariants({ size, tone }), className)}
-      style={{ ...toneVars[tone ?? "default"], ...style }}
       {...props}
     >
       <motion.div
-        className="pointer-events-none absolute inset-0 -z-10 opacity-80"
-        animate={{ backgroundPosition: ["0% 0%", "100% 100%"] }}
-        transition={{ duration: 12, repeat: Infinity, repeatType: "mirror" }}
-        style={{
-          backgroundImage:
-            "radial-gradient(circle at 20% 20%, var(--kinetic-soft), transparent 32%), radial-gradient(circle at 80% 0%, color-mix(in oklch, var(--kinetic-color) 12%, transparent), transparent 30%)",
-          backgroundSize: "160% 160%",
-        }}
-      />
-
-      <div
-        className="pointer-events-none absolute inset-0 -z-10 opacity-35"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle, var(--kinetic-line) 1px, transparent 1px)",
-          backgroundSize: "18px 18px",
-        }}
-      />
-
-      <motion.svg
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-full w-full text-[var(--kinetic-color)]"
-        fill="none"
-        viewBox="0 0 420 260"
-        preserveAspectRatio="none"
-      >
-        <motion.path
-          d="M-20 72 C84 34 142 122 224 86 C306 50 342 18 440 42"
-          stroke="currentColor"
-          strokeOpacity="0.45"
-          strokeWidth="1.5"
-          variants={beamVariants}
-          initial="initial"
-          animate="animate"
-          custom={0}
-        />
-        <motion.path
-          d="M-12 190 C82 146 126 224 226 178 C306 142 348 132 432 160"
-          stroke="currentColor"
-          strokeOpacity="0.35"
-          strokeWidth="1.5"
-          variants={beamVariants}
-          initial="initial"
-          animate="animate"
-          custom={1.2}
-        />
-      </motion.svg>
-
-      {badge && (
-        <div className="absolute top-4 right-4 z-20 rounded-full border border-border bg-background/80 px-2.5 py-1 text-xs font-medium text-muted-foreground shadow-xs backdrop-blur">
-          {badge}
-        </div>
-      )}
-
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
+        data-slot="kinetic-card-panel"
+        initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+        whileHover={shouldReduceMotion ? undefined : { y: -1 }}
+        transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+        className="relative overflow-hidden rounded-xl border border-border/60 bg-card shadow-sm"
       >
+        <div
+          aria-hidden="true"
+          className="absolute right-4 top-4 flex items-center gap-1.5"
+        >
+          <span className="h-px w-8 bg-border" />
+          <motion.span
+            className={twMerge("size-1.5 rounded-full", toneStyle.rail)}
+            animate={
+              shouldReduceMotion
+                ? undefined
+                : { x: [-10, 0, -10], opacity: [0.45, 1, 0.45] }
+            }
+            transition={{
+              duration: 2.4,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+        </div>
+
+        {badge ? (
+          <div
+            data-slot="kinetic-card-badge"
+            className={twMerge(
+              "absolute right-3 top-3 z-20 rounded-full border px-2 py-0.5 text-[10px] font-medium",
+              toneStyle.badge,
+            )}
+          >
+            {badge}
+          </div>
+        ) : null}
+
         {children}
       </motion.div>
     </div>

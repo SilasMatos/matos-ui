@@ -1,0 +1,81 @@
+---
+title: Inset Command Dock
+description: Compact inset toolbar for dashboard actions, detail pages, builders, and SaaS workflows.
+---
+
+<ComponentPreview name="inset-command-dock-demo" chromeless align="start" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/inset-command-dock.json" />
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the following dependencies:</Step>
+
+<CodeBlockCommand command="npm install framer-motion lucide-react tailwind-merge tailwind-variants" />
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="inset-command-dock" title="components/matos-ui/inset-command-dock.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { InsetCommandDock } from "@/components/matos-ui/inset-command-dock"
+```
+
+```tsx
+<InsetCommandDock
+  defaultActiveId="edit"
+  groups={[
+    {
+      id: "content",
+      actions: [
+        { id: "edit", label: "Edit", icon: <FilePenLine /> },
+        { id: "preview", label: "Preview", icon: <Eye /> },
+      ],
+    },
+  ]}
+  status={{ label: "Saved" }}
+/>
+```
+
+## Reference
+
+### InsetCommandDock Props
+
+| Prop              | Type                         | Default             | Description                         |
+| ----------------- | ---------------------------- | ------------------- | ----------------------------------- |
+| `actions`         | `InsetCommandDockAction[]`   | -                   | Flat list of actions.               |
+| `groups`          | `InsetCommandDockGroup[]`    | -                   | Grouped actions with separators.    |
+| `activeId`        | `string?`                    | -                   | Controlled active action id.        |
+| `defaultActiveId` | `string?`                    | First action        | Initial active action id.           |
+| `onAction`        | `(action) => void`           | -                   | Callback fired when action is used. |
+| `showLabels`      | `boolean`                    | `true`              | Shows labels next to icons.         |
+| `status`          | `InsetCommandDockStatus?`    | -                   | Optional dock status.               |
+| `shape`           | `"rounded" \| "pill"`        | `"rounded"`         | Dock corner style.                  |
+| `density`         | `"compact" \| "comfortable"` | `"comfortable"`     | Dock spacing preset.                |
+| `variant`         | `"default" \| "floating"`    | `"default"`         | Visual treatment.                   |
+
+Also exported: `insetCommandDockVariants`, `InsetCommandDockGroupView`, `InsetCommandDockStatusView`, and related types.

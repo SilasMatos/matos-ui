@@ -1,6 +1,6 @@
 ---
 title: Activity Feed
-description: Animated activity feed for product events, audit trails, workspace logs, and operational timelines.
+description: Compact animated activity feed for product events, audit trails, workspace logs, and operational timelines.
 ---
 
 <ComponentPreview name="activity-feed-demo" chromeless align="start" />
@@ -73,9 +73,10 @@ import { ActivityFeed } from "@/components/matos-ui/activity-feed"
 | `title`       | `ReactNode?`         | -                   | Optional header title.         |
 | `description` | `ReactNode?`         | -                   | Optional header description.   |
 | `action`      | `ReactNode?`         | -                   | Optional header action.        |
+| `showAction`  | `boolean`            | `false`             | Shows the built-in View all action. |
 | `emptyText`   | `ReactNode?`         | `"No activity yet"` | Empty state content.           |
 | `compact`     | `boolean`            | `false`             | Reduces row padding.           |
-| `size`        | `"sm" \| "md" \| "lg"` | `"md"`            | Max width preset.              |
+| `size`        | `"sm" \| "md" \| "lg"` | -                 | Optional max width preset.     |
 
 ### ActivityFeedItem
 
@@ -86,6 +87,7 @@ import { ActivityFeed } from "@/components/matos-ui/activity-feed"
 | `description` | `ReactNode` | Optional supporting text.                    |
 | `time`        | `ReactNode` | Optional timestamp.                          |
 | `badge`       | `ReactNode` | Optional status badge.                       |
+| `checks`      | `ReactNode` | Optional checks metadata.                    |
 | `meta`        | `ReactNode` | Optional secondary metadata.                 |
 | `actor`       | `object`    | Optional actor with `name` and `initials`.   |
 | `icon`        | `ReactNode` | Optional marker icon.                        |

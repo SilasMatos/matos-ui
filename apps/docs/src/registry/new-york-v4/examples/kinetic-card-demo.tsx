@@ -10,40 +10,39 @@ import {
 const signals = [
   { label: "Latency", value: "24ms" },
   { label: "Sync", value: "98%" },
-  { label: "Load", value: "1.2k" },
 ];
 
 export default function KineticCardDemo() {
   return (
-    <div className="flex w-full items-center justify-center p-2">
-      <KineticCard badge="Live" size="lg" tone="accent">
+    <div className="flex w-full items-center justify-center">
+      <KineticCard className="max-w-[360px]" badge="Live" tone="primary">
         <KineticCardHeader>
-          <div className="space-y-1 pr-14">
+          <div className="space-y-1 pr-16">
             <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
-              Signal layer
+              Signal
             </p>
-            <h3 className="text-xl font-semibold tracking-tight">
-              Adaptive orchestration
+            <h3 className="text-base font-semibold leading-5">
+              Adaptive queue
             </h3>
           </div>
         </KineticCardHeader>
 
         <KineticCardContent>
-          <p className="max-w-sm text-sm leading-6 text-muted-foreground">
-            A kinetic surface for product cards, status panels, and feature
-            highlights that need motion without losing clarity.
+          <p className="text-muted-foreground text-xs leading-5">
+            Compact motion surface for live SaaS state without turning into a
+            feature block.
           </p>
 
-          <div className="mt-5 grid grid-cols-3 gap-2">
+          <div className="mt-3 grid grid-cols-2 gap-2">
             {signals.map((signal) => (
               <div
-                className="rounded-xl border border-border bg-background/70 p-3 shadow-xs backdrop-blur"
+                className="rounded-lg border border-border/70 bg-secondary px-2.5 py-2"
                 key={signal.label}
               >
-                <p className="text-[11px] font-medium text-muted-foreground">
+                <p className="text-[10px] font-medium text-muted-foreground">
                   {signal.label}
                 </p>
-                <p className="mt-1 text-sm font-semibold">{signal.value}</p>
+                <p className="mt-0.5 text-sm font-semibold">{signal.value}</p>
               </div>
             ))}
           </div>
@@ -51,9 +50,9 @@ export default function KineticCardDemo() {
 
         <KineticCardFooter>
           <span className="text-xs text-muted-foreground">
-            Animated with theme-aware beams
+            Updated just now
           </span>
-          <span className="size-2 rounded-full bg-chart-2 shadow-[0_0_0_4px_color-mix(in_oklch,var(--chart-2)_18%,transparent)]" />
+          <span className="size-2 rounded-full bg-primary" />
         </KineticCardFooter>
       </KineticCard>
     </div>

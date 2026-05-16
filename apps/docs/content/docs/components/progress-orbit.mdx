@@ -1,6 +1,6 @@
 ---
 title: Progress Orbit
-description: Compact circular progress card with a minimal ring, subtle motion, and milestone chips.
+description: Compact circular progress indicator with a minimal ring, inline copy, and milestone chips.
 ---
 
 <ComponentPreview name="progress-orbit-demo" chromeless align="start" />
@@ -51,6 +51,7 @@ import { ProgressOrbit } from "@/components/matos-ui/progress-orbit"
   label="Launch"
   description="Checklist"
   value={86}
+  tone="primary"
   milestones={[
     { value: 25, label: "Plan" },
     { value: 60, label: "QA" },
@@ -70,9 +71,9 @@ import { ProgressOrbit } from "@/components/matos-ui/progress-orbit"
 | `label`       | `ReactNode`                         | -           | Card title and accessible label.    |
 | `description` | `ReactNode?`                        | -           | Optional short description.         |
 | `icon`        | `ReactNode?`                        | -           | Optional header icon.               |
-| `tone`        | `"neutral" \| "emerald" \| "blue" \| "violet" \| "amber"` | `"neutral"` | Subtle progress accent tone. |
+| `tone`        | `"neutral" \| "primary" \| "muted" \| "destructive"` | `"neutral"` | Subtle progress accent tone. |
 | `suffix`      | `string`                            | `"%"`       | Value suffix.                       |
-| `milestones`  | `ProgressOrbitMilestone[]`          | `[]`        | Threshold chips around the card.    |
+| `milestones`  | `ProgressOrbitMilestone[]`          | `[]`        | Compact threshold chips.            |
 | `footer`      | `ReactNode?`                        | -           | Optional footer text or content.    |
 | `size`        | `"sm" \| "md" \| "lg"`             | `"md"`      | Internal spacing and ring stroke.   |
 

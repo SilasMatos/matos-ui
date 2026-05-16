@@ -67,6 +67,38 @@ export const ui: Registry["items"] = [
     ],
   },
   {
+    name: "status-pulse-card",
+    type: "registry:ui",
+    dependencies: [
+      "framer-motion",
+      "lucide-react",
+      "tailwind-merge",
+      "tailwind-variants",
+    ],
+    files: [
+      {
+        path: "ui/status-pulse-card.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "inset-command-dock",
+    type: "registry:ui",
+    dependencies: [
+      "framer-motion",
+      "lucide-react",
+      "tailwind-merge",
+      "tailwind-variants",
+    ],
+    files: [
+      {
+        path: "ui/inset-command-dock.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
     name: "divider",
     type: "registry:ui",
     dependencies: ["tailwind-merge", "tailwind-variants"],

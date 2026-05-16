@@ -8,26 +8,20 @@ import {
   useTransform,
 } from "framer-motion";
 import { Check, Sparkles } from "lucide-react";
-import {
-  type ComponentProps,
-  type ReactNode,
-  useEffect,
-  useId,
-  useMemo,
-} from "react";
+import { type ComponentProps, type ReactNode, useEffect } from "react";
 import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
 
 export const progressOrbitVariants = tv({
   base: [
-    "not-prose group/progress-orbit relative w-full overflow-hidden rounded-2xl border border-border bg-card p-(--orbit-padding)",
-    "text-foreground shadow-sm",
+    "not-prose w-full overflow-hidden rounded-2xl border border-border",
+    "bg-secondary p-2 text-foreground",
   ],
   variants: {
     size: {
-      sm: "[--orbit-padding:--spacing(3)] [--orbit-panel-padding:--spacing(3.5)] [--orbit-ring-stroke:5]",
-      md: "[--orbit-padding:--spacing(3.5)] [--orbit-panel-padding:--spacing(4)] [--orbit-ring-stroke:5]",
-      lg: "[--orbit-padding:--spacing(4)] [--orbit-panel-padding:--spacing(4.5)] [--orbit-ring-stroke:5.5]",
+      sm: "[--orbit-size:--spacing(18)] [--orbit-stroke:5]",
+      md: "[--orbit-size:--spacing(22)] [--orbit-stroke:5]",
+      lg: "[--orbit-size:--spacing(26)] [--orbit-stroke:5.5]",
     },
   },
   defaultVariants: {
@@ -37,29 +31,24 @@ export const progressOrbitVariants = tv({
 
 const toneStyles = {
   neutral: {
-    color: "currentColor",
-    icon: "border-border bg-secondary text-muted-foreground",
-    chip: "border-border bg-secondary text-muted-foreground",
+    icon: "border-border/70 bg-secondary text-muted-foreground",
+    progress: "text-foreground",
+    chip: "border-border/70 bg-secondary text-muted-foreground",
   },
-  emerald: {
-    color: "currentColor",
-    icon: "border-border bg-secondary text-muted-foreground",
-    chip: "border-border bg-secondary text-muted-foreground",
+  primary: {
+    icon: "border-primary/20 bg-primary/10 text-primary",
+    progress: "text-primary",
+    chip: "border-primary/20 bg-primary/10 text-primary",
   },
-  blue: {
-    color: "currentColor",
-    icon: "border-border bg-secondary text-muted-foreground",
-    chip: "border-border bg-secondary text-muted-foreground",
+  muted: {
+    icon: "border-border/70 bg-muted text-muted-foreground",
+    progress: "text-muted-foreground",
+    chip: "border-border/70 bg-muted text-muted-foreground",
   },
-  violet: {
-    color: "currentColor",
-    icon: "border-border bg-secondary text-muted-foreground",
-    chip: "border-border bg-secondary text-muted-foreground",
-  },
-  amber: {
-    color: "currentColor",
-    icon: "border-border bg-secondary text-muted-foreground",
-    chip: "border-border bg-secondary text-muted-foreground",
+  destructive: {
+    icon: "border-destructive/20 bg-destructive/10 text-destructive",
+    progress: "text-destructive",
+    chip: "border-destructive/20 bg-destructive/10 text-destructive",
   },
 } as const;
 
@@ -102,30 +91,11 @@ function ProgressOrbit({
   ...props
 }: ProgressOrbitProps) {
   const shouldReduceMotion = useReducedMotion();
-  const gradientId = useId().replace(/:/g, "");
   const toneStyle = toneStyles[tone];
   const progress = clamp((value / max) * 100, 0, 100);
-  const radius = 43;
+  const radius = 42;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (progress / 100) * circumference;
-
-  const preparedMilestones = useMemo(
-    () =>
-      milestones.map((milestone) => {
-        const milestoneProgress = clamp((milestone.value / max) * 100, 0, 100);
-        const angle = (milestoneProgress / 100) * 360 - 90;
-        const radians = (angle * Math.PI) / 180;
-        const orbitRadius = 43;
-
-        return {
-          ...milestone,
-          x: 60 + Math.cos(radians) * orbitRadius,
-          y: 60 + Math.sin(radians) * orbitRadius,
-          complete: milestone.value <= value,
-        };
-      }),
-    [max, milestones, value],
-  );
 
   return (
     <div
@@ -136,128 +106,31 @@ function ProgressOrbit({
       {...props}
     >
       <div
-        data-slot="progress-orbit-header"
-        className="flex items-start justify-between gap-3"
-      >
-        <div className="flex min-w-0 items-center gap-3">
-          <span
-            data-slot="progress-orbit-icon"
-            className={twMerge(
-              "flex size-9 shrink-0 items-center justify-center rounded-xl border",
-              "[&_svg]:size-4",
-              toneStyle.icon,
-            )}
-          >
-            {icon ?? <Sparkles className="size-4" aria-hidden="true" />}
-          </span>
-          <div className="flex min-w-0 flex-col gap-0.5">
-            <h3
-              data-slot="progress-orbit-label"
-              className="truncate text-[13px] font-semibold leading-tight"
-            >
-              {label}
-            </h3>
-            {description ? (
-              <p
-                data-slot="progress-orbit-description"
-                className="truncate text-[11px] leading-none text-muted-foreground"
-              >
-                {description}
-              </p>
-            ) : null}
-          </div>
-        </div>
-
-        <span
-          data-slot="progress-orbit-chip"
-          className={twMerge(
-            "mt-0.5 inline-flex shrink-0 items-center gap-1.5 rounded-full border px-2.5 py-1",
-            "text-[10px] font-medium leading-none",
-            toneStyle.chip,
-          )}
-        >
-          <span
-            className="size-1.5 rounded-full bg-foreground"
-            aria-hidden="true"
-          />
-          {Math.round(progress)}
-          {suffix}
-        </span>
-      </div>
-
-      <div
         data-slot="progress-orbit-panel"
-        className="mt-4 overflow-hidden rounded-[1.25rem] border border-border bg-secondary p-(--orbit-panel-padding)"
+        className="flex items-center gap-3 rounded-xl border border-border/60 bg-card p-3 shadow-sm"
       >
         <div
           data-slot="progress-orbit-visual"
-          className="relative mx-auto flex aspect-square w-full items-center justify-center"
+          className="relative flex size-(--orbit-size) shrink-0 items-center justify-center"
         >
-          <motion.span
-            aria-hidden="true"
-            data-slot="progress-orbit-aura"
-            animate={
-              shouldReduceMotion
-                ? undefined
-                : { scale: [1, 1.04, 1], opacity: [0.08, 0.14, 0.08] }
-            }
-            transition={{
-              duration: 4.2,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: "easeInOut",
-            }}
-            className="absolute inset-[18%] rounded-full bg-foreground blur-xl"
-          />
-
-          <motion.span
-            aria-hidden="true"
-            data-slot="progress-orbit-satellite"
-            animate={shouldReduceMotion ? undefined : { rotate: 360 }}
-            transition={{
-              duration: 14,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: "linear",
-            }}
-            className="absolute inset-[15%] rounded-full"
-          >
-            <span className="absolute left-1/2 top-0 size-1.5 -translate-x-1/2 rounded-full bg-foreground" />
-          </motion.span>
-
           <motion.svg
             viewBox="0 0 120 120"
-            className="relative z-10 size-full -rotate-90"
+            className="absolute inset-0 size-full -rotate-90"
             aria-hidden="true"
             initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{
-              duration: shouldReduceMotion ? 0 : 0.45,
-              ease: [0.16, 1, 0.3, 1],
+              duration: shouldReduceMotion ? 0 : 0.32,
+              ease: [0.22, 1, 0.36, 1],
             }}
           >
-            <defs>
-              <linearGradient
-                id={`${gradientId}-orbit`}
-                x1="0"
-                x2="1"
-                y1="0"
-                y2="1"
-              >
-                <stop offset="0%" stopColor={toneStyle.color} stopOpacity="1" />
-                <stop
-                  offset="100%"
-                  stopColor={toneStyle.color}
-                  stopOpacity="0.64"
-                />
-              </linearGradient>
-            </defs>
-
             <circle
               cx="60"
               cy="60"
               r={radius}
               fill="none"
               stroke="currentColor"
-              strokeWidth="var(--orbit-ring-stroke)"
+              strokeWidth="var(--orbit-stroke)"
               className="text-border"
             />
 
@@ -266,11 +139,11 @@ function ProgressOrbit({
               cy="60"
               r={radius}
               fill="none"
-              stroke={`url(#${gradientId}-orbit)`}
-              strokeWidth="var(--orbit-ring-stroke)"
+              stroke="currentColor"
+              strokeWidth="var(--orbit-stroke)"
               strokeLinecap="round"
               strokeDasharray={circumference}
-              className="text-foreground"
+              className={toneStyle.progress}
               initial={
                 shouldReduceMotion
                   ? { strokeDashoffset: offset, opacity: 1 }
@@ -280,101 +153,108 @@ function ProgressOrbit({
               transition={{
                 strokeDashoffset: {
                   type: "spring",
-                  stiffness: 76,
+                  stiffness: 78,
                   damping: 22,
-                  mass: 0.9,
+                  mass: 0.86,
                 },
-                opacity: {
-                  duration: shouldReduceMotion ? 0 : 0.28,
-                  ease: "easeOut",
-                },
+                opacity: { duration: shouldReduceMotion ? 0 : 0.2 },
               }}
             />
-
-            {preparedMilestones.map((milestone, index) => (
-              <motion.circle
-                key={`${String(milestone.label)}-${milestone.value}`}
-                cx={milestone.x}
-                cy={milestone.y}
-                r={milestone.complete ? 2.7 : 2}
-                fill={milestone.complete ? toneStyle.color : "currentColor"}
-                className={milestone.complete ? "" : "text-border"}
-                initial={shouldReduceMotion ? false : { scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                style={{ transformBox: "fill-box", transformOrigin: "center" }}
-                transition={{
-                  delay: 0.35 + index * 0.08,
-                  type: "spring",
-                  stiffness: 420,
-                  damping: 24,
-                }}
-              />
-            ))}
           </motion.svg>
 
           <div
             data-slot="progress-orbit-value"
-            className="absolute inset-0 z-20 flex flex-col items-center justify-center text-center"
+            className="relative z-10 flex flex-col items-center justify-center text-center"
           >
             <AnimatedProgressValue value={progress} suffix={suffix} />
-            <span className="mt-0.5 text-[9px] leading-none text-muted-foreground">
-              of {max}
-            </span>
           </div>
         </div>
 
-        {preparedMilestones.length ? (
-          <div
-            data-slot="progress-orbit-milestones"
-            className="mt-4 flex min-w-0 flex-wrap items-center justify-center gap-1.5"
-          >
-            {preparedMilestones.map((milestone) => (
-              <motion.div
-                key={`${String(milestone.label)}-${milestone.value}-label`}
-                data-slot="progress-orbit-milestone"
-                data-complete={milestone.complete ? "" : undefined}
-                initial={shouldReduceMotion ? false : { opacity: 0, y: 4 }}
-                animate={{ opacity: 1, y: 0 }}
-                whileHover={shouldReduceMotion ? undefined : { y: -1 }}
-                transition={{
-                  delay: shouldReduceMotion ? 0 : 0.24 + milestone.value / 800,
-                  duration: 0.24,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
+        <div className="min-w-0 flex-1">
+          <div className="flex min-w-0 items-start justify-between gap-3">
+            <div className="flex min-w-0 items-center gap-2">
+              <span
+                data-slot="progress-orbit-icon"
                 className={twMerge(
-                  "flex min-w-0 items-center gap-1 rounded-full border border-border bg-card px-2 py-1",
-                  "text-[10px] leading-none text-muted-foreground transition-colors duration-200",
-                  milestone.complete && "text-foreground",
+                  "flex size-7 shrink-0 items-center justify-center rounded-lg border",
+                  "[&_svg]:size-3.5",
+                  toneStyle.icon,
                 )}
               >
-                <span
-                  className={twMerge(
-                    "flex size-3 shrink-0 items-center justify-center rounded-full border border-border bg-secondary",
-                    milestone.complete && "bg-card",
-                  )}
+                {icon ?? <Sparkles className="size-3.5" aria-hidden="true" />}
+              </span>
+              <div className="min-w-0">
+                <h3
+                  data-slot="progress-orbit-label"
+                  className="truncate text-[13px] font-semibold leading-4"
                 >
-                  {milestone.complete ? (
-                    <Check
-                      className="size-2 text-foreground"
-                      aria-hidden="true"
-                    />
-                  ) : null}
-                </span>
-                <span className="truncate">{milestone.label}</span>
-              </motion.div>
-            ))}
+                  {label}
+                </h3>
+                {description ? (
+                  <p
+                    data-slot="progress-orbit-description"
+                    className="mt-0.5 truncate text-[11px] leading-4 text-muted-foreground"
+                  >
+                    {description}
+                  </p>
+                ) : null}
+              </div>
+            </div>
           </div>
-        ) : null}
-      </div>
 
-      {footer ? (
-        <div
-          data-slot="progress-orbit-footer"
-          className="mt-3 text-[11px] leading-relaxed text-muted-foreground"
-        >
-          {footer}
+          {milestones.length ? (
+            <div
+              data-slot="progress-orbit-milestones"
+              className="mt-2 flex min-w-0 flex-wrap items-center gap-1.5"
+            >
+              {milestones.map((milestone, index) => {
+                const complete = milestone.value <= value;
+
+                return (
+                  <motion.div
+                    key={`${String(milestone.label)}-${milestone.value}`}
+                    data-slot="progress-orbit-milestone"
+                    data-complete={complete ? "" : undefined}
+                    initial={shouldReduceMotion ? false : { opacity: 0, y: 3 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{
+                      delay: shouldReduceMotion ? 0 : index * 0.045,
+                      duration: 0.2,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
+                    className={twMerge(
+                      "inline-flex min-w-0 items-center gap-1 rounded-full border px-1.5 py-0.5",
+                      "text-[10px] leading-none transition-colors duration-200",
+                      complete
+                        ? "border-border bg-secondary text-foreground"
+                        : toneStyle.chip,
+                    )}
+                  >
+                    <span className="flex size-3 shrink-0 items-center justify-center rounded-full border border-border bg-card">
+                      {complete ? (
+                        <Check
+                          className="size-2 text-foreground"
+                          aria-hidden="true"
+                        />
+                      ) : null}
+                    </span>
+                    <span className="truncate">{milestone.label}</span>
+                  </motion.div>
+                );
+              })}
+            </div>
+          ) : null}
+
+          {footer ? (
+            <div
+              data-slot="progress-orbit-footer"
+              className="mt-2 text-[11px] leading-4 text-muted-foreground"
+            >
+              {footer}
+            </div>
+          ) : null}
         </div>
-      ) : null}
+      </div>
     </div>
   );
 }
@@ -388,6 +268,7 @@ function AnimatedProgressValue({
   value,
   suffix = "%",
 }: AnimatedProgressValueProps) {
+  const shouldReduceMotion = useReducedMotion();
   const motionValue = useMotionValue(0);
   const spring = useSpring(motionValue, {
     stiffness: 90,
@@ -403,8 +284,17 @@ function AnimatedProgressValue({
     motionValue.set(value);
   }, [motionValue, value]);
 
+  if (shouldReduceMotion) {
+    return (
+      <span className="text-sm font-semibold leading-none text-foreground">
+        {Math.round(value)}
+        {suffix}
+      </span>
+    );
+  }
+
   return (
-    <motion.span className="text-2xl font-semibold leading-none text-foreground">
+    <motion.span className="text-sm font-semibold leading-none text-foreground">
       {display}
     </motion.span>
   );

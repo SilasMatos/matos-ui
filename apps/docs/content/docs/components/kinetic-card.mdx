@@ -1,6 +1,6 @@
 ---
 title: Kinetic Card
-description: Animated card with theme-aware beams, ambient texture, and structured content slots.
+description: Compact inset motion surface with structured content slots and subtle live-state animation.
 ---
 
 <ComponentPreview name="kinetic-card-demo" chromeless align="start" />
@@ -51,12 +51,12 @@ import {
 ```
 
 ```tsx
-<KineticCard badge="Live" tone="accent">
+<KineticCard badge="Live" tone="primary" className="max-w-[360px]">
   <KineticCardHeader>
-    <h3>Adaptive orchestration</h3>
+    <h3>Adaptive queue</h3>
   </KineticCardHeader>
   <KineticCardContent>
-    <p>Animated surface for feature highlights and status panels.</p>
+    <p>Compact surface for live SaaS state.</p>
   </KineticCardContent>
   <KineticCardFooter>
     <span>Updated now</span>
@@ -70,8 +70,8 @@ import {
 
 | Prop    | Type                                                  | Default     | Description                              |
 | ------- | ----------------------------------------------------- | ----------- | ---------------------------------------- |
-| `size`  | `"sm" \| "md" \| "lg" \| "full"`                      | `"md"`      | Maximum width of the card.               |
-| `tone`  | `"default" \| "primary" \| "accent" \| "destructive"` | `"default"` | Theme token used by the animated beams.  |
+| `size`  | `"sm" \| "md" \| "lg" \| "full"`                      | -           | Optional maximum width preset.           |
+| `tone`  | `"default" \| "primary" \| "accent" \| "destructive"` | `"default"` | Theme token used by the motion accent.   |
 | `badge` | `ReactNode`                                           | `undefined` | Optional floating badge in the top right. |
 
 ### Exported Subcomponents

@@ -1,0 +1,99 @@
+---
+title: Status Pulse Card
+description: Compact inset status card for API health, deploy state, queues, authentication, and operational system checks.
+---
+
+<ComponentPreview name="status-pulse-card-demo" chromeless align="start" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/status-pulse-card.json" />
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the following dependencies:</Step>
+
+<CodeBlockCommand command="npm install framer-motion lucide-react tailwind-merge tailwind-variants" />
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="status-pulse-card" title="components/matos-ui/status-pulse-card.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { StatusPulseCard } from "@/components/matos-ui/status-pulse-card"
+```
+
+```tsx
+<StatusPulseCard
+  title="All systems operational"
+  description="API latency is stable across all regions."
+  metricValue={99.98}
+  metricSuffix="% uptime"
+  tone="operational"
+  services={[
+    {
+      name: "API Gateway",
+      response: "82ms",
+      status: "Operational",
+      tone: "operational",
+    },
+    {
+      name: "Database",
+      response: "104ms",
+      status: "Stable",
+      tone: "operational",
+    },
+  ]}
+/>
+```
+
+## Reference
+
+### StatusPulseCard Props
+
+| Prop                | Type                                      | Default                          | Description                         |
+| ------------------- | ----------------------------------------- | -------------------------------- | ----------------------------------- |
+| `label`             | `ReactNode?`                              | `"SYSTEM STATUS"`                | Uppercase header label.             |
+| `title`             | `ReactNode?`                              | `"All systems operational"`      | Main status title.                  |
+| `description`       | `ReactNode?`                              | `"API latency is stable..."`     | Short supporting text.              |
+| `tone`              | `StatusPulseCardTone`                     | `"operational"`                  | Overall status tone.                |
+| `metricValue`       | `number`                                  | `99.98`                          | Main animated metric value.         |
+| `metricSuffix`      | `string?`                                 | `"% uptime"`                     | Suffix appended to the metric.      |
+| `metricDescription` | `ReactNode?`                              | `"Measured over the last 30 days"` | Small metric caption.             |
+| `metricDecimals`    | `number`                                  | `2`                              | Decimal places for the metric.      |
+| `services`          | `StatusPulseCardService[]`                | Built-in service list            | Services rendered inside the card.  |
+| `size`              | `"sm" \| "md" \| "lg"`                    | -                                | Optional maximum card width.        |
+
+### StatusPulseCardService
+
+| Field      | Type                  | Description                                      |
+| ---------- | --------------------- | ------------------------------------------------ |
+| `id`       | `string?`             | Optional stable key.                             |
+| `name`     | `ReactNode`           | Service name.                                    |
+| `response` | `ReactNode`           | Response time or small service metric.           |
+| `status`   | `ReactNode`           | Status label shown on the right.                 |
+| `tone`     | `StatusPulseCardTone` | `operational`, `monitoring`, or `incident`.      |
+
+Also exported: `statusPulseCardVariants`, `AnimatedMetricValue`, `StatusPulseIndicator`, `StatusPulseServiceRow`, and related types.
