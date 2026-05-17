@@ -150,27 +150,6 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
   },
-  divider: {
-    name: "divider",
-    type: "registry:ui",
-    registryDependencies: undefined,
-    files: [
-      {
-        path: "src/registry/new-york-v4/ui/divider.tsx",
-        type: "registry:ui",
-        target: "",
-      },
-    ],
-    component: React.lazy(async () => {
-      const mod = await import("@/registry/new-york-v4/ui/divider.tsx");
-      const exportName =
-        Object.keys(mod).find(
-          (key) =>
-            typeof mod[key] === "function" || typeof mod[key] === "object",
-        ) || item.name;
-      return { default: mod.default || mod[exportName] };
-    }),
-  },
   "dynamic-island": {
     name: "dynamic-island",
     type: "registry:ui",
@@ -598,29 +577,6 @@ export const Index: Record<string, any> = {
     component: React.lazy(async () => {
       const mod = await import(
         "@/registry/new-york-v4/examples/inset-command-dock-demo.tsx"
-      );
-      const exportName =
-        Object.keys(mod).find(
-          (key) =>
-            typeof mod[key] === "function" || typeof mod[key] === "object",
-        ) || item.name;
-      return { default: mod.default || mod[exportName] };
-    }),
-  },
-  "divider-demo": {
-    name: "divider-demo",
-    type: "registry:example",
-    registryDependencies: ["divider"],
-    files: [
-      {
-        path: "src/registry/new-york-v4/examples/divider-demo.tsx",
-        type: "registry:example",
-        target: "",
-      },
-    ],
-    component: React.lazy(async () => {
-      const mod = await import(
-        "@/registry/new-york-v4/examples/divider-demo.tsx"
       );
       const exportName =
         Object.keys(mod).find(
