@@ -85,7 +85,7 @@ export function DocsSidebar({
       <SidebarContent className="relative mx-auto w-(--sidebar-menu-width) overflow-hidden py-0">
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute bottom-4 left-1 top-4 z-0 w-4 opacity-45 [background-image:repeating-linear-gradient(to_bottom,var(--border)_0_1px,transparent_1px_8px)] [mask-image:linear-gradient(to_bottom,transparent,black_8%,black_92%,transparent)]"
+          className="pointer-events-none absolute bottom-4 left-1 top-4 z-0 w-4 opacity-40 [background-image:repeating-linear-gradient(to_bottom,var(--muted-foreground)_0_1px,transparent_1px_8px)] [mask-image:linear-gradient(to_bottom,transparent,black_8%,black_92%,transparent)]"
         />
         <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-8 bg-linear-to-b from-background via-background/90 to-transparent" />
         <motion.div

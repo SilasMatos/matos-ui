@@ -24,22 +24,6 @@ export const ui: Registry["items"] = [
     ],
   },
   {
-    name: "breadcrumb",
-    type: "registry:ui",
-    dependencies: [
-      "framer-motion",
-      "lucide-react",
-      "tailwind-merge",
-      "tailwind-variants",
-    ],
-    files: [
-      {
-        path: "ui/breadcrumb.tsx",
-        type: "registry:ui",
-      },
-    ],
-  },
-  {
     name: "data-table",
     type: "registry:ui",
     dependencies: ["@tanstack/react-table", "lucide-react"],

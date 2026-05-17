@@ -68,10 +68,10 @@ export function MetricCard({
       className={twMerge(metricCardVariants({ size }), className)}
       {...props}
     >
-      <div className="px-4 py-2 ">
+      <div className="px-4 py-1.5 ">
         <motion.span
           {...fadeUp(0)}
-          className="text-xs font-medium uppercase tracking-widest text-muted-foreground"
+          className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground"
         >
           {label}
         </motion.span>
