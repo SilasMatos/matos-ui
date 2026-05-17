@@ -50,14 +50,27 @@ import { Badge } from '@/components/matos-ui/badge'
 <Badge variant="secondary">Secondary</Badge>
 <Badge variant="destructive">Destructive</Badge>
 <Badge variant="outline">Outline</Badge>
+<Badge variant="inset" dot>Live</Badge>
+<Badge variant="keyboard">⌘K</Badge>
 ```
 
 ## Reference
 
 ### Props
 
-| Prop      | Type                                                     | Default     |
-| --------- | -------------------------------------------------------- | ----------- |
-| `variant` | `"default" \| "secondary" \| "destructive" \| "outline"` | `"default"` |
+| Prop          | Type                                                                                                                                                                                                                     | Default     |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------- |
+| `variant`     | `"default" \| "secondary" \| "destructive" \| "outline" \| "ghost" \| "soft" \| "dotted" \| "surface" \| "inset" \| "tonal" \| "muted" \| "success" \| "warning" \| "info" \| "pending" \| "pulse" \| "live" \| "count" \| "keyboard" \| "beta" \| "new"` | `"default"` |
+| `size`        | `"xs" \| "sm" \| "md" \| "lg"`                                                                                                                                                                                          | `"sm"`      |
+| `shape`       | `"pill" \| "rounded" \| "square" \| "dot"`                                                                                                                                                                               | `"rounded"` |
+| `iconLeft`    | `ReactNode`                                                                                                                                                                                                              | -           |
+| `iconRight`   | `ReactNode`                                                                                                                                                                                                              | -           |
+| `dot`         | `boolean`                                                                                                                                                                                                                | `false`     |
+| `pulse`       | `boolean`                                                                                                                                                                                                                | `false`     |
+| `count`       | `ReactNode`                                                                                                                                                                                                              | -           |
+| `dismissible` | `boolean`                                                                                                                                                                                                                | `false`     |
+| `onDismiss`   | `(event) => void`                                                                                                                                                                                                        | -           |
+| `interactive` | `boolean`                                                                                                                                                                                                                | `false`     |
+| `selected`    | `boolean`                                                                                                                                                                                                                | `false`     |
 
 `Badge` also accepts all props from `<span>` (HTML).

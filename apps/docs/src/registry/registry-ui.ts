@@ -83,17 +83,6 @@ export const ui: Registry["items"] = [
     ],
   },
   {
-    name: "divider",
-    type: "registry:ui",
-    dependencies: ["tailwind-merge", "tailwind-variants"],
-    files: [
-      {
-        path: "ui/divider.tsx",
-        type: "registry:ui",
-      },
-    ],
-  },
-  {
     name: "dynamic-island",
     type: "registry:ui",
     dependencies: [

@@ -42,7 +42,7 @@ export default async function LocaleLayout({ children, params }: Props) {
     <html lang={locale} suppressHydrationWarning>
       <body
         className="flex flex-col min-h-screen [--header-height:calc(var(--spacing)*13)]"
-        cz-shortcut-listen="true"
+        suppressHydrationWarning
       >
         <NextIntlClientProvider locale={locale} messages={messages}>
           <Provider>

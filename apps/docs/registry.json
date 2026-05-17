@@ -122,20 +122,6 @@
       ]
     },
     {
-      "name": "divider",
-      "type": "registry:ui",
-      "dependencies": [
-        "tailwind-merge",
-        "tailwind-variants"
-      ],
-      "files": [
-        {
-          "path": "src/registry/new-york-v4/ui/divider.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
       "name": "dynamic-island",
       "type": "registry:ui",
       "dependencies": [
@@ -432,19 +418,6 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/inset-command-dock-demo.tsx",
-          "type": "registry:example"
-        }
-      ]
-    },
-    {
-      "name": "divider-demo",
-      "type": "registry:example",
-      "registryDependencies": [
-        "divider"
-      ],
-      "files": [
-        {
-          "path": "src/registry/new-york-v4/examples/divider-demo.tsx",
           "type": "registry:example"
         }
       ]
