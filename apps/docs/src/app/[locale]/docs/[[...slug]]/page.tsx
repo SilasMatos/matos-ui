@@ -15,6 +15,7 @@ import {
 import { DocsTableOfContents } from "@/components/docs-toc";
 import { Link } from "@/i18n/navigation";
 import { getComponentSkillDoc } from "@/lib/component-skill-doc";
+import { createOpenGraphMetadata, createTwitterMetadata } from "@/lib/seo";
 import { getSiteUrl } from "@/lib/site-url";
 import { getPageImage, source } from "@/lib/source";
 import { absoluteUrl } from "@/lib/utils";
@@ -166,13 +167,28 @@ export async function generateMetadata(props: {
   const { locale, slug } = params;
   const page = source.getPage(slug ?? [], locale);
   if (!page) notFound();
+  const title = page.data.title;
+  const description =
+    page.data.description ?? `${page.data.title} documentation for Matos UI.`;
+  const pageImage = getPageImage(page).url;
 
   return {
     metadataBase: new URL(getSiteUrl()),
-    title: page.data.title,
-    description: page.data.description,
-    openGraph: {
-      images: getPageImage(page).url,
+    title,
+    description,
+    alternates: {
+      canonical: page.url,
     },
+    openGraph: createOpenGraphMetadata({
+      title,
+      description,
+      url: page.url,
+      images: [pageImage],
+    }),
+    twitter: createTwitterMetadata({
+      title,
+      description,
+      images: [pageImage],
+    }),
   };
 }

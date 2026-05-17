@@ -7,15 +7,34 @@ import { Provider } from "@/components/provider";
 import { SiteHeader } from "@/components/site-header";
 import { routing } from "@/i18n/routing";
 import { siteConfig } from "@/lib/config";
+import {
+  createOpenGraphMetadata,
+  createTwitterMetadata,
+  siteKeywords,
+} from "@/lib/seo";
 import { source } from "@/lib/source";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
+  applicationName: siteConfig.name,
   title: {
     default: siteConfig.name,
     template: `%s - ${siteConfig.name}`,
   },
   description: siteConfig.description,
+  keywords: siteKeywords,
+  authors: [{ name: "Silas Matos", url: siteConfig.links.github }],
+  creator: "Silas Matos",
+  publisher: siteConfig.name,
+  openGraph: createOpenGraphMetadata({
+    title: siteConfig.name,
+    description: siteConfig.description,
+    url: siteConfig.url,
+  }),
+  twitter: createTwitterMetadata({
+    title: siteConfig.name,
+    description: siteConfig.description,
+  }),
 };
 
 export function generateStaticParams() {

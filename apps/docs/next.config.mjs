@@ -8,6 +8,16 @@ const withMDX = createMDX();
 const config = {
   reactStrictMode: true,
   images: { unoptimized: true },
+  async rewrites() {
+    return {
+      beforeFiles: [
+        {
+          source: "/r/:path*",
+          destination: "/api/registry/:path*",
+        },
+      ],
+    };
+  },
   experimental: {
     turbopackUseSystemTlsCerts: true,
   },

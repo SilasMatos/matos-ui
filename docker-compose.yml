@@ -1,10 +1,39 @@
 services:
+  matos-ui-postgres:
+    container_name: matos-ui-postgres
+    build:
+      context: ./docker/postgres
+      dockerfile: Dockerfile
+    image: matos-ui/postgres:16
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-matos_ui}
+      POSTGRES_USER: ${POSTGRES_USER:-matos_ui}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-matos_ui_dev_password}
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - matos-ui-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
   matos-ui-docs:
     container_name: matos-ui-docs
     build:
       context: .
       dockerfile: Dockerfile
     image: matos-ui/docs:prod
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgresql://matos_ui:matos_ui_dev_password@matos-ui-postgres:5432/matos_ui}
     ports:
       - "127.0.0.1:8080:4000"
+    depends_on:
+      matos-ui-postgres:
+        condition: service_healthy
     restart: unless-stopped
+
+volumes:
+  matos-ui-postgres-data:

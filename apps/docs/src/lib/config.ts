@@ -3,7 +3,8 @@ import { getSiteUrl } from "@/lib/site-url";
 export const siteConfig = {
   name: "Matos UI",
   url: getSiteUrl(),
-  description: "Styled components for shadcn/ui",
+  description:
+    "A premium registry of styled React components for shadcn/ui, built with Tailwind CSS and the Inset UI visual language.",
   links: {
     github: "https://github.com/silasmatos/matos-ui",
     linkedin: "https://www.linkedin.com/in/silas-matos/",

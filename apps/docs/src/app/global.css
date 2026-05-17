@@ -122,15 +122,15 @@
       @apply !mt-0;
     }
 
-    &:first-child>h3:first-child {
+    &:first-child > h3:first-child {
       @apply !mt-0;
     }
 
-    >h3 {
+    > h3 {
       @apply !mt-8;
     }
 
-    >h3+p {
+    > h3 + p {
       @apply !mt-2;
     }
   }
