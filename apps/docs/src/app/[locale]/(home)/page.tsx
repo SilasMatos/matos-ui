@@ -4,7 +4,8 @@ import { HeroSection } from "@/components/hero-section";
 import { MatosAspectsSection } from "@/components/matos-aspects-section";
 import { ScrollCardsSection } from "@/components/scroll-cards-section";
 import { SiteFooter } from "@/components/site-footer";
-import { TestimonialsSection } from "@/components/testimonials-section";
+
+// import { TestimonialsSection } from '@/components/testimonials-section'
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -20,7 +21,7 @@ export default async function HomePage({ params }: Props) {
 
       <ScrollCardsSection />
       <MatosAspectsSection />
-      <TestimonialsSection />
+      {/* <TestimonialsSection /> */}
       <SiteFooter />
     </>
   );

@@ -330,7 +330,7 @@ function ProcessTimelineStep({
         </div>
       </div>
 
-      <div
+      <motion.div
         role="progressbar"
         aria-label={`${badge} ${Math.round(progress)}%`}
         aria-valuemax={100}
@@ -340,6 +340,13 @@ function ProcessTimelineStep({
           "mt-2 grid h-8 grid-cols-[repeat(48,minmax(2px,1fr))] items-center gap-0.5 rounded-md px-1 ring-1 ring-inset",
           styles.track,
         )}
+        initial={shouldReduceMotion ? false : { opacity: 0.72 }}
+        animate={{ opacity: 1 }}
+        transition={{
+          duration: 0.22,
+          delay: shouldReduceMotion ? 0 : index * 0.04,
+          ease: smoothEase,
+        }}
       >
         {Array.from({ length: SEGMENT_COUNT }, (_, segmentIndex) => ({
           id: `${item.id}-segment-${segmentIndex}`,
@@ -359,26 +366,26 @@ function ProcessTimelineStep({
                 shouldReduceMotion
                   ? false
                   : {
-                      opacity: filled ? 0.25 : 0.42,
-                      scaleY: filled ? 0.55 : 0.72,
+                      opacity: filled ? 0 : 0.32,
+                      scaleY: filled ? 0.08 : 0.54,
                     }
               }
               animate={{
                 opacity: filled ? 1 : 0.56,
-                scaleY: filled ? 1 : 0.82,
+                scaleY: filled ? [0.08, 1.08, 1] : 0.82,
               }}
+              style={{ transformOrigin: "bottom" }}
               transition={{
-                duration: filled ? 0.24 : 0.18,
+                duration: filled ? 0.48 : 0.24,
                 delay: shouldReduceMotion
                   ? 0
-                  : index * 0.05 +
-                    Math.min(segmentIndex, filledSegments) * 0.008,
+                  : index * 0.1 + segmentIndex * 0.018,
                 ease: smoothEase,
               }}
             />
           );
         })}
-      </div>
+      </motion.div>
 
       <div className="mt-1.5 flex items-center justify-between gap-2 text-[11px] leading-4">
         <p className="min-w-0 truncate text-zinc-500 dark:text-zinc-400">

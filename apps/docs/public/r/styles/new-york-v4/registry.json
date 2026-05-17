@@ -41,22 +41,6 @@
       ]
     },
     {
-      "name": "breadcrumb",
-      "type": "registry:ui",
-      "dependencies": [
-        "framer-motion",
-        "lucide-react",
-        "tailwind-merge",
-        "tailwind-variants"
-      ],
-      "files": [
-        {
-          "path": "src/registry/new-york-v4/ui/breadcrumb.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
       "name": "data-table",
       "type": "registry:ui",
       "dependencies": ["@tanstack/react-table", "lucide-react"],
@@ -349,17 +333,6 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/badge-demo.tsx",
-          "type": "registry:example"
-        }
-      ]
-    },
-    {
-      "name": "breadcrumb-demo",
-      "type": "registry:example",
-      "registryDependencies": ["breadcrumb"],
-      "files": [
-        {
-          "path": "src/registry/new-york-v4/examples/breadcrumb-demo.tsx",
           "type": "registry:example"
         }
       ]

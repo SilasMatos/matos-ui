@@ -24,17 +24,6 @@ export const examples: Registry["items"] = [
     ],
   },
   {
-    name: "breadcrumb-demo",
-    type: "registry:example",
-    registryDependencies: ["breadcrumb"],
-    files: [
-      {
-        path: "examples/breadcrumb-demo.tsx",
-        type: "registry:example",
-      },
-    ],
-  },
-  {
     name: "data-table-demo",
     type: "registry:example",
     registryDependencies: ["data-table"],

@@ -19,7 +19,7 @@ import { tv, type VariantProps } from "tailwind-variants";
 
 export const detailPanelVariants = tv({
   base: [
-    "w-full max-w-[420px] overflow-hidden rounded-2xl border border-border",
+    " not-prose w-full max-w-[420px] overflow-hidden rounded-2xl border border-border",
     "bg-secondary text-foreground shadow-xl",
   ],
 });
@@ -136,7 +136,7 @@ function DetailPanelHeader({
       {...fadeUp(0)}
       data-slot="detail-panel-header"
       className={twMerge(
-        "flex items-center justify-between px-5 pt-5 pb-4",
+        "flex items-center justify-between px-5 pt-2 pb-2",
         className,
       )}
     >
@@ -165,7 +165,7 @@ function DetailPanelContent({ className, ...props }: ComponentProps<"div">) {
     <div
       data-slot="detail-panel-content"
       className={twMerge(
-        " space-y-4 rounded-xl border-y border-border bg-card p-5",
+        " space-y-2 rounded-xl border-y border-border bg-card p-5",
         className,
       )}
       {...props}
@@ -231,11 +231,11 @@ function DetailPanelHighlight({
         </p>
       ) : null}
       <div className="flex items-baseline gap-0.5">
-        <span className="text-[40px] font-semibold leading-none tracking-[-0.03em]">
+        <span className="text-base font-semibold leading-none tracking-[-0.03em]">
           {primary}
         </span>
         {secondary ? (
-          <span className="text-[22px] font-normal leading-none text-muted-foreground">
+          <span className="text-base font-normal leading-none text-muted-foreground">
             {secondary}
           </span>
         ) : null}

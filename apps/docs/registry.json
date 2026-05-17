@@ -60,22 +60,6 @@
       ]
     },
     {
-      "name": "breadcrumb",
-      "type": "registry:ui",
-      "dependencies": [
-        "framer-motion",
-        "lucide-react",
-        "tailwind-merge",
-        "tailwind-variants"
-      ],
-      "files": [
-        {
-          "path": "src/registry/new-york-v4/ui/breadcrumb.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
       "name": "data-table",
       "type": "registry:ui",
       "dependencies": [
@@ -401,19 +385,6 @@
       ]
     },
     {
-      "name": "breadcrumb-demo",
-      "type": "registry:example",
-      "registryDependencies": [
-        "breadcrumb"
-      ],
-      "files": [
-        {
-          "path": "src/registry/new-york-v4/examples/breadcrumb-demo.tsx",
-          "type": "registry:example"
-        }
-      ]
-    },
-    {
       "name": "data-table-demo",
       "type": "registry:example",
       "registryDependencies": [
@@ -442,7 +413,9 @@
     {
       "name": "status-pulse-card-demo",
       "type": "registry:example",
-      "registryDependencies": ["status-pulse-card"],
+      "registryDependencies": [
+        "status-pulse-card"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/status-pulse-card-demo.tsx",
@@ -453,7 +426,9 @@
     {
       "name": "inset-command-dock-demo",
       "type": "registry:example",
-      "registryDependencies": ["inset-command-dock"],
+      "registryDependencies": [
+        "inset-command-dock"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/inset-command-dock-demo.tsx",
