@@ -26,6 +26,22 @@ export const metadata: Metadata = {
   authors: [{ name: "Silas Matos", url: siteConfig.links.github }],
   creator: "Silas Matos",
   publisher: siteConfig.name,
+  icons: {
+    icon: [
+      {
+        url: "/logo-black-fiv.png",
+        type: "image/png",
+        media: "(prefers-color-scheme: light)",
+      },
+      {
+        url: "/logo-white-fiv.png",
+        type: "image/png",
+        media: "(prefers-color-scheme: dark)",
+      },
+    ],
+    shortcut: "/logo-black-fiv.png",
+    apple: "/logo-black-fiv.png",
+  },
   openGraph: createOpenGraphMetadata({
     title: siteConfig.name,
     description: siteConfig.description,
