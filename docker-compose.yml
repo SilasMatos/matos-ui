@@ -28,6 +28,7 @@ services:
     image: matos-ui/docs:prod
     environment:
       DATABASE_URL: ${DATABASE_URL:-postgresql://matos_ui:matos_ui_dev_password@matos-ui-postgres:5432/matos_ui}
+      DOWNLOAD_IP_SALT: ${DOWNLOAD_IP_SALT}
     ports:
       - "127.0.0.1:8080:4000"
     depends_on:
