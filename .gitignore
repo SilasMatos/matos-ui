@@ -53,6 +53,10 @@ rebuild-matos-ui-commands.sh
 # Agent/GitHub assistant artifacts
 .agents/
 .github/
+!.github/
+.github/*
+!.github/workflows/
+!.github/workflows/*.yml
 
 # Generated Husky helper files
 .husky/_/
