@@ -64,7 +64,7 @@ export function HeroSection() {
   ];
 
   return (
-    <section className="relative flex min-h-svh flex-col items-center justify-center overflow-hidden px-6 py-20">
+    <section className="relative flex min-h-svh flex-col items-center justify-center overflow-hidden px-4 py-20 sm:px-6">
       <div className="pointer-events-none absolute inset-0">
         {floatingBlocks.map((block, i) => (
           <motion.div
@@ -208,7 +208,7 @@ export function HeroSection() {
         </motion.div>
 
         <motion.div variants={fadeUp} className="flex flex-col gap-4">
-          <h1 className="text-5xl font-bold tracking-tight md:text-7xl lg:text-8xl">
+          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-7xl lg:text-8xl">
             <span className="text-foreground/40">{t("titleLine1")} </span>
             <br className="hidden sm:block" />
             <span className="text-foreground/40">{t("titleLine2")} </span>

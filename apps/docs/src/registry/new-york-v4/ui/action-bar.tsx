@@ -8,14 +8,17 @@ import { Button } from "@/registry/new-york-v4/ui/button";
 
 export const actionBarVariants = tv({
   base: [
-    "fixed z-50 flex items-center gap-3 border shadow-lg",
+    "fixed z-50 flex w-[calc(100vw-2rem)] max-w-[calc(100vw-2rem)] flex-col gap-3 border shadow-lg sm:w-auto sm:max-w-[calc(100vw-3rem)] sm:flex-row sm:items-center",
     "backdrop-blur-sm supports-[backdrop-filter]:bg-background/20",
   ],
   variants: {
     placement: {
-      bottomCenter: "bottom-6 left-1/2 -translate-x-1/2",
-      bottomRight: "bottom-6 right-6 left-auto translate-x-0",
-      bottomLeft: "bottom-6 left-6 right-auto translate-x-0",
+      bottomCenter:
+        "bottom-4 right-4 left-4 translate-x-0 sm:bottom-6 sm:left-1/2 sm:right-auto sm:-translate-x-1/2",
+      bottomRight:
+        "right-4 bottom-4 left-4 translate-x-0 sm:right-6 sm:bottom-6 sm:left-auto",
+      bottomLeft:
+        "bottom-4 right-4 left-4 translate-x-0 sm:bottom-6 sm:right-auto sm:left-6",
     },
     tone: {
       default: "border-border bg-surface-raised",
@@ -114,11 +117,11 @@ export function ActionBar(props: ActionBarProps) {
         )}
         {...rest}
       >
-        <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+        <div className="flex min-w-0 items-start gap-2 text-sm font-medium text-foreground sm:items-center">
           {icon}
 
-          <div className="flex flex-col">
-            <span>
+          <div className="flex min-w-0 flex-1 flex-col">
+            <span className="break-words">
               {title ??
                 (subject
                   ? `Confirm action for "${subject}"?`
@@ -126,18 +129,19 @@ export function ActionBar(props: ActionBarProps) {
             </span>
 
             {description && (
-              <span className="text-xs text-muted-foreground">
+              <span className="mt-0.5 break-words text-muted-foreground text-xs">
                 {description}
               </span>
             )}
           </div>
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex w-full gap-2 sm:w-auto">
           <Button
             type="button"
             variant="outline"
             size="sm"
+            className="min-w-0 flex-1 sm:flex-none"
             onClick={actions.onCancel}
             disabled={isLoading}
           >
@@ -148,6 +152,7 @@ export function ActionBar(props: ActionBarProps) {
             type="button"
             variant={tone === "destructive" ? "destructive" : "default"}
             size="sm"
+            className="min-w-0 flex-1 sm:flex-none"
             onClick={actions.onConfirm}
             disabled={isLoading}
           >

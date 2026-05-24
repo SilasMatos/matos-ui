@@ -113,7 +113,7 @@ function EmojiButton({
       whileHover={{ scale: 1.25, y: -4 }}
       whileTap={{ scale: 0.9 }}
       className={twMerge(
-        "group flex flex-col items-center gap-1.5 rounded-xl px-3 py-2 transition-colors",
+        "group flex shrink-0 flex-col items-center gap-1.5 rounded-xl px-2 py-2 transition-colors sm:px-3",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
         isSelected ? "bg-primary/10" : "hover:bg-muted",
       )}
@@ -210,8 +210,8 @@ export function FeedbackCard({
               </motion.p>
             </div>
 
-            <div className="mx-2 mb-2 overflow-hidden rounded-xl bg-card p-4">
-              <div className="flex items-center justify-between">
+            <div className="mx-2 mb-2 overflow-hidden rounded-xl bg-card p-3 sm:p-4">
+              <div className="flex items-center gap-1 overflow-x-auto sm:justify-between sm:gap-0">
                 {options.map((option, i) => (
                   <EmojiButton
                     key={option.value}

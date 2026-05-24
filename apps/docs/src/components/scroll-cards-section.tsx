@@ -18,9 +18,9 @@ interface CardData {
 }
 
 const cardHeightClasses: Record<string, string> = {
-  "card-01": "min-h-[330px]",
-  "card-02": "min-h-[280px]",
-  "card-03": "min-h-[310px]",
+  "card-01": "min-h-[300px] sm:min-h-[330px]",
+  "card-02": "min-h-[260px] sm:min-h-[280px]",
+  "card-03": "min-h-[300px] sm:min-h-[310px]",
 };
 
 const cardVariants: Variants = {
@@ -40,7 +40,7 @@ const cardVariants: Variants = {
 function Card({ card, index }: { card: CardData; index: number }) {
   return (
     <motion.div
-      className={`relative flex flex-col rounded-2xl p-7 ${cardHeightClasses[card.id] ?? ""} group overflow-hidden border border-border/40 bg-muted/50`}
+      className={`relative flex flex-col rounded-2xl p-5 sm:p-7 ${cardHeightClasses[card.id] ?? ""} group overflow-hidden border border-border/40 bg-muted/50`}
       style={{ marginTop: card.yOffset, transformPerspective: 800 }}
       custom={index}
       variants={cardVariants}
@@ -93,7 +93,7 @@ function Card({ card, index }: { card: CardData; index: number }) {
         </motion.p>
 
         {card.id === "card-01" && (
-          <div className="absolute left-1/2 -translate-x-1/2 -bottom-16">
+          <div className="absolute -bottom-12 left-1/2 origin-bottom -translate-x-1/2 scale-90 sm:-bottom-16 sm:scale-100">
             <OrbitIcons />
           </div>
         )}
@@ -103,7 +103,7 @@ function Card({ card, index }: { card: CardData; index: number }) {
           </div>
         )}
         {card.id === "card-03" && (
-          <div className="absolute -bottom-30 left-1/2 -translate-x-1/2 w-full px-4">
+          <div className="absolute -bottom-20 left-1/2 w-full max-w-[22rem] -translate-x-1/2 px-3 sm:-bottom-28 sm:px-4">
             <MiniDataTable />
           </div>
         )}
@@ -136,7 +136,7 @@ export function ScrollCardsSection() {
     <section className="relative overflow-hidden bg-background">
       <div
         ref={sectionRef}
-        className="relative mx-auto max-w-5xl px-6 py-24 md:py-32"
+        className="relative mx-auto max-w-5xl px-4 py-20 sm:px-6 md:py-32"
       >
         <motion.div
           className="absolute inset-0"
@@ -200,7 +200,7 @@ export function ScrollCardsSection() {
             </motion.p>
           </motion.div>
 
-          <div className="grid grid-cols-1 items-end gap-6 sm:grid-cols-2 md:grid-cols-3">
+          <div className="grid grid-cols-1 items-end gap-4 sm:grid-cols-2 sm:gap-6 md:grid-cols-3">
             {cards.map((card, i) => (
               <div key={card.id}>
                 <Card card={card} index={i} />

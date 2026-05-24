@@ -30,7 +30,7 @@ export function ComponentPreviewTabs({
       data-slot="component-preview"
       data-chromeless-preview={chromeless ? "true" : undefined}
       className={cn(
-        "group relative mt-4 mb-12 flex flex-col gap-4 overflow-hidden rounded-xl  p-4 border",
+        "group relative mt-4 mb-12 flex min-w-0 flex-col gap-4 overflow-hidden rounded-xl border p-3 sm:p-4",
         className,
       )}
       {...props}
@@ -92,16 +92,16 @@ function PreviewWrapper({
   children: React.ReactNode;
 }) {
   return (
-    <div data-slot="preview">
+    <div data-slot="preview" className="min-w-0">
       <div
         data-align={align}
         data-chromeless={chromeless ? "true" : undefined}
         className={cn(
-          "preview relative flex w-full justify-center p-6 sm:p-10",
+          "preview relative flex w-full justify-center p-4 sm:p-10",
           "data-[align=center]:items-center data-[align=end]:items-end data-[align=start]:items-start",
           chromeless
-            ? "h-auto min-h-0 max-h-[min(85vh,920px)] overflow-y-auto overflow-x-hidden py-8"
-            : "h-72",
+            ? "h-auto min-h-0 max-h-[min(85vh,920px)] overflow-x-auto overflow-y-auto py-6 sm:py-8"
+            : "h-72 overflow-x-auto overflow-y-hidden",
           previewClassName,
         )}
       >

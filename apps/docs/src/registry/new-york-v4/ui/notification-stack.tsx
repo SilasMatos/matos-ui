@@ -22,12 +22,12 @@ import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
 
 export const notificationStackVariants = tv({
-  base: "not-prose relative flex flex-col items-center",
+  base: "not-prose relative flex w-full max-w-full flex-col items-center",
   variants: {
     size: {
-      sm: "w-[288px]",
-      md: "w-[340px]",
-      lg: "w-[392px]",
+      sm: "max-w-[288px]",
+      md: "max-w-[340px]",
+      lg: "max-w-[392px]",
     },
   },
   defaultVariants: {

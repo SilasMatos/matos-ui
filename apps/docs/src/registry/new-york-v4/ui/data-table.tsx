@@ -188,18 +188,18 @@ export function DataTablePagination<TData>({
     <div
       data-slot="data-table-footer"
       className={twMerge(
-        "flex h-9 items-center justify-between px-3 pt-2 text-muted-foreground",
+        "flex min-h-9 flex-col items-stretch gap-2 px-2 pt-2 text-muted-foreground sm:h-9 sm:flex-row sm:items-center sm:justify-between sm:px-3",
         className,
       )}
     >
-      <p className="font-mono text-[0.68rem] uppercase tracking-[0.16em]">
+      <p className="text-center font-mono text-[0.68rem] uppercase tracking-[0.16em] sm:text-left">
         {showingLabel}: <span className="text-foreground">{currentCount}</span>{" "}
         of <span className="text-foreground">{totalItems}</span> items
       </p>
 
       <div
         data-slot="data-table-pagination"
-        className="flex items-center gap-2"
+        className="flex items-center justify-center gap-2 sm:justify-start"
       >
         <button
           type="button"

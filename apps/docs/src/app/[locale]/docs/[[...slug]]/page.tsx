@@ -97,7 +97,7 @@ export default async function Page(props: { params: Promise<PageParams> }) {
     >
       <div className="flex min-w-0 flex-col">
         <div className="h-(--top-spacing) shrink-0" />
-        <div className="mx-auto flex w-full max-w-[768px] min-w-0 flex-1 flex-col gap-5 px-4 py-5 text-neutral-800 md:px-0 lg:py-6 dark:text-neutral-300">
+        <div className="mx-auto flex w-full max-w-[768px] min-w-0 flex-1 flex-col gap-5 px-0 py-5 text-neutral-800 lg:py-6 dark:text-neutral-300">
           <DocsPageHeader
             title={doc.title}
             description={doc.description}

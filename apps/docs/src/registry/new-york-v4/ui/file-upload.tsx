@@ -35,11 +35,11 @@ export const fileUploadVariants = tv({
       "group-hover/dropzone:text-foreground",
     ],
     copy: "min-w-0 flex-1",
-    header: "flex min-w-0 items-center gap-2",
+    header: "flex min-w-0 flex-wrap items-center gap-2",
     title: "truncate text-sm font-medium leading-none text-foreground",
     description: "mt-1 truncate text-xs leading-5 text-muted-foreground",
     badge:
-      "shrink-0 rounded-md border border-border/70 bg-muted px-1.5 py-0.5 text-[10px] font-medium leading-none text-muted-foreground",
+      "max-w-full shrink-0 truncate rounded-md border border-border/70 bg-muted px-1.5 py-0.5 text-[10px] font-medium leading-none text-muted-foreground",
     list: "mt-2 flex flex-col gap-1.5",
     item: [
       "group/item grid grid-cols-[1rem_minmax(0,1fr)_auto_auto] items-center gap-2 rounded-lg border border-border/60 bg-card px-2.5 py-2 text-xs shadow-xs",

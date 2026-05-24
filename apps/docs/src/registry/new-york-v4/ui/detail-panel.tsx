@@ -288,7 +288,7 @@ function DetailPanelRow({
       <span className="min-w-0 flex-1 text-[12px] text-muted-foreground">
         {label}
       </span>
-      <span className="shrink-0 text-right text-[12px] text-foreground">
+      <span className="min-w-0 max-w-[55%] truncate text-right text-[12px] text-foreground">
         {value}
       </span>
     </motion.div>
@@ -370,7 +370,7 @@ function DetailPanelAttachment({
         <p className="truncate text-[12px] text-foreground/80">{name}</p>
       </div>
       {meta ? (
-        <span className="shrink-0 text-[11px] text-muted-foreground">
+        <span className="max-w-[35%] shrink-0 truncate text-[11px] text-muted-foreground">
           {meta}
         </span>
       ) : null}
