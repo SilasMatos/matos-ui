@@ -19,7 +19,7 @@ metadata:
 Use this skill when:
 - Creating UI animations (buttons, cards, modals, page transitions)
 - Designing micro-interactions and feedback animations
-- Building loading, success, or error states
+- Building loading, success, or error statess
 - Animating illustrations or decorative elements
 - Planning scroll-triggered or progress-based animations
 - Establishing brand motion identity
