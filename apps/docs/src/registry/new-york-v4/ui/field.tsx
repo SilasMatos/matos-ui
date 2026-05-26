@@ -16,7 +16,7 @@ export const fieldVariants = tv({
     root: "not-prose group/field grid w-full gap-1.5 text-foreground",
     label: [
       "flex w-fit items-center gap-1 text-xs font-medium text-foreground",
-      "transition-[color,transform] duration-200 ease-out",
+      "transition-[color,transform] duration-300 ease-in-out",
       "group-focus-within/field:-translate-y-px group-focus-within/field:text-foreground",
       "group-data-[invalid=true]/field:text-destructive group-data-[disabled=true]/field:opacity-60",
     ],
@@ -44,6 +44,8 @@ export const fieldVariants = tv({
     disabled: false,
   },
 });
+
+const feedbackEase = [0.4, 0, 0.2, 1] as const;
 
 export type FieldProps = ComponentProps<"div"> &
   VariantProps<typeof fieldVariants> & {
@@ -145,10 +147,21 @@ export function FieldError({
         <motion.p
           data-slot="field-error"
           role="alert"
-          initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -3 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -3 }}
-          transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+          initial={
+            shouldReduceMotion
+              ? { opacity: 0 }
+              : { opacity: 0, y: -2, filter: "blur(2px)" }
+          }
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          exit={
+            shouldReduceMotion
+              ? { opacity: 0 }
+              : { opacity: 0, y: -1, filter: "blur(1px)" }
+          }
+          transition={{
+            duration: shouldReduceMotion ? 0.01 : 0.28,
+            ease: feedbackEase,
+          }}
           className={twMerge(
             "not-prose",
             styles.feedback(),
@@ -192,10 +205,21 @@ export function FieldSuccess({
       {children ? (
         <motion.p
           data-slot="field-success"
-          initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -3 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -3 }}
-          transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+          initial={
+            shouldReduceMotion
+              ? { opacity: 0 }
+              : { opacity: 0, y: -2, filter: "blur(2px)" }
+          }
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          exit={
+            shouldReduceMotion
+              ? { opacity: 0 }
+              : { opacity: 0, y: -1, filter: "blur(1px)" }
+          }
+          transition={{
+            duration: shouldReduceMotion ? 0.01 : 0.28,
+            ease: feedbackEase,
+          }}
           className={twMerge(
             "not-prose",
             styles.feedback(),
@@ -273,7 +297,7 @@ export function InputGroup({
       data-disabled={disabled || undefined}
       className={twMerge(
         "not-prose flex h-9 w-full items-center overflow-hidden rounded-xl border border-border bg-background shadow-xs",
-        "transition-[border-color,box-shadow,transform] duration-200 ease-out focus-within:-translate-y-px focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/25",
+        "transition-[border-color,box-shadow,transform,background-color] duration-300 ease-in-out focus-within:-translate-y-px focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/25",
         "data-[invalid=true]:border-destructive data-[invalid=true]:focus-within:border-destructive data-[invalid=true]:focus-within:ring-destructive/20",
         "data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50",
         "[&_[data-slot=input]]:h-full [&_[data-slot=input]]:rounded-none [&_[data-slot=input]]:border-0 [&_[data-slot=input]]:shadow-none [&_[data-slot=input]]:focus-visible:translate-y-0 [&_[data-slot=input]]:focus-visible:ring-0",
@@ -311,7 +335,7 @@ export function InputGroupButton({
       type={type}
       data-slot="input-group-button"
       className={twMerge(
-        "not-prose inline-flex size-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors duration-150 hover:bg-muted/60 hover:text-foreground",
+        "not-prose inline-flex size-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors duration-200 ease-in-out hover:bg-muted/60 hover:text-foreground",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
         className,
       )}

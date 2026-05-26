@@ -9,7 +9,7 @@ export const formSectionVariants = tv({
   slots: {
     root: [
       "not-prose rounded-2xl border border-border bg-muted/40 p-2 text-foreground",
-      "transition-[border-color,box-shadow] duration-300 ease-out",
+      "transition-[border-color,box-shadow] duration-300 ease-in-out",
     ],
     inner: "rounded-xl border border-border bg-background p-4 shadow-xs sm:p-5",
     header: "mb-4 flex items-start justify-between gap-3",
@@ -59,9 +59,9 @@ export function FormSection({
     <motion.section
       data-slot="form-section"
       className={twMerge(styles.root(), className)}
-      initial={shouldReduceMotion ? false : { opacity: 0, y: 6 }}
+      initial={shouldReduceMotion ? false : { opacity: 0, y: 4 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.34, ease: [0.4, 0, 0.2, 1] }}
       {...props}
     >
       <div data-slot="form-section-inner" className={styles.inner()}>

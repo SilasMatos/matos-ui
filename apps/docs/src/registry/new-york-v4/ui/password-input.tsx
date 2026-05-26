@@ -59,7 +59,7 @@ export const passwordInputVariants = tv({
     control: "relative",
     toggle: [
       "absolute inset-y-0 right-1.5 my-auto inline-flex size-7 items-center justify-center rounded-lg text-muted-foreground",
-      "transition-[background-color,color,transform] duration-150 ease-out hover:bg-muted/60 hover:text-foreground active:scale-[0.97]",
+      "transition-[background-color,color,transform] duration-300 ease-in-out hover:bg-muted/60 hover:text-foreground active:scale-[0.98]",
       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
       "disabled:pointer-events-none disabled:opacity-50",
     ],
@@ -199,11 +199,11 @@ export function PasswordInput({
               initial={
                 shouldReduceMotion
                   ? { opacity: 0 }
-                  : { opacity: 0, scale: 0.88 }
+                  : { opacity: 0, scale: 0.94 }
               }
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.88 }}
-              transition={{ duration: 0.14, ease: [0.22, 1, 0.36, 1] }}
+              exit={{ opacity: 0, scale: 0.94 }}
+              transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
             >
               {visible ? (
                 <EyeOff className="size-4" aria-hidden="true" />
@@ -239,8 +239,8 @@ export function PasswordInput({
               initial={false}
               animate={{ width: `${meterWidth}%`, opacity: password ? 1 : 0 }}
               transition={{
-                duration: shouldReduceMotion ? 0 : 0.24,
-                ease: [0.22, 1, 0.36, 1],
+                duration: shouldReduceMotion ? 0 : 0.32,
+                ease: [0.4, 0, 0.2, 1],
               }}
             />
           </div>
@@ -258,13 +258,13 @@ export function PasswordInput({
                       initial={
                         shouldReduceMotion
                           ? { opacity: 0 }
-                          : { opacity: 0, scale: 0.7 }
+                          : { opacity: 0, scale: 0.88 }
                       }
                       animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.7 }}
+                      exit={{ opacity: 0, scale: 0.88 }}
                       transition={{
-                        duration: 0.16,
-                        ease: [0.22, 1, 0.36, 1],
+                        duration: 0.24,
+                        ease: [0.4, 0, 0.2, 1],
                       }}
                     >
                       {criterion.met ? (

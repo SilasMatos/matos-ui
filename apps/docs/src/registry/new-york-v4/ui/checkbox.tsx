@@ -16,7 +16,7 @@ import {
 export const checkboxVariants = cva(
   [
     "not-prose group/checkbox inline-flex size-4.5 shrink-0 items-center justify-center rounded-[0.35rem] border border-border bg-background text-foreground shadow-xs",
-    "transition-[background-color,border-color,box-shadow,transform] duration-150 ease-out hover:border-ring/60 hover:bg-muted/40 active:scale-[0.96]",
+    "transition-[background-color,border-color,box-shadow,transform] duration-300 ease-in-out hover:border-ring/60 hover:bg-muted/40 active:scale-[0.98]",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
     "data-checked:border-ring data-checked:bg-muted data-[invalid=true]:border-destructive data-[invalid=true]:bg-destructive/10 data-[invalid=true]:focus-visible:ring-destructive/20",
     "data-disabled:pointer-events-none data-disabled:cursor-not-allowed data-disabled:opacity-50",
@@ -54,7 +54,7 @@ export function Checkbox({
     >
       <CheckboxPrimitive.Indicator
         data-slot="checkbox-indicator"
-        className="flex items-center justify-center transition-[opacity,transform] duration-150 data-starting-style:scale-75 data-starting-style:opacity-0 data-ending-style:scale-75 data-ending-style:opacity-0"
+        className="flex items-center justify-center transition-[opacity,transform] duration-300 ease-in-out data-starting-style:scale-90 data-starting-style:opacity-0 data-ending-style:scale-90 data-ending-style:opacity-0"
       >
         <Check className="size-3" aria-hidden="true" />
       </CheckboxPrimitive.Indicator>

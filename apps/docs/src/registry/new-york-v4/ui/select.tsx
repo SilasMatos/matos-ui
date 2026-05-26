@@ -15,7 +15,7 @@ import {
 export const selectTriggerVariants = cva(
   [
     "not-prose group/select-trigger flex h-9 w-full items-center justify-between gap-2 rounded-xl border border-border bg-background px-3 text-left text-sm text-foreground shadow-xs",
-    "transition-[background-color,border-color,box-shadow,transform] duration-200 ease-out",
+    "transition-[background-color,border-color,box-shadow,transform] duration-300 ease-in-out",
     "hover:border-border/80 focus-visible:-translate-y-px focus-visible:border-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25",
     "data-popup-open:border-ring data-popup-open:ring-2 data-popup-open:ring-ring/20 data-placeholder:text-muted-foreground",
     "data-[invalid=true]:border-destructive data-[invalid=true]:bg-destructive/10 data-[invalid=true]:focus-visible:border-destructive data-[invalid=true]:focus-visible:ring-destructive/20",
@@ -44,10 +44,10 @@ export const selectTriggerVariants = cva(
 
 export const selectPopupVariants = cva(
   [
-    "not-prose min-w-(--anchor-width) max-w-(--available-width) overflow-hidden rounded-xl border border-border bg-muted/40 p-1 shadow-md outline-none",
-    "origin-(--transform-origin) transition-[opacity,transform,filter] duration-200 ease-out",
-    "data-starting-style:scale-[0.98] data-starting-style:opacity-0 data-starting-style:blur-[2px]",
-    "data-ending-style:scale-[0.98] data-ending-style:opacity-0 data-ending-style:blur-[2px]",
+    "not-prose min-w-(--anchor-width) max-w-(--available-width) overflow-hidden rounded-xl border border-border bg-background/95 p-1 shadow-lg backdrop-blur-xl outline-none",
+    "origin-(--transform-origin) transition-[opacity,transform,filter] duration-300 ease-in-out",
+    "data-starting-style:scale-[0.985] data-starting-style:opacity-0 data-starting-style:blur-[4px]",
+    "data-ending-style:scale-[0.985] data-ending-style:opacity-0 data-ending-style:blur-[3px]",
   ],
   {
     variants: {
@@ -197,7 +197,7 @@ export function Select({
                     data-slot="select-item"
                     className={cn(
                       "group/select-item relative flex cursor-default items-start gap-2 rounded-lg px-2.5 py-2 text-sm text-foreground outline-none",
-                      "transition-[background-color,transform] duration-150 ease-out data-highlighted:bg-background data-highlighted:shadow-xs data-highlighted:-translate-y-px",
+                      "transition-[background-color,transform,box-shadow] duration-200 ease-in-out data-highlighted:bg-muted/60 data-highlighted:shadow-xs data-highlighted:-translate-y-px",
                       "data-disabled:pointer-events-none data-disabled:opacity-45",
                     )}
                   >
@@ -219,7 +219,7 @@ export function Select({
                         </span>
                       ) : null}
                     </span>
-                    <SelectPrimitive.ItemIndicator className="mt-0.5 flex size-4 shrink-0 items-center justify-center text-foreground transition-[opacity,transform] duration-150 data-starting-style:scale-75 data-starting-style:opacity-0">
+                    <SelectPrimitive.ItemIndicator className="mt-0.5 flex size-4 shrink-0 items-center justify-center text-foreground transition-[opacity,transform] duration-300 ease-in-out data-starting-style:scale-90 data-starting-style:opacity-0">
                       <Check className="size-3.5" aria-hidden="true" />
                     </SelectPrimitive.ItemIndicator>
                   </SelectPrimitive.Item>
