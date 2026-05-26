@@ -1,0 +1,29 @@
+---
+title: Select
+description: Accessible Base UI select with inset trigger, rich options, validation states, and refined popup motion.
+---
+
+<ComponentPreview name="select-demo" chromeless align="start" />
+
+## Installation
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/select.json" />
+
+## Usage
+
+```tsx
+import { Select } from "@/components/matos-ui/select"
+
+<Select
+  label="Role"
+  options={[
+    { value: "design", label: "Design", description: "Product and systems" },
+    { value: "engineering", label: "Engineering" },
+  ]}
+  value={role}
+  onValueChange={setRole}
+  error={errors.role?.message}
+/>
+```
+
+`Select` supports option icons and descriptions, keyboard navigation through Base UI, `disabled`, and direct integration with a React Hook Form `Controller`.

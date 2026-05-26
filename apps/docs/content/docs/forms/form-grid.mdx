@@ -1,0 +1,27 @@
+---
+title: Form Grid
+description: Responsive field grid for dense form arrangements across phone, tablet, and desktop widths.
+---
+
+<ComponentPreview name="form-grid-demo" chromeless align="start" />
+
+## Installation
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/form-grid.json" />
+
+## Usage
+
+```tsx
+import { FormGrid, FormGridItem } from "@/components/matos-ui/form-grid"
+
+<FormGrid columns="three">
+  <InputField label="City" />
+  <InputField label="State" />
+  <InputField label="Postal code" />
+  <FormGridItem span="full">
+    <TextareaField label="Notes" />
+  </FormGridItem>
+</FormGrid>
+```
+
+The grid begins as one column and expands with `md` and `lg` breakpoints. Available columns are `one`, `two`, and `three`.

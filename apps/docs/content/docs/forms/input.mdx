@@ -1,0 +1,26 @@
+---
+title: Input
+description: Compact inset text input with muted, ghost, success, error, loading, and disabled states.
+---
+
+<ComponentPreview name="input-demo" chromeless align="start" />
+
+## Installation
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/input.json" />
+
+## Usage
+
+```tsx
+import { InputField } from "@/components/matos-ui/input"
+
+<InputField
+  label="Email"
+  required
+  placeholder="you@company.com"
+  error={errors.email?.message}
+  {...register("email")}
+/>
+```
+
+`Input` is the primitive control. `InputField` composes label, description, status icon, and animated feedback. Both accept standard input attributes including `aria-invalid` and `data-invalid`.

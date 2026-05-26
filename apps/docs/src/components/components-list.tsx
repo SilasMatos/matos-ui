@@ -1,5 +1,5 @@
+import { ChevronRight } from "lucide-react";
 import { getLocale } from "next-intl/server";
-
 import { Link } from "@/i18n/navigation";
 import { getPagesFromFolder } from "@/lib/page-tree";
 import { source } from "@/lib/source";
@@ -49,8 +49,8 @@ export async function ComponentsList() {
                 {component.name}
               </span>
             </span>
-            <span className="text-muted-foreground transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-foreground">
-              -&gt;
+            <span className="text-muted-foreground transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-foreground text-xs">
+              <ChevronRight />
             </span>
           </Link>
         ))}

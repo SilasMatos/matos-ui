@@ -1,0 +1,30 @@
+---
+title: React Hook Form + Zod
+description: Real form examples with schema validation, inline animated errors, and asynchronous submit state.
+---
+
+<ComponentPreview name="form-with-zod-demo" chromeless align="start" />
+
+## Dependencies
+
+<CodeBlockCommand command="npm install react-hook-form zod @hookform/resolvers" />
+
+## Schema And Resolver
+
+```tsx
+const schema = z.object({
+  email: z.email("Enter a valid work email."),
+  teamSize: z.string().min(1, "Choose a team size."),
+})
+
+const form = useForm({
+  resolver: zodResolver(schema),
+  defaultValues: { email: "", teamSize: "" },
+})
+```
+
+Native-shaped controls accept `register(...)` directly. Use `Controller` for `Select`, `PasswordInput`, or `Checkbox` when their controlled value API is the clearest fit.
+
+## Full Signup Example
+
+<ComponentPreview name="signup-form-demo" chromeless align="start" />

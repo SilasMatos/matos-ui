@@ -282,4 +282,120 @@ export const ui: Registry["items"] = [
       },
     ],
   },
+  {
+    name: "field",
+    type: "registry:ui",
+    dependencies: [
+      "framer-motion",
+      "lucide-react",
+      "tailwind-merge",
+      "tailwind-variants",
+    ],
+    files: [
+      {
+        path: "ui/field.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "input",
+    type: "registry:ui",
+    dependencies: [
+      "@base-ui/react",
+      "class-variance-authority",
+      "framer-motion",
+      "lucide-react",
+    ],
+    registryDependencies: ["field"],
+    files: [
+      {
+        path: "ui/input.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "password-input",
+    type: "registry:ui",
+    dependencies: [
+      "framer-motion",
+      "lucide-react",
+      "tailwind-merge",
+      "tailwind-variants",
+    ],
+    registryDependencies: ["field", "input"],
+    files: [
+      {
+        path: "ui/password-input.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "select",
+    type: "registry:ui",
+    dependencies: [
+      "@base-ui/react",
+      "class-variance-authority",
+      "lucide-react",
+    ],
+    registryDependencies: ["field"],
+    files: [
+      {
+        path: "ui/select.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "textarea",
+    type: "registry:ui",
+    dependencies: ["tailwind-merge", "tailwind-variants"],
+    registryDependencies: ["field"],
+    files: [
+      {
+        path: "ui/textarea.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "form-grid",
+    type: "registry:ui",
+    dependencies: ["tailwind-merge", "tailwind-variants"],
+    files: [
+      {
+        path: "ui/form-grid.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "form-section",
+    type: "registry:ui",
+    dependencies: ["framer-motion", "tailwind-merge", "tailwind-variants"],
+    files: [
+      {
+        path: "ui/form-section.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "checkbox",
+    type: "registry:ui",
+    dependencies: [
+      "@base-ui/react",
+      "class-variance-authority",
+      "lucide-react",
+    ],
+    registryDependencies: ["field"],
+    files: [
+      {
+        path: "ui/checkbox.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
 ];

@@ -1,0 +1,25 @@
+---
+title: Field
+description: Form field composition for labels, supporting copy, animated errors, success feedback, and input groups.
+---
+
+<ComponentPreview name="input-demo" chromeless align="start" />
+
+## Installation
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/field.json" />
+
+## Usage
+
+```tsx
+import { Field, FieldDescription, FieldError, FieldLabel } from "@/components/matos-ui/field"
+
+<Field invalid={Boolean(error)}>
+  <FieldLabel htmlFor="email" required>Email</FieldLabel>
+  <input id="email" aria-invalid={Boolean(error)} />
+  <FieldDescription>Used for account notices.</FieldDescription>
+  <FieldError error={error} />
+</Field>
+```
+
+`FieldError` enters with a short fade and slide and sets `role="alert"`. Also exported: `FieldSuccess`, `InputGroup`, `InputGroupAddon`, `InputGroupButton`, and `fieldVariants`.

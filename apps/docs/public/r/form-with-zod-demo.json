@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "form-with-zod-demo",
+  "dependencies": [
+    "react-hook-form",
+    "@hookform/resolvers",
+    "zod"
+  ],
+  "registryDependencies": [
+    "button",
+    "input",
+    "select",
+    "form-grid",
+    "form-section"
+  ],
+  "files": [
+    {
+      "path": "components/matos-ui/examples/form-with-zod-demo.tsx",
+      "content": "\"use client\";\n\nimport { zodResolver } from \"@hookform/resolvers/zod\";\nimport { Controller, useForm } from \"react-hook-form\";\nimport { z } from \"zod\";\n\nimport { Button } from \"@/components/matos-ui/button\";\nimport { FormGrid } from \"@/components/matos-ui/form-grid\";\nimport { FormSection } from \"@/components/matos-ui/form-section\";\nimport { InputField } from \"@/components/matos-ui/input\";\nimport { Select } from \"@/components/matos-ui/select\";\n\nconst workspaceSchema = z.object({\n  email: z.email(\"Enter a valid work email.\"),\n  teamSize: z.string().min(1, \"Choose a team size.\"),\n});\n\ntype WorkspaceValues = z.infer<typeof workspaceSchema>;\n\nexport default function FormWithZodDemo() {\n  const {\n    control,\n    register,\n    handleSubmit,\n    formState: { errors, isSubmitting, isSubmitSuccessful },\n  } = useForm<WorkspaceValues>({\n    resolver: zodResolver(workspaceSchema),\n    defaultValues: { email: \"\", teamSize: \"\" },\n    mode: \"onBlur\",\n  });\n\n  async function onSubmit() {\n    await new Promise((resolve) => window.setTimeout(resolve, 800));\n  }\n\n  return (\n    <form\n      onSubmit={handleSubmit(onSubmit)}\n      className=\"mx-auto w-full max-w-xl\"\n      noValidate\n    >\n      <FormSection\n        size=\"compact\"\n        title=\"Request access\"\n        description=\"Zod errors are passed directly to each form component.\"\n        footer={\n          <>\n            <span className=\"text-xs text-muted-foreground\">\n              {isSubmitSuccessful\n                ? \"Request ready for review.\"\n                : \"No card required.\"}\n            </span>\n            <Button\n              type=\"submit\"\n              size=\"sm\"\n              loading={isSubmitting}\n              loadingText=\"Sending...\"\n            >\n              Continue\n            </Button>\n          </>\n        }\n      >\n        <FormGrid gap=\"compact\">\n          <InputField\n            label=\"Work email\"\n            placeholder=\"you@company.com\"\n            required\n            error={errors.email?.message}\n            {...register(\"email\")}\n          />\n          <Controller\n            name=\"teamSize\"\n            control={control}\n            render={({ field }) => (\n              <Select\n                label=\"Team size\"\n                required\n                options={[\n                  { value: \"small\", label: \"1-10 people\" },\n                  { value: \"medium\", label: \"11-50 people\" },\n                  { value: \"large\", label: \"51+ people\" },\n                ]}\n                value={field.value || null}\n                onValueChange={(nextValue) => field.onChange(nextValue ?? \"\")}\n                name={field.name}\n                inputRef={field.ref}\n                error={errors.teamSize?.message}\n                placeholder=\"Choose size\"\n              />\n            )}\n          />\n        </FormGrid>\n      </FormSection>\n    </form>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/form-with-zod-demo.tsx"
+    }
+  ],
+  "type": "registry:example"
+}

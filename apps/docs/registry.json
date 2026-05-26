@@ -305,6 +305,122 @@
       ]
     },
     {
+      "name": "field",
+      "type": "registry:ui",
+      "dependencies": [
+        "framer-motion",
+        "lucide-react",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/field.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "input",
+      "type": "registry:ui",
+      "dependencies": [
+        "@base-ui/react",
+        "class-variance-authority",
+        "framer-motion",
+        "lucide-react"
+      ],
+      "registryDependencies": ["field"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/input.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "password-input",
+      "type": "registry:ui",
+      "dependencies": [
+        "framer-motion",
+        "lucide-react",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
+      "registryDependencies": ["field", "input"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/password-input.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "select",
+      "type": "registry:ui",
+      "dependencies": [
+        "@base-ui/react",
+        "class-variance-authority",
+        "lucide-react"
+      ],
+      "registryDependencies": ["field"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/select.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "textarea",
+      "type": "registry:ui",
+      "dependencies": ["tailwind-merge", "tailwind-variants"],
+      "registryDependencies": ["field"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/textarea.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "form-grid",
+      "type": "registry:ui",
+      "dependencies": ["tailwind-merge", "tailwind-variants"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/form-grid.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "form-section",
+      "type": "registry:ui",
+      "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/form-section.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "checkbox",
+      "type": "registry:ui",
+      "dependencies": [
+        "@base-ui/react",
+        "class-variance-authority",
+        "lucide-react"
+      ],
+      "registryDependencies": ["field"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/checkbox.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "button-demo",
       "type": "registry:example",
       "registryDependencies": ["button"],
@@ -520,6 +636,94 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/process-timeline-engine-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "input-demo",
+      "type": "registry:example",
+      "registryDependencies": ["field", "input", "form-grid", "form-section"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/input-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "password-input-demo",
+      "type": "registry:example",
+      "registryDependencies": ["password-input", "form-section"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/password-input-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "select-demo",
+      "type": "registry:example",
+      "registryDependencies": ["select", "form-grid", "form-section"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/select-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "form-grid-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "input",
+        "textarea",
+        "form-grid",
+        "form-section"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/form-grid-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "form-with-zod-demo",
+      "type": "registry:example",
+      "dependencies": ["react-hook-form", "@hookform/resolvers", "zod"],
+      "registryDependencies": [
+        "button",
+        "input",
+        "select",
+        "form-grid",
+        "form-section"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/form-with-zod-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "signup-form-demo",
+      "type": "registry:example",
+      "dependencies": ["react-hook-form", "@hookform/resolvers", "zod"],
+      "registryDependencies": [
+        "button",
+        "checkbox",
+        "form-grid",
+        "form-section",
+        "input",
+        "password-input",
+        "select",
+        "textarea"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/signup-form-demo.tsx",
           "type": "registry:example"
         }
       ]

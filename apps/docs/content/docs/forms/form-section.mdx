@@ -1,0 +1,26 @@
+---
+title: Form Section
+description: Inset card section for grouping form fields, headings, actions, and submission feedback.
+---
+
+<ComponentPreview name="form-with-zod-demo" chromeless align="start" />
+
+## Installation
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/form-section.json" />
+
+## Usage
+
+```tsx
+import { FormSection } from "@/components/matos-ui/form-section"
+
+<FormSection
+  title="Account details"
+  description="Information used to personalize your workspace."
+  footer={<Button type="submit">Continue</Button>}
+>
+  <FormGrid>{fields}</FormGrid>
+</FormSection>
+```
+
+Use `size="compact"` for embedded panels or `size="roomy"` when the form is the page focus.

@@ -448,6 +448,174 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
   },
+  field: {
+    name: "field",
+    type: "registry:ui",
+    registryDependencies: undefined,
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/field.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/ui/field.tsx");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  input: {
+    name: "input",
+    type: "registry:ui",
+    registryDependencies: ["field"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/input.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/ui/input.tsx");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "password-input": {
+    name: "password-input",
+    type: "registry:ui",
+    registryDependencies: ["field", "input"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/password-input.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/ui/password-input.tsx");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  select: {
+    name: "select",
+    type: "registry:ui",
+    registryDependencies: ["field"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/select.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/ui/select.tsx");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  textarea: {
+    name: "textarea",
+    type: "registry:ui",
+    registryDependencies: ["field"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/textarea.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/ui/textarea.tsx");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "form-grid": {
+    name: "form-grid",
+    type: "registry:ui",
+    registryDependencies: undefined,
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/form-grid.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/ui/form-grid.tsx");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "form-section": {
+    name: "form-section",
+    type: "registry:ui",
+    registryDependencies: undefined,
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/form-section.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/ui/form-section.tsx");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  checkbox: {
+    name: "checkbox",
+    type: "registry:ui",
+    registryDependencies: ["field"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/checkbox.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/ui/checkbox.tsx");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
   "button-demo": {
     name: "button-demo",
     type: "registry:example",
@@ -899,6 +1067,159 @@ export const Index: Record<string, any> = {
     component: React.lazy(async () => {
       const mod = await import(
         "@/registry/new-york-v4/examples/process-timeline-engine-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "input-demo": {
+    name: "input-demo",
+    type: "registry:example",
+    registryDependencies: ["field", "input", "form-grid", "form-section"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/input-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/input-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "password-input-demo": {
+    name: "password-input-demo",
+    type: "registry:example",
+    registryDependencies: ["password-input", "form-section"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/password-input-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/password-input-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "select-demo": {
+    name: "select-demo",
+    type: "registry:example",
+    registryDependencies: ["select", "form-grid", "form-section"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/select-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/select-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "form-grid-demo": {
+    name: "form-grid-demo",
+    type: "registry:example",
+    registryDependencies: ["input", "textarea", "form-grid", "form-section"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/form-grid-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/form-grid-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "form-with-zod-demo": {
+    name: "form-with-zod-demo",
+    type: "registry:example",
+    registryDependencies: [
+      "button",
+      "input",
+      "select",
+      "form-grid",
+      "form-section",
+    ],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/form-with-zod-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/form-with-zod-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "signup-form-demo": {
+    name: "signup-form-demo",
+    type: "registry:example",
+    registryDependencies: [
+      "button",
+      "checkbox",
+      "form-grid",
+      "form-section",
+      "input",
+      "password-input",
+      "select",
+      "textarea",
+    ],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/signup-form-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/signup-form-demo.tsx"
       );
       const exportName =
         Object.keys(mod).find(

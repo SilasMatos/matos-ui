@@ -1,0 +1,19 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "input-demo",
+  "registryDependencies": [
+    "field",
+    "input",
+    "form-grid",
+    "form-section"
+  ],
+  "files": [
+    {
+      "path": "components/matos-ui/examples/input-demo.tsx",
+      "content": "\"use client\";\n\nimport { AtSign } from \"lucide-react\";\n\nimport { InputGroup, InputGroupAddon } from \"@/components/matos-ui/field\";\nimport { FormGrid } from \"@/components/matos-ui/form-grid\";\nimport { FormSection } from \"@/components/matos-ui/form-section\";\nimport { Input, InputField } from \"@/components/matos-ui/input\";\n\nexport default function InputDemo() {\n  return (\n    <FormSection\n      size=\"compact\"\n      title=\"Profile details\"\n      description=\"Compact inset inputs with calm feedback states.\"\n      className=\"mx-auto w-full max-w-2xl\"\n    >\n      <FormGrid>\n        <InputField\n          label=\"Email\"\n          placeholder=\"hello@studio.com\"\n          description=\"Used for workspace notifications.\"\n        />\n        <InputField\n          label=\"Workspace URL\"\n          state=\"success\"\n          defaultValue=\"studio-matos\"\n          success=\"Available to claim.\"\n        />\n        <InputField\n          label=\"Contact email\"\n          defaultValue=\"invalid-address\"\n          error=\"Enter a valid email address.\"\n        />\n        <InputField\n          label=\"Syncing account\"\n          state=\"loading\"\n          defaultValue=\"Checking domain...\"\n          disabled\n        />\n      </FormGrid>\n      <div className=\"mt-4 grid gap-1.5\">\n        <span className=\"text-xs font-medium text-foreground\">Input group</span>\n        <InputGroup>\n          <InputGroupAddon>\n            <AtSign className=\"size-3.5\" aria-hidden=\"true\" />\n          </InputGroupAddon>\n          <Input variant=\"ghost\" placeholder=\"username\" aria-label=\"Username\" />\n          <InputGroupAddon>.matos.app</InputGroupAddon>\n        </InputGroup>\n      </div>\n    </FormSection>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/input-demo.tsx"
+    }
+  ],
+  "type": "registry:example"
+}

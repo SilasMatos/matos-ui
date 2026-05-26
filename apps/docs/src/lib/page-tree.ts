@@ -21,7 +21,7 @@ export function getAllPagesFromFolder(folder: PageTreeFolder): PageTreePage[] {
 }
 
 export function getPagesFromFolder(folder: PageTreeFolder): PageTreePage[] {
-  return getAllPagesFromFolder(folder).filter(
-    (page) => !page.url.endsWith("/components"),
-  );
+  const indexUrl = folder.index?.url;
+
+  return getAllPagesFromFolder(folder).filter((page) => page.url !== indexUrl);
 }

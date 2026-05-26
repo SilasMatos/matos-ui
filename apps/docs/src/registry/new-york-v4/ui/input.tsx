@@ -1,20 +1,187 @@
+"use client";
+
 import { Input as InputPrimitive } from "@base-ui/react/input";
-import type * as React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { Check, LoaderCircle } from "lucide-react";
+import { type ComponentProps, type ReactNode, useId } from "react";
 
 import { cn } from "@/lib/utils";
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldLabel,
+  FieldSuccess,
+} from "@/registry/new-york-v4/ui/field";
 
-function Input({ className, type, ...props }: React.ComponentProps<"input">) {
+export const inputVariants = cva(
+  [
+    "h-9 w-full min-w-0 rounded-xl border border-border bg-background px-3 py-1.5 text-sm text-foreground shadow-xs",
+    "placeholder:text-muted-foreground file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground",
+    "transition-[background-color,border-color,box-shadow,transform] duration-200 ease-out",
+    "hover:border-border/80 focus-visible:-translate-y-px focus-visible:border-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25",
+    "aria-invalid:border-destructive aria-invalid:bg-destructive/10 aria-invalid:focus-visible:border-destructive aria-invalid:focus-visible:ring-destructive/20",
+    "data-[invalid=true]:border-destructive data-[invalid=true]:bg-destructive/10 data-[invalid=true]:focus-visible:border-destructive data-[invalid=true]:focus-visible:ring-destructive/20",
+    "disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-muted/40 disabled:opacity-60",
+  ],
+  {
+    variants: {
+      variant: {
+        inset: "bg-background",
+        muted: "bg-muted/40 shadow-none focus-visible:bg-background",
+        ghost:
+          "border-transparent bg-transparent shadow-none hover:bg-muted/40",
+      },
+      inputSize: {
+        sm: "h-8 rounded-lg px-2.5 text-xs",
+        md: "h-9 px-3",
+        lg: "h-10 px-3.5",
+      },
+      state: {
+        default: "",
+        error:
+          "border-destructive bg-destructive/10 focus-visible:border-destructive focus-visible:ring-destructive/20",
+        success: "border-ring/50 focus-visible:border-ring",
+        loading: "cursor-wait",
+      },
+    },
+    defaultVariants: {
+      variant: "inset",
+      inputSize: "md",
+      state: "default",
+    },
+  },
+);
+
+export type InputProps = ComponentProps<"input"> &
+  VariantProps<typeof inputVariants> & {
+    state?: "default" | "error" | "success" | "loading";
+    "data-invalid"?: boolean | "true" | "false";
+  };
+
+export function Input({
+  className,
+  variant = "inset",
+  inputSize = "md",
+  state = "default",
+  "aria-invalid": ariaInvalid,
+  "data-invalid": dataInvalid,
+  ...props
+}: InputProps) {
+  const invalid =
+    ariaInvalid === true ||
+    ariaInvalid === "true" ||
+    Boolean(dataInvalid) ||
+    state === "error";
+
   return (
     <InputPrimitive
-      type={type}
       data-slot="input"
-      className={cn(
-        "dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 disabled:bg-input/50 dark:disabled:bg-input/80 h-8 rounded-lg border bg-transparent px-2.5 py-1 text-base transition-colors file:h-6 file:text-sm file:font-medium focus-visible:ring-3 aria-invalid:ring-3 md:text-sm w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
-        className,
-      )}
+      data-invalid={dataInvalid ?? (invalid || undefined)}
+      aria-invalid={ariaInvalid ?? (invalid || undefined)}
+      className={cn(inputVariants({ variant, inputSize, state, className }))}
       {...props}
     />
   );
 }
 
-export { Input };
+export type InputFieldProps = Omit<InputProps, "state"> & {
+  label?: ReactNode;
+  description?: ReactNode;
+  error?: ReactNode;
+  success?: ReactNode;
+  state?: "default" | "error" | "success" | "loading";
+  trailing?: ReactNode;
+};
+
+export function InputField({
+  id,
+  className,
+  label,
+  description,
+  error,
+  success,
+  state = "default",
+  trailing,
+  required,
+  disabled,
+  "aria-describedby": ariaDescribedBy,
+  "aria-invalid": ariaInvalid,
+  ...props
+}: InputFieldProps) {
+  const generatedId = useId();
+  const shouldReduceMotion = useReducedMotion();
+  const inputId = id ?? generatedId;
+  const invalid =
+    Boolean(error) ||
+    state === "error" ||
+    ariaInvalid === true ||
+    ariaInvalid === "true";
+  const resolvedState = invalid ? "error" : state;
+  const descriptionId = description ? `${inputId}-description` : undefined;
+  const feedbackId = error
+    ? `${inputId}-error`
+    : success
+      ? `${inputId}-success`
+      : undefined;
+  const describedBy = [ariaDescribedBy, descriptionId, feedbackId]
+    .filter(Boolean)
+    .join(" ");
+  const showStatusIcon =
+    trailing ?? (resolvedState === "loading" || resolvedState === "success");
+
+  return (
+    <Field data-slot="input-field" invalid={invalid} disabled={disabled}>
+      {label ? (
+        <FieldLabel htmlFor={inputId} required={required}>
+          {label}
+        </FieldLabel>
+      ) : null}
+      <div className="relative">
+        <Input
+          id={inputId}
+          className={cn(showStatusIcon && "pr-9", className)}
+          state={resolvedState}
+          required={required}
+          disabled={disabled}
+          aria-describedby={describedBy || undefined}
+          aria-invalid={invalid || undefined}
+          {...props}
+        />
+        <AnimatePresence initial={false}>
+          {showStatusIcon ? (
+            <motion.span
+              key={resolvedState}
+              data-slot="input-status"
+              aria-hidden="true"
+              initial={
+                shouldReduceMotion
+                  ? { opacity: 0 }
+                  : { opacity: 0, scale: 0.85 }
+              }
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.85 }}
+              transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
+              className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-muted-foreground"
+            >
+              {trailing ??
+                (resolvedState === "loading" ? (
+                  <LoaderCircle className="size-4 animate-spin" />
+                ) : (
+                  <Check className="size-4 text-foreground" />
+                ))}
+            </motion.span>
+          ) : null}
+        </AnimatePresence>
+      </div>
+      {description ? (
+        <FieldDescription id={descriptionId}>{description}</FieldDescription>
+      ) : null}
+      <FieldError id={feedbackId} error={error} />
+      {!error && success ? (
+        <FieldSuccess id={feedbackId}>{success}</FieldSuccess>
+      ) : null}
+    </Field>
+  );
+}

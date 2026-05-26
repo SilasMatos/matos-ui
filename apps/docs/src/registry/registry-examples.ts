@@ -221,4 +221,87 @@ export const examples: Registry["items"] = [
       },
     ],
   },
+  {
+    name: "input-demo",
+    type: "registry:example",
+    registryDependencies: ["field", "input", "form-grid", "form-section"],
+    files: [
+      {
+        path: "examples/input-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "password-input-demo",
+    type: "registry:example",
+    registryDependencies: ["password-input", "form-section"],
+    files: [
+      {
+        path: "examples/password-input-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "select-demo",
+    type: "registry:example",
+    registryDependencies: ["select", "form-grid", "form-section"],
+    files: [
+      {
+        path: "examples/select-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "form-grid-demo",
+    type: "registry:example",
+    registryDependencies: ["input", "textarea", "form-grid", "form-section"],
+    files: [
+      {
+        path: "examples/form-grid-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "form-with-zod-demo",
+    type: "registry:example",
+    dependencies: ["react-hook-form", "@hookform/resolvers", "zod"],
+    registryDependencies: [
+      "button",
+      "input",
+      "select",
+      "form-grid",
+      "form-section",
+    ],
+    files: [
+      {
+        path: "examples/form-with-zod-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "signup-form-demo",
+    type: "registry:example",
+    dependencies: ["react-hook-form", "@hookform/resolvers", "zod"],
+    registryDependencies: [
+      "button",
+      "checkbox",
+      "form-grid",
+      "form-section",
+      "input",
+      "password-input",
+      "select",
+      "textarea",
+    ],
+    files: [
+      {
+        path: "examples/signup-form-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
 ];

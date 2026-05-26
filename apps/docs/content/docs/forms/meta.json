@@ -1,0 +1,15 @@
+{
+  "title": "Forms",
+  "pages": [
+    "index",
+    "field",
+    "input",
+    "password-input",
+    "select",
+    "textarea",
+    "checkbox",
+    "form-grid",
+    "form-section",
+    "validation"
+  ]
+}
