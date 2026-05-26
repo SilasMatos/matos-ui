@@ -9,13 +9,13 @@ import { cn } from "@/lib/utils";
 import {
   Field,
   FieldDescription,
-  FieldError,
   FieldLabel,
+  FieldMessage,
 } from "@/registry/new-york-v4/ui/field";
 
 export const checkboxVariants = cva(
   [
-    "group/checkbox inline-flex size-4.5 shrink-0 items-center justify-center rounded-[0.35rem] border border-border bg-background text-foreground shadow-xs",
+    "not-prose group/checkbox inline-flex size-4.5 shrink-0 items-center justify-center rounded-[0.35rem] border border-border bg-background text-foreground shadow-xs",
     "transition-[background-color,border-color,box-shadow,transform] duration-150 ease-out hover:border-ring/60 hover:bg-muted/40 active:scale-[0.96]",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
     "data-checked:border-ring data-checked:bg-muted data-[invalid=true]:border-destructive data-[invalid=true]:bg-destructive/10 data-[invalid=true]:focus-visible:ring-destructive/20",
@@ -67,6 +67,7 @@ export type CheckboxFieldProps = Omit<CheckboxProps, "id"> & {
   label: ReactNode;
   description?: ReactNode;
   error?: ReactNode;
+  reserveMessageSpace?: boolean;
 };
 
 export function CheckboxField({
@@ -74,6 +75,7 @@ export function CheckboxField({
   label,
   description,
   error,
+  reserveMessageSpace = true,
   invalid = false,
   required,
   disabled,
@@ -118,7 +120,12 @@ export function CheckboxField({
           ) : null}
         </div>
       </div>
-      <FieldError id={errorId} error={error} className="pl-7" />
+      <FieldMessage
+        id={errorId}
+        error={error}
+        reserveSpace={reserveMessageSpace}
+        className="pl-7"
+      />
     </Field>
   );
 }

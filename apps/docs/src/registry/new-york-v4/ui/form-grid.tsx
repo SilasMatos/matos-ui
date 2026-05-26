@@ -3,7 +3,7 @@ import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
 
 export const formGridVariants = tv({
-  base: "grid w-full grid-cols-1",
+  base: "not-prose grid w-full grid-cols-1",
   variants: {
     columns: {
       one: "",
@@ -54,7 +54,7 @@ export function FormGridItem({
       data-slot="form-grid-item"
       data-span={span}
       className={twMerge(
-        "min-w-0 data-[span=two]:md:col-span-2 data-[span=full]:col-span-full",
+        "not-prose min-w-0 data-[span=two]:md:col-span-2 data-[span=full]:col-span-full",
         className,
       )}
       {...props}

@@ -23,4 +23,4 @@ import { InputField } from "@/components/matos-ui/input"
 />
 ```
 
-`Input` is the primitive control. `InputField` composes label, description, status icon, and animated feedback. Both accept standard input attributes including `aria-invalid` and `data-invalid`.
+`Input` is the primitive control. `InputField` composes label, description, status icon, and animated feedback, reserving message space by default so validation does not move adjacent fields. Pass `reserveMessageSpace={false}` for layouts that do not need that reservation.

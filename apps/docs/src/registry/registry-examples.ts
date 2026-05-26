@@ -224,7 +224,7 @@ export const examples: Registry["items"] = [
   {
     name: "input-demo",
     type: "registry:example",
-    registryDependencies: ["field", "input", "form-grid", "form-section"],
+    registryDependencies: ["input"],
     files: [
       {
         path: "examples/input-demo.tsx",
@@ -235,7 +235,7 @@ export const examples: Registry["items"] = [
   {
     name: "password-input-demo",
     type: "registry:example",
-    registryDependencies: ["password-input", "form-section"],
+    registryDependencies: ["password-input"],
     files: [
       {
         path: "examples/password-input-demo.tsx",
@@ -246,10 +246,32 @@ export const examples: Registry["items"] = [
   {
     name: "select-demo",
     type: "registry:example",
-    registryDependencies: ["select", "form-grid", "form-section"],
+    registryDependencies: ["select"],
     files: [
       {
         path: "examples/select-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "textarea-demo",
+    type: "registry:example",
+    registryDependencies: ["textarea"],
+    files: [
+      {
+        path: "examples/textarea-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "checkbox-demo",
+    type: "registry:example",
+    registryDependencies: ["checkbox"],
+    files: [
+      {
+        path: "examples/checkbox-demo.tsx",
         type: "registry:example",
       },
     ],

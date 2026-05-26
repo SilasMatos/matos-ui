@@ -6,15 +6,13 @@ import { tv, type VariantProps } from "tailwind-variants";
 
 import {
   Field,
-  FieldDescription,
-  FieldError,
   FieldLabel,
-  FieldSuccess,
+  FieldMessage,
 } from "@/registry/new-york-v4/ui/field";
 
 export const textareaVariants = tv({
   base: [
-    "min-h-24 w-full resize-y rounded-xl border border-border bg-background px-3 py-2.5 text-sm text-foreground shadow-xs",
+    "not-prose min-h-24 w-full resize-y rounded-xl border border-border bg-background px-3 py-2.5 text-sm text-foreground shadow-xs",
     "placeholder:text-muted-foreground transition-[background-color,border-color,box-shadow,transform] duration-200 ease-out",
     "hover:border-border/80 focus-visible:-translate-y-px focus-visible:border-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25",
     "aria-invalid:border-destructive aria-invalid:bg-destructive/10 aria-invalid:focus-visible:border-destructive aria-invalid:focus-visible:ring-destructive/20",
@@ -88,6 +86,7 @@ export type TextareaFieldProps = Omit<TextareaProps, "state"> & {
   error?: ReactNode;
   success?: ReactNode;
   state?: "default" | "error" | "success" | "loading";
+  reserveMessageSpace?: boolean;
 };
 
 export function TextareaField({
@@ -97,6 +96,7 @@ export function TextareaField({
   error,
   success,
   state = "default",
+  reserveMessageSpace = true,
   required,
   disabled,
   "aria-describedby": ariaDescribedBy,
@@ -110,15 +110,9 @@ export function TextareaField({
     state === "error" ||
     ariaInvalid === true ||
     ariaInvalid === "true";
-  const descriptionId = description ? `${textareaId}-description` : undefined;
-  const feedbackId = error
-    ? `${textareaId}-error`
-    : success
-      ? `${textareaId}-success`
-      : undefined;
-  const describedBy = [ariaDescribedBy, descriptionId, feedbackId]
-    .filter(Boolean)
-    .join(" ");
+  const messageId =
+    description || error || success ? `${textareaId}-message` : undefined;
+  const describedBy = [ariaDescribedBy, messageId].filter(Boolean).join(" ");
 
   return (
     <Field data-slot="textarea-field" invalid={invalid} disabled={disabled}>
@@ -136,13 +130,13 @@ export function TextareaField({
         aria-invalid={invalid || undefined}
         {...props}
       />
-      {description ? (
-        <FieldDescription id={descriptionId}>{description}</FieldDescription>
-      ) : null}
-      <FieldError id={feedbackId} error={error} />
-      {!error && success ? (
-        <FieldSuccess id={feedbackId}>{success}</FieldSuccess>
-      ) : null}
+      <FieldMessage
+        id={messageId}
+        description={description}
+        error={error}
+        success={success}
+        reserveSpace={reserveMessageSpace}
+      />
     </Field>
   );
 }

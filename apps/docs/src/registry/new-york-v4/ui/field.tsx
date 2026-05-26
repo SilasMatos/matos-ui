@@ -13,7 +13,7 @@ import { tv, type VariantProps } from "tailwind-variants";
 
 export const fieldVariants = tv({
   slots: {
-    root: "group/field grid w-full gap-1.5 text-foreground",
+    root: "not-prose group/field grid w-full gap-1.5 text-foreground",
     label: [
       "flex w-fit items-center gap-1 text-xs font-medium text-foreground",
       "transition-[color,transform] duration-200 ease-out",
@@ -89,7 +89,7 @@ export function FieldLabel({
     <label
       data-slot="field-label"
       htmlFor={htmlFor}
-      className={twMerge(styles.label(), className)}
+      className={twMerge("not-prose", styles.label(), className)}
       {...props}
     >
       {children}
@@ -113,7 +113,7 @@ export function FieldDescription({
   return (
     <p
       data-slot="field-description"
-      className={twMerge(styles.description(), className)}
+      className={twMerge("not-prose", styles.description(), className)}
       {...props}
     />
   );
@@ -149,7 +149,12 @@ export function FieldError({
           animate={{ opacity: 1, y: 0 }}
           exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -3 }}
           transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
-          className={twMerge(styles.feedback(), "text-destructive", className)}
+          className={twMerge(
+            "not-prose",
+            styles.feedback(),
+            "text-destructive",
+            className,
+          )}
           {...props}
         >
           {showIcon ? (
@@ -191,7 +196,12 @@ export function FieldSuccess({
           animate={{ opacity: 1, y: 0 }}
           exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -3 }}
           transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
-          className={twMerge(styles.feedback(), "text-foreground", className)}
+          className={twMerge(
+            "not-prose",
+            styles.feedback(),
+            "text-foreground",
+            className,
+          )}
           {...props}
         >
           {showIcon ? (
@@ -204,6 +214,44 @@ export function FieldSuccess({
         </motion.p>
       ) : null}
     </AnimatePresence>
+  );
+}
+
+export type FieldMessageProps = ComponentProps<"div"> & {
+  description?: ReactNode;
+  error?: ReactNode;
+  success?: ReactNode;
+  reserveSpace?: boolean;
+  showIcon?: boolean;
+};
+
+export function FieldMessage({
+  className,
+  description,
+  error,
+  success,
+  reserveSpace = true,
+  showIcon = true,
+  ...props
+}: FieldMessageProps) {
+  return (
+    <div
+      data-slot="field-message"
+      className={twMerge(
+        "not-prose min-w-0",
+        reserveSpace && "min-h-5",
+        className,
+      )}
+      {...props}
+    >
+      {error ? (
+        <FieldError error={error} showIcon={showIcon} />
+      ) : success ? (
+        <FieldSuccess showIcon={showIcon}>{success}</FieldSuccess>
+      ) : description ? (
+        <FieldDescription>{description}</FieldDescription>
+      ) : null}
+    </div>
   );
 }
 
@@ -224,7 +272,7 @@ export function InputGroup({
       data-invalid={invalid || undefined}
       data-disabled={disabled || undefined}
       className={twMerge(
-        "flex h-9 w-full items-center overflow-hidden rounded-xl border border-border bg-background shadow-xs",
+        "not-prose flex h-9 w-full items-center overflow-hidden rounded-xl border border-border bg-background shadow-xs",
         "transition-[border-color,box-shadow,transform] duration-200 ease-out focus-within:-translate-y-px focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/25",
         "data-[invalid=true]:border-destructive data-[invalid=true]:focus-within:border-destructive data-[invalid=true]:focus-within:ring-destructive/20",
         "data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50",
@@ -243,7 +291,7 @@ export function InputGroupAddon({ className, ...props }: InputGroupAddonProps) {
     <span
       data-slot="input-group-addon"
       className={twMerge(
-        "flex h-full shrink-0 items-center border-border px-2.5 text-xs text-muted-foreground first:border-r last:border-l",
+        "not-prose flex h-full shrink-0 items-center border-border px-2.5 text-xs text-muted-foreground first:border-r last:border-l",
         className,
       )}
       {...props}
@@ -263,7 +311,7 @@ export function InputGroupButton({
       type={type}
       data-slot="input-group-button"
       className={twMerge(
-        "inline-flex size-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors duration-150 hover:bg-muted/60 hover:text-foreground",
+        "not-prose inline-flex size-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors duration-150 hover:bg-muted/60 hover:text-foreground",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
         className,
       )}

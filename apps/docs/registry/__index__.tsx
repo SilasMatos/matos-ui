@@ -1079,7 +1079,7 @@ export const Index: Record<string, any> = {
   "input-demo": {
     name: "input-demo",
     type: "registry:example",
-    registryDependencies: ["field", "input", "form-grid", "form-section"],
+    registryDependencies: ["input"],
     files: [
       {
         path: "src/registry/new-york-v4/examples/input-demo.tsx",
@@ -1102,7 +1102,7 @@ export const Index: Record<string, any> = {
   "password-input-demo": {
     name: "password-input-demo",
     type: "registry:example",
-    registryDependencies: ["password-input", "form-section"],
+    registryDependencies: ["password-input"],
     files: [
       {
         path: "src/registry/new-york-v4/examples/password-input-demo.tsx",
@@ -1125,7 +1125,7 @@ export const Index: Record<string, any> = {
   "select-demo": {
     name: "select-demo",
     type: "registry:example",
-    registryDependencies: ["select", "form-grid", "form-section"],
+    registryDependencies: ["select"],
     files: [
       {
         path: "src/registry/new-york-v4/examples/select-demo.tsx",
@@ -1136,6 +1136,52 @@ export const Index: Record<string, any> = {
     component: React.lazy(async () => {
       const mod = await import(
         "@/registry/new-york-v4/examples/select-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "textarea-demo": {
+    name: "textarea-demo",
+    type: "registry:example",
+    registryDependencies: ["textarea"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/textarea-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/textarea-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "checkbox-demo": {
+    name: "checkbox-demo",
+    type: "registry:example",
+    registryDependencies: ["checkbox"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/checkbox-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/checkbox-demo.tsx"
       );
       const exportName =
         Object.keys(mod).find(

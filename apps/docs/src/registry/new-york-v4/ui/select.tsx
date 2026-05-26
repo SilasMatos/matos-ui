@@ -8,14 +8,13 @@ import { type ReactNode, useId } from "react";
 import { cn } from "@/lib/utils";
 import {
   Field,
-  FieldDescription,
-  FieldError,
   FieldLabel,
+  FieldMessage,
 } from "@/registry/new-york-v4/ui/field";
 
 export const selectTriggerVariants = cva(
   [
-    "group/select-trigger flex h-9 w-full items-center justify-between gap-2 rounded-xl border border-border bg-background px-3 text-left text-sm text-foreground shadow-xs",
+    "not-prose group/select-trigger flex h-9 w-full items-center justify-between gap-2 rounded-xl border border-border bg-background px-3 text-left text-sm text-foreground shadow-xs",
     "transition-[background-color,border-color,box-shadow,transform] duration-200 ease-out",
     "hover:border-border/80 focus-visible:-translate-y-px focus-visible:border-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25",
     "data-popup-open:border-ring data-popup-open:ring-2 data-popup-open:ring-ring/20 data-placeholder:text-muted-foreground",
@@ -45,7 +44,7 @@ export const selectTriggerVariants = cva(
 
 export const selectPopupVariants = cva(
   [
-    "min-w-(--anchor-width) max-w-(--available-width) overflow-hidden rounded-xl border border-border bg-muted/40 p-1 shadow-md outline-none",
+    "not-prose min-w-(--anchor-width) max-w-(--available-width) overflow-hidden rounded-xl border border-border bg-muted/40 p-1 shadow-md outline-none",
     "origin-(--transform-origin) transition-[opacity,transform,filter] duration-200 ease-out",
     "data-starting-style:scale-[0.98] data-starting-style:opacity-0 data-starting-style:blur-[2px]",
     "data-ending-style:scale-[0.98] data-ending-style:opacity-0 data-ending-style:blur-[2px]",
@@ -85,6 +84,7 @@ export type SelectProps = Omit<
     className?: string;
     triggerClassName?: string;
     popupClassName?: string;
+    reserveMessageSpace?: boolean;
     "aria-invalid"?: boolean | "true" | "false";
     "data-invalid"?: boolean;
   };
@@ -102,6 +102,7 @@ export function Select({
   variant = "inset",
   selectSize = "md",
   density = "default",
+  reserveMessageSpace = true,
   required,
   disabled,
   "aria-invalid": ariaInvalid,
@@ -115,8 +116,7 @@ export function Select({
     ariaInvalid === true ||
     ariaInvalid === "true" ||
     Boolean(dataInvalid);
-  const descriptionId = description ? `${selectId}-description` : undefined;
-  const errorId = error ? `${selectId}-error` : undefined;
+  const messageId = description || error ? `${selectId}-message` : undefined;
 
   return (
     <Field
@@ -144,9 +144,7 @@ export function Select({
           data-slot="select-trigger"
           data-invalid={invalid || undefined}
           aria-invalid={invalid || undefined}
-          aria-describedby={
-            [descriptionId, errorId].filter(Boolean).join(" ") || undefined
-          }
+          aria-describedby={messageId || undefined}
           className={cn(
             selectTriggerVariants({ variant, selectSize }),
             triggerClassName,
@@ -231,10 +229,12 @@ export function Select({
           </SelectPrimitive.Positioner>
         </SelectPrimitive.Portal>
       </SelectPrimitive.Root>
-      {description ? (
-        <FieldDescription id={descriptionId}>{description}</FieldDescription>
-      ) : null}
-      <FieldError id={errorId} error={error} />
+      <FieldMessage
+        id={messageId}
+        description={description}
+        error={error}
+        reserveSpace={reserveMessageSpace}
+      />
     </Field>
   );
 }

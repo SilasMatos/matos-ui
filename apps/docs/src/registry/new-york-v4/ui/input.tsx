@@ -9,15 +9,13 @@ import { type ComponentProps, type ReactNode, useId } from "react";
 import { cn } from "@/lib/utils";
 import {
   Field,
-  FieldDescription,
-  FieldError,
   FieldLabel,
-  FieldSuccess,
+  FieldMessage,
 } from "@/registry/new-york-v4/ui/field";
 
 export const inputVariants = cva(
   [
-    "h-9 w-full min-w-0 rounded-xl border border-border bg-background px-3 py-1.5 text-sm text-foreground shadow-xs",
+    "not-prose h-9 w-full min-w-0 rounded-xl border border-border bg-background px-3 py-1.5 text-sm text-foreground shadow-xs",
     "placeholder:text-muted-foreground file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground",
     "transition-[background-color,border-color,box-shadow,transform] duration-200 ease-out",
     "hover:border-border/80 focus-visible:-translate-y-px focus-visible:border-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25",
@@ -93,6 +91,7 @@ export type InputFieldProps = Omit<InputProps, "state"> & {
   success?: ReactNode;
   state?: "default" | "error" | "success" | "loading";
   trailing?: ReactNode;
+  reserveMessageSpace?: boolean;
 };
 
 export function InputField({
@@ -104,6 +103,7 @@ export function InputField({
   success,
   state = "default",
   trailing,
+  reserveMessageSpace = true,
   required,
   disabled,
   "aria-describedby": ariaDescribedBy,
@@ -119,15 +119,9 @@ export function InputField({
     ariaInvalid === true ||
     ariaInvalid === "true";
   const resolvedState = invalid ? "error" : state;
-  const descriptionId = description ? `${inputId}-description` : undefined;
-  const feedbackId = error
-    ? `${inputId}-error`
-    : success
-      ? `${inputId}-success`
-      : undefined;
-  const describedBy = [ariaDescribedBy, descriptionId, feedbackId]
-    .filter(Boolean)
-    .join(" ");
+  const messageId =
+    description || error || success ? `${inputId}-message` : undefined;
+  const describedBy = [ariaDescribedBy, messageId].filter(Boolean).join(" ");
   const showStatusIcon =
     trailing ?? (resolvedState === "loading" || resolvedState === "success");
 
@@ -175,13 +169,13 @@ export function InputField({
           ) : null}
         </AnimatePresence>
       </div>
-      {description ? (
-        <FieldDescription id={descriptionId}>{description}</FieldDescription>
-      ) : null}
-      <FieldError id={feedbackId} error={error} />
-      {!error && success ? (
-        <FieldSuccess id={feedbackId}>{success}</FieldSuccess>
-      ) : null}
+      <FieldMessage
+        id={messageId}
+        description={description}
+        error={error}
+        success={success}
+        reserveSpace={reserveMessageSpace}
+      />
     </Field>
   );
 }

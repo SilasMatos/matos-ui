@@ -14,9 +14,8 @@ import { tv, type VariantProps } from "tailwind-variants";
 
 import {
   Field,
-  FieldDescription,
-  FieldError,
   FieldLabel,
+  FieldMessage,
 } from "@/registry/new-york-v4/ui/field";
 import { Input } from "@/registry/new-york-v4/ui/input";
 
@@ -56,7 +55,7 @@ export const defaultPasswordCriteria: PasswordCriterion[] = [
 
 export const passwordInputVariants = tv({
   slots: {
-    root: "gap-2",
+    root: "not-prose gap-2",
     control: "relative",
     toggle: [
       "absolute inset-y-0 right-1.5 my-auto inline-flex size-7 items-center justify-center rounded-lg text-muted-foreground",
@@ -99,6 +98,7 @@ export type PasswordInputProps = Omit<
     showCriteria?: boolean;
     inputClassName?: string;
     strengthLabel?: (completed: number, total: number) => ReactNode;
+    reserveMessageSpace?: boolean;
   };
 
 export function PasswordInput({
@@ -112,6 +112,7 @@ export function PasswordInput({
   criteria = defaultPasswordCriteria,
   showCriteria = true,
   strengthLabel,
+  reserveMessageSpace = true,
   required,
   disabled,
   value,
@@ -142,10 +143,9 @@ export function PasswordInput({
     password.length > 0
       ? Math.max((completed / Math.max(criteria.length, 1)) * 100, 10)
       : 0;
-  const descriptionId = description ? `${inputId}-description` : undefined;
-  const errorId = error ? `${inputId}-error` : undefined;
+  const messageId = description || error ? `${inputId}-message` : undefined;
   const criteriaId = showCriteria ? `${inputId}-criteria` : undefined;
-  const describedBy = [ariaDescribedBy, descriptionId, errorId, criteriaId]
+  const describedBy = [ariaDescribedBy, messageId, criteriaId]
     .filter(Boolean)
     .join(" ");
   const styles = passwordInputVariants({ size });
@@ -214,9 +214,12 @@ export function PasswordInput({
           </AnimatePresence>
         </button>
       </div>
-      {description ? (
-        <FieldDescription id={descriptionId}>{description}</FieldDescription>
-      ) : null}
+      <FieldMessage
+        id={messageId}
+        description={description}
+        error={error}
+        reserveSpace={reserveMessageSpace}
+      />
       {showCriteria ? (
         <div
           id={criteriaId}
@@ -278,7 +281,6 @@ export function PasswordInput({
           </ul>
         </div>
       ) : null}
-      <FieldError id={errorId} error={error} />
     </Field>
   );
 }
