@@ -5,10 +5,13 @@ import type { ComponentProps, ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
 
+const outerCardBackground =
+  "url('data:image/svg+xml,%3Csvg width=%2248%22 height=%2248%22 viewBox=%220 0 48 48%22 xmlns=%22http://www.w3.org/2000/svg%22 fill=%22none%22%3E%3Cg opacity=%220.18%22%3E%3Cpath fill-rule=%22evenodd%22 clip-rule=%22evenodd%22 d=%22M12 11H11V12H12V11Z%22 fill=%22%23A1A1AA%22/%3E%3Cpath fill-rule=%22evenodd%22 clip-rule=%22evenodd%22 d=%22M12 23H11V24H12V23Z%22 fill=%22%23A1A1AA%22/%3E%3Cpath fill-rule=%22evenodd%22 clip-rule=%22evenodd%22 d=%22M11 35H12V36H11V35Z%22 fill=%22%23A1A1AA%22/%3E%3Cpath fill-rule=%22evenodd%22 clip-rule=%22evenodd%22 d=%22M12 47H11V48H12V47Z%22 fill=%22%23A1A1AA%22/%3E%3Cpath fill-rule=%22evenodd%22 clip-rule=%22evenodd%22 d=%22M23 11H24V12H23V11Z%22 fill=%22%23A1A1AA%22/%3E%3Cpath fill-rule=%22evenodd%22 clip-rule=%22evenodd%22 d=%22M24 23H23V24H24V23Z%22 fill=%22%23A1A1AA%22/%3E%3Cpath fill-rule=%22evenodd%22 clip-rule=%22evenodd%22 d=%22M23 35H24V36H23V35Z%22 fill=%22%23A1A1AA%22/%3E%3Cpath fill-rule=%22evenodd%22 clip-rule=%22evenodd%22 d=%22M24 47H23V48H24V47Z%22 fill=%22%23A1A1AA%22/%3E%3Cpath fill-rule=%22evenodd%22 clip-rule=%22evenodd%22 d=%22M35 11H36V12H35V11Z%22 fill=%22%23A1A1AA%22/%3E%3Cpath fill-rule=%22evenodd%22 clip-rule=%22evenodd%22 d=%22M36 23H35V24H36V23Z%22 fill=%22%23A1A1AA%22/%3E%3Cpath fill-rule=%22evenodd%22 clip-rule=%22evenodd%22 d=%22M35 35H36V36H35V35Z%22 fill=%22%23A1A1AA%22/%3E%3Cpath fill-rule=%22evenodd%22 clip-rule=%22evenodd%22 d=%22M36 47H35V48H36V47Z%22 fill=%22%23A1A1AA%22/%3E%3Cpath fill-rule=%22evenodd%22 clip-rule=%22evenodd%22 d=%22M47 11H48V12H47V11Z%22 fill=%22%23A1A1AA%22/%3E%3Cpath fill-rule=%22evenodd%22 clip-rule=%22evenodd%22 d=%22M48 23H47V24H48V23Z%22 fill=%22%23A1A1AA%22/%3E%3Cpath fill-rule=%22evenodd%22 clip-rule=%22evenodd%22 d=%22M47 35H48V36H47V35Z%22 fill=%22%23A1A1AA%22/%3E%3Cpath fill-rule=%22evenodd%22 clip-rule=%22evenodd%22 d=%22M48 47H47V48H48V47Z%22 fill=%22%23A1A1AA%22/%3E%3C/g%3E%3C/svg%3E')";
+
 export const kineticCardVariants = tv({
   base: [
-    "not-prose w-full overflow-hidden rounded-2xl border border-border",
-    "bg-secondary p-2 text-foreground",
+    "not-prose relative w-full overflow-hidden rounded-2xl border border-border",
+    "bg-muted text-foreground",
   ],
   variants: {
     size: {
@@ -31,15 +34,18 @@ export const kineticCardVariants = tv({
 });
 
 export const kineticCardHeaderVariants = tv({
-  base: "relative z-10 flex items-start justify-between gap-3 px-4 pt-4",
+  base: "relative z-10 flex items-start justify-between gap-3 px-4 pt-4 pb-2",
 });
 
 export const kineticCardContentVariants = tv({
-  base: "relative z-10 px-4 py-3",
+  base: [
+    "relative z-10 mx-2 mb-2 overflow-hidden rounded-xl border border-border/60",
+    "bg-card p-4",
+  ],
 });
 
 export const kineticCardFooterVariants = tv({
-  base: "relative z-10 flex items-center justify-between gap-3 px-4 pb-4 text-xs",
+  base: "relative z-10 flex items-center justify-between gap-3 px-4 pt-2 pb-4 text-xs",
 });
 
 const toneStyles = {
@@ -69,6 +75,7 @@ export type KineticCardProps = ComponentProps<"div"> &
 
 export function KineticCard({
   className,
+  style,
   size,
   tone = "default",
   badge,
@@ -79,22 +86,26 @@ export function KineticCard({
   const toneStyle = toneStyles[tone ?? "default"];
 
   return (
-    <div
+    <motion.div
       data-slot="kinetic-card"
       className={twMerge(kineticCardVariants({ size, tone }), className)}
+      initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={shouldReduceMotion ? undefined : { y: -1 }}
+      transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+      style={{
+        backgroundImage: outerCardBackground,
+        backgroundRepeat: "repeat",
+        backgroundSize: "48px 48px",
+        backgroundClip: "padding-box",
+        ...style,
+      }}
       {...props}
     >
-      <motion.div
-        data-slot="kinetic-card-panel"
-        initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        whileHover={shouldReduceMotion ? undefined : { y: -1 }}
-        transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-        className="relative overflow-hidden rounded-xl border border-border/60 bg-card shadow-sm"
-      >
+      {!badge ? (
         <div
           aria-hidden="true"
-          className="absolute right-4 top-4 flex items-center gap-1.5"
+          className="absolute right-4 top-4 z-10 flex items-center gap-1.5"
         >
           <span className="h-px w-8 bg-border" />
           <motion.span
@@ -111,22 +122,22 @@ export function KineticCard({
             }}
           />
         </div>
+      ) : null}
 
-        {badge ? (
-          <div
-            data-slot="kinetic-card-badge"
-            className={twMerge(
-              "absolute right-3 top-3 z-20 rounded-full border px-2 py-0.5 text-[10px] font-medium",
-              toneStyle.badge,
-            )}
-          >
-            {badge}
-          </div>
-        ) : null}
+      {badge ? (
+        <div
+          data-slot="kinetic-card-badge"
+          className={twMerge(
+            "absolute right-3 top-3 z-20 rounded-full border px-2 py-0.5 text-[10px] font-medium leading-4",
+            toneStyle.badge,
+          )}
+        >
+          {badge}
+        </div>
+      ) : null}
 
-        {children}
-      </motion.div>
-    </div>
+      {children}
+    </motion.div>
   );
 }
 

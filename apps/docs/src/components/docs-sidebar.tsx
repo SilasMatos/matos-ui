@@ -76,7 +76,7 @@ const activeSpring = {
 const sidebarLinkClassName = [
   "group/sidebar-link relative flex h-8 w-full min-w-0 items-center rounded-md px-2.5 pl-3.5 text-[0.83rem] font-medium",
   "outline-none transition-[background-color,color,transform] duration-150 ease-out",
-  "hover:translate-x-px hover:bg-muted/40 hover:text-foreground",
+  "hover:translate-x-px hover:bg-background hover:text-foreground hover:shadow-[0_0_0_1px_color-mix(in_oklab,var(--border)_65%,transparent)] dark:hover:bg-muted/40 dark:hover:shadow-none",
   "motion-reduce:transform-none motion-reduce:transition-none",
   "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background",
 ].join(" ");
@@ -149,12 +149,12 @@ function SidebarActiveIndicator({
   return (
     <motion.span
       layoutId="docs-sidebar-active-indicator"
-      className="absolute inset-0 overflow-hidden rounded-md bg-muted/45"
+      className="absolute inset-0 overflow-hidden rounded-md bg-background shadow-[0_0_0_1px_color-mix(in_oklab,var(--border)_70%,transparent)] dark:bg-muted/45 dark:shadow-none"
       initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.98 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={shouldReduceMotion ? { duration: 0 } : activeSpring}
     >
-      <span className="absolute inset-y-2 left-1.5 w-0.5 rounded-full bg-foreground/70" />
+      <span className="absolute inset-y-2 left-1.5 w-0.5 rounded-full bg-foreground/80 dark:bg-foreground/70" />
     </motion.span>
   );
 }
@@ -177,7 +177,9 @@ function SidebarLink({
         aria-current={isActive ? "page" : undefined}
         className={cn(
           sidebarLinkClassName,
-          isActive ? "text-foreground" : "text-muted-foreground",
+          isActive
+            ? "text-foreground"
+            : "text-foreground/65 dark:text-muted-foreground",
         )}
       >
         <AnimatePresence initial={false}>
@@ -240,23 +242,23 @@ function SidebarGroup({
           aria-expanded={isOpen}
           disabled={isFiltering}
           onClick={onToggle}
-          className="group/header flex h-7 w-full items-center gap-2 rounded-md px-1.5 text-left outline-none transition-colors duration-150 hover:bg-muted/20 disabled:pointer-events-none focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none"
+          className="group/header flex h-7 w-full items-center gap-2 rounded-md px-1.5 text-left outline-none transition-colors duration-150 hover:bg-background/75 disabled:pointer-events-none focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none dark:hover:bg-muted/20"
         >
-          <span className="shrink-0 font-semibold text-[0.64rem] text-muted-foreground/75 uppercase tracking-[0.16em]">
+          <span className="shrink-0 font-semibold text-[0.64rem] text-foreground/60 uppercase tracking-[0.16em] dark:text-muted-foreground/75">
             {group.title}
           </span>
           {group.count !== undefined ? (
-            <span className="rounded-full border border-border/30 bg-muted/20 px-1.5 py-px font-medium text-[9px] text-muted-foreground/70 tabular-nums leading-none">
+            <span className="rounded-full border border-border/75 bg-background px-1.5 py-px font-medium text-[9px] text-foreground/55 tabular-nums leading-none dark:border-border/30 dark:bg-muted/20 dark:text-muted-foreground/70">
               {group.count}
             </span>
           ) : null}
           <span
             aria-hidden="true"
-            className="h-px min-w-2 flex-1 bg-border/25"
+            className="h-px min-w-2 flex-1 bg-border/70 dark:bg-border/25"
           />
           <motion.span
             aria-hidden="true"
-            className="flex text-muted-foreground/55"
+            className="flex text-foreground/55 dark:text-muted-foreground/55"
             animate={{ rotate: isOpen ? 0 : -90 }}
             transition={
               shouldReduceMotion
@@ -285,7 +287,7 @@ function SidebarGroup({
           >
             <motion.ul
               variants={shouldReduceMotion ? undefined : containerVariants}
-              className="space-y-px rounded-md bg-muted/20 p-0.5"
+              className="space-y-px rounded-lg border border-border/65 bg-muted/55 p-0.5 dark:border-transparent dark:bg-muted/20"
             >
               {group.pages.map((page) => (
                 <SidebarLink
@@ -348,12 +350,12 @@ export function DocsSidebar({
       collapsible="none"
       {...props}
     >
-      <SidebarContent className="relative mx-auto w-(--sidebar-menu-width) overflow-hidden bg-background py-0">
+      <SidebarContent className="relative mx-auto w-(--sidebar-menu-width) overflow-hidden bg-muted/35 py-0 dark:bg-background">
         <nav
           aria-label="Documentation navigation"
           className="flex min-h-0 flex-1 flex-col"
         >
-          <div className="sticky top-0 z-20 bg-background/95 px-2 pb-3 pt-1 backdrop-blur-sm">
+          <div className="sticky top-0 z-20 bg-muted/45 px-2 pb-3 pt-1 backdrop-blur-sm dark:bg-background/95">
             <label htmlFor={searchId} className="sr-only">
               Search components
             </label>
@@ -371,7 +373,7 @@ export function DocsSidebar({
                 autoComplete="off"
                 spellCheck={false}
                 aria-controls="docs-sidebar-groups"
-                className="h-8 w-full rounded-lg border border-border/40 bg-muted/20 pl-8 pr-3 text-xs text-foreground outline-none transition-[background-color,border-color,box-shadow] duration-200 placeholder:text-muted-foreground/70 hover:bg-muted/30 focus:border-ring/70 focus:bg-background focus:ring-2 focus:ring-ring/15"
+                className="h-8 w-full rounded-lg border border-border/80 bg-background pl-8 pr-3 text-xs text-foreground shadow-[0_1px_0_color-mix(in_oklab,var(--border)_35%,transparent)] outline-none transition-[background-color,border-color,box-shadow] duration-200 placeholder:text-muted-foreground/75 hover:bg-muted/30 focus:border-ring/70 focus:bg-background focus:ring-2 focus:ring-ring/15 dark:border-border/40 dark:bg-muted/20 dark:shadow-none dark:hover:bg-muted/30"
               />
             </div>
           </div>

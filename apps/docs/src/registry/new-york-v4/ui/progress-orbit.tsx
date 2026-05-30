@@ -12,10 +12,12 @@ import { type ComponentProps, type ReactNode, useEffect } from "react";
 import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
 
+const outerCardBackground =
+  "url('data:image/svg+xml,%3Csvg width=%2248%22 height=%2248%22 viewBox=%220 0 48 48%22 xmlns=%22http://www.w3.org/2000/svg%22 fill=%22none%22%3E%3Cg opacity=%220.18%22%3E%3Cpath fill-rule=%22evenodd%22 clip-rule=%22evenodd%22 d=%22M12 11H11V12H12V11Z%22 fill=%22%23A1A1AA%22/%3E%3Cpath fill-rule=%22evenodd%22 clip-rule=%22evenodd%22 d=%22M12 23H11V24H12V23Z%22 fill=%22%23A1A1AA%22/%3E%3Cpath fill-rule=%22evenodd%22 clip-rule=%22evenodd%22 d=%22M11 35H12V36H11V35Z%22 fill=%22%23A1A1AA%22/%3E%3Cpath fill-rule=%22evenodd%22 clip-rule=%22evenodd%22 d=%22M12 47H11V48H12V47Z%22 fill=%22%23A1A1AA%22/%3E%3Cpath fill-rule=%22evenodd%22 clip-rule=%22evenodd%22 d=%22M23 11H24V12H23V11Z%22 fill=%22%23A1A1AA%22/%3E%3Cpath fill-rule=%22evenodd%22 clip-rule=%22evenodd%22 d=%22M24 23H23V24H24V23Z%22 fill=%22%23A1A1AA%22/%3E%3Cpath fill-rule=%22evenodd%22 clip-rule=%22evenodd%22 d=%22M23 35H24V36H23V35Z%22 fill=%22%23A1A1AA%22/%3E%3Cpath fill-rule=%22evenodd%22 clip-rule=%22evenodd%22 d=%22M24 47H23V48H24V47Z%22 fill=%22%23A1A1AA%22/%3E%3Cpath fill-rule=%22evenodd%22 clip-rule=%22evenodd%22 d=%22M35 11H36V12H35V11Z%22 fill=%22%23A1A1AA%22/%3E%3Cpath fill-rule=%22evenodd%22 clip-rule=%22evenodd%22 d=%22M36 23H35V24H36V23Z%22 fill=%22%23A1A1AA%22/%3E%3Cpath fill-rule=%22evenodd%22 clip-rule=%22evenodd%22 d=%22M35 35H36V36H35V35Z%22 fill=%22%23A1A1AA%22/%3E%3Cpath fill-rule=%22evenodd%22 clip-rule=%22evenodd%22 d=%22M36 47H35V48H36V47Z%22 fill=%22%23A1A1AA%22/%3E%3Cpath fill-rule=%22evenodd%22 clip-rule=%22evenodd%22 d=%22M47 11H48V12H47V11Z%22 fill=%22%23A1A1AA%22/%3E%3Cpath fill-rule=%22evenodd%22 clip-rule=%22evenodd%22 d=%22M48 23H47V24H48V23Z%22 fill=%22%23A1A1AA%22/%3E%3Cpath fill-rule=%22evenodd%22 clip-rule=%22evenodd%22 d=%22M47 35H48V36H47V35Z%22 fill=%22%23A1A1AA%22/%3E%3Cpath fill-rule=%22evenodd%22 clip-rule=%22evenodd%22 d=%22M48 47H47V48H48V47Z%22 fill=%22%23A1A1AA%22/%3E%3C/g%3E%3C/svg%3E')";
+
 export const progressOrbitVariants = tv({
   base: [
-    "not-prose w-full overflow-hidden rounded-2xl border border-border",
-    "bg-secondary p-2 text-foreground",
+    "not-prose w-full overflow-hidden rounded-2xl border border-border bg-muted text-foreground",
   ],
   variants: {
     size: {
@@ -78,6 +80,7 @@ function clamp(value: number, min: number, max: number) {
 
 function ProgressOrbit({
   className,
+  style,
   size,
   value,
   max = 100,
@@ -103,11 +106,54 @@ function ProgressOrbit({
       className={twMerge(progressOrbitVariants({ size }), className)}
       role="img"
       aria-label={`${String(label)} ${Math.round(progress)}${suffix}`}
+      style={{
+        backgroundImage: outerCardBackground,
+        backgroundRepeat: "repeat",
+        backgroundSize: "48px 48px",
+        backgroundClip: "padding-box",
+        ...style,
+      }}
       {...props}
     >
       <div
+        data-slot="progress-orbit-header"
+        className="flex items-start justify-between gap-3 px-4 pt-4 pb-2"
+      >
+        <div className="flex min-w-0 items-center gap-2.5">
+          <span
+            data-slot="progress-orbit-icon"
+            className={twMerge(
+              "flex size-7 shrink-0 items-center justify-center rounded-lg border",
+              "[&_svg]:size-3.5",
+              toneStyle.icon,
+            )}
+          >
+            {icon ?? <Sparkles className="size-3.5" aria-hidden="true" />}
+          </span>
+          <div className="min-w-0">
+            <h3
+              data-slot="progress-orbit-label"
+              className="truncate text-[13px] font-semibold leading-4"
+            >
+              {label}
+            </h3>
+            {description ? (
+              <p
+                data-slot="progress-orbit-description"
+                className="mt-0.5 truncate text-[11px] leading-4 text-muted-foreground"
+              >
+                {description}
+              </p>
+            ) : null}
+          </div>
+        </div>
+      </div>
+      <div
         data-slot="progress-orbit-panel"
-        className="flex items-center gap-3 rounded-xl border border-border/60 bg-card p-3 shadow-sm"
+        className={twMerge(
+          "mx-1 flex items-center gap-3 overflow-hidden rounded-xl border border-border/60 bg-card p-2",
+          !footer && "mb-2",
+        )}
       >
         <div
           data-slot="progress-orbit-visual"
@@ -171,41 +217,10 @@ function ProgressOrbit({
         </div>
 
         <div className="min-w-0 flex-1">
-          <div className="flex min-w-0 items-start justify-between gap-3">
-            <div className="flex min-w-0 items-center gap-2">
-              <span
-                data-slot="progress-orbit-icon"
-                className={twMerge(
-                  "flex size-7 shrink-0 items-center justify-center rounded-lg border",
-                  "[&_svg]:size-3.5",
-                  toneStyle.icon,
-                )}
-              >
-                {icon ?? <Sparkles className="size-3.5" aria-hidden="true" />}
-              </span>
-              <div className="min-w-0">
-                <h3
-                  data-slot="progress-orbit-label"
-                  className="truncate text-[13px] font-semibold leading-4"
-                >
-                  {label}
-                </h3>
-                {description ? (
-                  <p
-                    data-slot="progress-orbit-description"
-                    className="mt-0.5 truncate text-[11px] leading-4 text-muted-foreground"
-                  >
-                    {description}
-                  </p>
-                ) : null}
-              </div>
-            </div>
-          </div>
-
           {milestones.length ? (
             <div
               data-slot="progress-orbit-milestones"
-              className="mt-2 flex min-w-0 flex-wrap items-center gap-1.5"
+              className="flex min-w-0 flex-wrap items-center gap-1.5"
             >
               {milestones.map((milestone, index) => {
                 const complete = milestone.value <= value;
@@ -245,16 +260,22 @@ function ProgressOrbit({
             </div>
           ) : null}
 
-          {footer ? (
-            <div
-              data-slot="progress-orbit-footer"
-              className="mt-2 text-[11px] leading-4 text-muted-foreground"
-            >
-              {footer}
-            </div>
+          {!milestones.length ? (
+            <p className="text-[11px] leading-4 text-muted-foreground">
+              {Math.round(progress)}
+              {suffix} complete
+            </p>
           ) : null}
         </div>
       </div>
+      {footer ? (
+        <div
+          data-slot="progress-orbit-footer"
+          className="px-4 pt-2 pb-4 text-[11px] leading-4 text-muted-foreground"
+        >
+          {footer}
+        </div>
+      ) : null}
     </div>
   );
 }

@@ -20,14 +20,15 @@ O padrão **inset card** cria profundidade visual usando camadas de fundo e geom
 
 ```
 ┌─────────────────────────────────────┐  ← outer card
-│  [header solto]                     │    background diferenciado
-│                                     │    border-radius grande (~20px)
+│  [header solto]  ou                 │    background diferenciado
+│  [titulo]                           │    border-radius grande (~20px)
 │  ┌───────────────────────────────┐  │  ← inner panel
 │  │  conteúdo principal           │  │    background primário
 │  │  (tabela, chart, form, etc.)  │  │    border-radius menor (~12px)
 │  └───────────────────────────────┘  │    margin lateral (~10-12px)
 │                                     │
-│  [footer solto]                     │
+│  [footer solto]  ou                 │
+│   [button] [link]                   │
 └─────────────────────────────────────┘
 ```
 
@@ -35,12 +36,13 @@ O padrão **inset card** cria profundidade visual usando camadas de fundo e geom
 
 | Camada | Papel | CSS-chave |
 |---|---|---|
-| **Outer card** | Container externo com fundo diferenciado | `background: var(--color-background-secondary)` · `border-radius: 20px` · `border: 0.5px solid var(--color-border-tertiary)` |
+| **Outer card** | Container externo com fundo diferenciado + textura sutil de pontos | `background-color: var(--color-background-secondary)` · `background-image: var(--inset-card-dot-pattern)` · `border-radius: 20px` · `border: 0.5px solid var(--color-border-tertiary)` |
 | **Inner panel** | Bloco recuado que "flutua" dentro do outer | `background: var(--color-background-primary)` · `border-radius: 12px` · `margin: 0 10px` · `border: 0.5px solid var(--color-border-tertiary)` |
 | **Header / Footer soltos** | Ações e metadados fora do inner panel | `padding: 14px 18px` · sem `border` · separação só por espaçamento |
 
 > **Regra de ouro:** a profundidade vem do contraste de fundo entre outer e inner, não de bordas ou sombras.
 > Se você adicionou um `box-shadow`, algo está errado.
+> O padrão de pontos do outer card é uma textura por cima do fundo, nunca um fundo próprio que troca a cor base.
 
 ---
 
@@ -87,7 +89,11 @@ O padrão **inset card** cria profundidade visual usando camadas de fundo e geom
 
 ```css
 .outer-card {
-  background: var(--color-background-secondary);
+  background-color: var(--color-background-secondary);
+  background-image: var(--inset-card-dot-pattern);
+  background-size: 48px 48px;
+  background-repeat: repeat;
+  background-clip: padding-box;
   border-radius: 20px;
   border: 0.5px solid var(--color-border-tertiary);
   overflow: hidden;
@@ -205,6 +211,7 @@ O inner panel começa logo após o `padding-top` do outer card.
 | Erro | Por quê é errado | Correção |
 |---|---|---|
 | `box-shadow` no inner panel | Destrói a sensação flat | Remova. Use só contraste de fundo |
+| SVG de pontos com `<rect>` de fundo | Troca a cor do outer card e quebra o tema claro/escuro | Remova o `<rect>` e use o SVG só como `background-image` transparente |
 | `border-bottom` no header solto | Transforma em flat card | Remova. Só padding separa |
 | `margin: 0` no inner panel | O "inset" desaparece | Use pelo menos `margin: 0 10px` |
 | `border-radius` igual no outer e inner | Não cria hierarquia visual | Outer ≥ 16px, inner ≤ 14px |
@@ -221,6 +228,7 @@ Estes valores usam as CSS variables do sistema host (claude.ai / qualquer design
 /* backgrounds */
 --outer-bg:  var(--color-background-secondary);   /* cinza/escuro suave */
 --inner-bg:  var(--color-background-primary);      /* branco ou mais claro */
+--inset-card-dot-pattern: url("data:image/svg+xml,%3Csvg width='48' height='48' viewBox='0 0 48 48' xmlns='http://www.w3.org/2000/svg' fill='none'%3E%3Cg opacity='0.18'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M12 11H11V12H12V11Z' fill='%23A1A1AA'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M12 23H11V24H12V23Z' fill='%23A1A1AA'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M11 35H12V36H11V35Z' fill='%23A1A1AA'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M12 47H11V48H12V47Z' fill='%23A1A1AA'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M23 11H24V12H23V11Z' fill='%23A1A1AA'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M24 23H23V24H24V23Z' fill='%23A1A1AA'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M23 35H24V36H23V35Z' fill='%23A1A1AA'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M24 47H23V48H24V47Z' fill='%23A1A1AA'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M35 11H36V12H35V11Z' fill='%23A1A1AA'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M36 23H35V24H36V23Z' fill='%23A1A1AA'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M35 35H36V36H35V35Z' fill='%23A1A1AA'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M36 47H35V48H36V47Z' fill='%23A1A1AA'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M47 11H48V12H47V11Z' fill='%23A1A1AA'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M48 23H47V24H48V23Z' fill='%23A1A1AA'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M47 35H48V36H47V35Z' fill='%23A1A1AA'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M48 47H47V48H48V47Z' fill='%23A1A1AA'/%3E%3C/g%3E%3C/svg%3E");
 
 /* bordas */
 --card-border: 0.5px solid var(--color-border-tertiary);
@@ -235,11 +243,29 @@ Estes valores usam as CSS variables do sistema host (claude.ai / qualquer design
 --panel-margin:   0 10px;
 ```
 
+### Textura padrão do outer card
+
+Use o padrão de pontos apenas no **outer card**. Ele deve ser transparente e aplicado por cima do background base:
+
+```css
+.outer-card {
+  background-color: var(--outer-bg);
+  background-image: var(--inset-card-dot-pattern);
+  background-size: 48px 48px;
+  background-repeat: repeat;
+  background-clip: padding-box;
+}
+```
+
+Não aplique essa textura no inner panel. O inner panel precisa continuar limpo para manter legibilidade de formulários, tabelas e conteúdo denso.
+
 ---
 
 ## Checklist de implementação
 
 - [ ] Outer card tem `background` diferente do inner panel
+- [ ] Outer card usa a textura de pontos padrão como `background-image`
+- [ ] SVG/textura do outer card é transparente e não substitui a cor base
 - [ ] Inner panel tem `margin` lateral (mínimo `0 10px`)
 - [ ] Inner panel tem `border-radius` menor que o outer
 - [ ] Inner panel tem `overflow: hidden`
