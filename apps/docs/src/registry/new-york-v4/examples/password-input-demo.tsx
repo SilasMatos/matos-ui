@@ -8,7 +8,7 @@ export default function PasswordInputDemo() {
   const [password, setPassword] = useState("Matos");
 
   return (
-    <div className="mx-auto w-full max-w-sm">
+    <div className="mx-auto w-full max-w-sm py-32">
       <PasswordInput
         label="Password"
         required

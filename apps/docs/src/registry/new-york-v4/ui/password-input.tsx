@@ -5,6 +5,7 @@ import { Circle, Eye, EyeOff } from "lucide-react";
 import {
   type ChangeEvent,
   type ComponentProps,
+  type FocusEvent,
   type ReactNode,
   useId,
   useState,
@@ -204,7 +205,7 @@ export const passwordInputVariants = tv({
       "disabled:pointer-events-none disabled:opacity-50",
     ],
     meter:
-      "mt-0.5 grid gap-1.5 rounded-xl border border-border bg-muted/40 p-2.5",
+      "absolute inset-x-0 top-[calc(100%+0.375rem)] z-20 grid gap-1.5 rounded-xl border border-border bg-background/95 p-2.5 shadow-lg backdrop-blur-sm",
     meterHeader:
       "flex items-center justify-between gap-2 text-[11px] text-muted-foreground",
     meterTrack: "h-1 overflow-hidden rounded-full bg-muted",
@@ -257,6 +258,8 @@ export function PasswordInput({
   value,
   defaultValue,
   onChange,
+  onFocus,
+  onBlur,
   autoComplete = "new-password",
   "aria-describedby": ariaDescribedBy,
   "aria-invalid": ariaInvalid,
@@ -265,6 +268,7 @@ export function PasswordInput({
   const generatedId = useId();
   const shouldReduceMotion = useReducedMotion();
   const [visible, setVisible] = useState(false);
+  const [isMeterOpen, setIsMeterOpen] = useState(false);
   const [internalValue, setInternalValue] = useState(() =>
     typeof defaultValue === "string" ? defaultValue : "",
   );
@@ -283,7 +287,8 @@ export function PasswordInput({
       ? Math.max((completed / Math.max(criteria.length, 1)) * 100, 10)
       : 0;
   const messageId = description || error ? `${inputId}-message` : undefined;
-  const criteriaId = showCriteria ? `${inputId}-criteria` : undefined;
+  const criteriaId =
+    showCriteria && isMeterOpen ? `${inputId}-criteria` : undefined;
   const describedBy = [ariaDescribedBy, messageId, criteriaId]
     .filter(Boolean)
     .join(" ");
@@ -292,6 +297,16 @@ export function PasswordInput({
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     setInternalValue(event.target.value);
     onChange?.(event);
+  }
+
+  function handleFocus(event: FocusEvent<HTMLInputElement>) {
+    setIsMeterOpen(true);
+    onFocus?.(event);
+  }
+
+  function handleBlur(event: FocusEvent<HTMLInputElement>) {
+    setIsMeterOpen(false);
+    onBlur?.(event);
   }
 
   return (
@@ -321,6 +336,8 @@ export function PasswordInput({
           aria-describedby={describedBy || undefined}
           aria-invalid={invalid || undefined}
           onChange={handleChange}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           {...props}
         />
         <button
@@ -330,6 +347,7 @@ export function PasswordInput({
           aria-label={visible ? "Hide password" : "Show password"}
           aria-pressed={visible}
           disabled={disabled}
+          onPointerDown={(event) => event.preventDefault()}
           onClick={() => setVisible((current) => !current)}
         >
           <AnimatePresence initial={false} mode="wait">
@@ -352,6 +370,88 @@ export function PasswordInput({
             </motion.span>
           </AnimatePresence>
         </button>
+        <AnimatePresence initial={false}>
+          {showCriteria && isMeterOpen ? (
+            <motion.div
+              id={criteriaId}
+              data-slot="password-input-meter"
+              className={styles.meter()}
+              initial={
+                shouldReduceMotion
+                  ? { opacity: 0 }
+                  : { opacity: 0, y: -6, scale: 0.985 }
+              }
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={
+                shouldReduceMotion
+                  ? { opacity: 0 }
+                  : { opacity: 0, y: -4, scale: 0.99 }
+              }
+              transition={{
+                duration: shouldReduceMotion ? 0 : 0.28,
+                ease: [0.2, 0, 0, 1],
+              }}
+            >
+              <div className={styles.meterHeader()}>
+                <span>Password strength</span>
+                <span>
+                  {strengthLabel?.(completed, criteria.length) ??
+                    `${completed}/${criteria.length} met`}
+                </span>
+              </div>
+              <div className={styles.meterTrack()} aria-hidden="true">
+                <motion.div
+                  className={styles.meterBar()}
+                  initial={false}
+                  animate={{
+                    width: `${meterWidth}%`,
+                    opacity: password ? 1 : 0,
+                  }}
+                  transition={{
+                    duration: shouldReduceMotion ? 0 : 0.32,
+                    ease: [0.4, 0, 0.2, 1],
+                  }}
+                />
+              </div>
+              <ul className={styles.criteria()}>
+                {results.map((criterion) => (
+                  <li
+                    key={criterion.id}
+                    data-met={criterion.met}
+                    className={styles.criterion()}
+                  >
+                    <span className={styles.criterionIcon()} aria-hidden="true">
+                      <AnimatePresence initial={false} mode="wait">
+                        <motion.span
+                          key={criterion.met ? "valid" : "pending"}
+                          className="flex"
+                          initial={
+                            shouldReduceMotion
+                              ? { opacity: 0 }
+                              : { opacity: 0, scale: 0.88 }
+                          }
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.88 }}
+                          transition={{
+                            duration: 0.24,
+                            ease: [0.4, 0, 0.2, 1],
+                          }}
+                        >
+                          {criterion.met ? (
+                            <IconCircleCheck className="drop-shadow-[0_1px_2px_rgba(16,185,129,0.25)]" />
+                          ) : (
+                            <Circle className="size-2 fill-muted text-muted" />
+                          )}
+                        </motion.span>
+                      </AnimatePresence>
+                    </span>
+                    {criterion.label}
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
       </div>
       {description || error || reserveMessageSpace ? (
         <FieldMessage
@@ -360,68 +460,6 @@ export function PasswordInput({
           error={error}
           reserveSpace={reserveMessageSpace}
         />
-      ) : null}
-      {showCriteria ? (
-        <div
-          id={criteriaId}
-          data-slot="password-input-meter"
-          className={styles.meter()}
-        >
-          <div className={styles.meterHeader()}>
-            <span>Password strength</span>
-            <span>
-              {strengthLabel?.(completed, criteria.length) ??
-                `${completed}/${criteria.length} met`}
-            </span>
-          </div>
-          <div className={styles.meterTrack()} aria-hidden="true">
-            <motion.div
-              className={styles.meterBar()}
-              initial={false}
-              animate={{ width: `${meterWidth}%`, opacity: password ? 1 : 0 }}
-              transition={{
-                duration: shouldReduceMotion ? 0 : 0.32,
-                ease: [0.4, 0, 0.2, 1],
-              }}
-            />
-          </div>
-          <ul className={styles.criteria()}>
-            {results.map((criterion) => (
-              <li
-                key={criterion.id}
-                data-met={criterion.met}
-                className={styles.criterion()}
-              >
-                <span className={styles.criterionIcon()} aria-hidden="true">
-                  <AnimatePresence initial={false} mode="wait">
-                    <motion.span
-                      key={criterion.met ? "valid" : "pending"}
-                      className="flex"
-                      initial={
-                        shouldReduceMotion
-                          ? { opacity: 0 }
-                          : { opacity: 0, scale: 0.88 }
-                      }
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.88 }}
-                      transition={{
-                        duration: 0.24,
-                        ease: [0.4, 0, 0.2, 1],
-                      }}
-                    >
-                      {criterion.met ? (
-                        <IconCircleCheck className="drop-shadow-[0_1px_2px_rgba(16,185,129,0.25)]" />
-                      ) : (
-                        <Circle className="size-2 fill-muted text-muted" />
-                      )}
-                    </motion.span>
-                  </AnimatePresence>
-                </span>
-                {criterion.label}
-              </li>
-            ))}
-          </ul>
-        </div>
       ) : null}
     </Field>
   );

@@ -30,6 +30,22 @@
       ]
     },
     {
+      "name": "reactive-button",
+      "type": "registry:ui",
+      "dependencies": [
+        "framer-motion",
+        "lucide-react",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/reactive-button.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "badge",
       "type": "registry:ui",
       "dependencies": ["tailwind-merge", "tailwind-variants"],
@@ -427,6 +443,17 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/button-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "reactive-button-demo",
+      "type": "registry:example",
+      "registryDependencies": ["reactive-button"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/reactive-button-demo.tsx",
           "type": "registry:example"
         }
       ]

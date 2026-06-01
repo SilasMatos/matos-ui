@@ -13,6 +13,17 @@ export const examples: Registry["items"] = [
     ],
   },
   {
+    name: "reactive-button-demo",
+    type: "registry:example",
+    registryDependencies: ["reactive-button"],
+    files: [
+      {
+        path: "examples/reactive-button-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
     name: "badge-demo",
     type: "registry:example",
     registryDependencies: ["badge"],

@@ -355,7 +355,7 @@ export function DocsSidebar({
           aria-label="Documentation navigation"
           className="flex min-h-0 flex-1 flex-col"
         >
-          <div className="sticky top-0 z-20 bg-muted/45 px-2 pb-3 pt-1 backdrop-blur-sm dark:bg-background/95">
+          <div className="sticky top-0 z-20  px-2 pb-3 pt-1 backdrop-blur-sm ">
             <label htmlFor={searchId} className="sr-only">
               Search components
             </label>

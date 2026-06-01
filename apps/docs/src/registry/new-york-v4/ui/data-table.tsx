@@ -85,7 +85,7 @@ export function DataTable<TData, TValue>({
     >
       <div
         data-slot="data-table-card"
-        className="overflow-hidden rounded-[1.35rem] bg-muted/45 p-2 shadow-sm"
+        className="overflow-hidden rounded-[1.35rem] bg-muted p-2 shadow-sm"
       >
         <div
           data-slot="data-table-panel"
@@ -429,7 +429,7 @@ export function Table({ className, ...props }: ComponentProps<"table">) {
       <table
         data-slot="table"
         className={twMerge(
-          "m-0 w-full min-w-190 caption-bottom border-collapse text-sm",
+          "m-0 w-full min-w-190 border-separate border-spacing-0 caption-bottom text-sm",
           className,
         )}
         {...props}
@@ -452,7 +452,10 @@ export function TableBody({ className, ...props }: ComponentProps<"tbody">) {
   return (
     <tbody
       data-slot="table-body"
-      className={twMerge("bg-background [&_tr:last-child]:border-0", className)}
+      className={twMerge(
+        "bg-background [&_tr:first-child_td]:border-border/45 [&_tr:first-child_td]:border-t [&_tr:first-child_td:first-child]:rounded-tl-xl [&_tr:first-child_td:last-child]:rounded-tr-xl [&_tr:last-child_td]:border-b-0 [&_tr:last-child_td:first-child]:rounded-bl-xl [&_tr:last-child_td:last-child]:rounded-br-xl",
+        className,
+      )}
       {...props}
     />
   );
@@ -462,10 +465,7 @@ export function TableRow({ className, ...props }: ComponentProps<"tr">) {
   return (
     <tr
       data-slot="table-row"
-      className={twMerge(
-        "border-b border-border/70 transition-colors hover:bg-muted/25",
-        className,
-      )}
+      className={twMerge("transition-colors hover:bg-muted/25", className)}
       {...props}
     />
   );
@@ -476,7 +476,7 @@ export function TableHead({ className, ...props }: ComponentProps<"th">) {
     <th
       data-slot="table-head"
       className={twMerge(
-        "h-9 px-4 text-left align-middle font-medium whitespace-nowrap first:pl-5 last:pr-5",
+        "relative h-9 px-4 text-left align-middle font-medium whitespace-nowrap after:absolute after:inset-y-2 after:right-0 after:w-px after:bg-border/30 after:content-[''] first:pl-5 last:pr-5 last:after:hidden",
         className,
       )}
       {...props}
@@ -489,7 +489,7 @@ export function TableCell({ className, ...props }: ComponentProps<"td">) {
     <td
       data-slot="table-cell"
       className={twMerge(
-        "h-13 px-4 align-middle text-sm text-foreground first:pl-5 last:pr-5",
+        "h-13 border-border/70 border-b px-4 align-middle text-sm text-foreground first:pl-5 last:pr-5",
         className,
       )}
       {...props}

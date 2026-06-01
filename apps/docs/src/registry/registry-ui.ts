@@ -13,6 +13,22 @@ export const ui: Registry["items"] = [
     ],
   },
   {
+    name: "reactive-button",
+    type: "registry:ui",
+    dependencies: [
+      "framer-motion",
+      "lucide-react",
+      "tailwind-merge",
+      "tailwind-variants",
+    ],
+    files: [
+      {
+        path: "ui/reactive-button.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
     name: "badge",
     type: "registry:ui",
     dependencies: ["tailwind-merge", "tailwind-variants"],

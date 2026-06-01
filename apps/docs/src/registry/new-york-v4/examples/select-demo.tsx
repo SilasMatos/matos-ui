@@ -9,19 +9,16 @@ const roles: SelectOption[] = [
   {
     value: "design",
     label: "Product Designer",
-    description: "Flows, prototypes and design systems.",
     icon: <Palette className="size-4" />,
   },
   {
     value: "engineering",
     label: "Frontend Engineer",
-    description: "Interfaces and product architecture.",
     icon: <Code2 className="size-4" />,
   },
   {
     value: "lead",
     label: "Product Lead",
-    description: "Strategy and delivery alignment.",
     icon: <BriefcaseBusiness className="size-4" />,
   },
 ];

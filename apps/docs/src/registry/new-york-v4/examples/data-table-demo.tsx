@@ -9,7 +9,6 @@ import {
   DataTableColumnHeader,
   DataTableConfidence,
   DataTableStatusBadge,
-  DataTableTaskCount,
 } from "@/registry/new-york-v4/ui/data-table";
 
 type AgentStatus = "running" | "idle" | "error" | "scheduled";
@@ -191,12 +190,6 @@ const columns: ColumnDef<Agent>[] = [
         {row.original.cost}
       </span>
     ),
-  },
-  {
-    accessorKey: "tasks",
-    size: 100,
-    header: "Tasks",
-    cell: ({ row }) => <DataTableTaskCount count={row.original.tasks} />,
   },
   {
     accessorKey: "assignee",

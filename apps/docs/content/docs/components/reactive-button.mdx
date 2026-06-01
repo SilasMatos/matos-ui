@@ -1,0 +1,171 @@
+---
+title: Reactive Button
+description: Compact action button with polished loading, success, and error feedback for asynchronous flows.
+---
+
+<ComponentPreview name="reactive-button-demo" chromeless align="start" />
+
+## When To Use
+
+Use `ReactiveButton` when an action needs immediate, inline feedback without opening a toast or changing the surrounding layout. It works well for save, send, submit, and delete flows.
+
+Keep using the regular `Button` for navigation, simple actions, and cases where the result is already visible elsewhere on the page.
+
+The default loading, success, and error icons use small inline SVG animations. The button surface also reacts to each state: loading adds a quiet sweep, success fills with the theme success tone, and error settles with a restrained alert pulse. These effects become static when reduced motion is enabled.
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/reactive-button.json" />
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the following dependencies:</Step>
+
+<CodeBlockCommand command="npm install framer-motion lucide-react tailwind-merge tailwind-variants" />
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="reactive-button" title="components/matos-ui/reactive-button.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Manual Status Control
+
+The component is controlled through `status`. Update it when your asynchronous operation starts and finishes.
+
+```tsx
+import { useState } from "react"
+import { ReactiveButton, type ReactiveButtonStatus } from "@/components/matos-ui/reactive-button"
+
+function SaveButton() {
+  const [status, setStatus] = useState<ReactiveButtonStatus>("idle")
+
+  async function save() {
+    setStatus("loading")
+
+    try {
+      await saveChanges()
+      setStatus("success")
+    } catch {
+      setStatus("error")
+    }
+  }
+
+  return (
+    <ReactiveButton status={status} onClick={save}>
+      Save changes
+    </ReactiveButton>
+  )
+}
+```
+
+## Automatic Reset
+
+Enable `autoReset` when the final state should return to idle after a short delay. Use `onStatusReset` to keep your external state synchronized.
+
+```tsx
+<ReactiveButton
+  status={status}
+  autoReset
+  resetDelay={1800}
+  onStatusReset={() => setStatus("idle")}
+>
+  Send message
+</ReactiveButton>
+```
+
+## Custom Status Text
+
+```tsx
+<ReactiveButton
+  status={status}
+  loadingText="Publishing..."
+  successText="Published"
+  errorText="Try again"
+>
+  Publish
+</ReactiveButton>
+```
+
+## React Hook Form
+
+Use `formState.isSubmitting` for loading and update a local status after the submit promise resolves.
+
+```tsx
+import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { ReactiveButton, type ReactiveButtonStatus } from "@/components/matos-ui/reactive-button"
+
+function ProfileForm() {
+  const [status, setStatus] = useState<ReactiveButtonStatus>("idle")
+  const { handleSubmit, formState } = useForm()
+
+  async function onSubmit(values: unknown) {
+    setStatus("loading")
+
+    try {
+      await updateProfile(values)
+      setStatus("success")
+    } catch {
+      setStatus("error")
+    }
+  }
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <ReactiveButton
+        type="submit"
+        status={formState.isSubmitting ? "loading" : status}
+        loadingText="Saving..."
+        successText="Saved"
+        autoReset
+        onStatusReset={() => setStatus("idle")}
+      >
+        Save changes
+      </ReactiveButton>
+    </form>
+  )
+}
+```
+
+## Reference
+
+### Props
+
+| Prop            | Type                                                                       | Default        |
+| --------------- | -------------------------------------------------------------------------- | -------------- |
+| `variant`       | `"default" \| "secondary" \| "outline" \| "ghost" \| "destructive" \| "link"` | `"default"`    |
+| `size`          | `"sm" \| "md" \| "lg" \| "icon"`                                        | `"md"`         |
+| `status`        | `"idle" \| "loading" \| "success" \| "error"`                            | `"idle"`       |
+| `loadingText`   | `ReactNode`                                                                | `"Loading..."` |
+| `successText`   | `ReactNode`                                                                | `"Done"`       |
+| `errorText`     | `ReactNode`                                                                | `"Try again"`  |
+| `icon`          | `ReactNode`                                                                | -              |
+| `loadingIcon`   | `ReactNode`                                                                | Animated spinner |
+| `successIcon`   | `ReactNode`                                                                | Animated check |
+| `errorIcon`     | `ReactNode`                                                                | Animated alert |
+| `autoReset`     | `boolean`                                                                  | `false`        |
+| `resetDelay`    | `number`                                                                   | `1800`         |
+| `onStatusReset` | `() => void`                                                               | -              |
+
+For icon-only buttons, provide a descriptive `aria-label`.
+
+Also exported: `reactiveButtonVariants`, `ReactiveButtonStatus`, and `ReactiveButtonProps`.

@@ -1,6 +1,6 @@
 ---
 title: Select
-description: Accessible Base UI select with inset trigger, rich options, validation states, and refined popup motion.
+description: Searchable Base UI combobox with rich options, validation states, and refined popup motion.
 ---
 
 <ComponentPreview name="select-demo" chromeless align="start" />
@@ -26,4 +26,4 @@ import { Select } from "@/components/matos-ui/select"
 />
 ```
 
-`Select` supports option icons and descriptions, keyboard navigation through Base UI, `disabled`, and direct integration with a React Hook Form `Controller`.
+`Select` behaves like a compact command menu: opening it focuses a search field inside the popup, where users can filter options, navigate matches with the keyboard, and select with `Enter`. It supports option icons and descriptions, `disabled`, direct integration with a React Hook Form `Controller`, an `emptyMessage`, and custom `searchText` for options whose labels are not plain strings.
