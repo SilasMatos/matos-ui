@@ -14,7 +14,7 @@ import { tv, type VariantProps } from "tailwind-variants";
 export const reactiveButtonVariants = tv({
   base: [
     "relative inline-flex shrink-0 items-center justify-center overflow-hidden whitespace-nowrap rounded-lg border border-transparent bg-clip-padding text-sm font-medium outline-none select-none",
-    "transition-[background-color,border-color,box-shadow,color,opacity,transform] duration-200 ease-out",
+    "transition-[background-color,border-color,border-radius,box-shadow,color,opacity,transform] duration-200 ease-out",
     "hover:-translate-y-0.5 hover:shadow-sm active:translate-y-0 active:scale-[0.98] motion-reduce:transform-none",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
     "disabled:pointer-events-none disabled:opacity-50",
@@ -54,6 +54,7 @@ export type ReactiveButtonProps = ComponentProps<"button"> &
     loadingText?: ReactNode;
     successText?: ReactNode;
     errorText?: ReactNode;
+    countdown?: number;
     icon?: ReactNode;
     loadingIcon?: ReactNode;
     successIcon?: ReactNode;
@@ -68,7 +69,7 @@ const statusStyles: Record<ReactiveButtonStatus, string> = {
   loading: "cursor-wait",
   success: "border-chart-2/40 text-primary-foreground hover:border-chart-2/50",
   error:
-    "border-destructive bg-destructive text-destructive-foreground hover:bg-destructive/90",
+    "border-destructive bg-destructive text-primary-foreground hover:bg-destructive/90",
 };
 
 type AnimatedStatusIconProps = {
@@ -254,93 +255,135 @@ function ReactiveButtonSurface({
   status: ReactiveButtonStatus;
   shouldReduceMotion: boolean;
 }) {
-  if (status === "idle") {
-    return null;
-  }
-
   return (
     <AnimatePresence initial={false} mode="wait">
-      <motion.span
-        key={status}
-        data-slot="reactive-button-surface"
-        className="pointer-events-none absolute inset-0"
-        initial={shouldReduceMotion ? false : { opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={shouldReduceMotion ? undefined : { opacity: 0 }}
-        transition={{ duration: shouldReduceMotion ? 0 : 0.18 }}
-        aria-hidden="true"
-      >
-        {status === "loading" ? (
-          <motion.span
-            className="absolute inset-y-0 w-1/3 bg-foreground/10"
-            initial={shouldReduceMotion ? { x: "0%" } : { x: "-120%" }}
-            animate={
-              shouldReduceMotion ? { x: "0%" } : { x: ["-120%", "360%"] }
-            }
-            transition={{
-              duration: shouldReduceMotion ? 0 : 1.15,
-              ease: "easeInOut",
-              repeat: shouldReduceMotion ? 0 : Number.POSITIVE_INFINITY,
-              repeatDelay: 0.12,
-            }}
-          />
-        ) : null}
-
-        {status === "success" ? (
-          <>
+      {status !== "idle" ? (
+        <motion.span
+          key={status}
+          data-slot="reactive-button-surface"
+          className="pointer-events-none absolute inset-0"
+          initial={shouldReduceMotion ? false : { opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={shouldReduceMotion ? undefined : { opacity: 0 }}
+          transition={{ duration: shouldReduceMotion ? 0 : 0.18 }}
+          aria-hidden="true"
+        >
+          {status === "loading" ? (
             <motion.span
-              className="absolute inset-0 bg-chart-2"
-              style={{ transformOrigin: "left center" }}
-              initial={shouldReduceMotion ? false : { scaleX: 0 }}
-              animate={{ scaleX: 1 }}
-              transition={{
-                duration: shouldReduceMotion ? 0 : 0.34,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-            />
-            <motion.span
-              className="absolute inset-y-0 left-1/2 aspect-square -translate-x-1/2 rounded-full bg-background/20"
-              initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.7 }}
+              className="absolute inset-y-0 w-1/3 bg-foreground/10"
+              initial={shouldReduceMotion ? { x: "0%" } : { x: "-120%" }}
               animate={
-                shouldReduceMotion
-                  ? { opacity: 0 }
-                  : { opacity: [0, 0.38, 0], scale: [0.7, 1.45] }
+                shouldReduceMotion ? { x: "0%" } : { x: ["-120%", "360%"] }
               }
               transition={{
-                duration: shouldReduceMotion ? 0 : 0.46,
-                delay: 0.08,
-                ease: [0.22, 1, 0.36, 1],
+                duration: shouldReduceMotion ? 0 : 1.15,
+                ease: "easeInOut",
+                repeat: shouldReduceMotion ? 0 : Number.POSITIVE_INFINITY,
+                repeatDelay: 0.12,
               }}
             />
-          </>
-        ) : null}
+          ) : null}
 
-        {status === "error" ? (
-          <>
-            <motion.span
-              className="absolute inset-0 bg-destructive"
-              style={{ transformOrigin: "center" }}
-              initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.96 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{
-                duration: shouldReduceMotion ? 0 : 0.22,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-            />
-            <motion.span
-              className="absolute inset-0 bg-destructive-foreground/10"
-              animate={
-                shouldReduceMotion ? { opacity: 0 } : { opacity: [0, 0.4, 0] }
-              }
-              transition={{
-                duration: shouldReduceMotion ? 0 : 0.34,
-                ease: "easeOut",
-              }}
-            />
-          </>
-        ) : null}
-      </motion.span>
+          {status === "success" ? (
+            <>
+              <motion.span
+                className="absolute inset-0 bg-chart-2"
+                style={{ transformOrigin: "left center" }}
+                initial={shouldReduceMotion ? false : { scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{
+                  duration: shouldReduceMotion ? 0 : 0.34,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+              />
+              <motion.span
+                className="absolute inset-y-0 left-1/2 aspect-square rounded-full bg-background/20"
+                initial={
+                  shouldReduceMotion
+                    ? false
+                    : { opacity: 0, scale: 0.7, x: "-50%" }
+                }
+                animate={
+                  shouldReduceMotion
+                    ? { opacity: 0, x: "-50%" }
+                    : {
+                        opacity: [0, 0.38, 0],
+                        scale: [0.7, 1.45],
+                        x: "-50%",
+                      }
+                }
+                transition={{
+                  duration: shouldReduceMotion ? 0 : 0.46,
+                  delay: 0.08,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+              />
+            </>
+          ) : null}
+
+          {status === "error" ? (
+            <>
+              <motion.span
+                className="absolute inset-0 bg-destructive"
+                style={{ transformOrigin: "center" }}
+                initial={
+                  shouldReduceMotion ? false : { opacity: 0, scale: 0.96 }
+                }
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{
+                  duration: shouldReduceMotion ? 0 : 0.22,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+              />
+              <motion.span
+                className="absolute inset-0 bg-primary-foreground/10"
+                animate={
+                  shouldReduceMotion ? { opacity: 0 } : { opacity: [0, 0.4, 0] }
+                }
+                transition={{
+                  duration: shouldReduceMotion ? 0 : 0.34,
+                  ease: "easeOut",
+                }}
+              />
+            </>
+          ) : null}
+        </motion.span>
+      ) : null}
     </AnimatePresence>
+  );
+}
+
+function ReactiveButtonCountdownSurface({
+  shouldReduceMotion,
+}: {
+  shouldReduceMotion: boolean;
+}) {
+  return (
+    <motion.span
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-y-0 right-0 aspect-square rounded-full bg-destructive/20"
+      initial={
+        shouldReduceMotion ? false : { opacity: 0, scale: 0.65, x: "24%" }
+      }
+      animate={
+        shouldReduceMotion
+          ? { opacity: 0.18 }
+          : {
+              opacity: [0, 0.35, 0.18],
+              scale: [0.65, 1.1, 1],
+              x: ["24%", "4%", "0%"],
+            }
+      }
+      exit={
+        shouldReduceMotion
+          ? { opacity: 0 }
+          : { opacity: 0, scale: 0.75, x: "16%" }
+      }
+      transition={{
+        duration: shouldReduceMotion ? 0.12 : 0.42,
+        ease: [0.2, 0.8, 0.2, 1],
+      }}
+    />
   );
 }
 
@@ -351,6 +394,7 @@ function ReactiveButton({
   loadingText = "Loading...",
   successText = "Done",
   errorText = "Try again",
+  countdown,
   icon,
   loadingIcon,
   successIcon,
@@ -373,6 +417,11 @@ function ReactiveButton({
   const visibleStatus = autoResetStatus === status ? "idle" : status;
   const isLoading = visibleStatus === "loading";
   const isIconButton = size === "icon";
+  const displayCountdown =
+    typeof countdown === "number" && Number.isFinite(countdown)
+      ? Math.max(0, Math.floor(countdown))
+      : null;
+  const hasCountdown = displayCountdown !== null;
   const resolvedAriaLabel =
     ariaLabel ??
     (isIconButton
@@ -429,6 +478,7 @@ function ReactiveButton({
     },
   };
   const activeContent = stateContent[visibleStatus];
+  const contentKey = `${visibleStatus}-${hasCountdown ? "countdown" : "default"}`;
   const transition = shouldReduceMotion
     ? { duration: 0 }
     : { duration: 0.18, ease: [0.22, 1, 0.36, 1] as const };
@@ -445,10 +495,18 @@ function ReactiveButton({
       className={twMerge(
         reactiveButtonVariants({ variant, size }),
         statusStyles[visibleStatus],
+        hasCountdown && "rounded-full",
         className,
       )}
       {...props}
     >
+      <AnimatePresence>
+        {hasCountdown ? (
+          <ReactiveButtonCountdownSurface
+            shouldReduceMotion={Boolean(shouldReduceMotion)}
+          />
+        ) : null}
+      </AnimatePresence>
       <ReactiveButtonSurface
         status={visibleStatus}
         shouldReduceMotion={Boolean(shouldReduceMotion)}
@@ -472,7 +530,7 @@ function ReactiveButton({
 
         <AnimatePresence initial={false} mode="popLayout">
           <motion.span
-            key={visibleStatus}
+            key={contentKey}
             data-slot="reactive-button-state"
             className="col-start-1 row-start-1 inline-flex items-center gap-1.5"
             initial={shouldReduceMotion ? false : { opacity: 0, y: 2 }}
@@ -503,6 +561,65 @@ function ReactiveButton({
           </motion.span>
         </AnimatePresence>
       </span>
+
+      <AnimatePresence initial={false}>
+        {hasCountdown ? (
+          <motion.span
+            aria-hidden="true"
+            className="relative -mr-0.5 ml-1 inline-flex size-5 shrink-0 items-center justify-center rounded-full border border-destructive/30 bg-destructive/15 font-semibold text-[0.625rem] text-destructive tabular-nums"
+            initial={
+              shouldReduceMotion
+                ? false
+                : { marginLeft: 0, opacity: 0, scale: 0.45, width: 0 }
+            }
+            animate={{ marginLeft: 4, opacity: 1, scale: 1, width: 20 }}
+            exit={
+              shouldReduceMotion
+                ? { opacity: 0 }
+                : { marginLeft: 0, opacity: 0, scale: 0.45, width: 0 }
+            }
+            transition={{
+              duration: shouldReduceMotion ? 0.12 : 0.32,
+              ease: [0.2, 0.8, 0.2, 1],
+            }}
+          >
+            <AnimatePresence initial={false}>
+              <motion.span
+                key={`reactive-button-countdown-pulse-${displayCountdown}`}
+                className="pointer-events-none absolute inset-0 rounded-full bg-destructive/25"
+                initial={
+                  shouldReduceMotion ? false : { opacity: 0.5, scale: 0.8 }
+                }
+                animate={{ opacity: 0, scale: shouldReduceMotion ? 1 : 1.45 }}
+                transition={{
+                  duration: shouldReduceMotion ? 0 : 0.42,
+                  ease: "easeOut",
+                }}
+              />
+            </AnimatePresence>
+            <AnimatePresence initial={false} mode="popLayout">
+              <motion.span
+                key={displayCountdown}
+                className="relative"
+                initial={shouldReduceMotion ? false : { opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={
+                  shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 8 }
+                }
+                transition={{ duration: shouldReduceMotion ? 0.1 : 0.2 }}
+              >
+                {displayCountdown}
+              </motion.span>
+            </AnimatePresence>
+          </motion.span>
+        ) : null}
+      </AnimatePresence>
+
+      {hasCountdown ? (
+        <span className="sr-only" aria-live="polite">
+          {displayCountdown} seconds remaining
+        </span>
+      ) : null}
     </button>
   );
 }

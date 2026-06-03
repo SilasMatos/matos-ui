@@ -105,6 +105,20 @@ Enable `autoReset` when the final state should return to idle after a short dela
 </ReactiveButton>
 ```
 
+## Countdown Action
+
+Pass `countdown` to reveal a circular counter with a smooth capsule expansion. This works well for reversible destructive actions, such as a short window to cancel a deletion.
+
+```tsx
+<ReactiveButton
+  variant="destructive"
+  countdown={countdown ?? undefined}
+  onClick={toggleDeletion}
+>
+  {countdown === null ? "Schedule deletion" : "Cancel deletion"}
+</ReactiveButton>
+```
+
 ## React Hook Form
 
 Use `formState.isSubmitting` for loading and update a local status after the submit promise resolves.
@@ -158,6 +172,7 @@ function ProfileForm() {
 | `loadingText`   | `ReactNode`                                                                | `"Loading..."` |
 | `successText`   | `ReactNode`                                                                | `"Done"`       |
 | `errorText`     | `ReactNode`                                                                | `"Try again"`  |
+| `countdown`     | `number`                                                                   | -              |
 | `icon`          | `ReactNode`                                                                | -              |
 | `loadingIcon`   | `ReactNode`                                                                | Animated spinner |
 | `successIcon`   | `ReactNode`                                                                | Animated check |

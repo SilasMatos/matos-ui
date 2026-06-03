@@ -37,10 +37,35 @@ function useDemoAction(
   return { status, setStatus, run };
 }
 
+function useDeletionCountdown(initialValue = 9) {
+  const [countdown, setCountdown] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (countdown === null) {
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      setCountdown((current) =>
+        current === null || current <= 1 ? null : current - 1,
+      );
+    }, 1000);
+
+    return () => window.clearTimeout(timer);
+  }, [countdown]);
+
+  function toggle() {
+    setCountdown((current) => (current === null ? initialValue : null));
+  }
+
+  return { countdown, toggle };
+}
+
 export default function ReactiveButtonDemo() {
   const send = useDemoAction("success");
   const save = useDemoAction("success");
   const remove = useDemoAction("error");
+  const deletion = useDeletionCountdown();
 
   return (
     <div className="flex w-full max-w-2xl flex-col gap-5">
@@ -78,6 +103,15 @@ export default function ReactiveButtonDemo() {
           onClick={remove.run}
         >
           Delete item
+        </ReactiveButton>
+        <ReactiveButton
+          variant="destructive"
+          countdown={deletion.countdown ?? undefined}
+          onClick={deletion.toggle}
+        >
+          {deletion.countdown === null
+            ? "Schedule deletion"
+            : "Cancel deletion"}
         </ReactiveButton>
       </div>
 

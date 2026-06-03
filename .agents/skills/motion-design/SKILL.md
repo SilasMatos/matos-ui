@@ -1,315 +1,932 @@
 ---
-name: motion-design
-description: >
-  Applies motion design principles to create emotionally-driven, technically sound animations and transitions.
-  Provides timing, easing, choreography, and Disney animation principles adapted for UI.
-  Use when creating animations, transitions, micro-interactions, loading states, page transitions,
-  scroll-triggered effects, or any motion work. Works with CSS, Framer Motion, GSAP, Lottie, Spring,
-  or any animation system.
-license: MIT
-metadata:
-  author: LottieFiles
-  version: "1.0.0"
+name: motion-framer
+description: Modern animation library for React and JavaScript. Create smooth, production-ready animations with motion components, variants, gestures (hover/tap/drag), layout animations, AnimatePresence exit animations, spring physics, and scroll-based effects. Use when building interactive UI components, micro-interactions, page transitions, or complex animation sequences.
 ---
 
-# Motion Design Skill
+# Motion & Framer Motion
 
-## When to Apply
+## Overview
 
-Use this skill when:
-- Creating UI animations (buttons, cards, modals, page transitions)
-- Designing micro-interactions and feedback animations
-- Building loading, success, or error statess
-- Animating illustrations or decorative elements
-- Planning scroll-triggered or progress-based animations
-- Establishing brand motion identity
-- Choreographing multi-element sequences
+Motion (formerly Framer Motion) is a production-ready animation library for React and JavaScript that enables declarative, performant animations with minimal code. It provides `motion` components that wrap HTML elements with animation superpowers, supports gesture recognition (hover, tap, drag, focus), and includes advanced features like layout animations, exit animations, and spring physics.
 
-**Decision tree:**
-1. Does it serve a functional purpose (feedback, guidance)? → Timing rules for responsiveness
-2. Does it express brand personality? → Motion Personality archetypes
-3. Does it tell a story or guide attention? → Disney principles + choreography
-4. Is this a complex multi-element scene? → 1/3 Rule + stagger patterns
+**When to use this skill:**
+- Building interactive UI components (buttons, cards, menus)
+- Creating micro-interactions and hover effects
+- Implementing page transitions and route animations
+- Adding scroll-based animations and parallax effects
+- Animating layout changes (resizing, reordering, shared element transitions)
+- Drag-and-drop interfaces
+- Complex animation sequences and state-based animations
+- Replacing CSS transitions with more powerful, controllable animations
 
----
+**Technology:**
+- **Motion** (v11+) - The modern, smaller library from Framer Motion creators
+- **Framer Motion** - The full-featured predecessor (still widely used)
+- React 18+ compatible, also supports Vue
+- Supports TypeScript
+- Works with Next.js, Vite, Remix, and all modern React frameworks
 
-## Quick Reference: 8-Step Checklist
+## Core Concepts
 
-Before creating any animation:
+### 1. Motion Components
 
-1. **Emotional target?** — joy, calm, urgency, elegance
-2. **Motion Personality?** — Playful, Premium, Corporate, Energetic
-3. **Primary property?** — position, scale, rotation, opacity
-4. **Duration?** — see duration table below
-5. **Easing family?** — entrance=decelerate, exit=accelerate
-6. **Hero element?** — apply staging principles
-7. **Secondary + ambient layers?** — add richness
-8. **1/3 rules?** — motion distance, simultaneous elements
+Convert any HTML/SVG element into an animatable component by prefixing with `motion.`:
 
----
+```jsx
+import { motion } from "framer-motion"
 
-## Three Pillars (CRITICAL)
+// Regular HTML becomes motion component
+<motion.div />
+<motion.button />
+<motion.svg />
+<motion.path />
+```
 
-Every animation must satisfy three pillars before any technical decisions:
+Every motion component accepts animation props like `animate`, `initial`, `transition`, and gesture props like `whileHover`, `whileTap`, etc.
 
-| Pillar | Question | Drives |
-|--------|----------|--------|
-| **Emotional Intent** | What should the viewer FEEL? | Easing, timing, amplitude |
-| **Visual Narrative** | What's the micro-story? | Setup → Action → Resolution |
-| **Motion Craft** | How do we make it believable? | Physics, secondary motion, paths |
+### 2. Animate Prop
 
-**Three motion layers** (flat animation = missing layers):
-- **Primary**: Main action the viewer follows
-- **Secondary**: Supporting richness (shadows, icons shifting)
-- **Ambient**: Background life (gradients, subtle pulses)
+The `animate` prop defines the target animation state. When values change, Motion automatically animates to them:
 
-> Deep dive: [director/core-philosophy.md](director/core-philosophy.md)
+```jsx
+// Simple animation - x position changes
+<motion.div animate={{ x: 100 }} />
 
----
+// Multiple properties
+<motion.div animate={{ x: 100, opacity: 1, scale: 1.2 }} />
 
-## Motion Personality
+// Animates when state changes
+const [isOpen, setIsOpen] = useState(false)
+<motion.div animate={{ width: isOpen ? 300 : 100 }} />
+```
 
-Select ONE archetype per project. Apply consistently.
+### 3. Initial State
 
-| Archetype | Duration | Easing | Overshoot | Keywords |
-|-----------|----------|--------|-----------|----------|
-| **Playful** | 150-300ms | ease-out-back | 10-20% | fun, whimsical, bouncy, cute |
-| **Premium** | 350-600ms | cubic-bezier(0.4,0,0.2,1) | 0% | elegant, minimal, luxury, sophisticated |
-| **Corporate** | 200-400ms | cubic-bezier(0.2,0,0,1) | 0-3% | clean, professional, business, dashboard |
-| **Energetic** | 100-250ms | ease-out-expo | 15-30% | dynamic, energetic, bold, exciting |
+Set the initial state before animation using the `initial` prop:
 
-**Default**: Corporate for UI, Playful for illustrations.
+```jsx
+<motion.div
+  initial={{ opacity: 0, y: 50 }}
+  animate={{ opacity: 1, y: 0 }}
+/>
+```
 
-**Brand Motion Identity** — define three constants:
-1. **Signature easing**: One curve for 80% of animations
-2. **Duration palette**: 3 durations (quick / standard / slow)
-3. **Entrance pattern**: One consistent entry style
+Set `initial={false}` to disable initial animations on mount.
 
-> Deep dive: [director/motion-personality.md](director/motion-personality.md)
+### 4. Transitions
 
----
+Control how animations move between states using the `transition` prop:
 
-## Property Selection
+```jsx
+// Duration-based
+<motion.div
+  animate={{ x: 100 }}
+  transition={{ duration: 0.5, ease: "easeInOut" }}
+/>
 
-| Effect Goal | Primary Property | Secondary Properties |
-|-------------|------------------|---------------------|
-| Entrance/Exit | position | opacity, scale |
-| Emphasis/Attention | scale | rotation (subtle), opacity pulse |
-| State Change | opacity, color | scale (press feedback) |
-| Direction/Flow | position | rotation (follow path) |
-| Depth/3D Feel | scale + shadow | position (parallax) |
-| Loading/Progress | rotation (spinner) | scale, opacity pulse |
-| Success | scale (pop) | color, rotation (checkmark draw) |
-| Error/Alert | position (shake) | color, rotation (wobble) |
+// Spring physics
+<motion.div
+  animate={{ scale: 1.2 }}
+  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+/>
 
-**Simplicity threshold**: Use the minimum properties needed. One = direct. Two = polished. Three+ = potentially overwhelming.
+// Different transitions for different properties
+<motion.div
+  animate={{ x: 100, opacity: 1 }}
+  transition={{
+    x: { type: "spring", stiffness: 300 },
+    opacity: { duration: 0.2 }
+  }}
+/>
+```
 
-> Deep dive: [reference/property-selection.md](reference/property-selection.md)
+**Transition types:**
+- `"tween"` (default) - Duration-based with easing
+- `"spring"` - Physics-based spring animation
+- `"inertia"` - Decelerating animation (used in drag)
 
----
+### 5. Variants
 
-## Duration Table
+Organize animation states using named variants for cleaner code and propagation to children:
 
-| Element Type | Duration | Rationale |
-|-------------|----------|-----------|
-| Tooltip / micro-feedback | 80-120ms | Must feel instant |
-| Button press / toggle | 120-180ms | Responsive feedback |
-| Icon transition | 150-250ms | Clear state change |
-| Card enter / exit | 200-350ms | Spatial awareness |
-| Modal / dialog | 300-400ms | Focus shift |
-| Page transition | 400-600ms | Context switch |
-| Dramatic reveal | 600-1200ms | Theatrical build |
+```jsx
+const variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+  exit: { opacity: 0, scale: 0.9 }
+}
 
-**Distance scales duration**: 100px = base. 200px = 1.3x. 400px = 1.6x.
+<motion.div
+  variants={variants}
+  initial="hidden"
+  animate="visible"
+  exit="exit"
+/>
+```
 
-**Enter > Exit**: Entrances 30-50% longer than exits. Users care about what appears.
+**Variant propagation** - Children automatically inherit parent variant states:
 
-**Interactive feedback**:
-- Hover: <100ms
-- Press: <150ms
-- Release/settle: 200-300ms
-- Error shake: 300-400ms (2-3 oscillations)
+```jsx
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1  // Stagger child animations
+    }
+  }
+}
 
-> Deep dive: [reference/timing-easing-tables.md](reference/timing-easing-tables.md)
+const itemVariants = {
+  hidden: { x: -20, opacity: 0 },
+  visible: { x: 0, opacity: 1 }
+}
 
----
-
-## Easing Selection
-
-**Directional rules**:
-- **Entrance** → decelerate (fast start, gentle landing): ease-out family
-- **Exit** → accelerate (gentle start, fast departure): ease-in family
-- **On-screen** → smooth both ends: ease-in-out family
-- **Looping ambient** → seamless: sine-based ease-in-out
-
-**Industry standards**:
-
-| Standard | Cubic Bezier | Use For |
-|----------|-------------|---------|
-| Material Design 3 | (0.2, 0, 0, 1) | Default on-screen |
-| MD3 Emphasized | (0.05, 0.7, 0.1, 1) | Entrances, attention |
-| MD3 Accelerate | (0.3, 0, 1, 1) | Exits, dismissals |
-| Apple HIG | (0.25, 0.1, 0.25, 1) | Standard iOS |
-| Snappy UI | (0.2, 0, 0, 1) | Fast, decisive |
-| Gentle float | (0.4, 0, 0.2, 1) | Ambient, background |
-| Bounce settle | (0.175, 0.885, 0.32, 1.275) | Overshoot, playful |
-
-**Material-based easing**:
-
-| Material | Duration Scale | Overshoot |
-|----------|---------------|-----------|
-| Rigid (metal, stone) | 1.2x | 0% |
-| Elastic (rubber, gel) | 0.8x | 15-25% |
-| Fluid (water, paint) | 1.5x | 5% |
-| Paper (cards, sheets) | 1.0x | 3-5% |
-| Gas (smoke, fog) | 2.0x | 0% |
-| Glass (brittle) | 0.9x | 0% |
-
-> Deep dive: [reference/timing-easing-tables.md](reference/timing-easing-tables.md)
-
----
+<motion.ul variants={containerVariants} initial="hidden" animate="visible">
+  <motion.li variants={itemVariants} />
+  <motion.li variants={itemVariants} />
+  <motion.li variants={itemVariants} />
+</motion.ul>
+```
 
 ## Common Patterns
 
-### Button Press (Playful)
-1. **Anticipation**: Scale to 0.97 (50ms, ease-out)
-2. **Squash**: Scale to [1.04, 0.96] (100ms, ease-in)
-3. **Follow through**: Overshoots to 1.02, settles to 1.0 (spring, 200ms)
-4. **Secondary**: Shadow shrinks during press, icon shifts down 2px
-5. **Total**: ~150ms press + 200ms settle
+### 1. Hover Animations
 
-### Card Entrance (Premium)
-1. **Start**: 20px below target, opacity 0
-2. **Path**: Slight curve (10px X offset at midpoint)
-3. **Easing**: ease-out-cubic deceleration
-4. **Follow through**: Shadow arrives 50ms after card
-5. **Secondary**: Content fades in 100ms after card lands
-6. **Staging**: Other cards dim to 80%
+Animate on hover using `whileHover` prop:
 
-### Success State (Playful)
-1. **Primary**: Scale pop with ease-out-back
-2. **Secondary**: Checkmark draws in
-3. **Ambient**: Subtle particle burst
-4. **Color**: Green fill
-5. **Total**: 300-400ms
+```jsx
+// Simple hover effect
+<motion.button
+  whileHover={{ scale: 1.1 }}
+  transition={{ duration: 0.2 }}
+>
+  Hover me
+</motion.button>
 
-### Error Shake (Corporate)
-1. **Primary**: Position oscillates 2-3 times, ±10-15px horizontal
-2. **Easing**: ease-in-out for sharp stops
-3. **Color**: Red tint
-4. **Total**: 300-400ms
-5. **No overshoot**: Errors feel firm
+// Multiple properties
+<motion.div
+  whileHover={{
+    scale: 1.05,
+    backgroundColor: "#f0f0f0",
+    boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.2)"
+  }}
+>
+  Hover card
+</motion.div>
 
-> More patterns: [patterns/entrance-exit.md](patterns/entrance-exit.md) | [patterns/state-feedback.md](patterns/state-feedback.md)
+// With custom transition
+<motion.button
+  whileHover={{
+    scale: 1.2,
+    transition: { duration: 0.1 }  // Transition for gesture start
+  }}
+  transition={{ duration: 0.5 }}  // Transition for gesture end
+>
+  Button
+</motion.button>
+```
 
----
+**Hover with nested elements:**
 
-## Choreography Essentials
+```jsx
+<motion.div whileHover="hover" variants={cardVariants}>
+  <motion.h3 variants={titleVariants}>Title</motion.h3>
+  <motion.img variants={imageVariants} />
+</motion.div>
+```
 
-**Coordinated entry**:
-- Lead with the hero — primary element enters first or most prominently
-- Spatial consistency — all elements enter from same direction
-- Counter-motion — hero moves right → ambient moves left at 20-30% speed
+### 2. Tap/Press Animations
 
-**1/3 Rule (distance)**: No motion travels more than 1/3 of screen without a keyframe change.
+Animate on tap/press using `whileTap` prop:
 
-**1/3 Rule (elements)**: With 3+ elements, no more than 1/3 in active motion simultaneously.
+```jsx
+// Scale down on tap
+<motion.button
+  whileTap={{ scale: 0.9 }}
+>
+  Click me
+</motion.button>
 
-**Stagger budgets**:
+// Combined hover + tap
+<motion.button
+  whileHover={{ scale: 1.1 }}
+  whileTap={{ scale: 0.95, rotate: 3 }}
+>
+  Interactive button
+</motion.button>
 
-| Pattern | Delay | Total Budget | Use Case |
-|---------|-------|-------------|----------|
-| Micro cascade | 20-40ms | <200ms | List items, grid cells |
-| Standard | 50-100ms | <400ms | Cards, panels, nav |
-| Dramatic | 100-200ms | <600ms | Hero sections |
-| Wave | 30-60ms | <500ms | Data visualizations |
+// With variants
+const buttonVariants = {
+  rest: { scale: 1 },
+  hover: { scale: 1.1 },
+  pressed: { scale: 0.95 }
+}
 
-**Critical**: Total stagger must stay under 500ms.
+<motion.button
+  variants={buttonVariants}
+  initial="rest"
+  whileHover="hover"
+  whileTap="pressed"
+>
+  Button
+</motion.button>
+```
 
-> Deep dive: [director/choreography.md](director/choreography.md)
+### 3. Drag Interactions
 
----
+Make elements draggable with the `drag` prop:
 
-## Emotion-to-Motion Map
+```jsx
+// Basic dragging (both axes)
+<motion.div drag />
 
-| Emotion | Character | Path | Easing | Duration |
-|---------|-----------|------|--------|----------|
-| Joy | Bouncy, arcs | Curved, upward | ease-out-back | 200-400ms |
-| Calm | Smooth, flowing | Gentle curves | sine ease-in-out | 500-1000ms |
-| Urgency | Sharp, fast | Straight lines | ease-out | 100-200ms |
-| Sadness | Slow, downward | Drooping curves | cubic ease-in-out | 600-1200ms |
-| Surprise | Sudden, expanding | Radial outward | ease-out-expo | 150-300ms |
-| Elegance | Slow, controlled | Long arcs | (0.4,0,0.2,1) | 400-700ms |
-| Playfulness | Bouncy, irregular | Arcs, squiggly | ease-out-back | 200-350ms |
+// Constrain to axis
+<motion.div drag="x" />  // Only horizontal
+<motion.div drag="y" />  // Only vertical
 
-**Path as language**: Angular = tense. Curved = friendly. Spiral = whimsical. Diagonal = purposeful. Vertical = growth/weight. Horizontal = progress.
+// Drag constraints
+<motion.div
+  drag
+  dragConstraints={{ left: -100, right: 100, top: -100, bottom: 100 }}
+/>
 
-> Deep dive: [director/emotion-mapping.md](director/emotion-mapping.md)
+// Drag with parent constraints
+<motion.div ref={constraintsRef}>
+  <motion.div drag dragConstraints={constraintsRef} />
+</motion.div>
 
----
+// Visual feedback while dragging
+<motion.div
+  drag
+  whileDrag={{
+    scale: 1.1,
+    boxShadow: "0px 10px 20px rgba(0,0,0,0.2)",
+    cursor: "grabbing"
+  }}
+  dragElastic={0.1}  // Elasticity when dragging outside constraints
+  dragTransition={{ bounceStiffness: 600, bounceDamping: 20 }}
+/>
+```
 
-## Weight Classification
+**Drag events:**
 
-| Weight | Examples | Duration | Overshoot | Easing |
-|--------|----------|----------|-----------|--------|
-| Heavy | Modals, overlays | 300-500ms | 0% | Gentle, high damping |
-| Medium | Cards, panels | 200-350ms | 3-5% | Moderate |
-| Light | Tooltips, badges, icons | 80-200ms | 5-15% | Responsive |
+```jsx
+<motion.div
+  drag
+  onDragStart={(event, info) => console.log(info.point)}
+  onDrag={(event, info) => console.log(info.offset)}
+  onDragEnd={(event, info) => console.log(info.velocity)}
+/>
+```
 
----
+### 4. Exit Animations (AnimatePresence)
 
-## Quality Rules
+Animate components when they're removed from the DOM using `AnimatePresence`:
 
-### CRITICAL — never break
-1. **Never linear for spatial movement** — always use easing curves (linear only for spinners, progress bars)
-2. **Never opacity-only** for important state changes — combine with position or scale
-3. **Never exceed 1/3 screen** without intermediate keyframe
-4. **Always three motion layers** — primary + secondary + ambient
+```jsx
+import { AnimatePresence } from "framer-motion"
 
-### HIGH — strongly follow
-1. Match duration to element type (see tables)
-2. Use directional easing (ease-out entrance, ease-in exit)
-3. Apply Disney principles (especially anticipation, follow-through)
-4. Maintain consistent personality across scene
+// Basic exit animation
+<AnimatePresence>
+  {isVisible && (
+    <motion.div
+      key="modal"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    />
+  )}
+</AnimatePresence>
+```
 
-> Full checklist: [reference/quality-checklist.md](reference/quality-checklist.md)
+**Key requirements:**
+- Component must be direct child of `<AnimatePresence>`
+- Must have a unique `key` prop
+- Use `exit` prop to define exit animation
 
----
+**List items with exit animations:**
 
-## Troubleshooting Quick Reference
+```jsx
+<AnimatePresence>
+  {items.map(item => (
+    <motion.li
+      key={item.id}
+      initial={{ opacity: 0, x: -50 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: 50 }}
+      layout  // Smooth layout shifts
+    >
+      {item.name}
+    </motion.li>
+  ))}
+</AnimatePresence>
+```
 
-| Problem | Likely Cause | Fix |
-|---------|-------------|-----|
-| Looks robotic | Linear easing or no arcs | Add easing curves + arc paths |
-| Feels too slow | Duration too long for element type | Check duration table, use ease-out |
-| Feels cheap/flat | Missing secondary + ambient | Add shadow motion + background life |
-| Too distracting | Too many elements moving | Apply 1/3 rule, reduce amplitude |
-| No personality | Generic easing everywhere | Apply personality archetype consistently |
+**Staggered exit animations:**
 
-> Deep dive: [reference/troubleshooting.md](reference/troubleshooting.md)
+```jsx
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      when: "beforeChildren",
+      staggerChildren: 0.1
+    }
+  },
+  exit: {
+    opacity: 0,
+    transition: {
+      when: "afterChildren",
+      staggerChildren: 0.05,
+      staggerDirection: -1  // Reverse order
+    }
+  }
+}
 
----
+<AnimatePresence>
+  {show && (
+    <motion.div variants={containerVariants} initial="hidden" animate="visible" exit="exit">
+      <motion.div variants={itemVariants} />
+      <motion.div variants={itemVariants} />
+      <motion.div variants={itemVariants} />
+    </motion.div>
+  )}
+</AnimatePresence>
+```
 
-## File Reference
+### 5. Layout Animations
 
-**Philosophy** (director/):
-- [core-philosophy.md](director/core-philosophy.md) — Three Pillars deep dive
-- [decision-framework.md](director/decision-framework.md) — Full decision pipeline
-- [disney-principles.md](director/disney-principles.md) — 12 principles, UI-adapted
-- [motion-personality.md](director/motion-personality.md) — 4 archetypes + brand identity
-- [emotion-mapping.md](director/emotion-mapping.md) — Emotion → motion + color psychology
-- [choreography.md](director/choreography.md) — Multi-element coordination
-- [narrative-structure.md](director/narrative-structure.md) — Micro-story framework
-- [context-adaptation.md](director/context-adaptation.md) — Platform, a11y, performance
+Automatically animate layout changes (position, size) with the `layout` prop:
 
-**Reference** (reference/):
-- [timing-easing-tables.md](reference/timing-easing-tables.md) — Duration + easing lookups
-- [property-selection.md](reference/property-selection.md) — Property communication guide
-- [troubleshooting.md](reference/troubleshooting.md) — Animation smells + fixes
-- [quality-checklist.md](reference/quality-checklist.md) — Evaluation criteria
+```jsx
+// Animate all layout changes
+<motion.div layout />
 
-**Patterns** (patterns/):
-- [entrance-exit.md](patterns/entrance-exit.md) — Entrance/exit recipes
-- [state-feedback.md](patterns/state-feedback.md) — Success, error, loading, hover
-- [ambient-continuous.md](patterns/ambient-continuous.md) — Looping, breathing, parallax
-- [multi-element.md](patterns/multi-element.md) — Stagger + choreography recipes
+// Animate only position changes
+<motion.div layout="position" />
+
+// Animate only size changes
+<motion.div layout="size" />
+```
+
+**Grid layout animation:**
+
+```jsx
+const [columns, setColumns] = useState(3)
+
+<motion.div className="grid">
+  {items.map(item => (
+    <motion.div
+      key={item.id}
+      layout
+      transition={{ layout: { duration: 0.3, ease: "easeInOut" } }}
+    />
+  ))}
+</motion.div>
+```
+
+**Shared layout animations (layoutId):**
+
+Connect two different elements for smooth transitions using `layoutId`:
+
+```jsx
+// Tab indicator example
+<nav>
+  {tabs.map(tab => (
+    <button key={tab.id} onClick={() => setActive(tab.id)}>
+      {tab.label}
+      {activeTab === tab.id && (
+        <motion.div
+          layoutId="underline"
+          style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 2 }}
+        />
+      )}
+    </button>
+  ))}
+</nav>
+
+// Modal opening from thumbnail
+<motion.img
+  src={thumbnail}
+  layoutId="product-image"
+  onClick={() => setExpanded(true)}
+/>
+
+<AnimatePresence>
+  {expanded && (
+    <motion.div layoutId="product-image">
+      <img src={fullsize} />
+    </motion.div>
+  )}
+</AnimatePresence>
+```
+
+### 6. Scroll-Based Animations
+
+Animate elements when they enter the viewport using `whileInView`:
+
+```jsx
+<motion.div
+  initial={{ opacity: 0, y: 50 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: true, amount: 0.8 }}  // once: trigger once, amount: 80% visible
+  transition={{ duration: 0.5 }}
+>
+  Animates when scrolled into view
+</motion.div>
+```
+
+**Viewport options:**
+- `once: true` - Animation triggers only once
+- `amount: 0.5` - Percentage of element visible (0-1) or "some" | "all"
+- `margin: "-100px"` - Offset viewport boundaries
+
+**Staggered scroll animations:**
+
+```jsx
+<motion.ul
+  initial="hidden"
+  whileInView="visible"
+  viewport={{ once: true, amount: 0.3 }}
+  variants={{
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1 }
+    },
+    hidden: { opacity: 0 }
+  }}
+>
+  <motion.li variants={itemVariants} />
+  <motion.li variants={itemVariants} />
+  <motion.li variants={itemVariants} />
+</motion.ul>
+```
+
+### 7. Spring Animations
+
+Use spring physics for natural, bouncy animations:
+
+```jsx
+// Basic spring
+<motion.div
+  animate={{ scale: 1.2 }}
+  transition={{ type: "spring" }}
+/>
+
+// Customize spring physics
+<motion.div
+  animate={{ x: 100 }}
+  transition={{
+    type: "spring",
+    stiffness: 300,  // Higher = faster, snappier (default: 100)
+    damping: 20,     // Higher = less bouncy (default: 10)
+    mass: 1,         // Higher = more inertia (default: 1)
+  }}
+/>
+
+// Visual duration (easier spring control)
+<motion.div
+  animate={{ rotate: 90 }}
+  transition={{
+    type: "spring",
+    visualDuration: 0.5,  // Perceived duration
+    bounce: 0.25          // Bounciness (0-1, default: 0.25)
+  }}
+/>
+```
+
+**Spring presets:**
+- **Gentle**: `stiffness: 100, damping: 20`
+- **Wobbly**: `stiffness: 200, damping: 10`
+- **Stiff**: `stiffness: 400, damping: 30`
+- **Slow**: `stiffness: 50, damping: 20`
+
+## Gesture Recognition
+
+Motion provides declarative gesture handlers:
+
+### Gesture Props
+
+```jsx
+<motion.div
+  whileHover={{ scale: 1.1 }}        // Pointer hovers over element
+  whileTap={{ scale: 0.9 }}          // Primary pointer presses element
+  whileFocus={{ outline: "2px" }}    // Element gains focus
+  whileDrag={{ scale: 1.1 }}         // Element is being dragged
+  whileInView={{ opacity: 1 }}       // Element is in viewport
+/>
+```
+
+### Gesture Events
+
+```jsx
+<motion.div
+  onHoverStart={(event, info) => {}}
+  onHoverEnd={(event, info) => {}}
+  onTap={(event, info) => {}}
+  onTapStart={(event, info) => {}}
+  onTapCancel={(event, info) => {}}
+  onDragStart={(event, info) => {}}
+  onDrag={(event, info) => {}}
+  onDragEnd={(event, info) => {}}
+  onViewportEnter={(entry) => {}}
+  onViewportLeave={(entry) => {}}
+/>
+```
+
+**Event info objects contain:**
+- `point: { x, y }` - Page coordinates
+- `offset: { x, y }` - Offset from drag start
+- `velocity: { x, y }` - Drag velocity
+
+## Hooks
+
+### useAnimate
+
+Manually control animations with the `useAnimate` hook:
+
+```jsx
+import { useAnimate } from "framer-motion"
+
+function Component() {
+  const [scope, animate] = useAnimate()
+
+  useEffect(() => {
+    // Animate multiple elements
+    animate([
+      [scope.current, { opacity: 1 }],
+      ["li", { x: 0, opacity: 1 }, { delay: stagger(0.1) }],
+      [".button", { scale: 1.2 }]
+    ])
+  }, [])
+
+  return (
+    <div ref={scope}>
+      <ul>
+        <li>Item 1</li>
+        <li>Item 2</li>
+      </ul>
+      <button className="button">Click</button>
+    </div>
+  )
+}
+```
+
+**Animation controls:**
+
+```jsx
+const controls = animate(element, { x: 100 })
+controls.play()
+controls.pause()
+controls.stop()
+controls.speed = 0.5
+controls.time = 0  // Seek to start
+```
+
+### useSpring
+
+Create spring-animated motion values:
+
+```jsx
+import { useSpring } from "framer-motion"
+
+function Component() {
+  const x = useSpring(0, { stiffness: 300, damping: 20 })
+
+  return (
+    <motion.div style={{ x }}>
+      <button onClick={() => x.set(100)}>Move</button>
+    </motion.div>
+  )
+}
+```
+
+### useInView
+
+Detect when an element is in viewport:
+
+```jsx
+import { useInView } from "framer-motion"
+
+function Component() {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, amount: 0.5 })
+
+  return (
+    <div ref={ref}>
+      {isInView ? "In view!" : "Not in view"}
+    </div>
+  )
+}
+```
+
+## Integration Patterns
+
+### With GSAP
+
+Combine Motion for React state-based animations and GSAP for complex timelines:
+
+```jsx
+import { motion } from "framer-motion"
+import gsap from "gsap"
+
+function Component() {
+  const boxRef = useRef()
+
+  const handleClick = () => {
+    // Use GSAP for complex timeline
+    const tl = gsap.timeline()
+    tl.to(boxRef.current, { rotation: 360, duration: 1 })
+      .to(boxRef.current, { scale: 1.5, duration: 0.5 })
+  }
+
+  return (
+    // Use Motion for hover/tap/layout animations
+    <motion.div
+      ref={boxRef}
+      whileHover={{ scale: 1.1 }}
+      onClick={handleClick}
+    />
+  )
+}
+```
+
+### With React Three Fiber
+
+Animate 3D objects using Motion values:
+
+```jsx
+import { motion } from "framer-motion"
+import { useFrame } from "@react-three/fiber"
+
+function Box() {
+  const x = useMotionValue(0)
+
+  useFrame(() => {
+    // Sync Motion value with Three.js position
+    meshRef.current.position.x = x.get()
+  })
+
+  return (
+    <>
+      <mesh ref={meshRef}>
+        <boxGeometry />
+        <meshStandardMaterial />
+      </mesh>
+      <motion.div
+        style={{ x }}
+        drag="x"
+        dragConstraints={{ left: -5, right: 5 }}
+      />
+    </>
+  )
+}
+```
+
+### With Form Libraries
+
+Animate form validation states:
+
+```jsx
+import { motion, AnimatePresence } from "framer-motion"
+
+function FormField({ error }) {
+  return (
+    <div>
+      <motion.input
+        animate={{
+          borderColor: error ? "#ff0000" : "#cccccc",
+          x: error ? [0, -10, 10, -10, 10, 0] : 0  // Shake animation
+        }}
+        transition={{ duration: 0.4 }}
+      />
+      <AnimatePresence>
+        {error && (
+          <motion.p
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            style={{ color: "#ff0000" }}
+          >
+            {error}
+          </motion.p>
+        )}
+      </AnimatePresence>
+    </div>
+  )
+}
+```
+
+## Performance Optimization
+
+### 1. Use Transform Properties
+
+Transform properties (x, y, scale, rotate) are hardware-accelerated:
+
+```jsx
+// ✅ Good - Hardware accelerated
+<motion.div animate={{ x: 100, scale: 1.2 }} />
+
+// ❌ Avoid - Triggers layout/paint
+<motion.div animate={{ left: 100, width: 200 }} />
+```
+
+### 2. Individual Transform Properties
+
+Motion supports individual transform properties for cleaner code:
+
+```jsx
+// Individual properties (Motion feature)
+<motion.div style={{ x: 100, rotate: 45, scale: 1.2 }} />
+
+// Traditional (also supported)
+<motion.div style={{ transform: "translateX(100px) rotate(45deg) scale(1.2)" }} />
+```
+
+### 3. Reduce Motion for Accessibility
+
+Respect user preferences for reduced motion:
+
+```jsx
+import { useReducedMotion } from "framer-motion"
+
+function Component() {
+  const shouldReduceMotion = useReducedMotion()
+
+  return (
+    <motion.div
+      animate={{ x: 100 }}
+      transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.5 }}
+    />
+  )
+}
+```
+
+### 4. Layout Animations Performance
+
+Layout animations can be expensive. Optimize with:
+
+```jsx
+// Specify what to animate
+<motion.div layout="position" />  // Only position, not size
+
+// Optimize transition
+<motion.div
+  layout
+  transition={{
+    layout: { duration: 0.3, ease: "easeOut" }
+  }}
+/>
+```
+
+### 5. Use layoutId Sparingly
+
+`layoutId` creates shared layout animations but tracks elements globally. Use only when needed.
+
+## Common Pitfalls
+
+### 1. Forgetting AnimatePresence for Exit Animations
+
+**Problem:** Exit animations don't work
+
+```jsx
+// ❌ Wrong - No AnimatePresence
+{show && <motion.div exit={{ opacity: 0 }} />}
+```
+
+```jsx
+// ✅ Correct - Wrapped in AnimatePresence
+<AnimatePresence>
+  {show && <motion.div exit={{ opacity: 0 }} />}
+</AnimatePresence>
+```
+
+### 2. Missing key Prop in Lists
+
+**Problem:** AnimatePresence can't track elements
+
+```jsx
+// ❌ Wrong - No key
+<AnimatePresence>
+  {items.map(item => <motion.div exit={{ opacity: 0 }} />)}
+</AnimatePresence>
+```
+
+```jsx
+// ✅ Correct - Unique keys
+<AnimatePresence>
+  {items.map(item => (
+    <motion.div key={item.id} exit={{ opacity: 0 }} />
+  ))}
+</AnimatePresence>
+```
+
+### 3. Animating Non-Transform Properties
+
+**Problem:** Janky animations, poor performance
+
+```jsx
+// ❌ Avoid - Not hardware accelerated
+<motion.div animate={{ top: 100, left: 50, width: 200 }} />
+```
+
+```jsx
+// ✅ Better - Use transforms
+<motion.div animate={{ x: 50, y: 100, scaleX: 2 }} />
+```
+
+### 4. Overusing Layout Animations
+
+**Problem:** Performance issues with many layout-animated elements
+
+```jsx
+// ❌ Too many layout animations
+{items.map(item => <motion.div layout>{item}</motion.div>)}
+```
+
+```jsx
+// ✅ Use layout only where needed, optimize others
+{items.map(item => (
+  <motion.div
+    key={item.id}
+    animate={{ opacity: 1 }}  // Cheaper animation
+    exit={{ opacity: 0 }}
+  />
+))}
+```
+
+### 5. Not Using Variants for Complex Animations
+
+**Problem:** Duplicated animation code, no child orchestration
+
+```jsx
+// ❌ Repetitive
+<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} />
+<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} />
+```
+
+```jsx
+// ✅ Use variants
+const variants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1 }
+}
+
+<motion.div variants={variants} initial="hidden" animate="visible" />
+<motion.div variants={variants} initial="hidden" animate="visible" />
+```
+
+### 6. Incorrect Transition Timing
+
+**Problem:** Transitions don't apply to specific gestures
+
+```jsx
+// ❌ Wrong - General transition won't apply to whileHover
+<motion.div
+  whileHover={{ scale: 1.2 }}
+  transition={{ duration: 1 }}  // This applies to animate prop, not whileHover
+/>
+```
+
+```jsx
+// ✅ Correct - Transition in whileHover or separate gesture transition
+<motion.div
+  whileHover={{
+    scale: 1.2,
+    transition: { duration: 0.2 }  // Applies to hover start
+  }}
+  transition={{ duration: 0.5 }}  // Applies to hover end
+/>
+```
+
+## Resources
+
+### Official Documentation
+- [Motion Docs](https://motion.dev/) - Official Motion documentation
+- [Framer Motion Docs](https://www.framer.com/motion/) - Framer Motion (legacy)
+- [Motion GitHub](https://github.com/framer/motion) - Source code & examples
+
+### Bundled Resources
+
+This skill includes:
+
+**references/**
+- `api_reference.md` - Complete Motion API reference
+- `variants_patterns.md` - Variant patterns and orchestration
+- `gesture_guide.md` - Comprehensive gesture handling guide
+
+**scripts/**
+- `animation_generator.py` - Generate Motion component boilerplate
+- `variant_builder.py` - Interactive variant configuration tool
+
+**assets/**
+- `starter_motion/` - Complete Motion + Vite starter template
+- `examples/` - Real-world Motion component patterns
+
+### Community Resources
+- [Motion Dev Discord](https://discord.gg/motion) - Official community
+- [Framer Motion Examples](https://www.framer.com/motion/examples/) - Interactive examples
+- [Motion Recipes](https://motion.dev/docs/recipes) - Common patterns
+- [CodeSandbox Templates](https://codesandbox.io/s/framer-motion-examples) - Live demos
