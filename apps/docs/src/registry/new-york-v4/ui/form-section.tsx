@@ -1,7 +1,7 @@
 "use client";
 
-import { type MotionProps, motion, useReducedMotion } from "framer-motion";
-import type { ComponentProps, ReactNode } from "react";
+import { type HTMLMotionProps, motion, useReducedMotion } from "framer-motion";
+import type { ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
 
@@ -41,10 +41,7 @@ export const formSectionVariants = tv({
   },
 });
 
-export type FormSectionProps = Omit<
-  ComponentProps<"section">,
-  keyof MotionProps
-> &
+export type FormSectionProps = HTMLMotionProps<"section"> &
   VariantProps<typeof formSectionVariants> & {
     title?: ReactNode;
     description?: ReactNode;

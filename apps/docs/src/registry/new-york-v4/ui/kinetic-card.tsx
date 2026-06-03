@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { type HTMLMotionProps, motion, useReducedMotion } from "framer-motion";
 import type { ComponentProps, ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
@@ -67,7 +67,7 @@ const toneStyles = {
   },
 } as const;
 
-export type KineticCardProps = ComponentProps<"div"> &
+export type KineticCardProps = HTMLMotionProps<"div"> &
   VariantProps<typeof kineticCardVariants> & {
     badge?: ReactNode;
     children?: ReactNode;
