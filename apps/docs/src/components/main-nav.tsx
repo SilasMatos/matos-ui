@@ -15,24 +15,30 @@ export function MainNav({
 
   return (
     <nav className={cn("items-center gap-0", className)} {...props}>
-      {items.map((item) => (
-        <Button
-          key={item.href}
-          variant="ghost"
-          size="sm"
-          className="px-2.5"
-          nativeButton={false}
-          render={
-            <Link
-              href={item.href}
-              data-active={pathname === item.href}
-              className="relative items-center"
-            >
-              {item.label}
-            </Link>
-          }
-        />
-      ))}
+      {items.map((item) => {
+        const isActive =
+          pathname === item.href ||
+          (item.href !== "/docs" && pathname.startsWith(`${item.href}/`));
+
+        return (
+          <Button
+            key={item.href}
+            variant="ghost"
+            size="sm"
+            className="px-2.5"
+            nativeButton={false}
+            render={
+              <Link
+                href={item.href}
+                data-active={isActive}
+                className="relative items-center"
+              >
+                {item.label}
+              </Link>
+            }
+          />
+        );
+      })}
     </nav>
   );
 }

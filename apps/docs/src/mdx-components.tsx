@@ -1,5 +1,6 @@
 import defaultMdxComponents from "fumadocs-ui/mdx";
 import type { MDXComponents } from "mdx/types";
+import { ChartsShowcase } from "@/components/charts-showcase";
 import { CodeBlockCommand } from "@/components/code-block-command";
 import { CodeTabs } from "@/components/code-tabs";
 import { ComponentPreview } from "@/components/component-preview";
@@ -19,6 +20,7 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
     ...defaultMdxComponents,
     ...components,
     ComponentsList,
+    ChartsShowcase,
     ComponentPreview,
     ComponentSource,
     ComponentPreviewTabs,

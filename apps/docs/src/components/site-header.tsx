@@ -24,7 +24,7 @@ export function SiteHeader({ pageTree }: { pageTree: DocsPageTree }) {
 
   const navItems = siteConfig.navItems.map((item) => ({
     href: item.href,
-    label: item.href === "/docs/components" ? tNav("components") : tNav("docs"),
+    label: tNav(item.labelKey),
   }));
 
   return (

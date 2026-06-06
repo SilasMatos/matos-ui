@@ -167,6 +167,50 @@ export const examples: Registry["items"] = [
     ],
   },
   {
+    name: "animated-area-chart-demo",
+    type: "registry:example",
+    registryDependencies: ["animated-area-chart"],
+    files: [
+      {
+        path: "examples/animated-area-chart-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "interactive-bar-chart-demo",
+    type: "registry:example",
+    registryDependencies: ["interactive-bar-chart"],
+    files: [
+      {
+        path: "examples/interactive-bar-chart-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "radial-metric-chart-demo",
+    type: "registry:example",
+    registryDependencies: ["radial-metric-chart"],
+    files: [
+      {
+        path: "examples/radial-metric-chart-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "sparkline-card-demo",
+    type: "registry:example",
+    registryDependencies: ["sparkline-card"],
+    files: [
+      {
+        path: "examples/sparkline-card-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
     name: "motion-tabs-demo",
     type: "registry:example",
     registryDependencies: ["motion-tabs"],

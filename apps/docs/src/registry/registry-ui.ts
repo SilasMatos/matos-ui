@@ -218,6 +218,71 @@ export const ui: Registry["items"] = [
     ],
   },
   {
+    name: "animated-area-chart",
+    type: "registry:ui",
+    dependencies: [
+      "framer-motion",
+      "recharts",
+      "tailwind-merge",
+      "tailwind-variants",
+    ],
+    files: [
+      {
+        path: "ui/animated-area-chart.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "interactive-bar-chart",
+    type: "registry:ui",
+    dependencies: [
+      "framer-motion",
+      "recharts",
+      "tailwind-merge",
+      "tailwind-variants",
+    ],
+    files: [
+      {
+        path: "ui/interactive-bar-chart.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "radial-metric-chart",
+    type: "registry:ui",
+    dependencies: [
+      "framer-motion",
+      "recharts",
+      "tailwind-merge",
+      "tailwind-variants",
+    ],
+    files: [
+      {
+        path: "ui/radial-metric-chart.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "sparkline-card",
+    type: "registry:ui",
+    dependencies: [
+      "framer-motion",
+      "lucide-react",
+      "recharts",
+      "tailwind-merge",
+      "tailwind-variants",
+    ],
+    files: [
+      {
+        path: "ui/sparkline-card.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
     name: "motion-tabs",
     type: "registry:ui",
     dependencies: ["framer-motion", "tailwind-merge", "tailwind-variants"],

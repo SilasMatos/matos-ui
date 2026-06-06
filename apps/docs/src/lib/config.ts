@@ -10,5 +10,9 @@ export const siteConfig = {
     linkedin: "https://www.linkedin.com/in/silas-matos/",
     twitter: "https://x.com/silasmatos_",
   },
-  navItems: [{ href: "/docs" }, { href: "/docs/components" }] as const,
+  navItems: [
+    { href: "/docs", labelKey: "docs" },
+    { href: "/docs/components", labelKey: "components" },
+    { href: "/charts", labelKey: "charts" },
+  ] as const,
 };

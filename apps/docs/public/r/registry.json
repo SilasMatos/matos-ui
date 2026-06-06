@@ -268,6 +268,71 @@
       ]
     },
     {
+      "name": "animated-area-chart",
+      "type": "registry:ui",
+      "dependencies": [
+        "framer-motion",
+        "recharts",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/animated-area-chart.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "interactive-bar-chart",
+      "type": "registry:ui",
+      "dependencies": [
+        "framer-motion",
+        "recharts",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/interactive-bar-chart.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "radial-metric-chart",
+      "type": "registry:ui",
+      "dependencies": [
+        "framer-motion",
+        "recharts",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/radial-metric-chart.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "sparkline-card",
+      "type": "registry:ui",
+      "dependencies": [
+        "framer-motion",
+        "lucide-react",
+        "recharts",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/sparkline-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "motion-tabs",
       "type": "registry:ui",
       "dependencies": [
@@ -689,6 +754,58 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/metric-card-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "animated-area-chart-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "animated-area-chart"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/animated-area-chart-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "interactive-bar-chart-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "interactive-bar-chart"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/interactive-bar-chart-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "radial-metric-chart-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "radial-metric-chart"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/radial-metric-chart-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "sparkline-card-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "sparkline-card"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/sparkline-card-demo.tsx",
           "type": "registry:example"
         }
       ]
