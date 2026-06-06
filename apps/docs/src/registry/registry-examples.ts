@@ -189,6 +189,17 @@ export const examples: Registry["items"] = [
     ],
   },
   {
+    name: "allocation-performance-chart-demo",
+    type: "registry:example",
+    registryDependencies: ["allocation-performance-chart"],
+    files: [
+      {
+        path: "examples/allocation-performance-chart-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
     name: "radial-metric-chart-demo",
     type: "registry:example",
     registryDependencies: ["radial-metric-chart"],

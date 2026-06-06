@@ -250,6 +250,22 @@ export const ui: Registry["items"] = [
     ],
   },
   {
+    name: "allocation-performance-chart",
+    type: "registry:ui",
+    dependencies: [
+      "framer-motion",
+      "lucide-react",
+      "tailwind-merge",
+      "tailwind-variants",
+    ],
+    files: [
+      {
+        path: "ui/allocation-performance-chart.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
     name: "radial-metric-chart",
     type: "registry:ui",
     dependencies: [

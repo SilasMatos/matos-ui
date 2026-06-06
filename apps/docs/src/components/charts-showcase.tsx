@@ -17,7 +17,13 @@ import {
   Scale,
   Sparkles,
 } from "lucide-react";
-import { type ReactNode, useEffect, useMemo, useState } from "react";
+import {
+  type ComponentProps,
+  type ReactNode,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { Link } from "@/i18n/navigation";
 import {
   type ChartCategory,
@@ -32,6 +38,46 @@ type ChartCard = (typeof chartCollection)[number] & {
   href: `/charts/${ChartId}`;
   preview: ReactNode;
 };
+
+function AnimatedCounterText({
+  value,
+  duration = 900,
+  reducedMotion,
+  ...props
+}: ComponentProps<"text"> & {
+  value: number;
+  duration?: number;
+  reducedMotion?: boolean;
+}) {
+  const [displayValue, setDisplayValue] = useState(reducedMotion ? value : 0);
+
+  useEffect(() => {
+    if (reducedMotion) {
+      setDisplayValue(value);
+      return;
+    }
+
+    const startedAt = performance.now();
+    let frame = 0;
+
+    function update(now: number) {
+      const progress = Math.min((now - startedAt) / duration, 1);
+      const eased = 1 - (1 - progress) ** 3;
+
+      setDisplayValue(Math.round(value * eased));
+
+      if (progress < 1) {
+        frame = requestAnimationFrame(update);
+      }
+    }
+
+    frame = requestAnimationFrame(update);
+
+    return () => cancelAnimationFrame(frame);
+  }, [duration, reducedMotion, value]);
+
+  return <text {...props}>{displayValue}</text>;
+}
 
 const featuredData = [
   { month: "Jan", value: 44 },
@@ -260,14 +306,14 @@ function ChartRegistryCard({
         reducedMotion
           ? undefined
           : {
-              y: -3,
-              scale: 1.01,
-              transition: { duration: 0.18, ease: "easeOut" },
+              y: -1,
+              scale: 1.003,
+              transition: { duration: 0.34, ease: [0.22, 1, 0.36, 1] },
             }
       }
       className={cn(
         "group overflow-hidden rounded-2xl border border-border bg-secondary p-2 shadow-sm",
-        "transition-colors duration-200 hover:border-ring/45",
+        "transition-colors duration-300 hover:border-ring/35",
       )}
     >
       <Link
@@ -541,21 +587,18 @@ function AllocationPerformancePreview({
       label: "Bonds",
       value: 45,
       color: "color-mix(in oklab, var(--destructive) 82%, var(--chart-1) 18%)",
-      labelColor: "var(--primary-foreground)",
     },
     {
       id: "stocks",
       label: "Stocks",
       value: 85,
       color: "var(--chart-3)",
-      labelColor: "var(--foreground)",
     },
     {
       id: "etfs",
       label: "ETFs",
       value: 48,
       color: "color-mix(in oklab, var(--background) 92%, var(--foreground) 8%)",
-      labelColor: "var(--foreground)",
     },
     {
       id: "crypto",
@@ -563,14 +606,32 @@ function AllocationPerformancePreview({
       value: 14,
       color:
         "color-mix(in oklab, var(--muted-foreground) 58%, var(--background) 42%)",
-      labelColor: "var(--foreground)",
     },
-  ];
+  ] as const;
+  const [activeBarId, setActiveBarId] = useState("stocks");
+  const activeBar = bars.find((bar) => bar.id === activeBarId) ?? bars[1];
+  const activeIndex = Math.max(
+    0,
+    bars.findIndex((bar) => bar.id === activeBar.id),
+  );
+  const activeX = 34 + activeIndex * 78;
+  const tooltipWidth = 126;
+  const tooltipX = Math.min(218, Math.max(24, activeX - 14));
+  const tooltipY = 24;
 
   return (
     <PreviewFrame icon={<BarChart3 className="size-3.5" />} label="Allocation">
       <svg viewBox="0 0 360 180" className="size-full" aria-hidden="true">
         <defs>
+          <filter id="allocation-mini-tooltip-shadow">
+            <feDropShadow
+              dx="0"
+              dy="10"
+              floodColor="var(--foreground)"
+              floodOpacity="0.14"
+              stdDeviation="10"
+            />
+          </filter>
           <pattern
             id="allocation-mini-stripes"
             width="6"
@@ -617,22 +678,26 @@ function AllocationPerformancePreview({
             const trackHeight = 90;
             const fillHeight = Math.max((trackHeight * bar.value) / 100, 18);
             const fillY = trackY + trackHeight - fillHeight;
-            const labelInside = fillHeight > 28;
 
             return (
               <motion.g
                 key={bar.id}
-                whileHover={{ y: -2, scale: 1.015 }}
-                transition={{ duration: 0.2, ease: "easeOut" }}
+                onPointerEnter={() => setActiveBarId(bar.id)}
+                whileHover={{ y: -0.8, scale: 1.004 }}
+                transition={{ duration: 0.34, ease: [0.22, 1, 0.36, 1] }}
                 style={{ transformOrigin: `${x + width / 2}px ${trackY}px` }}
               >
-                <rect
+                <motion.rect
                   x={x}
                   y={trackY}
                   width={width}
                   height={trackHeight}
                   rx="8"
                   fill="url(#allocation-mini-stripes)"
+                  animate={{
+                    opacity: activeBar.id === bar.id ? 1 : 0.72,
+                  }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
                 />
                 <motion.rect
                   x={x}
@@ -642,7 +707,10 @@ function AllocationPerformancePreview({
                   rx="8"
                   fill="currentColor"
                   initial={compact ? { scaleY: 0, opacity: 0 } : false}
-                  animate={{ scaleY: 1, opacity: 1 }}
+                  animate={{
+                    scaleY: 1,
+                    opacity: activeBar.id === bar.id ? 1 : 0.84,
+                  }}
                   transition={{
                     delay: index * 0.07,
                     duration: 0.48,
@@ -653,35 +721,6 @@ function AllocationPerformancePreview({
                     transformOrigin: `${x + width / 2}px ${trackY + trackHeight}px`,
                   }}
                 />
-                <motion.rect
-                  x={x + 8}
-                  y={fillY + 8}
-                  width={width - 16}
-                  height="1"
-                  rx="1"
-                  fill="var(--background)"
-                  opacity={labelInside ? 0.36 : 0}
-                  initial={compact ? { opacity: 0, width: 0 } : false}
-                  animate={{
-                    opacity: labelInside ? 0.36 : 0,
-                    width: width - 16,
-                  }}
-                  transition={{ delay: 0.32 + index * 0.08, duration: 0.36 }}
-                />
-                <motion.text
-                  x={x + 10}
-                  y={labelInside ? fillY + 22 : fillY - 7}
-                  className="text-[11px] font-semibold"
-                  fill={labelInside ? bar.labelColor : "var(--foreground)"}
-                  initial={compact ? { y: fillY + 8, opacity: 0 } : false}
-                  animate={{
-                    y: labelInside ? fillY + 22 : fillY - 7,
-                    opacity: 1,
-                  }}
-                  transition={{ delay: 0.18 + index * 0.08, duration: 0.32 }}
-                >
-                  {bar.value}%
-                </motion.text>
                 <text
                   x={x + width / 2}
                   y="154"
@@ -694,14 +733,68 @@ function AllocationPerformancePreview({
             );
           })}
         </g>
+        <AnimatePresence mode="wait">
+          <motion.g
+            key={activeBar.id}
+            pointerEvents="none"
+            initial={compact ? { opacity: 0, y: 6, scale: 0.98 } : false}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 4, scale: 0.98 }}
+            transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <rect
+              x={tooltipX}
+              y={tooltipY}
+              width={tooltipWidth}
+              height="58"
+              rx="10"
+              fill="var(--popover)"
+              stroke="var(--border)"
+              filter="url(#allocation-mini-tooltip-shadow)"
+            />
+            <text
+              x={tooltipX + 13}
+              y={tooltipY + 22}
+              fill="var(--popover-foreground)"
+              className="text-[11px] font-semibold"
+            >
+              {activeBar.label}
+            </text>
+            <circle
+              cx={tooltipX + 16}
+              cy={tooltipY + 40}
+              r="4.5"
+              fill={activeBar.color}
+            />
+            <text
+              x={tooltipX + 28}
+              y={tooltipY + 44}
+              fill="var(--muted-foreground)"
+              className="text-[11px] font-medium"
+            >
+              Allocation
+            </text>
+            <text
+              x={tooltipX + tooltipWidth - 12}
+              y={tooltipY + 44}
+              textAnchor="end"
+              fill="var(--popover-foreground)"
+              className="text-[11px] font-semibold"
+            >
+              {activeBar.value}%
+            </text>
+          </motion.g>
+        </AnimatePresence>
       </svg>
     </PreviewFrame>
   );
 }
 
 function RiskScoreGaugePreview({ compact = false }: { compact?: boolean }) {
-  const path = "M82 140 A98 98 0 0 1 278 140";
-  const progressPath = "M82 140 A98 98 0 0 1 222 52";
+  const path = "M98 142 A92 92 0 0 1 282 142";
+  const progressPath = "M98 142 A92 92 0 0 1 226 57";
+  const [tooltipVisible, setTooltipVisible] = useState(true);
+  const shouldReduceMotion = useReducedMotion();
 
   return (
     <PreviewFrame icon={<Gauge className="size-3.5" />} label="Risk">
@@ -711,6 +804,15 @@ function RiskScoreGaugePreview({ compact = false }: { compact?: boolean }) {
         aria-hidden="true"
       >
         <defs>
+          <filter id="risk-mini-tooltip-shadow">
+            <feDropShadow
+              dx="0"
+              dy="10"
+              floodColor="var(--foreground)"
+              floodOpacity="0.13"
+              stdDeviation="10"
+            />
+          </filter>
           <pattern
             id="risk-mini-stripes"
             width="7"
@@ -739,55 +841,52 @@ function RiskScoreGaugePreview({ compact = false }: { compact?: boolean }) {
             <stop offset="100%" stopColor="var(--chart-2)" />
           </linearGradient>
         </defs>
-        <rect
-          x="24"
-          y="18"
-          width="312"
-          height="144"
-          rx="24"
-          className="fill-card stroke-border"
-        />
         <text
-          x="48"
+          x="38"
           y="52"
           className="fill-muted-foreground text-[13px] font-medium"
         >
           Risk Score
         </text>
-        <text
-          x="48"
+        <AnimatedCounterText
+          x="38"
           y="86"
+          value={72}
+          duration={950}
+          reducedMotion={Boolean(shouldReduceMotion)}
           className="fill-foreground text-[32px] font-semibold"
-        >
-          72
-        </text>
+        />
         <text
-          x="96"
+          x="86"
           y="86"
           className="fill-muted-foreground text-[18px] font-medium"
         >
           /100
         </text>
-        <g transform="translate(0 10)">
+        <g
+          transform="translate(0 10)"
+          onPointerEnter={() => setTooltipVisible(true)}
+          onPointerLeave={() => setTooltipVisible(false)}
+        >
           <path
             d={path}
             fill="none"
             stroke="url(#risk-mini-stripes)"
-            strokeWidth="28"
+            strokeWidth="24"
             strokeLinecap="round"
           />
           <motion.path
             d={progressPath}
             fill="none"
             stroke="url(#risk-mini-gradient)"
-            strokeWidth="28"
+            strokeWidth="24"
             strokeLinecap="round"
             initial={compact ? { pathLength: 0 } : false}
             animate={{ pathLength: 1 }}
             transition={{ duration: 0.86, ease: [0.16, 1, 0.3, 1] }}
           />
           <circle
-            cx="82"
+            cx="98"
             cy="140"
             r="8"
             fill="var(--card)"
@@ -795,25 +894,16 @@ function RiskScoreGaugePreview({ compact = false }: { compact?: boolean }) {
             strokeOpacity="0.32"
             strokeWidth="8"
           />
-          <line
-            x1="222"
-            x2="222"
-            y1="58"
-            y2="126"
-            className="stroke-muted-foreground"
-            strokeWidth="1.5"
-            opacity="0.2"
-          />
           <motion.g
             initial={compact ? { scale: 0, opacity: 0 } : false}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.58, duration: 0.22, ease: "easeOut" }}
-            style={{ transformOrigin: "222px 52px" }}
+            style={{ transformOrigin: "226px 57px" }}
           >
             <motion.circle
-              cx="222"
-              cy="52"
-              r="21"
+              cx="226"
+              cy="57"
+              r="18"
               className="fill-chart-2"
               animate={
                 compact ? { opacity: [0.22, 0.38, 0.22] } : { opacity: 0.3 }
@@ -825,15 +915,63 @@ function RiskScoreGaugePreview({ compact = false }: { compact?: boolean }) {
               }}
             />
             <circle
-              cx="222"
-              cy="52"
-              r="10"
+              cx="226"
+              cy="57"
+              r="9"
               fill="var(--background)"
               stroke="var(--chart-2)"
               strokeWidth="2"
             />
           </motion.g>
         </g>
+        <AnimatePresence>
+          {tooltipVisible ? (
+            <motion.g
+              pointerEvents="none"
+              initial={compact ? { opacity: 0, y: 6, scale: 0.98 } : false}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 4, scale: 0.98 }}
+              transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <rect
+                x="206"
+                y="20"
+                width="124"
+                height="58"
+                rx="10"
+                fill="var(--popover)"
+                stroke="var(--border)"
+                filter="url(#risk-mini-tooltip-shadow)"
+              />
+              <text
+                x="219"
+                y="42"
+                fill="var(--popover-foreground)"
+                className="text-[11px] font-semibold"
+              >
+                Risk Score
+              </text>
+              <circle cx="222" cy="60" r="4.5" fill="var(--chart-2)" />
+              <text
+                x="234"
+                y="64"
+                fill="var(--muted-foreground)"
+                className="text-[11px] font-medium"
+              >
+                Stability
+              </text>
+              <text
+                x="318"
+                y="64"
+                textAnchor="end"
+                fill="var(--popover-foreground)"
+                className="text-[11px] font-semibold"
+              >
+                72/100
+              </text>
+            </motion.g>
+          ) : null}
+        </AnimatePresence>
         <text
           x="180"
           y="150"

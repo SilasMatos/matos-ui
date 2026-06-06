@@ -1,11 +1,19 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
-import { ArrowLeft, Code2, Maximize2, RefreshCw } from "lucide-react";
-import { type ComponentProps, type ReactNode, useMemo, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { ArrowLeft, Maximize2, Moon, RefreshCw, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
+import {
+  type ComponentProps,
+  type ReactNode,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { Link } from "@/i18n/navigation";
 import { type ChartId, getChartById } from "@/lib/charts";
 import { cn } from "@/lib/utils";
+import { AllocationPerformanceChart } from "@/registry/new-york-v4/ui/allocation-performance-chart";
 import { AnimatedAreaChart } from "@/registry/new-york-v4/ui/animated-area-chart";
 import { InteractiveBarChart } from "@/registry/new-york-v4/ui/interactive-bar-chart";
 import { RadialMetricChart } from "@/registry/new-york-v4/ui/radial-metric-chart";
@@ -14,6 +22,46 @@ import { SparklineCard } from "@/registry/new-york-v4/ui/sparkline-card";
 type ChartFullscreenViewerProps = ComponentProps<"main"> & {
   chartId: ChartId;
 };
+
+function AnimatedCounterText({
+  value,
+  duration = 1200,
+  reducedMotion,
+  ...props
+}: ComponentProps<"text"> & {
+  value: number;
+  duration?: number;
+  reducedMotion?: boolean;
+}) {
+  const [displayValue, setDisplayValue] = useState(reducedMotion ? value : 0);
+
+  useEffect(() => {
+    if (reducedMotion) {
+      setDisplayValue(value);
+      return;
+    }
+
+    const startedAt = performance.now();
+    let frame = 0;
+
+    function update(now: number) {
+      const progress = Math.min((now - startedAt) / duration, 1);
+      const eased = 1 - (1 - progress) ** 3;
+
+      setDisplayValue(Math.round(value * eased));
+
+      if (progress < 1) {
+        frame = requestAnimationFrame(update);
+      }
+    }
+
+    frame = requestAnimationFrame(update);
+
+    return () => cancelAnimationFrame(frame);
+  }, [duration, reducedMotion, value]);
+
+  return <text {...props}>{displayValue}</text>;
+}
 
 const areaData = [
   { month: "Jan", value: 42 },
@@ -38,6 +86,21 @@ const barData = [
   { label: "Sun", value: 96 },
 ];
 
+const allocationData = [
+  { label: "Bonds", value: 45, tone: "destructive" },
+  { label: "Stocks", value: 85, tone: "chart-4" },
+  {
+    label: "ETFs",
+    value: 48,
+    tone: "color-mix(in oklab, var(--foreground) 18%, var(--background) 82%)",
+  },
+  {
+    label: "Crypto",
+    value: 14,
+    tone: "color-mix(in oklab, var(--muted-foreground) 44%, var(--background) 56%)",
+  },
+];
+
 const sparklineData = [
   { label: "01", value: 28 },
   { label: "02", value: 34 },
@@ -56,6 +119,7 @@ export function ChartFullscreenViewer({
   ...props
 }: ChartFullscreenViewerProps) {
   const shouldReduceMotion = useReducedMotion();
+  const { resolvedTheme, setTheme } = useTheme();
   const chart = getChartById(chartId);
   const [renderKey, setRenderKey] = useState(0);
 
@@ -74,8 +138,8 @@ export function ChartFullscreenViewer({
     void document.documentElement.requestFullscreen?.();
   }
 
-  async function copyChartId() {
-    await navigator.clipboard?.writeText(chartId);
+  function toggleTheme() {
+    setTheme(resolvedTheme === "dark" ? "light" : "dark");
   }
 
   return (
@@ -180,8 +244,12 @@ export function ChartFullscreenViewer({
               >
                 <RefreshCw className="size-4" aria-hidden="true" />
               </ControlButton>
-              <ControlButton label="Copy chart id" onClick={copyChartId}>
-                <Code2 className="size-4" aria-hidden="true" />
+              <ControlButton label="Toggle theme" onClick={toggleTheme}>
+                {resolvedTheme === "dark" ? (
+                  <Sun className="size-4" aria-hidden="true" />
+                ) : (
+                  <Moon className="size-4" aria-hidden="true" />
+                )}
               </ControlButton>
             </div>
           </div>
@@ -325,6 +393,15 @@ function getChartDependencies(chartId: ChartId) {
     return ["recharts", "framer-motion", "tailwind-merge", "tailwind-variants"];
   }
 
+  if (chartId === "allocation-performance-chart") {
+    return [
+      "framer-motion",
+      "lucide-react",
+      "tailwind-merge",
+      "tailwind-variants",
+    ];
+  }
+
   return ["framer-motion", "recharts", "theme tokens"];
 }
 
@@ -336,8 +413,9 @@ function getUsageSnippet(chartId: ChartId) {
     "interactive-bar-chart": `import { InteractiveBarChart } from "@/registry/new-york-v4/ui/interactive-bar-chart"
 
 <InteractiveBarChart data={data} />`,
-    "allocation-performance-chart": `<AllocationPerformanceChart data={allocations} />
-// Docs-only showcase preview`,
+    "allocation-performance-chart": `import { AllocationPerformanceChart } from "@/registry/new-york-v4/ui/allocation-performance-chart"
+
+<AllocationPerformanceChart data={allocations} />`,
     "radial-metric-chart": `import { RadialMetricChart } from "@/registry/new-york-v4/ui/radial-metric-chart"
 
 <RadialMetricChart value={84} />`,
@@ -463,7 +541,16 @@ function renderChartPreview(chartId: ChartId) {
         />
       );
     case "allocation-performance-chart":
-      return <AllocationPerformanceFullPreview />;
+      return (
+        <AllocationPerformanceChart
+          size="full"
+          data={allocationData}
+          title="Allocation Performance"
+          description="Textured allocation tracks with active marker and tooltip"
+          height={360}
+          className="w-full max-w-[760px]"
+        />
+      );
     case "radial-metric-chart":
       return (
         <RadialMetricChart
@@ -528,6 +615,7 @@ function FullPreviewCard({
   );
 }
 
+// biome-ignore lint/correctness/noUnusedVariables: kept temporarily while the registry chart replaces this preview.
 function AllocationPerformanceFullPreview() {
   const allocations = [
     {
@@ -559,7 +647,21 @@ function AllocationPerformanceFullPreview() {
         "color-mix(in oklab, var(--muted-foreground) 58%, var(--background) 42%)",
       labelColor: "var(--foreground)",
     },
-  ];
+  ] as const;
+  const [activeAllocationId, setActiveAllocationId] = useState("stocks");
+  const activeAllocation =
+    allocations.find((allocation) => allocation.id === activeAllocationId) ??
+    allocations[1];
+  const activeIndex = Math.max(
+    0,
+    allocations.findIndex(
+      (allocation) => allocation.id === activeAllocation.id,
+    ),
+  );
+  const activeX = 52 + activeIndex * 170;
+  const tooltipWidth = 168;
+  const tooltipX = Math.min(568, Math.max(44, activeX - 18));
+  const tooltipY = 82;
 
   return (
     <FullPreviewCard
@@ -568,6 +670,15 @@ function AllocationPerformanceFullPreview() {
     >
       <svg viewBox="0 0 780 360" className="h-auto w-full" aria-hidden="true">
         <defs>
+          <filter id="allocation-full-tooltip-shadow">
+            <feDropShadow
+              dx="0"
+              dy="14"
+              floodColor="var(--foreground)"
+              floodOpacity="0.16"
+              stdDeviation="13"
+            />
+          </filter>
           <pattern
             id="allocation-full-stripes"
             width="8"
@@ -660,19 +771,24 @@ function AllocationPerformanceFullPreview() {
           return (
             <motion.g
               key={allocation.id}
-              whileHover={{ y: -4, scale: 1.012 }}
-              transition={{ duration: 0.22, ease: "easeOut" }}
+              onPointerEnter={() => setActiveAllocationId(allocation.id)}
+              whileHover={{ y: -1.2, scale: 1.004 }}
+              transition={{ duration: 0.36, ease: [0.22, 1, 0.36, 1] }}
               style={{
                 transformOrigin: `${x + width / 2}px ${trackY + trackHeight}px`,
               }}
             >
-              <rect
+              <motion.rect
                 x={x}
                 y={trackY}
                 width={width}
                 height={trackHeight}
                 rx="12"
                 fill="url(#allocation-full-stripes)"
+                animate={{
+                  opacity: activeAllocation.id === allocation.id ? 1 : 0.7,
+                }}
+                transition={{ duration: 0.34, ease: "easeOut" }}
               />
               <motion.rect
                 x={x}
@@ -682,7 +798,10 @@ function AllocationPerformanceFullPreview() {
                 rx="12"
                 fill="currentColor"
                 initial={{ scaleY: 0, opacity: 0 }}
-                animate={{ scaleY: 1, opacity: 1 }}
+                animate={{
+                  scaleY: 1,
+                  opacity: activeAllocation.id === allocation.id ? 1 : 0.84,
+                }}
                 transition={{
                   delay: index * 0.08,
                   duration: 0.58,
@@ -732,21 +851,77 @@ function AllocationPerformanceFullPreview() {
             </motion.g>
           );
         })}
+        <AnimatePresence mode="wait">
+          <motion.g
+            key={activeAllocation.id}
+            pointerEvents="none"
+            initial={{ opacity: 0, y: 8, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 6, scale: 0.98 }}
+            transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <rect
+              x={tooltipX}
+              y={tooltipY}
+              width={tooltipWidth}
+              height="70"
+              rx="14"
+              fill="var(--popover)"
+              stroke="var(--border)"
+              filter="url(#allocation-full-tooltip-shadow)"
+            />
+            <text
+              x={tooltipX + 18}
+              y={tooltipY + 27}
+              fill="var(--popover-foreground)"
+              className="text-sm font-semibold"
+            >
+              {activeAllocation.label}
+            </text>
+            <circle
+              cx={tooltipX + 22}
+              cy={tooltipY + 50}
+              r="5.5"
+              fill={activeAllocation.color}
+            />
+            <text
+              x={tooltipX + 38}
+              y={tooltipY + 55}
+              fill="var(--muted-foreground)"
+              className="text-sm font-medium"
+            >
+              Allocation
+            </text>
+            <text
+              x={tooltipX + tooltipWidth - 16}
+              y={tooltipY + 55}
+              textAnchor="end"
+              fill="var(--popover-foreground)"
+              className="text-sm font-semibold"
+            >
+              {activeAllocation.value}%
+            </text>
+          </motion.g>
+        </AnimatePresence>
       </svg>
     </FullPreviewCard>
   );
 }
 
 function RiskScoreGaugeFullPreview() {
-  const remainderPath = "M66 254 A164 164 0 0 1 394 254";
-  const progressPath = "M66 254 A164 164 0 0 1 272 104";
+  const remainderPath = "M112 256 A138 138 0 0 1 388 256";
+  const progressPath = "M112 256 A138 138 0 0 1 284 122";
+  const [tooltipVisible, setTooltipVisible] = useState(true);
+  const shouldReduceMotion = useReducedMotion();
 
   return (
-    <FullPreviewCard
-      label="Risk score gauge fullscreen preview"
-      className="max-w-[520px]"
+    <div
+      data-slot="risk-score-gauge-full-preview"
+      role="img"
+      aria-label="Risk score gauge fullscreen preview"
+      className="not-prose w-full max-w-[540px] text-foreground"
     >
-      <svg viewBox="0 0 460 340" className="h-auto w-full" aria-hidden="true">
+      <svg viewBox="0 0 500 320" className="h-auto w-full" aria-hidden="true">
         <defs>
           <pattern
             id="risk-full-stripes"
@@ -780,91 +955,144 @@ function RiskScoreGaugeFullPreview() {
           </filter>
         </defs>
         <rect
-          x="24"
-          y="24"
-          width="412"
+          x="10"
+          y="14"
+          width="480"
           height="292"
-          rx="34"
+          rx="30"
           className="fill-card stroke-border"
         />
         <text
-          x="60"
-          y="78"
+          x="48"
+          y="66"
           className="fill-muted-foreground text-base font-semibold"
         >
           Risk Score
         </text>
-        <text x="60" y="128" className="fill-foreground text-5xl font-semibold">
-          72
-        </text>
+        <AnimatedCounterText
+          x="48"
+          y="118"
+          value={72}
+          duration={1350}
+          reducedMotion={Boolean(shouldReduceMotion)}
+          className="fill-foreground text-5xl font-semibold"
+        />
         <text
-          x="128"
-          y="128"
+          x="116"
+          y="118"
           className="fill-muted-foreground text-3xl font-medium"
         >
           /100
         </text>
-        <path
-          d={remainderPath}
-          fill="none"
-          stroke="url(#risk-full-stripes)"
-          strokeWidth="48"
-          strokeLinecap="round"
-        />
-        <motion.path
-          d={progressPath}
-          fill="none"
-          stroke="url(#risk-full-gradient)"
-          strokeWidth="48"
-          strokeLinecap="round"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 0.95, ease: [0.16, 1, 0.3, 1] }}
-        />
-        <circle
-          cx="66"
-          cy="254"
-          r="12"
-          fill="var(--card)"
-          stroke="var(--muted-foreground)"
-          strokeOpacity="0.32"
-          strokeWidth="12"
-        />
-        <line
-          x1="272"
-          x2="272"
-          y1="118"
-          y2="224"
-          className="stroke-muted-foreground"
-          strokeWidth="2"
-          opacity="0.22"
-        />
-        <motion.g
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.66, duration: 0.28, ease: "easeOut" }}
-          style={{ transformOrigin: "272px 104px" }}
-          filter="url(#risk-full-glow)"
+        <g
+          onPointerEnter={() => setTooltipVisible(true)}
+          onPointerLeave={() => setTooltipVisible(false)}
         >
-          <motion.circle
-            cx="272"
-            cy="104"
-            r="31"
-            className="fill-chart-2"
-            animate={{ opacity: [0.2, 0.36, 0.2] }}
-            transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+          <path
+            d={remainderPath}
+            fill="none"
+            stroke="url(#risk-full-stripes)"
+            strokeWidth="42"
+            strokeLinecap="round"
+          />
+          <motion.path
+            d={progressPath}
+            fill="none"
+            stroke="url(#risk-full-gradient)"
+            strokeWidth="42"
+            strokeLinecap="round"
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ duration: 1.55, ease: [0.16, 1, 0.3, 1] }}
           />
           <circle
-            cx="272"
-            cy="104"
-            r="15"
-            fill="var(--background)"
-            stroke="var(--chart-2)"
-            strokeWidth="2"
+            cx="112"
+            cy="256"
+            r="10"
+            fill="var(--card)"
+            stroke="var(--muted-foreground)"
+            strokeOpacity="0.32"
+            strokeWidth="10"
           />
-        </motion.g>
+          <motion.g
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 1.08, duration: 0.4, ease: "easeOut" }}
+            style={{ transformOrigin: "284px 122px" }}
+            filter="url(#risk-full-glow)"
+          >
+            <motion.circle
+              cx="284"
+              cy="122"
+              r="27"
+              className="fill-chart-2"
+              animate={{ opacity: [0.2, 0.36, 0.2] }}
+              transition={{
+                duration: 2.2,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 1.2,
+              }}
+            />
+            <circle
+              cx="284"
+              cy="122"
+              r="13"
+              fill="var(--background)"
+              stroke="var(--chart-2)"
+              strokeWidth="2"
+            />
+          </motion.g>
+        </g>
+        <AnimatePresence>
+          {tooltipVisible ? (
+            <motion.g
+              pointerEvents="none"
+              initial={{ opacity: 0, y: 8, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 6, scale: 0.98 }}
+              transition={{ duration: 0.46, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <rect
+                x="250"
+                y="72"
+                width="148"
+                height="68"
+                rx="14"
+                fill="var(--popover)"
+                stroke="var(--border)"
+              />
+              <text
+                x="268"
+                y="98"
+                fill="var(--popover-foreground)"
+                className="text-sm font-semibold"
+              >
+                Risk Score
+              </text>
+              <circle cx="272" cy="121" r="5.5" fill="var(--chart-2)" />
+              <text
+                x="288"
+                y="126"
+                fill="var(--muted-foreground)"
+                className="text-sm font-medium"
+              >
+                Stability
+              </text>
+              <text
+                x="386"
+                y="126"
+                textAnchor="end"
+                fill="var(--popover-foreground)"
+                className="text-xs font-semibold"
+              >
+                72/100
+              </text>
+            </motion.g>
+          ) : null}
+        </AnimatePresence>
         <motion.text
-          x="230"
+          x="250"
           y="292"
           textAnchor="middle"
           className="fill-muted-foreground text-base font-medium"
@@ -875,7 +1103,7 @@ function RiskScoreGaugeFullPreview() {
           Stability improved by +4%
         </motion.text>
       </svg>
-    </FullPreviewCard>
+    </div>
   );
 }
 

@@ -33,7 +33,7 @@ export const chartCollection = [
       "Inset allocation columns with textured tracks and expressive fill states.",
     category: "Analytics",
     badge: "Analytics",
-    installable: false,
+    installable: true,
   },
   {
     id: "radial-metric-chart",

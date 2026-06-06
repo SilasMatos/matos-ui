@@ -387,6 +387,29 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
   },
+  "allocation-performance-chart": {
+    name: "allocation-performance-chart",
+    type: "registry:ui",
+    registryDependencies: undefined,
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/allocation-performance-chart.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/ui/allocation-performance-chart.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
   "radial-metric-chart": {
     name: "radial-metric-chart",
     type: "registry:ui",
@@ -1109,6 +1132,29 @@ export const Index: Record<string, any> = {
     component: React.lazy(async () => {
       const mod = await import(
         "@/registry/new-york-v4/examples/interactive-bar-chart-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "allocation-performance-chart-demo": {
+    name: "allocation-performance-chart-demo",
+    type: "registry:example",
+    registryDependencies: ["allocation-performance-chart"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/allocation-performance-chart-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/allocation-performance-chart-demo.tsx"
       );
       const exportName =
         Object.keys(mod).find(

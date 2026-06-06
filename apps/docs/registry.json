@@ -272,6 +272,22 @@
       ]
     },
     {
+      "name": "allocation-performance-chart",
+      "type": "registry:ui",
+      "dependencies": [
+        "framer-motion",
+        "lucide-react",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/allocation-performance-chart.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "radial-metric-chart",
       "type": "registry:ui",
       "dependencies": [
@@ -684,6 +700,17 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/interactive-bar-chart-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "allocation-performance-chart-demo",
+      "type": "registry:example",
+      "registryDependencies": ["allocation-performance-chart"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/allocation-performance-chart-demo.tsx",
           "type": "registry:example"
         }
       ]
