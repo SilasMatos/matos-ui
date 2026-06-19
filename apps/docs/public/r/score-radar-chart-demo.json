@@ -1,0 +1,16 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "score-radar-chart-demo",
+  "registryDependencies": [
+    "score-radar-chart"
+  ],
+  "files": [
+    {
+      "path": "components/matos-ui/examples/score-radar-chart-demo.tsx",
+      "content": "\"use client\";\n\nimport { ScoreRadarChart } from \"@/components/matos-ui/score-radar-chart\";\n\nexport default function ScoreRadarChartDemo() {\n  return (\n    <div className=\"flex w-full justify-center\">\n      <ScoreRadarChart\n        title=\"Lighthouse Audit\"\n        description=\"Core Web Vitals and audit scores for homepage\"\n        data={[\n          { label: \"Performance\", value: 92 },\n          { label: \"SEO\", value: 98 },\n          { label: \"Best Practices\", value: 91 },\n          { label: \"Accessibility\", value: 87 },\n        ]}\n        showRingValues\n      />\n    </div>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/score-radar-chart-demo.tsx"
+    }
+  ],
+  "type": "registry:example"
+}

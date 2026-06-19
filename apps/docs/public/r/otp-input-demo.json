@@ -1,0 +1,16 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "otp-input-demo",
+  "registryDependencies": [
+    "otp-input"
+  ],
+  "files": [
+    {
+      "path": "components/matos-ui/examples/otp-input-demo.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\n\nimport { OtpInput } from \"@/components/matos-ui/otp-input\";\n\nconst DEMO_CODE = \"123456\";\n\nexport default function OtpInputDemo() {\n  const [value, setValue] = useState(\"\");\n  const [error, setError] = useState<string | undefined>(undefined);\n  const [verified, setVerified] = useState(false);\n\n  function handleChange(next: string) {\n    setValue(next);\n    if (error) {\n      setError(undefined);\n    }\n    if (verified) {\n      setVerified(false);\n    }\n  }\n\n  function handleComplete(next: string) {\n    if (next === DEMO_CODE) {\n      setVerified(true);\n      setError(undefined);\n    } else {\n      setError(\"Invalid code. Try 123456.\");\n      setVerified(false);\n    }\n  }\n\n  return (\n    <div className=\"flex w-full max-w-md flex-col gap-8\">\n      <OtpInput\n        label=\"Verification code\"\n        description={\n          verified\n            ? \"Code verified — welcome back.\"\n            : \"Enter the 6-digit code (try 123456).\"\n        }\n        error={error}\n        value={value}\n        onChange={handleChange}\n        onComplete={handleComplete}\n        groupSize={3}\n      />\n\n      <div className=\"flex flex-col gap-3 border-border/60 border-t pt-6\">\n        <span className=\"text-muted-foreground text-xs\">Sizes</span>\n        <div className=\"flex flex-wrap items-end gap-6\">\n          <OtpInput size=\"sm\" length={4} defaultValue=\"12\" />\n          <OtpInput size=\"md\" length={4} defaultValue=\"34\" />\n          <OtpInput size=\"lg\" length={4} defaultValue=\"56\" />\n        </div>\n      </div>\n\n      <div className=\"flex flex-col gap-3 border-border/60 border-t pt-6\">\n        <span className=\"text-muted-foreground text-xs\">\n          Subtle, masked & disabled\n        </span>\n        <div className=\"flex flex-wrap items-center gap-6\">\n          <OtpInput variant=\"subtle\" length={5} defaultValue=\"42\" />\n          <OtpInput mask length={5} defaultValue=\"903\" />\n          <OtpInput disabled length={4} defaultValue=\"7788\" />\n        </div>\n      </div>\n    </div>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/otp-input-demo.tsx"
+    }
+  ],
+  "type": "registry:example"
+}

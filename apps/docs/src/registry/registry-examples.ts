@@ -167,6 +167,149 @@ export const examples: Registry["items"] = [
     ],
   },
   {
+    name: "animated-area-chart-demo",
+    type: "registry:example",
+    registryDependencies: ["animated-area-chart"],
+    files: [
+      {
+        path: "examples/animated-area-chart-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "allocation-performance-chart-demo",
+    type: "registry:example",
+    registryDependencies: ["allocation-performance-chart"],
+    files: [
+      {
+        path: "examples/allocation-performance-chart-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "sparkline-card-demo",
+    type: "registry:example",
+    registryDependencies: ["sparkline-card"],
+    files: [
+      {
+        path: "examples/sparkline-card-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "signal-flow-chart-demo",
+    type: "registry:example",
+    registryDependencies: ["signal-flow-chart"],
+    files: [
+      {
+        path: "examples/signal-flow-chart-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "activity-heatmap-chart-demo",
+    type: "registry:example",
+    registryDependencies: ["activity-heatmap-chart"],
+    files: [
+      {
+        path: "examples/activity-heatmap-chart-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "candlestick-chart-demo",
+    type: "registry:example",
+    registryDependencies: ["candlestick-chart"],
+    files: [
+      {
+        path: "examples/candlestick-chart-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "bubble-chart-demo",
+    type: "registry:example",
+    registryDependencies: ["bubble-chart"],
+    files: [
+      {
+        path: "examples/bubble-chart-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "activity-waveform-chart-demo",
+    type: "registry:example",
+    registryDependencies: ["activity-waveform-chart"],
+    files: [
+      {
+        path: "examples/activity-waveform-chart-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "performance-waterfall-chart-demo",
+    type: "registry:example",
+    registryDependencies: ["performance-waterfall-chart"],
+    files: [
+      {
+        path: "examples/performance-waterfall-chart-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "threshold-band-chart-demo",
+    type: "registry:example",
+    registryDependencies: ["threshold-band-chart"],
+    files: [
+      {
+        path: "examples/threshold-band-chart-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "impact-priority-matrix-demo",
+    type: "registry:example",
+    registryDependencies: ["impact-priority-matrix"],
+    files: [
+      {
+        path: "examples/impact-priority-matrix-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "resource-treemap-chart-demo",
+    type: "registry:example",
+    registryDependencies: ["resource-treemap-chart"],
+    files: [
+      {
+        path: "examples/resource-treemap-chart-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "score-radar-chart-demo",
+    type: "registry:example",
+    registryDependencies: ["score-radar-chart"],
+    files: [
+      {
+        path: "examples/score-radar-chart-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
     name: "motion-tabs-demo",
     type: "registry:example",
     registryDependencies: ["motion-tabs"],
@@ -312,6 +455,41 @@ export const examples: Registry["items"] = [
     files: [
       {
         path: "examples/form-with-zod-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "otp-input-demo",
+    type: "registry:example",
+    registryDependencies: ["otp-input"],
+    files: [
+      {
+        path: "examples/otp-input-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "popover-card-demo",
+    type: "registry:example",
+    dependencies: ["lucide-react"],
+    registryDependencies: ["popover-card"],
+    files: [
+      {
+        path: "examples/popover-card-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "sheet-panel-demo",
+    type: "registry:example",
+    dependencies: ["lucide-react"],
+    registryDependencies: ["sheet-panel"],
+    files: [
+      {
+        path: "examples/sheet-panel-demo.tsx",
         type: "registry:example",
       },
     ],

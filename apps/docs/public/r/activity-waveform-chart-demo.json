@@ -1,0 +1,16 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "activity-waveform-chart-demo",
+  "registryDependencies": [
+    "activity-waveform-chart"
+  ],
+  "files": [
+    {
+      "path": "components/matos-ui/examples/activity-waveform-chart-demo.tsx",
+      "content": "\"use client\";\n\nimport { ActivityWaveformChart } from \"@/components/matos-ui/activity-waveform-chart\";\n\nexport default function ActivityWaveformChartDemo() {\n  return (\n    <div className=\"flex w-full justify-center\">\n      <ActivityWaveformChart\n        title=\"Sales activity\"\n        valueCaption=\"This week you spent\"\n        value=\"−$3,245.00\"\n        startLabel=\"Mon\"\n        endLabel=\"Sun\"\n        segments={[\n          { label: \"Credit card\", value: 83, tone: \"chart-2\" },\n          { label: \"Cash\", value: 17, tone: \"chart-4\" },\n        ]}\n        valueFormatter={(value) => `$${value.toLocaleString(\"en-US\")}`}\n      />\n    </div>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/activity-waveform-chart-demo.tsx"
+    }
+  ],
+  "type": "registry:example"
+}

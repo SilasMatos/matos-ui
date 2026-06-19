@@ -10,7 +10,8 @@
   },
   "nav": {
     "docs": "Docs",
-    "components": "Components"
+    "components": "Components",
+    "charts": "Charts"
   },
   "command": {
     "searchLong": "Search documentation...",

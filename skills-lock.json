@@ -1,6 +1,12 @@
 {
 	"version": 1,
 	"skills": {
+		"12-principles-of-animation": {
+			"source": "raphaelsalaja/skill",
+			"sourceType": "github",
+			"skillPath": "skills/12-principles-of-animation/SKILL.md",
+			"computedHash": "028c3bad9e7417460e0d2094fc0c1b9d601e56317d38c4f5d124666b06a9405b"
+		},
 		"motion-design": {
 			"source": "lottiefiles/motion-design-skill",
 			"sourceType": "github",

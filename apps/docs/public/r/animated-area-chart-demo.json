@@ -1,0 +1,16 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "animated-area-chart-demo",
+  "registryDependencies": [
+    "animated-area-chart"
+  ],
+  "files": [
+    {
+      "path": "components/matos-ui/examples/animated-area-chart-demo.tsx",
+      "content": "\"use client\";\n\nimport { AnimatedAreaChart } from \"@/components/matos-ui/animated-area-chart\";\n\nconst revenueData = [\n  { month: \"Jan\", value: 42 },\n  { month: \"Feb\", value: 48 },\n  { month: \"Mar\", value: 53 },\n  { month: \"Apr\", value: 49 },\n  { month: \"May\", value: 68 },\n  { month: \"Jun\", value: 74 },\n  { month: \"Jul\", value: 69 },\n  { month: \"Aug\", value: 86 },\n  { month: \"Sep\", value: 91 },\n];\n\nexport default function AnimatedAreaChartDemo() {\n  return (\n    <div className=\"flex w-full justify-center\">\n      <AnimatedAreaChart\n        size=\"lg\"\n        data={revenueData}\n        title=\"Revenue velocity\"\n        description=\"Monthly recurring revenue trend\"\n        valueFormatter={(value) => `$${value.toFixed(1)}k`}\n        height={300}\n      />\n    </div>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/animated-area-chart-demo.tsx"
+    }
+  ],
+  "type": "registry:example"
+}

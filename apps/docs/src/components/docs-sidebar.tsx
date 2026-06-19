@@ -18,6 +18,7 @@ import {
 } from "react";
 
 import { Link } from "@/i18n/navigation";
+import { NEW_COMPONENTS } from "@/lib/new-components";
 import {
   type DocsPageTree,
   getPagesFromFolder,
@@ -31,6 +32,7 @@ type NavigationPage = {
   label: ReactNode;
   searchLabel: string;
   url: string;
+  isNew?: boolean;
 };
 
 type NavigationGroup = {
@@ -93,12 +95,21 @@ function getTextLabel(value: ReactNode) {
   return typeof value === "string" ? value : String(value ?? "");
 }
 
+function NewBadge() {
+  return (
+    <span className="ml-auto shrink-0 rounded-full bg-emerald-500/15 px-1.5 py-px font-semibold text-[9px] text-emerald-600 uppercase leading-none tracking-wide dark:bg-emerald-500/20 dark:text-emerald-400">
+      New
+    </span>
+  );
+}
+
 function createPage(page: PageTreePage, label: ReactNode = page.name) {
   return {
     id: page.$id ?? page.url,
     label,
     searchLabel: getTextLabel(label),
     url: page.url,
+    isNew: NEW_COMPONENTS.has(page.url),
   };
 }
 
@@ -188,11 +199,12 @@ function SidebarLink({
           ) : null}
         </AnimatePresence>
         <motion.span
-          className="relative z-10 truncate"
+          className="relative z-10 flex min-w-0 flex-1 items-center gap-1.5"
           animate={{ x: isActive && !shouldReduceMotion ? 3 : 0 }}
           transition={shouldReduceMotion ? { duration: 0 } : activeSpring}
         >
-          {page.label}
+          <span className="truncate">{page.label}</span>
+          {page.isNew ? <NewBadge /> : null}
         </motion.span>
       </Link>
     </motion.li>
