@@ -17,10 +17,7 @@ import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
 
 export const animatedAreaChartVariants = tv({
-  base: [
-    "not-prose w-full overflow-hidden rounded-2xl border border-border",
-    "bg-secondary p-2 text-foreground shadow-sm",
-  ],
+  base: "not-prose w-full text-foreground",
   variants: {
     size: {
       sm: "max-w-[420px]",
@@ -320,21 +317,15 @@ export function AnimatedAreaChart({
       className={twMerge(animatedAreaChartVariants({ size }), className)}
       {...props}
     >
-      <div
-        data-slot="animated-area-chart-header"
-        className="flex items-start justify-between gap-4 px-2 pb-2"
-      >
-        <div className="min-w-0">
-          <h3 className="truncate text-sm font-semibold text-foreground">
-            {title}
-          </h3>
-          <p className="mt-1 truncate text-xs text-muted-foreground">
+      <div data-slot="animated-area-chart-header" className="mb-3">
+        <h3 className="truncate text-sm font-semibold tracking-tight text-foreground">
+          {title}
+        </h3>
+        {description ? (
+          <p className="mt-1 truncate text-xs leading-5 text-muted-foreground">
             {description}
           </p>
-        </div>
-        <span className="rounded-full border border-border/70 bg-card px-2 py-1 text-[10px] font-medium text-muted-foreground">
-          Live path
-        </span>
+        ) : null}
       </div>
 
       {loading ? (
@@ -344,7 +335,7 @@ export function AnimatedAreaChart({
       ) : (
         <div
           data-slot="animated-area-chart-panel"
-          className="overflow-hidden rounded-xl border border-border/60 bg-card p-2 text-chart-2"
+          className="text-chart-2"
           style={{ height }}
         >
           <ResponsiveContainer width="100%" height="100%">

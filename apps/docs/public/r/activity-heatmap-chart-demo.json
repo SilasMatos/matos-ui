@@ -1,0 +1,16 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "activity-heatmap-chart-demo",
+  "registryDependencies": [
+    "activity-heatmap-chart"
+  ],
+  "files": [
+    {
+      "path": "components/matos-ui/examples/activity-heatmap-chart-demo.tsx",
+      "content": "\"use client\";\n\nimport { ActivityHeatmapChart } from \"@/components/matos-ui/activity-heatmap-chart\";\n\nexport default function ActivityHeatmapChartDemo() {\n  return (\n    <div className=\"flex w-full justify-center\">\n      <ActivityHeatmapChart\n        title=\"Contribution Activity\"\n        description=\"Daily commits over the last 18 weeks\"\n        monthLabels={[\"Jan\", \"Feb\", \"Mar\", \"Apr\"]}\n        valueFormatter={(value) => `${value} contributions`}\n      />\n    </div>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/activity-heatmap-chart-demo.tsx"
+    }
+  ],
+  "type": "registry:example"
+}

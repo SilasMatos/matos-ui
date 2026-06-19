@@ -13,11 +13,19 @@ import {
 import { Link } from "@/i18n/navigation";
 import { type ChartId, getChartById } from "@/lib/charts";
 import { cn } from "@/lib/utils";
+import { ActivityHeatmapChart } from "@/registry/new-york-v4/ui/activity-heatmap-chart";
+import { ActivityWaveformChart } from "@/registry/new-york-v4/ui/activity-waveform-chart";
 import { AllocationPerformanceChart } from "@/registry/new-york-v4/ui/allocation-performance-chart";
 import { AnimatedAreaChart } from "@/registry/new-york-v4/ui/animated-area-chart";
-import { InteractiveBarChart } from "@/registry/new-york-v4/ui/interactive-bar-chart";
-import { RadialMetricChart } from "@/registry/new-york-v4/ui/radial-metric-chart";
+import { BubbleChart } from "@/registry/new-york-v4/ui/bubble-chart";
+import { CandlestickChart } from "@/registry/new-york-v4/ui/candlestick-chart";
+import { ImpactPriorityMatrix } from "@/registry/new-york-v4/ui/impact-priority-matrix";
+import { PerformanceWaterfallChart } from "@/registry/new-york-v4/ui/performance-waterfall-chart";
+import { ResourceTreemapChart } from "@/registry/new-york-v4/ui/resource-treemap-chart";
+import { ScoreRadarChart } from "@/registry/new-york-v4/ui/score-radar-chart";
+import { SignalFlowChart } from "@/registry/new-york-v4/ui/signal-flow-chart";
 import { SparklineCard } from "@/registry/new-york-v4/ui/sparkline-card";
+import { ThresholdBandChart } from "@/registry/new-york-v4/ui/threshold-band-chart";
 
 type ChartFullscreenViewerProps = ComponentProps<"main"> & {
   chartId: ChartId;
@@ -76,16 +84,6 @@ const areaData = [
   { month: "Oct", value: 132 },
 ];
 
-const barData = [
-  { label: "Mon", value: 54 },
-  { label: "Tue", value: 78 },
-  { label: "Wed", value: 66 },
-  { label: "Thu", value: 102 },
-  { label: "Fri", value: 88 },
-  { label: "Sat", value: 124 },
-  { label: "Sun", value: 96 },
-];
-
 const allocationData = [
   { label: "Bonds", value: 45, tone: "destructive" },
   { label: "Stocks", value: 85, tone: "chart-4" },
@@ -111,6 +109,14 @@ const sparklineData = [
   { label: "07", value: 64 },
   { label: "08", value: 72 },
   { label: "09", value: 84 },
+];
+
+const signalFlowData = [
+  { label: "API Gateway", value: 92, hint: "Edge ingress" },
+  { label: "Auth Service", value: 58, tone: "chart-4", hint: "Token mint" },
+  { label: "Media CDN", value: 76, hint: "Asset stream" },
+  { label: "Webhooks", value: 34, tone: "destructive", hint: "Outbound" },
+  { label: "Analytics", value: 61, hint: "Event sink" },
 ];
 
 export function ChartFullscreenViewer({
@@ -296,14 +302,6 @@ const chartDocumentation: Record<ChartId, ChartDocumentation> = {
     interaction:
       "Hover or focus the path area to reveal the custom cursor, tooltip and highlighted point.",
   },
-  "interactive-bar-chart": {
-    summary:
-      "A responsive bar chart with focusable bars, animated SVG shapes and inline value labels.",
-    details:
-      "Each bar is a custom SVG shape with theme colors, internal markers, active state rings and keyboard-friendly focus styling for dense analytics views.",
-    interaction:
-      "Hover or tab through bars to inspect each value without leaving the preview surface.",
-  },
   "allocation-performance-chart": {
     summary:
       "An allocation dashboard card with textured asset tracks and bold fill states for portfolio composition.",
@@ -311,14 +309,6 @@ const chartDocumentation: Record<ChartId, ChartDocumentation> = {
       "The chart is built as custom SVG: striped track patterns, animated column fills, rounded mask-like bars and per-asset labels inspired by premium finance interfaces.",
     interaction:
       "Replay the fill animation to scan allocation changes across Bonds, Stocks, ETFs and Crypto.",
-  },
-  "radial-metric-chart": {
-    summary:
-      "A compact radial metric for progress, health and completion states in modern dashboards.",
-    details:
-      "The radial preview combines Recharts radial layout with a custom SVG ring overlay, dash reveal animation and an active endpoint marker.",
-    interaction:
-      "Hover the ring to inspect the current metric, then replay the animation from the control bar.",
   },
   "sparkline-card": {
     summary:
@@ -328,13 +318,85 @@ const chartDocumentation: Record<ChartId, ChartDocumentation> = {
     interaction:
       "Hover the sparkline to reveal a tooltip cursor and active dot without expanding the card.",
   },
-  "donut-progress-chart": {
+  "signal-flow-chart": {
     summary:
-      "A segmented donut preview for quota, completion and distribution states.",
+      "A live throughput board where curved channel cables carry flowing particles from a source bus to value-scaled sinks.",
     details:
-      "The docs-only preview uses SVG stroke dash segments, rounded caps and a subtle glow to separate progress bands while staying theme-aware.",
+      "The chart is built entirely from handcrafted SVG: bezier cables, a gradient fill that draws to each channel's throughput, SMIL particle streams whose speed and count track the value, pulsing source and sink nodes and a focus-aware tooltip.",
     interaction:
-      "Use the replay control to redraw the segmented arcs and inspect the centered progress label.",
+      "Hover or focus a channel to spotlight its cable, glow the flowing particles and reveal the throughput tooltip.",
+  },
+  "activity-heatmap-chart": {
+    summary:
+      "A calendar-style activity grid that reveals in a diagonal wave, with intensity levels, a hover tooltip and live recent cells.",
+    details:
+      "Every cell is an SVG square whose fill intensity maps to its value. The grid cascades in along the diagonal with spring scaling, the most recent column gently breathes and each cell is keyboard focusable with an accessible label.",
+    interaction:
+      "Hover or focus any day to scale it up and reveal its value, week and intensity swatch in the tooltip.",
+  },
+  "candlestick-chart": {
+    summary:
+      "An OHLC candlestick chart with bullish and bearish tones, growing candle bodies and an interactive price tooltip.",
+    details:
+      "Each candle is handcrafted SVG: a wick line and a body rect that grow from their center, colored by direction. Hovering or focusing a candle dims the rest and reveals open, high, low and close.",
+    interaction:
+      "Hover or focus a candle to spotlight it and read its full OHLC values.",
+  },
+  "bubble-chart": {
+    summary:
+      "A weighted bubble chart with radial gradient fills, spring scale-in, a gentle float loop and hover values.",
+    details:
+      "Bubbles are sized by value and placed from explicit coordinates or a deterministic spiral. Each uses its own radial gradient, scales in with a spring, floats continuously and exposes an accessible label.",
+    interaction:
+      "Hover or focus a bubble to enlarge it, ring it and reveal its label and value.",
+  },
+  "activity-waveform-chart": {
+    summary:
+      "A dense spending waveform with a metric header, hover tooltip and a split ratio bar with legend.",
+    details:
+      "Dozens of thin SVG bars grow from the baseline in a left-to-right wave, the peak is highlighted by default and a segmented ratio bar animates its width to break down the total.",
+    interaction:
+      "Hover or focus any bar to read its value; the ratio bar and legend summarize the split.",
+  },
+  "performance-waterfall-chart": {
+    summary:
+      "A Gantt-style network timeline that reveals each resource step as a bar growing from its start offset.",
+    details:
+      "Bars animate through per-step clip-paths so the reveal tracks the true start time. The slowest step pulses with a glow ring, a vertical marker indicates a performance milestone (e.g. LCP) and a time axis with ticks anchors the timeline.",
+    interaction:
+      "Hover or focus any bar to dim the rest and reveal a tooltip with start offset, duration and step name.",
+  },
+  "threshold-band-chart": {
+    summary:
+      "A horizontal quality-band ruler that translates a raw metric into a Good / Needs improvement / Poor verdict at a glance.",
+    details:
+      "Bands reveal with staggered clip-path animation, a diamond marker slides to the current value with a spring ease and the active band lifts its opacity to draw the eye. Hover any band to see its full range.",
+    interaction:
+      "Hover a band to reveal its range and compare against the current value in the tooltip.",
+  },
+  "impact-priority-matrix": {
+    summary:
+      "A 2×2 effort–impact matrix for prioritising tasks, with spring-animated dots and quadrant context labels.",
+    details:
+      "Points spring into position with staggered delays, quadrant backgrounds subtly reinforce the meaning (Quick Wins in green, Expensive in red), and the active point rings and floats to draw focus.",
+    interaction:
+      "Hover or focus any dot to see its label, description and effort–impact values.",
+  },
+  "resource-treemap-chart": {
+    summary:
+      "A proportional block layout that maps resource weight to tile area using a binary-split algorithm.",
+    details:
+      "Tiles are computed with a recursive binary split, each gets a unique radial gradient fill, they scale in with spring animations from their tile center and a percentage badge marks the dominant category.",
+    interaction:
+      "Hover or focus any tile to expand it and reveal its label, size and share percentage.",
+  },
+  "score-radar-chart": {
+    summary:
+      "A multi-axis radar polygon that draws axis by axis and fills in from the center, ideal for audit score dashboards.",
+    details:
+      "The polygon stroke uses framer-motion pathLength to draw around the axes; the fill fades in from the center. Each vertex node springs in sequentially and pulses on focus, a comparison polygon can be added for before/after views.",
+    interaction:
+      "Hover or focus a vertex to pulse its ring and reveal the axis label and score in a tooltip.",
   },
   "risk-score-gauge": {
     summary:
@@ -343,30 +405,6 @@ const chartDocumentation: Record<ChartId, ChartDocumentation> = {
       "The gauge uses handcrafted SVG arcs, stroke-dash drawing, gradient progress, diagonal pattern fills and marker rings to match a refined risk analytics card.",
     interaction:
       "Replay the arc reveal to inspect the current score and stability marker position.",
-  },
-  "stacked-revenue-chart": {
-    summary:
-      "A layered revenue chart for comparing multiple revenue streams over time.",
-    details:
-      "The SVG preview reveals stacked bars with clipPath animation, themed segments and a subtle pattern layer for secondary data.",
-    interaction:
-      "Replay the reveal animation or adjust scale and layout from the preview options.",
-  },
-  "comparison-chart": {
-    summary:
-      "A dual-series comparison chart with active rings, dashed secondary paths and a floating delta.",
-    details:
-      "The preview uses two handcrafted SVG paths, mask reveal and a floating label to make comparisons feel clearer and more intentional.",
-    interaction:
-      "Replay the draw animation to compare the primary path against the dashed benchmark.",
-  },
-  "realtime-activity-chart": {
-    summary:
-      "A streaming activity chart with pulse markers and a live signal treatment.",
-    details:
-      "The docs-only SVG uses a dotted pattern, animated path length and repeated pulse rings to communicate realtime movement.",
-    interaction:
-      "Watch the internal pulse markers loop, or replay the path drawing from the toolbar.",
   },
 };
 
@@ -385,11 +423,7 @@ function getChartDependencies(chartId: ChartId) {
     ];
   }
 
-  if (
-    chartId === "animated-area-chart" ||
-    chartId === "interactive-bar-chart" ||
-    chartId === "radial-metric-chart"
-  ) {
+  if (chartId === "animated-area-chart") {
     return ["recharts", "framer-motion", "tailwind-merge", "tailwind-variants"];
   }
 
@@ -402,6 +436,21 @@ function getChartDependencies(chartId: ChartId) {
     ];
   }
 
+  if (
+    chartId === "signal-flow-chart" ||
+    chartId === "activity-heatmap-chart" ||
+    chartId === "candlestick-chart" ||
+    chartId === "bubble-chart" ||
+    chartId === "activity-waveform-chart" ||
+    chartId === "performance-waterfall-chart" ||
+    chartId === "threshold-band-chart" ||
+    chartId === "impact-priority-matrix" ||
+    chartId === "resource-treemap-chart" ||
+    chartId === "score-radar-chart"
+  ) {
+    return ["framer-motion", "tailwind-merge", "tailwind-variants"];
+  }
+
   return ["framer-motion", "recharts", "theme tokens"];
 }
 
@@ -410,27 +459,43 @@ function getUsageSnippet(chartId: ChartId) {
     "animated-area-chart": `import { AnimatedAreaChart } from "@/registry/new-york-v4/ui/animated-area-chart"
 
 <AnimatedAreaChart data={data} />`,
-    "interactive-bar-chart": `import { InteractiveBarChart } from "@/registry/new-york-v4/ui/interactive-bar-chart"
-
-<InteractiveBarChart data={data} />`,
     "allocation-performance-chart": `import { AllocationPerformanceChart } from "@/registry/new-york-v4/ui/allocation-performance-chart"
 
 <AllocationPerformanceChart data={allocations} />`,
-    "radial-metric-chart": `import { RadialMetricChart } from "@/registry/new-york-v4/ui/radial-metric-chart"
-
-<RadialMetricChart value={84} />`,
     "sparkline-card": `import { SparklineCard } from "@/registry/new-york-v4/ui/sparkline-card"
 
 <SparklineCard data={data} value={84.2} />`,
-    "donut-progress-chart": `<DonutProgressChart value={84} />
-// Docs-only showcase preview`,
+    "signal-flow-chart": `import { SignalFlowChart } from "@/registry/new-york-v4/ui/signal-flow-chart"
+
+<SignalFlowChart data={channels} />`,
+    "activity-heatmap-chart": `import { ActivityHeatmapChart } from "@/registry/new-york-v4/ui/activity-heatmap-chart"
+
+<ActivityHeatmapChart data={days} />`,
+    "candlestick-chart": `import { CandlestickChart } from "@/registry/new-york-v4/ui/candlestick-chart"
+
+<CandlestickChart data={ohlc} />`,
+    "bubble-chart": `import { BubbleChart } from "@/registry/new-york-v4/ui/bubble-chart"
+
+<BubbleChart data={segments} />`,
+    "activity-waveform-chart": `import { ActivityWaveformChart } from "@/registry/new-york-v4/ui/activity-waveform-chart"
+
+<ActivityWaveformChart data={samples} value="−$3,245.00" />`,
+    "performance-waterfall-chart": `import { PerformanceWaterfallChart } from "@/registry/new-york-v4/ui/performance-waterfall-chart"
+
+<PerformanceWaterfallChart data={steps} markerLabel="LCP" markerAt={256} />`,
+    "threshold-band-chart": `import { ThresholdBandChart } from "@/registry/new-york-v4/ui/threshold-band-chart"
+
+<ThresholdBandChart bands={bands} value={2800} unit="ms" />`,
+    "impact-priority-matrix": `import { ImpactPriorityMatrix } from "@/registry/new-york-v4/ui/impact-priority-matrix"
+
+<ImpactPriorityMatrix data={items} />`,
+    "resource-treemap-chart": `import { ResourceTreemapChart } from "@/registry/new-york-v4/ui/resource-treemap-chart"
+
+<ResourceTreemapChart data={resources} />`,
+    "score-radar-chart": `import { ScoreRadarChart } from "@/registry/new-york-v4/ui/score-radar-chart"
+
+<ScoreRadarChart data={scores} showRingValues />`,
     "risk-score-gauge": `<RiskScoreGauge value={72} max={100} />
-// Docs-only showcase preview`,
-    "stacked-revenue-chart": `<StackedRevenueChart data={revenue} />
-// Docs-only showcase preview`,
-    "comparison-chart": `<ComparisonChart primary={current} secondary={previous} />
-// Docs-only showcase preview`,
-    "realtime-activity-chart": `<RealtimeActivityChart stream={events} />
 // Docs-only showcase preview`,
   };
 
@@ -528,18 +593,6 @@ function renderChartPreview(chartId: ChartId) {
           className="w-full max-w-[760px]"
         />
       );
-    case "interactive-bar-chart":
-      return (
-        <InteractiveBarChart
-          size="full"
-          data={barData}
-          title="Weekly activity"
-          description="Focusable bars with animated internal SVG marks"
-          valueFormatter={(value) => `${Math.round(value)}k`}
-          height={430}
-          className="w-full max-w-[740px]"
-        />
-      );
     case "allocation-performance-chart":
       return (
         <AllocationPerformanceChart
@@ -549,18 +602,6 @@ function renderChartPreview(chartId: ChartId) {
           description="Textured allocation tracks with active marker and tooltip"
           height={360}
           className="w-full max-w-[760px]"
-        />
-      );
-    case "radial-metric-chart":
-      return (
-        <RadialMetricChart
-          size="full"
-          value={84}
-          title="Deployment health"
-          description="Radial progress with dash reveal and endpoint"
-          label="Ready"
-          height={430}
-          className="w-full max-w-[460px]"
         />
       );
     case "sparkline-card":
@@ -576,16 +617,139 @@ function renderChartPreview(chartId: ChartId) {
           className="w-full max-w-[520px]"
         />
       );
-    case "donut-progress-chart":
-      return <DonutProgressFullPreview />;
+    case "signal-flow-chart":
+      return (
+        <SignalFlowChart
+          size="full"
+          data={signalFlowData}
+          title="Signal Flow"
+          description="Live throughput across service channels with flowing particles"
+          height={360}
+          className="w-full max-w-[760px]"
+        />
+      );
+    case "activity-heatmap-chart":
+      return (
+        <ActivityHeatmapChart
+          size="full"
+          title="Contribution Activity"
+          description="Daily engagement across the last 18 weeks"
+          monthLabels={["Jan", "Feb", "Mar", "Apr"]}
+          valueFormatter={(value) => `${value} contributions`}
+          className="w-full max-w-[680px]"
+        />
+      );
+    case "candlestick-chart":
+      return (
+        <CandlestickChart
+          size="full"
+          title="Sales Report"
+          description="Open-high-low-close price action over 16 sessions"
+          valueFormatter={(value) => `$${value.toFixed(0)}`}
+          height={360}
+          className="w-full max-w-[760px]"
+        />
+      );
+    case "bubble-chart":
+      return (
+        <BubbleChart
+          size="full"
+          title="Sales Report"
+          description="Revenue weight by device segment"
+          valueFormatter={(value) => value.toLocaleString("en-US")}
+          height={400}
+          className="w-full max-w-[560px]"
+        />
+      );
+    case "activity-waveform-chart":
+      return (
+        <ActivityWaveformChart
+          size="full"
+          title="Sales activity"
+          valueCaption="This week you spent"
+          value="−$3,245.00"
+          height={200}
+          valueFormatter={(value) => `$${value.toLocaleString("en-US")}`}
+          className="w-full max-w-[620px]"
+        />
+      );
+    case "performance-waterfall-chart":
+      return (
+        <PerformanceWaterfallChart
+          size="full"
+          title="Page Load Waterfall"
+          description="Network resource timing breakdown for dashboard.example.com"
+          markerLabel="LCP"
+          markerAt={256}
+          height={320}
+          className="w-full max-w-[760px]"
+        />
+      );
+    case "threshold-band-chart":
+      return (
+        <ThresholdBandChart
+          size="full"
+          title="LCP Score"
+          description="Largest Contentful Paint — measures perceived load speed"
+          bands={[
+            { label: "Good", max: 2500, tone: "chart-2" },
+            {
+              label: "Needs improvement",
+              max: 4000,
+              tone: "oklch(0.75 0.16 70)",
+            },
+            { label: "Poor", tone: "destructive" },
+          ]}
+          value={2800}
+          unit="ms"
+          className="w-full max-w-[560px]"
+        />
+      );
+    case "impact-priority-matrix":
+      return (
+        <ImpactPriorityMatrix
+          size="full"
+          title="Optimization Opportunities"
+          description="Web performance improvements ranked by effort vs impact"
+          height={400}
+          className="w-full max-w-150"
+        />
+      );
+    case "resource-treemap-chart":
+      return (
+        <ResourceTreemapChart
+          size="full"
+          title="Page Weight Breakdown"
+          description="Total transferred bytes by resource category"
+          data={[
+            { label: "JavaScript", value: 420, unit: "KB", tone: "chart-1" },
+            { label: "Images", value: 248, unit: "KB", tone: "chart-2" },
+            { label: "CSS", value: 112, unit: "KB", tone: "chart-4" },
+            { label: "Fonts", value: 68, unit: "KB", tone: "chart-3" },
+            { label: "Other", value: 32, unit: "KB", tone: "muted-foreground" },
+          ]}
+          height={360}
+          className="w-full max-w-160"
+        />
+      );
+    case "score-radar-chart":
+      return (
+        <ScoreRadarChart
+          size="full"
+          title="Lighthouse Audit"
+          description="Core Web Vitals and audit scores for homepage"
+          data={[
+            { label: "Performance", value: 92 },
+            { label: "SEO", value: 98 },
+            { label: "Best Practices", value: 91 },
+            { label: "Accessibility", value: 87 },
+          ]}
+          showRingValues
+          className="w-full max-w-120"
+        />
+      );
     case "risk-score-gauge":
       return <RiskScoreGaugeFullPreview />;
-    case "stacked-revenue-chart":
-      return <StackedRevenueFullPreview />;
-    case "comparison-chart":
-      return <ComparisonFullPreview />;
-    case "realtime-activity-chart":
-      return <RealtimeActivityFullPreview />;
   }
 }
 
@@ -909,8 +1073,11 @@ function AllocationPerformanceFullPreview() {
 }
 
 function RiskScoreGaugeFullPreview() {
+  const accent = "oklch(0.75 0.16 70)";
   const remainderPath = "M112 256 A138 138 0 0 1 388 256";
-  const progressPath = "M112 256 A138 138 0 0 1 284 122";
+  const progressPath = "M112 256 A138 138 0 0 1 338 150";
+  const markerX = 338;
+  const markerY = 150;
   const [tooltipVisible, setTooltipVisible] = useState(true);
   const shouldReduceMotion = useReducedMotion();
 
@@ -943,8 +1110,8 @@ function RiskScoreGaugeFullPreview() {
           </pattern>
           <linearGradient id="risk-full-gradient" x1="0" y1="1" x2="1" y2="0">
             <stop offset="0%" stopColor="var(--muted-foreground)" />
-            <stop offset="45%" stopColor="var(--chart-2)" />
-            <stop offset="100%" stopColor="var(--chart-2)" />
+            <stop offset="42%" stopColor={accent} stopOpacity="0.85" />
+            <stop offset="100%" stopColor={accent} />
           </linearGradient>
           <filter id="risk-full-glow">
             <feGaussianBlur stdDeviation="8" result="blur" />
@@ -962,48 +1129,31 @@ function RiskScoreGaugeFullPreview() {
           rx="30"
           className="fill-card stroke-border"
         />
-        <text
-          x="48"
-          y="66"
-          className="fill-muted-foreground text-base font-semibold"
-        >
-          Risk Score
-        </text>
-        <AnimatedCounterText
-          x="48"
-          y="118"
-          value={72}
-          duration={1350}
-          reducedMotion={Boolean(shouldReduceMotion)}
-          className="fill-foreground text-5xl font-semibold"
-        />
-        <text
-          x="116"
-          y="118"
-          className="fill-muted-foreground text-3xl font-medium"
-        >
-          /100
-        </text>
+
         <g
           onPointerEnter={() => setTooltipVisible(true)}
           onPointerLeave={() => setTooltipVisible(false)}
         >
-          <path
+          <motion.path
             d={remainderPath}
             fill="none"
             stroke="url(#risk-full-stripes)"
             strokeWidth="42"
             strokeLinecap="round"
+            initial={shouldReduceMotion ? false : { pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           />
           <motion.path
+            id="risk-full-progress"
             d={progressPath}
             fill="none"
             stroke="url(#risk-full-gradient)"
             strokeWidth="42"
             strokeLinecap="round"
-            initial={{ pathLength: 0 }}
+            initial={shouldReduceMotion ? false : { pathLength: 0 }}
             animate={{ pathLength: 1 }}
-            transition={{ duration: 1.55, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
           />
           <circle
             cx="112"
@@ -1014,36 +1164,92 @@ function RiskScoreGaugeFullPreview() {
             strokeOpacity="0.32"
             strokeWidth="10"
           />
-          <motion.g
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 1.08, duration: 0.4, ease: "easeOut" }}
-            style={{ transformOrigin: "284px 122px" }}
-            filter="url(#risk-full-glow)"
-          >
-            <motion.circle
-              cx="284"
-              cy="122"
-              r="27"
-              className="fill-chart-2"
-              animate={{ opacity: [0.2, 0.36, 0.2] }}
-              transition={{
-                duration: 2.2,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 1.2,
-              }}
-            />
-            <circle
-              cx="284"
-              cy="122"
-              r="13"
-              fill="var(--background)"
-              stroke="var(--chart-2)"
-              strokeWidth="2"
-            />
-          </motion.g>
+
+          {shouldReduceMotion ? (
+            <g filter="url(#risk-full-glow)">
+              <circle
+                cx={markerX}
+                cy={markerY}
+                r="27"
+                fill={accent}
+                opacity="0.28"
+              />
+              <circle
+                cx={markerX}
+                cy={markerY}
+                r="13"
+                fill="var(--background)"
+                stroke={accent}
+                strokeWidth="2"
+              />
+              <circle cx={markerX} cy={markerY} r="4" fill={accent} />
+            </g>
+          ) : (
+            <g filter="url(#risk-full-glow)">
+              <animateMotion
+                dur="1.5s"
+                begin="0s"
+                fill="freeze"
+                rotate="0"
+                calcMode="spline"
+                keyTimes="0;1"
+                keyPoints="0;1"
+                keySplines="0.16 1 0.3 1"
+              >
+                <mpath
+                  href="#risk-full-progress"
+                  xlinkHref="#risk-full-progress"
+                />
+              </animateMotion>
+              <circle cx="0" cy="0" r="27" fill={accent} opacity="0">
+                <animate
+                  attributeName="opacity"
+                  values="0.18;0.34;0.18"
+                  begin="1.6s"
+                  dur="2.4s"
+                  repeatCount="indefinite"
+                />
+              </circle>
+              <circle
+                cx="0"
+                cy="0"
+                r="13"
+                fill="var(--background)"
+                stroke={accent}
+                strokeWidth="2"
+              />
+              <circle cx="0" cy="0" r="4" fill={accent} />
+            </g>
+          )}
         </g>
+
+        {/* Centered value inside the gauge, clear of the arc band */}
+        <text
+          x="250"
+          y="184"
+          textAnchor="middle"
+          className="fill-muted-foreground text-base font-semibold"
+        >
+          Risk Score
+        </text>
+        <AnimatedCounterText
+          x="250"
+          y="244"
+          textAnchor="middle"
+          value={72}
+          duration={1500}
+          reducedMotion={Boolean(shouldReduceMotion)}
+          className="fill-foreground text-6xl font-semibold"
+        />
+        <text
+          x="250"
+          y="272"
+          textAnchor="middle"
+          className="fill-muted-foreground text-sm font-medium"
+        >
+          out of 100
+        </text>
+
         <AnimatePresence>
           {tooltipVisible ? (
             <motion.g
@@ -1054,34 +1260,34 @@ function RiskScoreGaugeFullPreview() {
               transition={{ duration: 0.46, ease: [0.22, 1, 0.36, 1] }}
             >
               <rect
-                x="250"
-                y="72"
-                width="148"
-                height="68"
+                x="314"
+                y="60"
+                width="158"
+                height="66"
                 rx="14"
                 fill="var(--popover)"
                 stroke="var(--border)"
               />
               <text
-                x="268"
-                y="98"
+                x="334"
+                y="88"
                 fill="var(--popover-foreground)"
                 className="text-sm font-semibold"
               >
                 Risk Score
               </text>
-              <circle cx="272" cy="121" r="5.5" fill="var(--chart-2)" />
+              <circle cx="336" cy="110" r="5.5" fill={accent} />
               <text
-                x="288"
-                y="126"
+                x="352"
+                y="115"
                 fill="var(--muted-foreground)"
                 className="text-sm font-medium"
               >
                 Stability
               </text>
               <text
-                x="386"
-                y="126"
+                x="456"
+                y="115"
                 textAnchor="end"
                 fill="var(--popover-foreground)"
                 className="text-xs font-semibold"
@@ -1098,419 +1304,11 @@ function RiskScoreGaugeFullPreview() {
           className="fill-muted-foreground text-base font-medium"
           initial={{ opacity: 0, y: 302 }}
           animate={{ opacity: 1, y: 292 }}
-          transition={{ delay: 0.48, duration: 0.36 }}
+          transition={{ delay: 0.6, duration: 0.36 }}
         >
           Stability improved by +4%
         </motion.text>
       </svg>
     </div>
-  );
-}
-
-function DonutProgressFullPreview() {
-  const segments = [
-    { length: 126, offset: 0, className: "text-chart-2" },
-    { length: 92, offset: 148, className: "text-chart-1" },
-    { length: 56, offset: 264, className: "text-chart-4" },
-  ];
-
-  return (
-    <FullPreviewCard
-      label="Donut progress chart fullscreen preview"
-      className="max-w-[460px]"
-    >
-      <svg viewBox="0 0 360 340" className="size-full" aria-hidden="true">
-        <defs>
-          <filter id="donut-glow">
-            <feGaussianBlur stdDeviation="4" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-        </defs>
-        <circle
-          cx="180"
-          cy="160"
-          r="92"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="24"
-          className="text-muted"
-        />
-        {segments.map((segment, index) => (
-          <motion.circle
-            key={segment.offset}
-            cx="180"
-            cy="160"
-            r="92"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="24"
-            strokeLinecap="round"
-            className={segment.className}
-            strokeDasharray={`${segment.length} 578`}
-            initial={{ strokeDashoffset: 578, opacity: 0 }}
-            animate={{ strokeDashoffset: -segment.offset, opacity: 0.95 }}
-            transition={{
-              delay: index * 0.1,
-              duration: 0.8,
-              ease: [0.16, 1, 0.3, 1],
-            }}
-            transform="rotate(-90 180 160)"
-            filter={index === 0 ? "url(#donut-glow)" : undefined}
-          />
-        ))}
-        <text
-          x="180"
-          y="154"
-          textAnchor="middle"
-          className="fill-muted-foreground text-sm font-medium"
-        >
-          Progress
-        </text>
-        <text
-          x="180"
-          y="192"
-          textAnchor="middle"
-          className="fill-foreground text-5xl font-semibold"
-        >
-          84%
-        </text>
-      </svg>
-    </FullPreviewCard>
-  );
-}
-
-function StackedRevenueFullPreview() {
-  const stacks = [
-    {
-      id: "jan",
-      values: [
-        { id: "jan-subscription", height: 74 },
-        { id: "jan-services", height: 44 },
-        { id: "jan-marketplace", height: 32 },
-      ],
-    },
-    {
-      id: "feb",
-      values: [
-        { id: "feb-subscription", height: 92 },
-        { id: "feb-services", height: 56 },
-        { id: "feb-marketplace", height: 38 },
-      ],
-    },
-    {
-      id: "mar",
-      values: [
-        { id: "mar-subscription", height: 84 },
-        { id: "mar-services", height: 64 },
-        { id: "mar-marketplace", height: 46 },
-      ],
-    },
-    {
-      id: "apr",
-      values: [
-        { id: "apr-subscription", height: 112 },
-        { id: "apr-services", height: 68 },
-        { id: "apr-marketplace", height: 52 },
-      ],
-    },
-    {
-      id: "may",
-      values: [
-        { id: "may-subscription", height: 124 },
-        { id: "may-services", height: 76 },
-        { id: "may-marketplace", height: 58 },
-      ],
-    },
-    {
-      id: "jun",
-      values: [
-        { id: "jun-subscription", height: 106 },
-        { id: "jun-services", height: 72 },
-        { id: "jun-marketplace", height: 48 },
-      ],
-    },
-  ];
-
-  return (
-    <FullPreviewCard label="Stacked revenue chart fullscreen preview">
-      <svg
-        viewBox="0 0 720 420"
-        className="h-[420px] w-full"
-        aria-hidden="true"
-      >
-        <defs>
-          <pattern
-            id="revenue-pattern"
-            width="10"
-            height="10"
-            patternUnits="userSpaceOnUse"
-          >
-            <path
-              d="M0 10 L10 0"
-              stroke="currentColor"
-              strokeWidth="1"
-              className="text-background"
-              opacity="0.5"
-            />
-          </pattern>
-          <clipPath id="revenue-reveal">
-            <motion.rect
-              x="0"
-              y="0"
-              width="720"
-              height="420"
-              initial={{ width: 0 }}
-              animate={{ width: 720 }}
-              transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-            />
-          </clipPath>
-        </defs>
-        {[70, 140, 210, 280, 350].map((y) => (
-          <line
-            key={y}
-            x1="64"
-            x2="656"
-            y1={y}
-            y2={y}
-            stroke="currentColor"
-            strokeDasharray="2 10"
-            className="text-border"
-          />
-        ))}
-        <g clipPath="url(#revenue-reveal)">
-          {stacks.map((stack, index) => {
-            const x = 100 + index * 88;
-            let cursor = 350;
-
-            return (
-              <g key={stack.id}>
-                {stack.values.map((part, partIndex) => {
-                  cursor -= part.height;
-                  const className =
-                    partIndex === 0
-                      ? "text-chart-2"
-                      : partIndex === 1
-                        ? "text-chart-1"
-                        : "text-chart-4";
-
-                  return (
-                    <motion.rect
-                      key={part.id}
-                      x={x}
-                      y={cursor}
-                      width="48"
-                      height={part.height}
-                      rx={partIndex === 0 ? 14 : 7}
-                      fill={
-                        partIndex === 2
-                          ? "url(#revenue-pattern)"
-                          : "currentColor"
-                      }
-                      className={className}
-                      initial={{ opacity: 0, y: 12 }}
-                      animate={{ opacity: 0.9, y: 0 }}
-                      transition={{
-                        delay: index * 0.05 + partIndex * 0.04,
-                        duration: 0.34,
-                      }}
-                    />
-                  );
-                })}
-              </g>
-            );
-          })}
-        </g>
-      </svg>
-    </FullPreviewCard>
-  );
-}
-
-function ComparisonFullPreview() {
-  return (
-    <FullPreviewCard label="Comparison chart fullscreen preview">
-      <svg
-        viewBox="0 0 720 420"
-        className="h-[420px] w-full"
-        aria-hidden="true"
-      >
-        <defs>
-          <linearGradient id="comparison-area" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="currentColor" stopOpacity="0.18" />
-            <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
-          </linearGradient>
-          <mask id="comparison-mask">
-            <motion.rect
-              x="0"
-              y="0"
-              width="720"
-              height="420"
-              fill="white"
-              initial={{ scaleX: 0 }}
-              animate={{ scaleX: 1 }}
-              transition={{ duration: 0.95, ease: [0.16, 1, 0.3, 1] }}
-              style={{ transformOrigin: "left center" }}
-            />
-          </mask>
-        </defs>
-        <path
-          d="M70 318 C142 246 188 268 248 206 C306 146 354 204 420 134 C488 62 548 104 654 74 L654 360 L70 360 Z"
-          fill="url(#comparison-area)"
-          className="text-chart-2"
-          mask="url(#comparison-mask)"
-        />
-        <motion.path
-          d="M70 318 C142 246 188 268 248 206 C306 146 354 204 420 134 C488 62 548 104 654 74"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="6"
-          strokeLinecap="round"
-          className="text-chart-2"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-        />
-        <motion.path
-          d="M70 344 C136 310 190 190 254 246 C318 304 360 210 430 192 C506 172 562 196 654 138"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="5"
-          strokeLinecap="round"
-          strokeDasharray="12 12"
-          className="text-chart-1"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ delay: 0.12, duration: 1, ease: [0.16, 1, 0.3, 1] }}
-        />
-        <motion.g
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7 }}
-        >
-          <circle
-            cx="420"
-            cy="134"
-            r="16"
-            fill="currentColor"
-            className="text-chart-2"
-            opacity="0.16"
-          />
-          <circle
-            cx="420"
-            cy="134"
-            r="6"
-            fill="currentColor"
-            className="text-chart-2"
-          />
-          <rect
-            x="438"
-            y="102"
-            width="74"
-            height="30"
-            rx="15"
-            className="fill-background stroke-border"
-          />
-          <text
-            x="475"
-            y="122"
-            textAnchor="middle"
-            className="fill-foreground text-xs font-semibold"
-          >
-            +18%
-          </text>
-        </motion.g>
-      </svg>
-    </FullPreviewCard>
-  );
-}
-
-function RealtimeActivityFullPreview() {
-  const points = [
-    { x: 86, y: 296 },
-    { x: 162, y: 172 },
-    { x: 244, y: 226 },
-    { x: 338, y: 118 },
-    { x: 452, y: 178 },
-    { x: 566, y: 90 },
-    { x: 646, y: 202 },
-  ];
-
-  return (
-    <FullPreviewCard label="Realtime activity chart fullscreen preview">
-      <svg
-        viewBox="0 0 720 420"
-        className="h-[420px] w-full text-chart-2"
-        aria-hidden="true"
-      >
-        <defs>
-          <pattern
-            id="activity-grid"
-            width="28"
-            height="28"
-            patternUnits="userSpaceOnUse"
-          >
-            <circle
-              cx="1"
-              cy="1"
-              r="1"
-              fill="currentColor"
-              className="text-border"
-              opacity="0.55"
-            />
-          </pattern>
-        </defs>
-        <rect
-          x="48"
-          y="48"
-          width="624"
-          height="324"
-          rx="24"
-          fill="url(#activity-grid)"
-          opacity="0.42"
-        />
-        <motion.path
-          d="M70 318 C116 318 114 126 162 172 C210 218 204 252 244 226 C296 194 286 80 338 118 C396 160 392 224 452 178 C510 132 508 70 566 90 C622 110 612 246 650 202"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="6"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
-        />
-        {points.map((point, index) => (
-          <g key={`${point.x}-${point.y}`}>
-            <motion.circle
-              cx={point.x}
-              cy={point.y}
-              r="7"
-              fill="currentColor"
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.22 + index * 0.07, duration: 0.2 }}
-            />
-            <motion.circle
-              cx={point.x}
-              cy={point.y}
-              r="7"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              initial={{ r: 7, opacity: 0.32 }}
-              animate={{ r: [7, 24, 7], opacity: [0.3, 0, 0.3] }}
-              transition={{
-                delay: index * 0.1,
-                duration: 1.8,
-                repeat: Number.POSITIVE_INFINITY,
-                ease: "easeInOut",
-              }}
-            />
-          </g>
-        ))}
-      </svg>
-    </FullPreviewCard>
   );
 }

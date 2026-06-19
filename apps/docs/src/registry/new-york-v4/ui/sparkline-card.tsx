@@ -16,10 +16,7 @@ import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
 
 export const sparklineCardVariants = tv({
-  base: [
-    "not-prose w-full overflow-hidden rounded-2xl border border-border",
-    "bg-secondary p-2 text-foreground shadow-sm",
-  ],
+  base: "not-prose w-full text-foreground",
   variants: {
     size: {
       sm: "max-w-[280px]",
@@ -340,7 +337,6 @@ export function SparklineCard({
         : 0;
   const resolvedTone = tone ?? getTone(trend);
   const toneStyle = toneClasses[resolvedTone];
-  const TrendIcon = toneStyle.icon;
 
   return (
     <div
@@ -360,47 +356,20 @@ export function SparklineCard({
       ) : chartData.length === 0 ? (
         <ChartEmpty>{emptyState}</ChartEmpty>
       ) : (
-        <div
-          data-slot="sparkline-card-panel"
-          className="overflow-hidden rounded-xl border border-border/60 bg-card"
-        >
-          <div className="flex items-start justify-between gap-3 p-4 pb-2">
-            <div className="min-w-0">
-              <p className="truncate text-[11px] font-medium uppercase tracking-widest text-muted-foreground">
-                {label}
-              </p>
-              <p className="mt-2 text-2xl font-semibold leading-none text-foreground">
-                {prefix}
-                {valueFormatter?.(latestValue) ?? formatNumber(latestValue)}
-                {suffix}
-              </p>
-            </div>
-            <motion.span
-              data-slot="sparkline-card-trend"
-              initial={
-                resolvedAnimated ? { opacity: 0, y: 4, scale: 0.96 } : false
-              }
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{
-                delay: motionDelay + 0.16,
-                duration: 0.24,
-                ease: "easeOut",
-              }}
-              className={twMerge(
-                "inline-flex shrink-0 items-center gap-1 rounded-full border px-2 py-1 text-[10px] font-medium",
-                toneStyle.badge,
-              )}
-            >
-              <TrendIcon className="size-3" aria-hidden="true" />
-              <span>
-                {trend > 0 ? "+" : ""}
-                {formatNumber(trend)}%
-              </span>
-            </motion.span>
+        <>
+          <div data-slot="sparkline-card-header" className="px-1">
+            <p className="truncate text-[11px] font-medium uppercase tracking-widest text-muted-foreground">
+              {label}
+            </p>
+            <p className="mt-1.5 text-2xl font-semibold leading-none text-foreground">
+              {prefix}
+              {valueFormatter?.(latestValue) ?? formatNumber(latestValue)}
+              {suffix}
+            </p>
           </div>
           <div
             data-slot="sparkline-card-chart"
-            className={twMerge("px-1 pb-1", toneStyle.chart)}
+            className={twMerge("mt-3", toneStyle.chart)}
             style={{ height }}
           >
             <ResponsiveContainer width="100%" height="100%">
@@ -515,11 +484,11 @@ export function SparklineCard({
             </ResponsiveContainer>
           </div>
           {trendLabel ? (
-            <div className="border-border/60 border-t px-4 py-2 text-xs text-muted-foreground">
+            <div className="mt-2 px-1 text-xs text-muted-foreground">
               {trendLabel}
             </div>
           ) : null}
-        </div>
+        </>
       )}
     </div>
   );

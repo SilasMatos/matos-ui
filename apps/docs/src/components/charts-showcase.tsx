@@ -8,14 +8,21 @@ import {
 } from "framer-motion";
 import {
   Activity,
+  AlignLeft,
+  ArrowRight,
+  ArrowUpRight,
+  AudioWaveform,
   BarChart3,
-  CircleDot,
+  Circle as BubbleIcon,
+  CandlestickChart as CandlestickIcon,
   Gauge,
-  Layers3,
+  LayoutDashboard,
+  LayoutGrid,
   LineChart,
-  Radio,
-  Scale,
-  Sparkles,
+  Network,
+  Radar,
+  SlidersHorizontal,
+  Target,
 } from "lucide-react";
 import {
   type ComponentProps,
@@ -32,7 +39,6 @@ import {
   chartCollection,
 } from "@/lib/charts";
 import { cn } from "@/lib/utils";
-import { AnimatedAreaChart } from "@/registry/new-york-v4/ui/animated-area-chart";
 
 type ChartCard = (typeof chartCollection)[number] & {
   href: `/charts/${ChartId}`;
@@ -79,19 +85,6 @@ function AnimatedCounterText({
   return <text {...props}>{displayValue}</text>;
 }
 
-const featuredData = [
-  { month: "Jan", value: 44 },
-  { month: "Feb", value: 51 },
-  { month: "Mar", value: 48 },
-  { month: "Apr", value: 68 },
-  { month: "May", value: 74 },
-  { month: "Jun", value: 71 },
-  { month: "Jul", value: 86 },
-  { month: "Aug", value: 94 },
-  { month: "Sep", value: 102 },
-  { month: "Oct", value: 118 },
-];
-
 const cardVariants: Variants = {
   hidden: { opacity: 0, y: 14, scale: 0.98 },
   visible: {
@@ -121,16 +114,48 @@ function usePreviewReady() {
 
 const chartPreviews: Record<ChartId, ReactNode> = {
   "animated-area-chart": <MiniAreaPreview />,
-  "interactive-bar-chart": <MiniBarPreview />,
   "allocation-performance-chart": <AllocationPerformancePreview compact />,
-  "radial-metric-chart": <MiniRadialPreview />,
   "sparkline-card": <MiniSparklinePreview />,
-  "donut-progress-chart": <DonutProgressPreview />,
+  "signal-flow-chart": <MiniSignalFlowPreview />,
+  "activity-heatmap-chart": <MiniActivityHeatmapPreview />,
+  "candlestick-chart": <MiniCandlestickPreview />,
+  "bubble-chart": <MiniBubblePreview />,
+  "activity-waveform-chart": <MiniWaveformPreview />,
+  "performance-waterfall-chart": <MiniWaterfallPreview />,
+  "threshold-band-chart": <MiniThresholdBandPreview />,
+  "impact-priority-matrix": <MiniMatrixPreview />,
+  "resource-treemap-chart": <MiniTreemapPreview />,
+  "score-radar-chart": <MiniRadarPreview />,
   "risk-score-gauge": <RiskScoreGaugePreview compact />,
-  "stacked-revenue-chart": <StackedRevenuePreview />,
-  "comparison-chart": <ComparisonPreview />,
-  "realtime-activity-chart": <RealtimeActivityPreview />,
 };
+
+const heroNetworkPoints = [
+  { id: "a", cx: 104, cy: 300, delay: 0 },
+  { id: "b", cx: 214, cy: 264, delay: 0.1 },
+  { id: "c", cx: 320, cy: 236, delay: 0.2 },
+  { id: "d", cx: 402, cy: 184, delay: 0.3 },
+] as const;
+
+const heroBottomBars = [
+  { id: "bar-1", x: 0, height: 24 },
+  { id: "bar-2", x: 24, height: 42 },
+  { id: "bar-3", x: 48, height: 32 },
+  { id: "bar-4", x: 72, height: 58 },
+  { id: "bar-5", x: 96, height: 38 },
+] as const;
+
+const heroCardConfigs = [
+  {
+    id: "signal-card",
+    x: 904,
+    y: 120,
+    width: 202,
+    height: 116,
+    delay: 0,
+    sparkline:
+      "M24 78 C44 62 58 72 78 52 C100 28 118 66 140 46 C162 26 174 42 184 30",
+  },
+] as const;
 
 export function ChartsShowcase() {
   const shouldReduceMotion = useReducedMotion();
@@ -153,47 +178,14 @@ export function ChartsShowcase() {
       : charts.filter((chart) => chart.category === activeCategory);
 
   return (
-    <section className="not-prose mt-8 space-y-10">
-      <motion.div
-        initial={shouldReduceMotion ? false : { opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
-        className="space-y-6"
-      >
-        <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
-          <div className="max-w-2xl">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-[11px] font-medium text-muted-foreground">
-              <Sparkles className="size-3.5" aria-hidden="true" />
-              Dashboard primitives
-            </div>
-            <h1 className="text-balance text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
-              Charts
-            </h1>
-            <p className="mt-4 max-w-xl text-balance text-base leading-7 text-muted-foreground">
-              Animated, composable and theme-aware charts for modern dashboards.
-            </p>
-          </div>
-          <div className="grid grid-cols-3 gap-2 text-center text-xs text-muted-foreground">
-            <MetricPill label="SVG-first" value="10" />
-            <MetricPill label="Registry" value="4" />
-            <MetricPill label="Themes" value="2" />
-          </div>
-        </div>
-
-        <AnimatedAreaChart
-          size="full"
-          data={featuredData}
-          title="Revenue signal"
-          description="Theme-aware path, mask reveal, SVG grid and animated tooltip"
-          valueFormatter={(value) => `$${Math.round(value)}k`}
-          height={360}
-          showDots
-          highlightActivePoint
-        />
-      </motion.div>
+    <section className="not-prose space-y-10">
+      <ChartsHero reducedMotion={Boolean(shouldReduceMotion)} />
 
       <div className="space-y-5">
-        <div className="flex flex-col gap-3 border-border border-b pb-4 md:flex-row md:items-end md:justify-between">
+        <div
+          id="chart-components"
+          className="flex scroll-mt-24 flex-col gap-3 border-border border-b pb-4 md:flex-row md:items-end md:justify-between"
+        >
           <div>
             <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
               Registry
@@ -268,13 +260,481 @@ export function ChartsShowcase() {
   );
 }
 
-function MetricPill({ label, value }: { label: string; value: string }) {
+function ChartsHero({ reducedMotion }: { reducedMotion: boolean }) {
   return (
-    <div className="min-w-20 rounded-xl border border-border bg-card px-3 py-2">
-      <p className="text-lg font-semibold leading-none text-foreground">
-        {value}
-      </p>
-      <p className="mt-1 text-[10px] uppercase tracking-widest">{label}</p>
+    <motion.div
+      initial={reducedMotion ? false : { opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
+      className={cn(
+        "relative isolate -mx-4 min-h-[450px] overflow-hidden bg-background px-4 py-20 text-center text-foreground sm:-mx-6 sm:min-h-[510px] sm:px-8 sm:py-24",
+        "[--charts-hero-bg:var(--background)] [--charts-hero-card-from:#ffffff] [--charts-hero-card-to:#fafafa] [--charts-hero-edge:var(--background)] [--charts-hero-fg:#171717] [--charts-hero-grid:rgba(0,0,0,.36)] [--charts-hero-muted:#525252] [--charts-hero-soft:#737373]",
+        "[--charts-hero-center:rgba(255,255,255,0.96)] [--charts-hero-center-mid:rgba(255,255,255,0.78)] [--charts-hero-glow-a:rgba(255,255,255,0.92)] [--charts-hero-glow-b:rgba(212,212,212,0.28)] [--charts-hero-vignette:rgba(255,255,255,0.52)]",
+        "dark:[--charts-hero-card-from:rgba(255,255,255,0.12)] dark:[--charts-hero-card-to:rgba(255,255,255,0.025)] dark:[--charts-hero-fg:#ffffff] dark:[--charts-hero-grid:rgba(255,255,255,.38)] dark:[--charts-hero-muted:#d4d4d4] dark:[--charts-hero-soft:#a3a3a3]",
+        "dark:[--charts-hero-center:rgba(23,23,23,0.94)] dark:[--charts-hero-center-mid:rgba(23,23,23,0.76)] dark:[--charts-hero-glow-a:rgba(255,255,255,0.09)] dark:[--charts-hero-glow-b:rgba(148,148,148,0.045)] dark:[--charts-hero-vignette:rgba(0,0,0,0.34)]",
+      )}
+    >
+      <ChartsHeroBackground reducedMotion={reducedMotion} />
+
+      <div className="relative z-20 mx-auto flex max-w-3xl flex-col items-center pt-2">
+        <motion.div
+          initial={reducedMotion ? false : { opacity: 0, y: 8, scale: 0.98 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ delay: reducedMotion ? 0 : 0.08, duration: 0.38 }}
+          className="mb-7 inline-flex min-h-8 items-center rounded-full border border-black/10 bg-white/70 px-3.5 py-1 text-xs font-medium text-neutral-600 shadow-[inset_0_1px_0_rgba(255,255,255,0.85),0_0_0_1px_rgba(255,255,255,0.55),0_14px_34px_rgba(0,0,0,0.06)] backdrop-blur dark:border-white/15 dark:bg-black/35 dark:text-white/72 dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_0_0_1px_rgba(255,255,255,0.04),0_14px_34px_rgba(0,0,0,0.34)]"
+        >
+          Studio{" "}
+          <span className="mx-1.5 text-neutral-400 dark:text-white/45">
+            {"\u00B7"}
+          </span>{" "}
+          Version 2
+        </motion.div>
+
+        <motion.h1
+          initial={reducedMotion ? false : { opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: reducedMotion ? 0 : 0.14, duration: 0.42 }}
+          className="text-balance text-[2.75rem] font-semibold leading-[1.02] tracking-normal text-foreground sm:text-6xl dark:drop-shadow-[0_2px_24px_rgba(0,0,0,0.52)]"
+        >
+          Ready to go Charts
+        </motion.h1>
+        <motion.p
+          initial={reducedMotion ? false : { opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: reducedMotion ? 0 : 0.2, duration: 0.42 }}
+          className="mt-6 max-w-2xl text-balance text-base leading-7 text-muted-foreground sm:text-xl sm:leading-8"
+        >
+          Beautiful open-source chart blocks for dashboards and analytics. Copy
+          and paste into your apps. Works with any React framework.
+        </motion.p>
+
+        <motion.a
+          href="#chart-components"
+          initial={reducedMotion ? false : { opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          whileHover={reducedMotion ? undefined : "hover"}
+          whileTap={reducedMotion ? undefined : { scale: 0.98 }}
+          transition={{ delay: reducedMotion ? 0 : 0.26, duration: 0.34 }}
+          className="group mt-8 inline-flex min-h-11 items-center gap-2 rounded-lg bg-foreground px-5 text-sm font-medium text-background shadow-[0_14px_34px_rgba(0,0,0,0.16),inset_0_1px_0_rgba(255,255,255,0.16)] outline-none transition-colors hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:shadow-[0_14px_34px_rgba(0,0,0,0.28),inset_0_-1px_0_rgba(0,0,0,0.16)]"
+        >
+          Browse Charts
+          <motion.span
+            variants={{ hover: { x: 3 } }}
+            transition={{ duration: 0.18, ease: "easeOut" }}
+            className="inline-flex"
+          >
+            <ArrowRight className="size-4" aria-hidden="true" />
+          </motion.span>
+        </motion.a>
+      </div>
+    </motion.div>
+  );
+}
+
+function ChartsHeroBackground({ reducedMotion }: { reducedMotion: boolean }) {
+  const signalCurve =
+    "M104 300 C148 250 180 238 214 264 C254 294 286 274 320 236 C348 204 370 216 402 184";
+
+  return (
+    <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+      <motion.div
+        className="absolute inset-0 opacity-[0.055]"
+        style={{
+          backgroundImage:
+            "linear-gradient(var(--charts-hero-grid) 1px, transparent 1px), linear-gradient(90deg, var(--charts-hero-grid) 1px, transparent 1px)",
+          backgroundPosition: "center",
+          backgroundSize: "68px 68px",
+        }}
+        animate={
+          reducedMotion
+            ? { opacity: 0.055 }
+            : {
+                opacity: [0.045, 0.075, 0.045],
+              }
+        }
+        transition={{
+          duration: 10,
+          repeat: reducedMotion ? 0 : Number.POSITIVE_INFINITY,
+          ease: "easeInOut",
+        }}
+      />
+
+      <motion.div
+        className="absolute inset-x-[8%] top-10 h-80 blur-3xl"
+        style={{
+          background:
+            "radial-gradient(ellipse at center, var(--charts-hero-glow-a), var(--charts-hero-glow-b) 44%, transparent 74%)",
+        }}
+        animate={
+          reducedMotion
+            ? { opacity: 0.75 }
+            : { opacity: [0.58, 0.86, 0.58], scale: [1, 1.05, 1] }
+        }
+        transition={{
+          duration: 8,
+          repeat: reducedMotion ? 0 : Number.POSITIVE_INFINITY,
+          ease: "easeInOut",
+        }}
+      />
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(ellipse at center, transparent 0%, transparent 36%, var(--charts-hero-vignette) 78%)",
+        }}
+      />
+
+      <svg
+        viewBox="0 0 1200 560"
+        preserveAspectRatio="xMidYMid slice"
+        className="absolute inset-0 size-full"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <defs>
+          <linearGradient id="charts-hero-line" x1="0" y1="0" x2="1" y2="0">
+            <stop
+              offset="0%"
+              stopColor="var(--charts-hero-fg)"
+              stopOpacity="0.18"
+            />
+            <stop
+              offset="50%"
+              stopColor="var(--charts-hero-fg)"
+              stopOpacity="0.52"
+            />
+            <stop
+              offset="100%"
+              stopColor="var(--charts-hero-soft)"
+              stopOpacity="0.28"
+            />
+          </linearGradient>
+          <linearGradient id="charts-hero-card" x1="0" y1="0" x2="1" y2="1">
+            <stop
+              offset="0%"
+              stopColor="var(--charts-hero-card-from)"
+              stopOpacity="0.92"
+            />
+            <stop
+              offset="100%"
+              stopColor="var(--charts-hero-card-to)"
+              stopOpacity="0.64"
+            />
+          </linearGradient>
+          <filter id="charts-hero-soft-glow">
+            <feDropShadow
+              dx="0"
+              dy="0"
+              floodColor="var(--charts-hero-soft)"
+              floodOpacity="0.18"
+              stdDeviation="8"
+            />
+          </filter>
+          <filter id="charts-hero-card-blur">
+            <feGaussianBlur
+              in="SourceGraphic"
+              result="blur"
+              stdDeviation="0.2"
+            />
+          </filter>
+          <radialGradient id="charts-hero-center-mask">
+            <stop offset="0%" stopColor="black" />
+            <stop offset="58%" stopColor="black" />
+            <stop offset="100%" stopColor="white" />
+          </radialGradient>
+          <mask id="charts-hero-readable-mask">
+            <rect width="1200" height="560" fill="white" />
+            <ellipse
+              cx="600"
+              cy="250"
+              rx="390"
+              ry="190"
+              fill="url(#charts-hero-center-mask)"
+            />
+          </mask>
+        </defs>
+
+        <g mask="url(#charts-hero-readable-mask)">
+          <g opacity="0.13">
+            {[118, 204, 290, 376, 462].map((y) => (
+              <line
+                key={y}
+                x1="54"
+                x2="1146"
+                y1={y}
+                y2={y}
+                stroke="var(--charts-hero-fg)"
+                strokeDasharray="2 18"
+                strokeLinecap="round"
+              />
+            ))}
+          </g>
+
+          <motion.path
+            id="charts-hero-curve"
+            d={signalCurve}
+            fill="none"
+            stroke="url(#charts-hero-line)"
+            strokeDasharray="520"
+            strokeDashoffset={reducedMotion ? 0 : 520}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.4"
+            filter="url(#charts-hero-soft-glow)"
+            opacity="0.56"
+            animate={{ strokeDashoffset: 0 }}
+            transition={{
+              delay: 0.2,
+              duration: reducedMotion ? 0 : 1.35,
+              ease: [0.16, 1, 0.3, 1],
+            }}
+          />
+
+          {/* Signals flowing along the curve */}
+          {reducedMotion
+            ? null
+            : [0, 1, 2].map((particle) => (
+                <circle
+                  key={`hero-flow-${particle}`}
+                  r="3.2"
+                  fill="var(--charts-hero-fg)"
+                  filter="url(#charts-hero-soft-glow)"
+                >
+                  <animateMotion
+                    dur="4.8s"
+                    begin={`${1.4 + particle * 1.6}s`}
+                    repeatCount="indefinite"
+                    rotate="auto"
+                    keyPoints="0;1"
+                    keyTimes="0;1"
+                    calcMode="linear"
+                  >
+                    <mpath
+                      href="#charts-hero-curve"
+                      xlinkHref="#charts-hero-curve"
+                    />
+                  </animateMotion>
+                  <animate
+                    attributeName="opacity"
+                    values="0;0.65;0.65;0"
+                    keyTimes="0;0.12;0.84;1"
+                    dur="4.8s"
+                    begin={`${1.4 + particle * 1.6}s`}
+                    repeatCount="indefinite"
+                  />
+                </circle>
+              ))}
+
+          <g className="hidden sm:block" opacity="0.18">
+            <polyline
+              points="104,300 214,264 320,236 402,184"
+              fill="none"
+              stroke="var(--charts-hero-fg)"
+              strokeDasharray="3 10"
+              strokeLinecap="round"
+            />
+          </g>
+
+          {heroNetworkPoints.map((point) => (
+            <motion.g
+              key={point.id}
+              className="hidden sm:block"
+              initial={reducedMotion ? false : { opacity: 0, scale: 0.82 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{
+                delay: reducedMotion ? 0 : 0.54 + point.delay,
+                duration: 0.24,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              style={{
+                transformOrigin: `${point.cx}px ${point.cy}px`,
+              }}
+            >
+              <motion.circle
+                cx={point.cx}
+                cy={point.cy}
+                r="10"
+                fill="var(--charts-hero-fg)"
+                opacity="0.08"
+                animate={
+                  reducedMotion
+                    ? { opacity: 0.08 }
+                    : { r: [7, 12, 7], opacity: [0.04, 0.12, 0.04] }
+                }
+                transition={{
+                  delay: reducedMotion ? 0 : 0.84 + point.delay,
+                  duration: 3.2,
+                  repeat: reducedMotion ? 0 : Number.POSITIVE_INFINITY,
+                  ease: "easeInOut",
+                }}
+              />
+              <circle
+                cx={point.cx}
+                cy={point.cy}
+                r="3"
+                fill="var(--charts-hero-muted)"
+              />
+            </motion.g>
+          ))}
+
+          <g transform="translate(92 438)" opacity="0.24">
+            {heroBottomBars.map((bar, index) => (
+              <motion.rect
+                key={bar.id}
+                x={bar.x}
+                y={92 - bar.height}
+                width="12"
+                height={bar.height}
+                rx="5"
+                fill={
+                  index === 3
+                    ? "var(--charts-hero-muted)"
+                    : "var(--charts-hero-soft)"
+                }
+                initial={reducedMotion ? false : { scaleY: 0.35, opacity: 0 }}
+                animate={{ scaleY: 1, opacity: index === 3 ? 0.38 : 0.22 }}
+                transition={{
+                  delay: reducedMotion ? 0 : 0.18 + index * 0.045,
+                  duration: 0.42,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                style={{ transformOrigin: `${bar.x + 6}px 92px` }}
+              />
+            ))}
+          </g>
+
+          {heroCardConfigs.map((card) => (
+            <motion.g
+              key={card.id}
+              className="hidden sm:block"
+              initial={reducedMotion ? false : { opacity: 0, y: 12 }}
+              animate={{ opacity: 0.46, y: 0 }}
+              transition={{
+                delay: reducedMotion ? 0 : 0.42 + card.delay,
+                duration: reducedMotion ? 0 : 0.38,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              filter="url(#charts-hero-card-blur)"
+            >
+              <motion.g
+                animate={
+                  reducedMotion
+                    ? undefined
+                    : { y: [0, -6, 0], rotate: [0, 0.4, 0] }
+                }
+                transition={{
+                  duration: 6,
+                  repeat: reducedMotion ? 0 : Number.POSITIVE_INFINITY,
+                  ease: "easeInOut",
+                }}
+                style={{
+                  transformOrigin: `${card.x + card.width / 2}px ${
+                    card.y + card.height / 2
+                  }px`,
+                }}
+              >
+                <rect
+                  x={card.x}
+                  y={card.y}
+                  width={card.width}
+                  height={card.height}
+                  rx="14"
+                  fill="url(#charts-hero-card)"
+                  stroke="var(--charts-hero-fg)"
+                  strokeOpacity="0.1"
+                />
+                <line
+                  x1={card.x + 18}
+                  x2={card.x + card.width - 18}
+                  y1={card.y + 54}
+                  y2={card.y + 54}
+                  stroke="var(--charts-hero-fg)"
+                  strokeOpacity="0.08"
+                />
+                <rect
+                  x={card.x + 18}
+                  y={card.y + 18}
+                  width="62"
+                  height="7"
+                  rx="3.5"
+                  fill="var(--charts-hero-fg)"
+                  opacity="0.16"
+                />
+                <rect
+                  x={card.x + 18}
+                  y={card.y + 35}
+                  width="104"
+                  height="7"
+                  rx="3.5"
+                  fill="var(--charts-hero-fg)"
+                  opacity="0.08"
+                />
+                <motion.path
+                  d={card.sparkline}
+                  transform={`translate(${card.x} ${card.y})`}
+                  fill="none"
+                  stroke="var(--charts-hero-muted)"
+                  strokeDasharray="260"
+                  strokeDashoffset={reducedMotion ? 0 : 260}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  opacity="0.58"
+                  animate={{ strokeDashoffset: 0 }}
+                  transition={{
+                    delay: 0.34 + card.delay,
+                    duration: reducedMotion ? 0 : 1.15,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
+                />
+                <circle
+                  cx={card.x + card.width - 24}
+                  cy={card.y + 24}
+                  r="4"
+                  fill="var(--charts-hero-muted)"
+                  opacity="0.56"
+                />
+              </motion.g>
+            </motion.g>
+          ))}
+        </g>
+      </svg>
+
+      <div
+        className="absolute left-1/2 top-[47%] h-72 w-[min(720px,92%)] -translate-x-1/2 -translate-y-1/2"
+        style={{
+          background:
+            "radial-gradient(ellipse at center, var(--charts-hero-center) 0%, var(--charts-hero-center-mid) 48%, transparent 74%)",
+        }}
+      />
+      <div
+        className="absolute inset-x-0 top-0 h-28"
+        style={{
+          background:
+            "linear-gradient(to bottom, var(--charts-hero-edge), transparent)",
+        }}
+      />
+      <div
+        className="absolute inset-x-0 bottom-0 h-36"
+        style={{
+          background:
+            "linear-gradient(to top, var(--charts-hero-edge), transparent)",
+        }}
+      />
+      <div
+        className="absolute inset-y-0 left-0 w-28"
+        style={{
+          background:
+            "linear-gradient(to right, var(--charts-hero-edge), transparent)",
+        }}
+      />
+      <div
+        className="absolute inset-y-0 right-0 w-28"
+        style={{
+          background:
+            "linear-gradient(to left, var(--charts-hero-edge), transparent)",
+        }}
+      />
     </div>
   );
 }
@@ -290,10 +750,22 @@ function ChartRegistryCard({
   previewReady: boolean;
   reducedMotion: boolean;
 }) {
+  function handlePointerMove(event: React.PointerEvent<HTMLElement>) {
+    if (reducedMotion) {
+      return;
+    }
+
+    const target = event.currentTarget;
+    const rect = target.getBoundingClientRect();
+    target.style.setProperty("--charts-mx", `${event.clientX - rect.left}px`);
+    target.style.setProperty("--charts-my", `${event.clientY - rect.top}px`);
+  }
+
   return (
     <motion.article
       data-slot="charts-card"
       layout
+      onPointerMove={handlePointerMove}
       variants={reducedMotion ? undefined : cardVariants}
       initial={reducedMotion ? false : "hidden"}
       animate="visible"
@@ -306,20 +778,30 @@ function ChartRegistryCard({
         reducedMotion
           ? undefined
           : {
-              y: -1,
-              scale: 1.003,
+              y: -5,
               transition: { duration: 0.34, ease: [0.22, 1, 0.36, 1] },
             }
       }
       className={cn(
-        "group overflow-hidden rounded-2xl border border-border bg-secondary p-2 shadow-sm",
-        "transition-colors duration-300 hover:border-ring/35",
+        "group relative overflow-hidden rounded-2xl border border-border bg-secondary p-2 shadow-sm",
+        "transition-[border-color,box-shadow] duration-300 hover:border-ring/40",
+        "hover:shadow-[0_18px_40px_-18px_color-mix(in_oklab,var(--foreground)_42%,transparent)]",
       )}
     >
+      {/* Cursor spotlight */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-20 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        style={{
+          background:
+            "radial-gradient(240px circle at var(--charts-mx, 50%) var(--charts-my, 0%), color-mix(in oklab, var(--ring) 22%, transparent), transparent 72%)",
+        }}
+      />
+
       <Link
         href={chart.href}
         aria-label={`Open ${chart.name} fullscreen preview`}
-        className="block rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        className="relative z-10 block rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
       >
         <div className="overflow-hidden rounded-xl border border-border/60 bg-card">
           <div className="relative h-40 overflow-hidden border-border/60 border-b bg-muted/25">
@@ -328,51 +810,53 @@ function ChartRegistryCard({
                 initial={reducedMotion ? false : { opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.2 }}
-                className="absolute inset-0"
+                className={cn(
+                  "absolute inset-0 origin-center",
+                  reducedMotion
+                    ? ""
+                    : "transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.045]",
+                )}
               >
                 {chart.preview}
               </motion.div>
             ) : (
               <PreviewSkeleton />
             )}
+
+            {/* Depth fade + top sheen */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-linear-to-t from-card/80 to-transparent"
+            />
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 [background:linear-gradient(120deg,transparent_40%,color-mix(in_oklab,var(--foreground)_8%,transparent)_50%,transparent_60%)]"
+            />
           </div>
 
           <div className="space-y-4 p-4">
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0">
-                <h3 className="truncate text-sm font-semibold text-foreground">
-                  {chart.name}
-                </h3>
-                <p className="mt-1 line-clamp-2 text-xs leading-5 text-muted-foreground">
-                  {chart.description}
-                </p>
-              </div>
-              <span className="shrink-0 rounded-full border border-border/70 bg-muted px-2 py-1 text-[10px] font-medium text-muted-foreground">
-                {chart.badge}
-              </span>
+            <div className="min-w-0">
+              <h3 className="truncate text-sm font-semibold text-foreground">
+                {chart.name}
+              </h3>
+              <p className="mt-1 line-clamp-2 text-xs leading-5 text-muted-foreground">
+                {chart.description}
+              </p>
             </div>
 
-            <div className="flex items-center justify-between gap-3">
-              <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-muted-foreground">
-                {chart.installable ? (
-                  <>
-                    <CircleDot
-                      className="size-3 text-chart-2"
-                      aria-hidden="true"
-                    />
-                    Registry item
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="size-3" aria-hidden="true" />
-                    Showcase preview
-                  </>
-                )}
-              </span>
-              <span className="text-[11px] text-muted-foreground transition-colors group-hover:text-foreground">
-                Open fullscreen
-              </span>
-            </div>
+            <span
+              data-slot="charts-card-cta"
+              className={cn(
+                "inline-flex w-full items-center justify-center gap-1.5 rounded-lg border border-border/70 bg-muted/50 px-3 py-2 text-xs font-medium text-foreground shadow-sm",
+                "transition-colors duration-300 group-hover:border-ring/45 group-hover:bg-muted",
+              )}
+            >
+              Open fullscreen
+              <ArrowUpRight
+                className="size-3.5 transition-transform duration-300 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                aria-hidden="true"
+              />
+            </span>
           </div>
         </div>
       </Link>
@@ -452,125 +936,6 @@ function MiniAreaPreview() {
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
         />
         <ActivePoint cx={264} cy={48} />
-      </svg>
-    </PreviewFrame>
-  );
-}
-
-function MiniBarPreview() {
-  const bars = [
-    { id: "mon", value: 42 },
-    { id: "tue", value: 74 },
-    { id: "wed", value: 56 },
-    { id: "thu", value: 96 },
-    { id: "fri", value: 68 },
-    { id: "sat", value: 112 },
-    { id: "sun", value: 86 },
-  ];
-
-  return (
-    <PreviewFrame icon={<BarChart3 className="size-3.5" />} label="Bar">
-      <svg
-        viewBox="0 0 320 160"
-        className="size-full text-chart-1"
-        aria-hidden="true"
-      >
-        <defs>
-          <linearGradient id="mini-bar-gradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="currentColor" stopOpacity="1" />
-            <stop offset="100%" stopColor="currentColor" stopOpacity="0.58" />
-          </linearGradient>
-        </defs>
-        {bars.map((bar, index) => {
-          const height = bar.value;
-          const x = 36 + index * 38;
-          const y = 134 - height;
-
-          return (
-            <motion.g
-              key={bar.id}
-              className={index % 2 ? "text-chart-2" : "text-chart-1"}
-              initial={{ opacity: 0, scaleY: 0.55 }}
-              animate={{ opacity: 1, scaleY: 1 }}
-              transition={{
-                delay: index * 0.045,
-                duration: 0.48,
-                ease: [0.16, 1, 0.3, 1],
-              }}
-              style={{ transformOrigin: `${x + 10}px 134px` }}
-            >
-              <rect
-                x={x}
-                y={y}
-                width="20"
-                height={height}
-                rx="8"
-                fill="url(#mini-bar-gradient)"
-              />
-              <line
-                x1={x + 5}
-                x2={x + 15}
-                y1={y + 18}
-                y2={y + 18}
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeDasharray="1 4"
-                opacity="0.5"
-              />
-            </motion.g>
-          );
-        })}
-      </svg>
-    </PreviewFrame>
-  );
-}
-
-function MiniRadialPreview() {
-  return (
-    <PreviewFrame icon={<Gauge className="size-3.5" />} label="Radial">
-      <svg
-        viewBox="0 0 180 160"
-        className="size-full text-chart-2"
-        aria-hidden="true"
-      >
-        <defs>
-          <linearGradient id="mini-radial-gradient" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="var(--chart-2)" />
-            <stop offset="100%" stopColor="var(--chart-1)" />
-          </linearGradient>
-        </defs>
-        <circle
-          cx="90"
-          cy="80"
-          r="52"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="14"
-          className="text-border"
-          opacity="0.7"
-        />
-        <motion.circle
-          cx="90"
-          cy="80"
-          r="52"
-          fill="none"
-          stroke="url(#mini-radial-gradient)"
-          strokeWidth="14"
-          strokeLinecap="round"
-          strokeDasharray="327"
-          initial={{ strokeDashoffset: 327 }}
-          animate={{ strokeDashoffset: 72 }}
-          transition={{ duration: 0.95, ease: [0.16, 1, 0.3, 1] }}
-          transform="rotate(-90 90 80)"
-        />
-        <text
-          x="90"
-          y="85"
-          textAnchor="middle"
-          className="fill-foreground text-xl font-semibold"
-        >
-          78%
-        </text>
       </svg>
     </PreviewFrame>
   );
@@ -791,18 +1156,18 @@ function AllocationPerformancePreview({
 }
 
 function RiskScoreGaugePreview({ compact = false }: { compact?: boolean }) {
+  const accent = "oklch(0.75 0.16 70)";
   const path = "M98 142 A92 92 0 0 1 282 142";
-  const progressPath = "M98 142 A92 92 0 0 1 226 57";
+  const progressPath = "M98 142 A92 92 0 0 1 249 71";
+  const markerX = 249;
+  const markerY = 71;
   const [tooltipVisible, setTooltipVisible] = useState(true);
   const shouldReduceMotion = useReducedMotion();
+  const animate = compact && !shouldReduceMotion;
 
   return (
     <PreviewFrame icon={<Gauge className="size-3.5" />} label="Risk">
-      <svg
-        viewBox="0 0 360 180"
-        className="size-full text-chart-2"
-        aria-hidden="true"
-      >
+      <svg viewBox="0 0 360 180" className="size-full" aria-hidden="true">
         <defs>
           <filter id="risk-mini-tooltip-shadow">
             <feDropShadow
@@ -837,32 +1202,11 @@ function RiskScoreGaugePreview({ compact = false }: { compact?: boolean }) {
               stopColor="var(--muted-foreground)"
               stopOpacity="0.7"
             />
-            <stop offset="46%" stopColor="var(--chart-2)" />
-            <stop offset="100%" stopColor="var(--chart-2)" />
+            <stop offset="46%" stopColor={accent} />
+            <stop offset="100%" stopColor={accent} />
           </linearGradient>
         </defs>
-        <text
-          x="38"
-          y="52"
-          className="fill-muted-foreground text-[13px] font-medium"
-        >
-          Risk Score
-        </text>
-        <AnimatedCounterText
-          x="38"
-          y="86"
-          value={72}
-          duration={950}
-          reducedMotion={Boolean(shouldReduceMotion)}
-          className="fill-foreground text-[32px] font-semibold"
-        />
-        <text
-          x="86"
-          y="86"
-          className="fill-muted-foreground text-[18px] font-medium"
-        >
-          /100
-        </text>
+
         <g
           transform="translate(0 10)"
           onPointerEnter={() => setTooltipVisible(true)}
@@ -876,14 +1220,15 @@ function RiskScoreGaugePreview({ compact = false }: { compact?: boolean }) {
             strokeLinecap="round"
           />
           <motion.path
+            id="risk-mini-progress"
             d={progressPath}
             fill="none"
             stroke="url(#risk-mini-gradient)"
             strokeWidth="24"
             strokeLinecap="round"
-            initial={compact ? { pathLength: 0 } : false}
+            initial={animate ? { pathLength: 0 } : false}
             animate={{ pathLength: 1 }}
-            transition={{ duration: 0.86, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.95, ease: [0.16, 1, 0.3, 1] }}
           />
           <circle
             cx="98"
@@ -894,36 +1239,84 @@ function RiskScoreGaugePreview({ compact = false }: { compact?: boolean }) {
             strokeOpacity="0.32"
             strokeWidth="8"
           />
-          <motion.g
-            initial={compact ? { scale: 0, opacity: 0 } : false}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.58, duration: 0.22, ease: "easeOut" }}
-            style={{ transformOrigin: "226px 57px" }}
-          >
-            <motion.circle
-              cx="226"
-              cy="57"
-              r="18"
-              className="fill-chart-2"
-              animate={
-                compact ? { opacity: [0.22, 0.38, 0.22] } : { opacity: 0.3 }
-              }
-              transition={{
-                duration: 2,
-                repeat: compact ? Infinity : 0,
-                ease: "easeInOut",
-              }}
-            />
-            <circle
-              cx="226"
-              cy="57"
-              r="9"
-              fill="var(--background)"
-              stroke="var(--chart-2)"
-              strokeWidth="2"
-            />
-          </motion.g>
+
+          {animate ? (
+            <g>
+              <animateMotion
+                dur="0.95s"
+                begin="0s"
+                fill="freeze"
+                rotate="0"
+                calcMode="spline"
+                keyTimes="0;1"
+                keyPoints="0;1"
+                keySplines="0.16 1 0.3 1"
+              >
+                <mpath
+                  href="#risk-mini-progress"
+                  xlinkHref="#risk-mini-progress"
+                />
+              </animateMotion>
+              <circle cx="0" cy="0" r="18" fill={accent} opacity="0">
+                <animate
+                  attributeName="opacity"
+                  values="0.2;0.4;0.2"
+                  begin="1.05s"
+                  dur="2s"
+                  repeatCount="indefinite"
+                />
+              </circle>
+              <circle
+                cx="0"
+                cy="0"
+                r="9"
+                fill="var(--background)"
+                stroke={accent}
+                strokeWidth="2"
+              />
+              <circle cx="0" cy="0" r="3" fill={accent} />
+            </g>
+          ) : (
+            <g>
+              <circle
+                cx={markerX}
+                cy={markerY}
+                r="18"
+                fill={accent}
+                opacity="0.3"
+              />
+              <circle
+                cx={markerX}
+                cy={markerY}
+                r="9"
+                fill="var(--background)"
+                stroke={accent}
+                strokeWidth="2"
+              />
+              <circle cx={markerX} cy={markerY} r="3" fill={accent} />
+            </g>
+          )}
         </g>
+
+        {/* Centered value inside the gauge */}
+        <text
+          x="190"
+          y="106"
+          textAnchor="middle"
+          className="fill-muted-foreground text-[12px] font-medium"
+        >
+          Risk Score
+        </text>
+        <AnimatedCounterText
+          x="190"
+          y="142"
+          textAnchor="middle"
+          value={72}
+          duration={950}
+          reducedMotion={Boolean(shouldReduceMotion)}
+          className="fill-foreground text-[34px] font-semibold"
+        />
+
         <AnimatePresence>
           {tooltipVisible ? (
             <motion.g
@@ -934,8 +1327,8 @@ function RiskScoreGaugePreview({ compact = false }: { compact?: boolean }) {
               transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
             >
               <rect
-                x="206"
-                y="20"
+                x="214"
+                y="18"
                 width="124"
                 height="58"
                 rx="10"
@@ -944,25 +1337,25 @@ function RiskScoreGaugePreview({ compact = false }: { compact?: boolean }) {
                 filter="url(#risk-mini-tooltip-shadow)"
               />
               <text
-                x="219"
-                y="42"
+                x="227"
+                y="40"
                 fill="var(--popover-foreground)"
                 className="text-[11px] font-semibold"
               >
                 Risk Score
               </text>
-              <circle cx="222" cy="60" r="4.5" fill="var(--chart-2)" />
+              <circle cx="230" cy="58" r="4.5" fill={accent} />
               <text
-                x="234"
-                y="64"
+                x="242"
+                y="62"
                 fill="var(--muted-foreground)"
                 className="text-[11px] font-medium"
               >
                 Stability
               </text>
               <text
-                x="318"
-                y="64"
+                x="326"
+                y="62"
                 textAnchor="end"
                 fill="var(--popover-foreground)"
                 className="text-[11px] font-semibold"
@@ -972,14 +1365,6 @@ function RiskScoreGaugePreview({ compact = false }: { compact?: boolean }) {
             </motion.g>
           ) : null}
         </AnimatePresence>
-        <text
-          x="180"
-          y="150"
-          textAnchor="middle"
-          className="fill-muted-foreground text-[12px] font-medium"
-        >
-          Stability improved by +4%
-        </text>
       </svg>
     </PreviewFrame>
   );
@@ -1032,159 +1417,107 @@ function MiniSparklinePreview() {
   );
 }
 
-function DonutProgressPreview() {
-  const segments = [
-    { offset: 0, length: 88, className: "text-chart-2" },
-    { offset: 104, length: 62, className: "text-chart-1" },
-    { offset: 182, length: 42, className: "text-chart-4" },
+function MiniSignalFlowPreview() {
+  const shouldReduceMotion = useReducedMotion();
+  const lanes = [
+    { id: "gateway", y: 52, fraction: 0.9, color: "var(--chart-2)" },
+    { id: "auth", y: 90, fraction: 0.55, color: "var(--chart-4)" },
+    { id: "media", y: 128, fraction: 0.72, color: "var(--destructive)" },
   ];
+  const railX = 64;
+  const cableEndX = 250;
 
   return (
-    <PreviewFrame icon={<CircleDot className="size-3.5" />} label="Donut">
-      <svg viewBox="0 0 180 160" className="size-full" aria-hidden="true">
-        <circle
-          cx="90"
-          cy="80"
-          r="52"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="14"
-          className="text-border"
+    <PreviewFrame icon={<Network className="size-3.5" />} label="Flow">
+      <svg viewBox="0 0 320 170" className="size-full" aria-hidden="true">
+        <line
+          x1={railX}
+          x2={railX}
+          y1="40"
+          y2="140"
+          stroke="var(--border)"
+          strokeWidth="2"
+          strokeLinecap="round"
         />
-        {segments.map((segment, index) => (
-          <motion.circle
-            key={segment.offset}
-            cx="90"
-            cy="80"
-            r="52"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="14"
-            strokeLinecap="round"
-            className={segment.className}
-            strokeDasharray={`${segment.length} 327`}
-            initial={{ strokeDashoffset: 327 }}
-            animate={{ strokeDashoffset: -segment.offset }}
-            transition={{
-              delay: index * 0.09,
-              duration: 0.78,
-              ease: [0.16, 1, 0.3, 1],
-            }}
-            transform="rotate(-90 90 80)"
-          />
-        ))}
-        <text
-          x="90"
-          y="86"
-          textAnchor="middle"
-          className="fill-foreground text-xl font-semibold"
-        >
-          84%
-        </text>
-      </svg>
-    </PreviewFrame>
-  );
-}
-
-function StackedRevenuePreview() {
-  const stacks = [
-    {
-      id: "jan",
-      values: [
-        { id: "jan-subscription", height: 34 },
-        { id: "jan-services", height: 26 },
-        { id: "jan-marketplace", height: 18 },
-      ],
-    },
-    {
-      id: "feb",
-      values: [
-        { id: "feb-subscription", height: 44 },
-        { id: "feb-services", height: 32 },
-        { id: "feb-marketplace", height: 24 },
-      ],
-    },
-    {
-      id: "mar",
-      values: [
-        { id: "mar-subscription", height: 38 },
-        { id: "mar-services", height: 38 },
-        { id: "mar-marketplace", height: 28 },
-      ],
-    },
-    {
-      id: "apr",
-      values: [
-        { id: "apr-subscription", height: 58 },
-        { id: "apr-services", height: 36 },
-        { id: "apr-marketplace", height: 30 },
-      ],
-    },
-    {
-      id: "may",
-      values: [
-        { id: "may-subscription", height: 64 },
-        { id: "may-services", height: 42 },
-        { id: "may-marketplace", height: 34 },
-      ],
-    },
-  ];
-
-  return (
-    <PreviewFrame icon={<Layers3 className="size-3.5" />} label="Revenue">
-      <svg viewBox="0 0 320 160" className="size-full" aria-hidden="true">
-        <defs>
-          <pattern
-            id="stacked-pattern"
-            width="8"
-            height="8"
-            patternUnits="userSpaceOnUse"
-          >
-            <path
-              d="M0 8 L8 0"
-              stroke="currentColor"
-              strokeWidth="0.75"
-              className="text-background"
-              opacity="0.5"
-            />
-          </pattern>
-        </defs>
-        {stacks.map((stack, index) => {
-          const x = 52 + index * 46;
-          let cursor = 130;
+        {lanes.map((lane, index) => {
+          const bump = index % 2 === 0 ? 7 : -7;
+          const length = cableEndX - railX;
+          const path = `M ${railX} ${lane.y} C ${railX + length * 0.32} ${
+            lane.y + bump
+          }, ${railX + length * 0.68} ${lane.y - bump}, ${cableEndX} ${lane.y}`;
+          const tipX = railX + length * lane.fraction;
+          const trackId = `mini-signal-track-${lane.id}`;
 
           return (
-            <g key={stack.id}>
-              {stack.values.map((part, partIndex) => {
-                const height = part.height;
-                cursor -= height;
-                const className =
-                  partIndex === 0
-                    ? "text-chart-2"
-                    : partIndex === 1
-                      ? "text-chart-1"
-                      : "text-chart-4";
-
-                return (
-                  <motion.rect
-                    key={part.id}
-                    x={x}
-                    y={cursor}
-                    width="28"
-                    height={height}
-                    rx={partIndex === 0 ? 8 : 4}
-                    fill="currentColor"
-                    className={className}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 0.88, y: 0 }}
-                    transition={{
-                      delay: index * 0.04 + partIndex * 0.04,
-                      duration: 0.34,
-                      ease: [0.22, 1, 0.36, 1],
-                    }}
+            <g key={lane.id} style={{ color: lane.color }}>
+              <defs>
+                <linearGradient
+                  id={`${trackId}-fill`}
+                  x1="0"
+                  y1="0"
+                  x2="1"
+                  y2="0"
+                >
+                  <stop
+                    offset="0%"
+                    stopColor="currentColor"
+                    stopOpacity="0.18"
                   />
-                );
-              })}
+                  <stop
+                    offset="100%"
+                    stopColor="currentColor"
+                    stopOpacity="1"
+                  />
+                </linearGradient>
+              </defs>
+              <path
+                id={trackId}
+                d={path}
+                fill="none"
+                stroke="var(--border)"
+                strokeWidth="5"
+                strokeLinecap="round"
+                opacity="0.5"
+              />
+              <motion.path
+                d={path}
+                fill="none"
+                stroke={`url(#${trackId}-fill)`}
+                strokeWidth="5"
+                strokeLinecap="round"
+                initial={shouldReduceMotion ? false : { pathLength: 0 }}
+                animate={{ pathLength: lane.fraction }}
+                transition={{
+                  duration: 0.8,
+                  delay: index * 0.1,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+              />
+              <circle
+                cx={railX}
+                cy={lane.y}
+                r="4"
+                fill="var(--card)"
+                stroke="currentColor"
+                strokeWidth="2.5"
+              />
+              <circle cx={tipX} cy={lane.y} r="3.5" fill="currentColor" />
+              {shouldReduceMotion
+                ? null
+                : [0, 1, 2].map((particle) => (
+                    <circle key={particle} r="2.4" fill="currentColor">
+                      <animateMotion
+                        dur="3.4s"
+                        begin={`-${(particle * 1.13).toFixed(2)}s`}
+                        repeatCount="indefinite"
+                        keyPoints={`0;${lane.fraction.toFixed(3)}`}
+                        keyTimes="0;1"
+                        calcMode="linear"
+                      >
+                        <mpath href={`#${trackId}`} xlinkHref={`#${trackId}`} />
+                      </animateMotion>
+                    </circle>
+                  ))}
             </g>
           );
         })}
@@ -1193,97 +1526,816 @@ function StackedRevenuePreview() {
   );
 }
 
-function ComparisonPreview() {
+function MiniActivityHeatmapPreview() {
+  const shouldReduceMotion = useReducedMotion();
+  const cols = 11;
+  const rows = 7;
+  const cell = 13;
+  const gap = 3.5;
+  const pitch = cell + gap;
+  const offsetX = 10;
+  const offsetY = 8;
+  const opacities = [0.16, 0.34, 0.58, 0.82, 1];
+
+  const cells = [];
+  for (let column = 0; column < cols; column += 1) {
+    for (let row = 0; row < rows; row += 1) {
+      const index = column * rows + row;
+      const wave = Math.sin(index * 0.7) + Math.cos(index * 0.27);
+      const level = Math.max(0, Math.round((wave + 1.6) * 1.4)) % 5;
+      cells.push({ column, row, level, index });
+    }
+  }
+
   return (
-    <PreviewFrame icon={<Scale className="size-3.5" />} label="Compare">
-      <svg viewBox="0 0 320 160" className="size-full" aria-hidden="true">
-        <motion.path
-          d="M28 112 C62 86 92 96 126 72 C158 50 184 74 216 48 C246 24 272 42 300 28"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="4"
-          strokeLinecap="round"
-          className="text-chart-2"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-        />
-        <motion.path
-          d="M28 130 C68 116 88 82 126 100 C164 118 184 86 218 76 C252 66 272 70 300 56"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="3"
-          strokeLinecap="round"
-          strokeDasharray="8 8"
-          className="text-chart-1"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ delay: 0.12, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-        />
-        <ActivePoint cx={216} cy={48} />
-        <FloatingLabel x={222} y={26} label="+18%" />
+    <PreviewFrame icon={<LayoutGrid className="size-3.5" />} label="Grid">
+      <svg
+        viewBox="0 0 198 130"
+        className="size-full text-chart-2"
+        aria-hidden="true"
+      >
+        {cells.map((c) => {
+          const empty = c.level === 0;
+          return (
+            <motion.rect
+              key={c.index}
+              x={offsetX + c.column * pitch}
+              y={offsetY + c.row * pitch}
+              width={cell}
+              height={cell}
+              rx="3"
+              fill={empty ? "var(--muted)" : "currentColor"}
+              fillOpacity={empty ? 0.5 : opacities[c.level]}
+              stroke="var(--border)"
+              strokeOpacity="0.4"
+              strokeWidth="0.75"
+              initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.3 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{
+                delay: (c.column + c.row) * 0.02,
+                duration: 0.3,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              style={{
+                transformOrigin: `${offsetX + c.column * pitch + cell / 2}px ${
+                  offsetY + c.row * pitch + cell / 2
+                }px`,
+              }}
+            />
+          );
+        })}
       </svg>
     </PreviewFrame>
   );
 }
 
-function RealtimeActivityPreview() {
-  const pulses = [
-    { x: 40, y: 102 },
-    { x: 84, y: 72 },
-    { x: 128, y: 88 },
-    { x: 172, y: 46 },
-    { x: 216, y: 66 },
-    { x: 260, y: 36 },
+function MiniCandlestickPreview() {
+  const shouldReduceMotion = useReducedMotion();
+  const candles = [
+    { o: 40, c: 30, h: 26, l: 44 },
+    { o: 30, c: 34, h: 27, l: 38 },
+    { o: 34, c: 28, h: 25, l: 37 },
+    { o: 28, c: 22, h: 19, l: 31 },
+    { o: 22, c: 26, h: 18, l: 29 },
+    { o: 26, c: 18, h: 15, l: 30 },
+    { o: 18, c: 14, h: 11, l: 22 },
+    { o: 14, c: 20, h: 10, l: 23 },
+    { o: 20, c: 12, h: 9, l: 24 },
+    { o: 12, c: 8, h: 6, l: 17 },
   ];
+  const slot = 300 / candles.length;
+  return (
+    <PreviewFrame
+      icon={<CandlestickIcon className="size-3.5" />}
+      label="Candles"
+    >
+      <svg viewBox="0 0 320 150" className="size-full" aria-hidden="true">
+        {candles.map((candle, index) => {
+          const up = candle.c < candle.o;
+          const color = up ? "var(--chart-2)" : "var(--destructive)";
+          const cx = 14 + slot * (index + 0.5);
+          const top = Math.min(candle.o, candle.c) + 12;
+          const bodyHeight = Math.max(4, Math.abs(candle.o - candle.c));
+          return (
+            <motion.g
+              // biome-ignore lint/suspicious/noArrayIndexKey: fixed preview candles
+              key={index}
+              style={{ color, transformOrigin: `${cx}px ${top + 30}px` }}
+              initial={shouldReduceMotion ? false : { scaleY: 0, opacity: 0 }}
+              animate={{ scaleY: 1, opacity: 1 }}
+              transition={{
+                delay: index * 0.05,
+                duration: 0.4,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+            >
+              <line
+                x1={cx}
+                x2={cx}
+                y1={candle.h + 12}
+                y2={candle.l + 12}
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+              />
+              <rect
+                x={cx - 5}
+                y={top}
+                width="10"
+                height={bodyHeight}
+                rx="2"
+                fill="currentColor"
+              />
+            </motion.g>
+          );
+        })}
+      </svg>
+    </PreviewFrame>
+  );
+}
+
+function MiniBubblePreview() {
+  const shouldReduceMotion = useReducedMotion();
+  const bubbles = [
+    { cx: 110, cy: 96, r: 38, tone: "var(--chart-1)" },
+    { cx: 196, cy: 84, r: 30, tone: "var(--chart-4)" },
+    { cx: 138, cy: 44, r: 20, tone: "var(--chart-2)" },
+    { cx: 214, cy: 38, r: 14, tone: "var(--chart-3)" },
+  ];
+  return (
+    <PreviewFrame icon={<BubbleIcon className="size-3.5" />} label="Bubble">
+      <svg viewBox="0 0 320 150" className="size-full" aria-hidden="true">
+        <defs>
+          {bubbles.map((bubble, index) => (
+            <radialGradient
+              // biome-ignore lint/suspicious/noArrayIndexKey: fixed preview bubbles
+              key={index}
+              id={`mini-bubble-${index}`}
+              cx="38%"
+              cy="32%"
+              r="75%"
+            >
+              <stop
+                offset="0%"
+                stopColor={`color-mix(in oklab, ${bubble.tone} 55%, white)`}
+              />
+              <stop offset="60%" stopColor={bubble.tone} />
+              <stop
+                offset="100%"
+                stopColor={`color-mix(in oklab, ${bubble.tone} 78%, black)`}
+              />
+            </radialGradient>
+          ))}
+        </defs>
+        {bubbles.map((bubble, index) => (
+          <motion.circle
+            // biome-ignore lint/suspicious/noArrayIndexKey: fixed preview bubbles
+            key={index}
+            cx={bubble.cx}
+            cy={bubble.cy}
+            r={bubble.r}
+            fill={`url(#mini-bubble-${index})`}
+            initial={shouldReduceMotion ? false : { scale: 0, opacity: 0 }}
+            animate={
+              shouldReduceMotion
+                ? { scale: 1, opacity: 1 }
+                : { scale: 1, opacity: 1, y: [0, -5, 0] }
+            }
+            transition={{
+              scale: {
+                type: "spring",
+                stiffness: 220,
+                damping: 18,
+                delay: index * 0.08,
+              },
+              opacity: { duration: 0.3, delay: index * 0.08 },
+              y: {
+                duration: 4 + index * 0.6,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "easeInOut",
+              },
+            }}
+            style={{ transformOrigin: `${bubble.cx}px ${bubble.cy}px` }}
+          />
+        ))}
+      </svg>
+    </PreviewFrame>
+  );
+}
+
+function MiniWaveformPreview() {
+  const shouldReduceMotion = useReducedMotion();
+  const bars = Array.from({ length: 34 }, (_, index) => {
+    const wave =
+      Math.sin(index * 0.55) * 0.5 + Math.cos(index * 0.9) * 0.2 + 1.1;
+    return Math.round(wave * 34);
+  });
+  const slot = 300 / bars.length;
+  return (
+    <PreviewFrame
+      icon={<AudioWaveform className="size-3.5" />}
+      label="Waveform"
+    >
+      <svg
+        viewBox="0 0 320 150"
+        className="size-full text-chart-2"
+        aria-hidden="true"
+      >
+        {bars.map((value, index) => {
+          const x = 12 + slot * index + slot * 0.2;
+          const barHeight = Math.max(4, value);
+          return (
+            <motion.rect
+              // biome-ignore lint/suspicious/noArrayIndexKey: fixed preview bars
+              key={index}
+              x={x}
+              y={128 - barHeight}
+              width={slot * 0.55}
+              height={barHeight}
+              rx="2"
+              fill="currentColor"
+              fillOpacity={index === 20 ? 1 : 0.85}
+              initial={shouldReduceMotion ? false : { scaleY: 0 }}
+              animate={{ scaleY: 1 }}
+              transition={{
+                delay: index * 0.015,
+                duration: 0.4,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              style={{ transformOrigin: `${x}px 128px` }}
+            />
+          );
+        })}
+        <line
+          x1="12"
+          x2="308"
+          y1="140"
+          y2="140"
+          stroke="var(--chart-2)"
+          strokeWidth="3"
+          strokeLinecap="round"
+          opacity="0.5"
+        />
+      </svg>
+    </PreviewFrame>
+  );
+}
+
+function MiniWaterfallPreview() {
+  const shouldReduceMotion = useReducedMotion();
+  const steps = [
+    { label: "DNS", start: 0, duration: 28, color: "var(--chart-2)" },
+    { label: "TLS", start: 28, duration: 42, color: "var(--chart-4)" },
+    { label: "TTFB", start: 70, duration: 186, color: "var(--chart-3)" },
+    { label: "HTML", start: 256, duration: 94, color: "var(--chart-2)" },
+    { label: "JS", start: 350, duration: 224, color: "var(--chart-1)" },
+  ];
+  const totalTime = 752;
+  const lx = 70;
+  const bw = 220;
+  const rPitch = 24;
+  const topY = 18;
+  const barH = 14;
 
   return (
-    <PreviewFrame icon={<Radio className="size-3.5" />} label="Realtime">
+    <PreviewFrame icon={<AlignLeft className="size-3.5" />} label="Waterfall">
+      <svg viewBox="0 0 320 160" className="size-full" aria-hidden="true">
+        {steps.map((step, i) => {
+          const bx = lx + (step.start / totalTime) * bw;
+          const bWidth = Math.max(4, (step.duration / totalTime) * bw);
+          const by = topY + i * rPitch;
+          return (
+            <motion.g
+              // biome-ignore lint/suspicious/noArrayIndexKey: fixed preview steps
+              key={i}
+              style={{ color: step.color }}
+            >
+              <rect
+                x={lx}
+                y={by}
+                width={bw}
+                height={barH}
+                rx={barH / 2}
+                fill="var(--muted)"
+                fillOpacity="0.4"
+              />
+              <motion.rect
+                x={bx}
+                y={by}
+                width={bWidth}
+                height={barH}
+                rx={barH / 2}
+                fill="currentColor"
+                initial={shouldReduceMotion ? false : { scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{
+                  delay: i * 0.09,
+                  duration: 0.55,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                style={{ transformOrigin: `${bx}px ${by}px` }}
+              />
+              <text
+                x={lx - 4}
+                y={by + barH / 2 + 1}
+                textAnchor="end"
+                dominantBaseline="middle"
+                fill="var(--muted-foreground)"
+                className="text-[9px] font-medium"
+              >
+                {step.label}
+              </text>
+            </motion.g>
+          );
+        })}
+        {/* LCP marker */}
+        <line
+          x1={lx + (256 / totalTime) * bw}
+          x2={lx + (256 / totalTime) * bw}
+          y1={topY - 4}
+          y2={topY + steps.length * rPitch - 6}
+          stroke="var(--foreground)"
+          strokeWidth="1.5"
+          strokeDasharray="3 4"
+          opacity="0.45"
+        />
+      </svg>
+    </PreviewFrame>
+  );
+}
+
+function MiniThresholdBandPreview() {
+  const shouldReduceMotion = useReducedMotion();
+  const bands = [
+    { color: "var(--chart-2)", fraction: 0.42 },
+    { color: "oklch(0.75 0.16 70)", fraction: 0.25 },
+    { color: "var(--destructive)", fraction: 0.33 },
+  ];
+  const bx = 14;
+  const bw = 292;
+  const by = 68;
+  const bh = 26;
+  const value = 0.6;
+  const markerX = bx + value * bw;
+  let offsetX = 0;
+
+  return (
+    <PreviewFrame
+      icon={<SlidersHorizontal className="size-3.5" />}
+      label="Band"
+    >
+      <svg viewBox="0 0 320 150" className="size-full" aria-hidden="true">
+        {bands.map((band, bi) => {
+          const segW = band.fraction * bw;
+          const rx = bx + offsetX;
+          offsetX += segW;
+          return (
+            <motion.rect
+              // biome-ignore lint/suspicious/noArrayIndexKey: fixed preview bands
+              key={bi}
+              x={rx}
+              y={by}
+              width={segW}
+              height={bh}
+              rx={bi === 0 ? bh / 2 : 0}
+              fill={band.color}
+              fillOpacity={bi === 1 ? 0.55 : bi === 2 ? 0.45 : 0.65}
+              initial={shouldReduceMotion ? false : { scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{
+                delay: bi * 0.12,
+                duration: 0.55,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              style={{ transformOrigin: `${rx}px ${by}px` }}
+            />
+          );
+        })}
+        {/* Last band right-rounded end */}
+        <rect
+          x={bx + bw - 13}
+          y={by}
+          width={13}
+          height={bh}
+          rx={bh / 2}
+          fill="var(--destructive)"
+          fillOpacity="0.45"
+        />
+
+        {/* Labels */}
+        <text
+          x={bx + bands[0].fraction * bw * 0.5}
+          y={by - 9}
+          textAnchor="middle"
+          fill="var(--chart-2)"
+          fillOpacity="0.8"
+          className="text-[9px] font-semibold"
+        >
+          Good
+        </text>
+        <text
+          x={bx + (bands[0].fraction + bands[1].fraction * 0.5) * bw}
+          y={by - 9}
+          textAnchor="middle"
+          fill="oklch(0.75 0.16 70)"
+          fillOpacity="0.8"
+          className="text-[9px] font-semibold"
+        >
+          Needs work
+        </text>
+        <text
+          x={
+            bx +
+            (bands[0].fraction + bands[1].fraction + bands[2].fraction * 0.5) *
+              bw
+          }
+          y={by - 9}
+          textAnchor="middle"
+          fill="var(--destructive)"
+          fillOpacity="0.8"
+          className="text-[9px] font-semibold"
+        >
+          Poor
+        </text>
+
+        {/* Marker */}
+        <motion.g
+          initial={shouldReduceMotion ? false : { x: bx }}
+          animate={{ x: markerX }}
+          transition={{ delay: 0.5, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <line
+            x1="0"
+            x2="0"
+            y1={by - 3}
+            y2={by + bh + 3}
+            stroke="var(--foreground)"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+          <polygon
+            points="0,-4 4,0 0,4 -4,0"
+            transform={`translate(0 ${by - 6})`}
+            fill="var(--foreground)"
+          />
+          <text
+            x="0"
+            y={by + bh + 16}
+            textAnchor="middle"
+            fill="var(--foreground)"
+            className="text-[10px] font-semibold"
+          >
+            2.8s
+          </text>
+        </motion.g>
+      </svg>
+    </PreviewFrame>
+  );
+}
+
+function MiniMatrixPreview() {
+  const shouldReduceMotion = useReducedMotion();
+  const points = [
+    { px: 102, py: 54, color: "var(--chart-2)" },
+    { px: 168, py: 46, color: "var(--chart-2)" },
+    { px: 96, py: 108, color: "var(--chart-4)" },
+    { px: 212, py: 68, color: "var(--chart-3)" },
+    { px: 222, py: 118, color: "var(--destructive)" },
+    { px: 118, py: 78, color: "var(--chart-2)" },
+  ];
+  const midX = 160;
+  const midY = 90;
+  const gridX = 44;
+  const gridY = 28;
+  const gridW = 232;
+  const gridH = 124;
+
+  return (
+    <PreviewFrame icon={<Target className="size-3.5" />} label="Matrix">
+      <svg viewBox="0 0 320 160" className="size-full" aria-hidden="true">
+        {/* Quadrant fills */}
+        <rect
+          x={gridX}
+          y={gridY}
+          width={gridW / 2}
+          height={gridH / 2}
+          fill="var(--chart-2)"
+          fillOpacity="0.04"
+        />
+        <rect
+          x={midX}
+          y={gridY}
+          width={gridW / 2}
+          height={gridH / 2}
+          fill="var(--chart-3)"
+          fillOpacity="0.04"
+        />
+        <rect
+          x={gridX}
+          y={midY}
+          width={gridW / 2}
+          height={gridH / 2}
+          fill="var(--muted-foreground)"
+          fillOpacity="0.025"
+        />
+        <rect
+          x={midX}
+          y={midY}
+          width={gridW / 2}
+          height={gridH / 2}
+          fill="var(--destructive)"
+          fillOpacity="0.03"
+        />
+        {/* Axis lines */}
+        <line
+          x1={midX}
+          x2={midX}
+          y1={gridY}
+          y2={gridY + gridH}
+          stroke="var(--border)"
+          strokeDasharray="4 5"
+          opacity="0.6"
+        />
+        <line
+          x1={gridX}
+          x2={gridX + gridW}
+          y1={midY}
+          y2={midY}
+          stroke="var(--border)"
+          strokeDasharray="4 5"
+          opacity="0.6"
+        />
+        <rect
+          x={gridX}
+          y={gridY}
+          width={gridW}
+          height={gridH}
+          fill="none"
+          stroke="var(--border)"
+          opacity="0.45"
+        />
+        {/* Corner labels */}
+        <text
+          x={gridX + 6}
+          y={gridY + 14}
+          fill="var(--chart-2)"
+          fillOpacity="0.55"
+          className="text-[8.5px] font-semibold"
+        >
+          Quick Wins
+        </text>
+        <text
+          x={gridX + gridW - 6}
+          y={gridY + 14}
+          textAnchor="end"
+          fill="var(--chart-3)"
+          fillOpacity="0.55"
+          className="text-[8.5px] font-semibold"
+        >
+          Strategic
+        </text>
+        {/* Points */}
+        {points.map((p, i) => (
+          <motion.circle
+            // biome-ignore lint/suspicious/noArrayIndexKey: fixed preview points
+            key={i}
+            cx={p.px}
+            cy={p.py}
+            r="6"
+            fill={p.color}
+            fillOpacity="0.85"
+            stroke="var(--background)"
+            strokeWidth="1.5"
+            initial={shouldReduceMotion ? false : { scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{
+              delay: 0.1 + i * 0.07,
+              type: "spring",
+              stiffness: 260,
+              damping: 18,
+            }}
+            style={{ transformOrigin: `${p.px}px ${p.py}px` }}
+          />
+        ))}
+      </svg>
+    </PreviewFrame>
+  );
+}
+
+function MiniTreemapPreview() {
+  const shouldReduceMotion = useReducedMotion();
+  const tiles = [
+    { x: 0, y: 0, w: 168, h: 130, color: "var(--chart-1)", label: "JS" },
+    { x: 168, y: 0, w: 100, h: 76, color: "var(--chart-2)", label: "Img" },
+    { x: 168, y: 76, w: 100, h: 54, color: "var(--chart-4)", label: "CSS" },
+    { x: 268, y: 0, w: 52, h: 80, color: "var(--chart-3)", label: "" },
+    {
+      x: 268,
+      y: 80,
+      w: 52,
+      h: 50,
+      color: "var(--muted-foreground)",
+      label: "",
+    },
+  ];
+  const gap = 2;
+
+  return (
+    <PreviewFrame
+      icon={<LayoutDashboard className="size-3.5" />}
+      label="Treemap"
+    >
+      <svg viewBox="0 0 320 140" className="size-full" aria-hidden="true">
+        <defs>
+          {tiles.map((tile, i) => (
+            <radialGradient
+              // biome-ignore lint/suspicious/noArrayIndexKey: fixed preview tiles
+              key={i}
+              id={`mini-treemap-grad-${i}`}
+              cx="30%"
+              cy="28%"
+              r="80%"
+            >
+              <stop
+                offset="0%"
+                stopColor={`color-mix(in oklab, ${tile.color} 55%, white)`}
+              />
+              <stop offset="60%" stopColor={tile.color} />
+              <stop
+                offset="100%"
+                stopColor={`color-mix(in oklab, ${tile.color} 70%, black)`}
+              />
+            </radialGradient>
+          ))}
+        </defs>
+        {tiles.map((tile, i) => {
+          const rx = tile.x + gap / 2;
+          const ry = tile.y + gap / 2;
+          const rw = tile.w - gap;
+          const rh = tile.h - gap;
+          const cx = rx + rw / 2;
+          const cy = ry + rh / 2;
+          return (
+            <motion.g
+              // biome-ignore lint/suspicious/noArrayIndexKey: fixed preview tiles
+              key={i}
+              style={{ transformOrigin: `${cx}px ${cy}px` }}
+              initial={shouldReduceMotion ? false : { scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{
+                delay: i * 0.06,
+                type: "spring",
+                stiffness: 200,
+                damping: 20,
+              }}
+            >
+              <rect
+                x={rx}
+                y={ry}
+                width={rw}
+                height={rh}
+                rx="5"
+                fill={`url(#mini-treemap-grad-${i})`}
+                fillOpacity="0.9"
+              />
+              {tile.label ? (
+                <text
+                  x={cx}
+                  y={cy + 4}
+                  textAnchor="middle"
+                  fill="white"
+                  fillOpacity="0.88"
+                  className="text-[11px] font-semibold"
+                >
+                  {tile.label}
+                </text>
+              ) : null}
+            </motion.g>
+          );
+        })}
+      </svg>
+    </PreviewFrame>
+  );
+}
+
+function MiniRadarPreview() {
+  const shouldReduceMotion = useReducedMotion();
+  const cx = 160;
+  const cy = 80;
+  const maxR = 60;
+  const rings = 4;
+  const n = 4;
+  const values = [0.92, 0.98, 0.91, 0.87];
+  const ringRadii = Array.from(
+    { length: rings },
+    (_, ring) => ((ring + 1) / rings) * maxR,
+  );
+  const spokeAngles = Array.from(
+    { length: n },
+    (_, i) => -Math.PI / 2 + (2 * Math.PI * i) / n,
+  );
+
+  function poly(vals: number[], r: number) {
+    return `${vals
+      .map((v, i) => {
+        const angle = -Math.PI / 2 + (2 * Math.PI * i) / n;
+        const radius = typeof v === "number" ? v * r : r;
+        const x = cx + radius * Math.cos(angle);
+        const y = cy + radius * Math.sin(angle);
+        return `${i === 0 ? "M" : "L"} ${x.toFixed(1)} ${y.toFixed(1)}`;
+      })
+      .join(" ")} Z`;
+  }
+
+  const gridPoly = (r: number) => poly(Array(n).fill(1), r);
+
+  return (
+    <PreviewFrame icon={<Radar className="size-3.5" />} label="Radar">
       <svg
         viewBox="0 0 320 160"
         className="size-full text-chart-2"
         aria-hidden="true"
       >
+        <defs>
+          <linearGradient id="mini-radar-fill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="currentColor" stopOpacity="0.28" />
+            <stop offset="100%" stopColor="currentColor" stopOpacity="0.06" />
+          </linearGradient>
+        </defs>
+        {/* Grid rings */}
+        {ringRadii.map((r) => (
+          <path
+            key={`ring-${r}`}
+            d={gridPoly(r)}
+            fill="none"
+            stroke="var(--border)"
+            strokeWidth="1"
+            opacity={r === maxR ? 0.6 : 0.35}
+          />
+        ))}
+        {/* Spokes */}
+        {spokeAngles.map((angle) => {
+          return (
+            <line
+              key={`spoke-${angle.toFixed(3)}`}
+              x1={cx}
+              y1={cy}
+              x2={cx + maxR * Math.cos(angle)}
+              y2={cy + maxR * Math.sin(angle)}
+              stroke="var(--border)"
+              strokeWidth="1"
+              opacity="0.4"
+            />
+          );
+        })}
+        {/* Fill */}
         <motion.path
-          d="M24 118 C52 118 56 56 84 72 C112 88 108 96 128 88 C152 78 144 36 172 46 C198 56 190 82 216 66 C244 50 238 34 260 36 C284 38 286 92 306 74"
+          d={poly(values, maxR)}
+          fill="url(#mini-radar-fill)"
+          initial={shouldReduceMotion ? false : { scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+          style={{ transformOrigin: `${cx}px ${cy}px` }}
+        />
+        {/* Stroke */}
+        <motion.path
+          d={poly(values, maxR)}
           fill="none"
           stroke="currentColor"
-          strokeWidth="4"
+          strokeWidth="2.5"
           strokeLinecap="round"
           strokeLinejoin="round"
-          initial={{ pathLength: 0 }}
+          initial={shouldReduceMotion ? false : { pathLength: 0 }}
           animate={{ pathLength: 1 }}
-          transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
         />
-        {pulses.map((point, index) => (
-          <g key={`${point.x}-${point.y}`}>
+        {/* Vertex dots */}
+        {values.map((v, i) => {
+          const angle = -Math.PI / 2 + (2 * Math.PI * i) / n;
+          const vx = cx + v * maxR * Math.cos(angle);
+          const vy = cy + v * maxR * Math.sin(angle);
+          return (
             <motion.circle
-              cx={point.x}
-              cy={point.y}
+              // biome-ignore lint/suspicious/noArrayIndexKey: fixed preview vertices
+              key={i}
+              cx={vx}
+              cy={vy}
               r="4"
               fill="currentColor"
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.18 + index * 0.08, duration: 0.2 }}
-            />
-            <motion.circle
-              cx={point.x}
-              cy={point.y}
-              r="4"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              initial={{ r: 4, opacity: 0.3 }}
-              animate={{ r: [4, 13, 4], opacity: [0.25, 0, 0.25] }}
+              stroke="var(--background)"
+              strokeWidth="1.5"
+              initial={shouldReduceMotion ? false : { scale: 0 }}
+              animate={{ scale: 1 }}
               transition={{
-                delay: index * 0.1,
-                duration: 1.8,
-                repeat: Number.POSITIVE_INFINITY,
-                ease: "easeInOut",
+                delay: 0.55 + i * 0.07,
+                type: "spring",
+                stiffness: 260,
+                damping: 18,
               }}
+              style={{ transformOrigin: `${vx}px ${vy}px` }}
             />
-          </g>
-        ))}
+          );
+        })}
       </svg>
     </PreviewFrame>
   );
@@ -1333,40 +2385,5 @@ function ActivePoint({ cx, cy }: { cx: number; cy: number }) {
         strokeWidth="1.5"
       />
     </g>
-  );
-}
-
-function FloatingLabel({
-  x,
-  y,
-  label,
-}: {
-  x: number;
-  y: number;
-  label: string;
-}) {
-  return (
-    <motion.g
-      initial={{ opacity: 0, y: 4 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.55, duration: 0.2 }}
-    >
-      <rect
-        x={x}
-        y={y}
-        width="50"
-        height="24"
-        rx="12"
-        className="fill-background stroke-border"
-      />
-      <text
-        x={x + 25}
-        y={y + 16}
-        textAnchor="middle"
-        className="fill-foreground text-[10px] font-semibold"
-      >
-        {label}
-      </text>
-    </motion.g>
   );
 }

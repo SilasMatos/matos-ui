@@ -1,0 +1,167 @@
+---
+title: Sheet Panel
+description: An animated side panel (drawer) for filters, details, settings and quick edits — with a soft overlay, a spring entrance and sections that reveal in sequence.
+---
+
+<ComponentPreview name="sheet-panel-demo" chromeless align="start" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/sheet-panel.json" />
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the following dependencies:</Step>
+
+<CodeBlockCommand command="npm install @base-ui/react class-variance-authority framer-motion lucide-react" />
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="sheet-panel" title="components/matos-ui/sheet-panel.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import {
+  SheetPanel,
+  SheetPanelTrigger,
+  SheetPanelContent,
+  SheetPanelHeader,
+  SheetPanelTitle,
+  SheetPanelDescription,
+  SheetPanelBody,
+  SheetPanelSection,
+  SheetPanelFooter,
+  SheetPanelClose
+} from '@/components/matos-ui/sheet-panel'
+```
+
+```tsx
+<SheetPanel>
+  <SheetPanelTrigger>Open</SheetPanelTrigger>
+  <SheetPanelContent side="right" size="md">
+    <SheetPanelHeader>
+      <SheetPanelTitle>Filters</SheetPanelTitle>
+      <SheetPanelDescription>Refine the results.</SheetPanelDescription>
+    </SheetPanelHeader>
+    <SheetPanelBody>
+      <SheetPanelSection title="Status">{/* ... */}</SheetPanelSection>
+    </SheetPanelBody>
+    <SheetPanelFooter>
+      <SheetPanelClose>Cancel</SheetPanelClose>
+      <SheetPanelClose>Apply</SheetPanelClose>
+    </SheetPanelFooter>
+  </SheetPanelContent>
+</SheetPanel>
+```
+
+Built on Base UI's Dialog, so focus trapping, scroll locking, the escape key and
+outside-press dismissal all work out of the box.
+
+## When to use
+
+- **Filters** — let users refine a list without leaving the page.
+- **Details** — show the full record for a selected row.
+- **Settings** — group configuration away from the main view.
+- **Quick edit** — edit an item inline and save.
+
+For short confirmations or focused tasks, prefer a centered dialog.
+
+## Examples
+
+### Sides
+
+```tsx
+<SheetPanelContent side="left" />
+<SheetPanelContent side="right" />
+<SheetPanelContent side="top" />
+<SheetPanelContent side="bottom" />
+```
+
+### Sizes
+
+`size` maps to a max width for left/right panels, and a max height for
+top/bottom panels.
+
+```tsx
+<SheetPanelContent side="right" size="lg" />
+```
+
+### Controlled
+
+```tsx
+const [open, setOpen] = useState(false)
+
+<SheetPanel open={open} onOpenChange={setOpen}>
+  <SheetPanelContent>...</SheetPanelContent>
+</SheetPanel>
+```
+
+## Micro-interactions
+
+- **Soft overlay** — the backdrop fades in and blurs the page behind it.
+- **Spring entrance** — the panel slides in with a gentle overshoot easing, and
+  slides out cleanly on close.
+- **Sequenced sections** — `Header`, `Body` sections and `Footer` rise and
+  de-blur one after another via Framer Motion.
+- **Reduced motion** — all motion is disabled when the user prefers reduced motion.
+
+## Reference
+
+### SheetPanel
+
+Wraps Base UI `Dialog.Root`. Accepts `open`, `defaultOpen`, `onOpenChange` and
+`modal`.
+
+### SheetPanelContent
+
+| Prop               | Type                                      | Default   | Description                              |
+| ------------------ | ----------------------------------------- | --------- | ---------------------------------------- |
+| `side`             | `"right" \| "left" \| "top" \| "bottom"`  | `"right"` | Edge the panel slides in from.           |
+| `size`             | `"sm" \| "md" \| "lg" \| "xl"`            | `"md"`    | Max width (sides) or max height (top/bottom). |
+| `showClose`        | `boolean`                                 | `true`    | Render the built-in close button.        |
+| `backdropClassName`| `string`                                  | —         | Class override for the backdrop.         |
+| `contentClassName` | `string`                                  | —         | Class override for the inner content wrapper. |
+
+### Subcomponents
+
+| Component               | Description                                          |
+| ----------------------- | ---------------------------------------------------- |
+| `SheetPanelTrigger`     | Opens the panel (renders a button).                  |
+| `SheetPanelClose`       | Closes the panel (renders a button).                 |
+| `SheetPanelHeader`      | Sequenced header region.                             |
+| `SheetPanelTitle`       | Accessible title (`Dialog.Title`).                   |
+| `SheetPanelDescription` | Accessible description (`Dialog.Description`).       |
+| `SheetPanelBody`        | Scrollable region that sequences its own sections.   |
+| `SheetPanelSection`     | Titled, sequenced group of controls.                 |
+| `SheetPanelItem`        | Generic sequenced block.                             |
+| `SheetPanelFooter`      | Sequenced footer with a top divider for actions.     |
+
+Also exported: `sheetPanelPopupVariants` and `sheetPanelBackdropVariants`.
+
+## Best practices
+
+- Keep one primary action in the footer; make secondary actions less prominent.
+- Use `side="bottom"` on mobile for thumb-friendly reach.
+- Always include a `SheetPanelTitle` for screen readers, even if visually subtle.
+- Persist draft state and only commit on save for filters and quick edits.

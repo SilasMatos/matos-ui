@@ -256,22 +256,6 @@
       ]
     },
     {
-      "name": "interactive-bar-chart",
-      "type": "registry:ui",
-      "dependencies": [
-        "framer-motion",
-        "recharts",
-        "tailwind-merge",
-        "tailwind-variants"
-      ],
-      "files": [
-        {
-          "path": "src/registry/new-york-v4/ui/interactive-bar-chart.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
       "name": "allocation-performance-chart",
       "type": "registry:ui",
       "dependencies": [
@@ -283,22 +267,6 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/allocation-performance-chart.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "radial-metric-chart",
-      "type": "registry:ui",
-      "dependencies": [
-        "framer-motion",
-        "recharts",
-        "tailwind-merge",
-        "tailwind-variants"
-      ],
-      "files": [
-        {
-          "path": "src/registry/new-york-v4/ui/radial-metric-chart.tsx",
           "type": "registry:ui"
         }
       ]
@@ -316,6 +284,116 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/sparkline-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "signal-flow-chart",
+      "type": "registry:ui",
+      "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/signal-flow-chart.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "activity-heatmap-chart",
+      "type": "registry:ui",
+      "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/activity-heatmap-chart.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "candlestick-chart",
+      "type": "registry:ui",
+      "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/candlestick-chart.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "bubble-chart",
+      "type": "registry:ui",
+      "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/bubble-chart.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "activity-waveform-chart",
+      "type": "registry:ui",
+      "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/activity-waveform-chart.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "performance-waterfall-chart",
+      "type": "registry:ui",
+      "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/performance-waterfall-chart.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "threshold-band-chart",
+      "type": "registry:ui",
+      "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/threshold-band-chart.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "impact-priority-matrix",
+      "type": "registry:ui",
+      "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/impact-priority-matrix.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "resource-treemap-chart",
+      "type": "registry:ui",
+      "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/resource-treemap-chart.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "score-radar-chart",
+      "type": "registry:ui",
+      "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/score-radar-chart.tsx",
           "type": "registry:ui"
         }
       ]
@@ -518,6 +596,49 @@
       ]
     },
     {
+      "name": "otp-input",
+      "type": "registry:ui",
+      "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "registryDependencies": ["field"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/otp-input.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "popover-card",
+      "type": "registry:ui",
+      "dependencies": [
+        "@base-ui/react",
+        "class-variance-authority",
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/popover-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "sheet-panel",
+      "type": "registry:ui",
+      "dependencies": [
+        "@base-ui/react",
+        "class-variance-authority",
+        "framer-motion",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/sheet-panel.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "button-demo",
       "type": "registry:example",
       "registryDependencies": ["button"],
@@ -694,17 +815,6 @@
       ]
     },
     {
-      "name": "interactive-bar-chart-demo",
-      "type": "registry:example",
-      "registryDependencies": ["interactive-bar-chart"],
-      "files": [
-        {
-          "path": "src/registry/new-york-v4/examples/interactive-bar-chart-demo.tsx",
-          "type": "registry:example"
-        }
-      ]
-    },
-    {
       "name": "allocation-performance-chart-demo",
       "type": "registry:example",
       "registryDependencies": ["allocation-performance-chart"],
@@ -716,23 +826,122 @@
       ]
     },
     {
-      "name": "radial-metric-chart-demo",
-      "type": "registry:example",
-      "registryDependencies": ["radial-metric-chart"],
-      "files": [
-        {
-          "path": "src/registry/new-york-v4/examples/radial-metric-chart-demo.tsx",
-          "type": "registry:example"
-        }
-      ]
-    },
-    {
       "name": "sparkline-card-demo",
       "type": "registry:example",
       "registryDependencies": ["sparkline-card"],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/sparkline-card-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "signal-flow-chart-demo",
+      "type": "registry:example",
+      "registryDependencies": ["signal-flow-chart"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/signal-flow-chart-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "activity-heatmap-chart-demo",
+      "type": "registry:example",
+      "registryDependencies": ["activity-heatmap-chart"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/activity-heatmap-chart-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "candlestick-chart-demo",
+      "type": "registry:example",
+      "registryDependencies": ["candlestick-chart"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/candlestick-chart-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "bubble-chart-demo",
+      "type": "registry:example",
+      "registryDependencies": ["bubble-chart"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/bubble-chart-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "activity-waveform-chart-demo",
+      "type": "registry:example",
+      "registryDependencies": ["activity-waveform-chart"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/activity-waveform-chart-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "performance-waterfall-chart-demo",
+      "type": "registry:example",
+      "registryDependencies": ["performance-waterfall-chart"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/performance-waterfall-chart-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "threshold-band-chart-demo",
+      "type": "registry:example",
+      "registryDependencies": ["threshold-band-chart"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/threshold-band-chart-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "impact-priority-matrix-demo",
+      "type": "registry:example",
+      "registryDependencies": ["impact-priority-matrix"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/impact-priority-matrix-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "resource-treemap-chart-demo",
+      "type": "registry:example",
+      "registryDependencies": ["resource-treemap-chart"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/resource-treemap-chart-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "score-radar-chart-demo",
+      "type": "registry:example",
+      "registryDependencies": ["score-radar-chart"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/score-radar-chart-demo.tsx",
           "type": "registry:example"
         }
       ]
@@ -888,6 +1097,41 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/form-with-zod-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "otp-input-demo",
+      "type": "registry:example",
+      "registryDependencies": ["otp-input"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/otp-input-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "popover-card-demo",
+      "type": "registry:example",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["popover-card"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/popover-card-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "sheet-panel-demo",
+      "type": "registry:example",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["sheet-panel"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/sheet-panel-demo.tsx",
           "type": "registry:example"
         }
       ]

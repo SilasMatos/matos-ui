@@ -1,0 +1,149 @@
+---
+title: OTP Input
+description: A polished one-time-password input with animated cells, a pulsing caret, spring-loaded digits, success glow and error shake.
+---
+
+<ComponentPreview name="otp-input-demo" chromeless align="start" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/otp-input.json" />
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the following dependencies:</Step>
+
+<CodeBlockCommand command="npm install framer-motion tailwind-merge tailwind-variants" />
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="otp-input" title="components/matos-ui/otp-input.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { OtpInput } from '@/components/matos-ui/otp-input'
+```
+
+```tsx
+<OtpInput
+  label="Verification code"
+  length={6}
+  onComplete={(code) => verify(code)}
+/>
+```
+
+## When to use
+
+Use the OTP Input for short, fixed-length codes: two-factor authentication, email
+or SMS verification, and PIN entry. It behaves like a single field — typing,
+pasting, autofill (`autocomplete="one-time-code"`) and keyboard navigation all
+work out of the box — while rendering one animated cell per character.
+
+## Examples
+
+### Controlled with validation
+
+Drive the value yourself and react to `onComplete` to verify the code. Setting
+`error` turns the cells destructive and triggers a subtle shake.
+
+```tsx
+const [value, setValue] = useState('')
+const [error, setError] = useState<string>()
+
+<OtpInput
+  label="Verification code"
+  value={value}
+  onChange={setValue}
+  error={error}
+  onComplete={(code) => {
+    if (code !== '123456') setError('Invalid code.')
+  }}
+/>
+```
+
+### Grouping
+
+Use `groupSize` to split the cells with separators (for example `XXX-XXX`).
+
+```tsx
+<OtpInput length={6} groupSize={3} />
+```
+
+### Masked PIN
+
+Hide the characters behind dots for sensitive PINs.
+
+```tsx
+<OtpInput type="numeric" mask length={4} />
+```
+
+### Alphanumeric
+
+Accept letters and numbers for invite or backup codes.
+
+```tsx
+<OtpInput type="alphanumeric" length={8} />
+```
+
+## States & micro-interactions
+
+- **Entrance** — cells fade and rise into place with a staggered delay.
+- **Active cell** — the focused empty cell lifts slightly, gains a ring and shows
+  a pulsing caret.
+- **Digit entry** — each character pops in with a spring and a soft blur, and
+  animates out on delete.
+- **Complete** — a `chart-2` glow sweeps over the group when every cell is filled.
+- **Error** — destructive borders plus a horizontal shake on the whole group.
+- **Reduced motion** — all motion is disabled when the user prefers reduced motion.
+
+## Reference
+
+### OtpInput Props
+
+| Prop          | Type                                          | Default          | Description                                            |
+| ------------- | --------------------------------------------- | ---------------- | ----------------------------------------------------- |
+| `length`      | `number`                                      | `6`              | Number of cells / characters.                         |
+| `value`       | `string`                                      | —                | Controlled value.                                     |
+| `defaultValue`| `string`                                      | `""`             | Initial value when uncontrolled.                      |
+| `onChange`    | `(value: string) => void`                     | —                | Called whenever the value changes.                    |
+| `onComplete`  | `(value: string) => void`                     | —                | Called once when all cells are filled.                |
+| `type`        | `"numeric" \| "alphanumeric" \| "text"`       | `"numeric"`      | Allowed characters and input mode.                    |
+| `mask`        | `boolean`                                      | `false`          | Render dots instead of the typed characters.          |
+| `groupSize`   | `number`                                       | —                | Insert a separator after every N cells.               |
+| `size`        | `"sm" \| "md" \| "lg"`                         | `"md"`           | Cell size.                                             |
+| `variant`     | `"default" \| "subtle"`                        | `"default"`      | Visual style of the cells.                             |
+| `label`       | `ReactNode`                                    | —                | Field label.                                           |
+| `description` | `ReactNode`                                    | —                | Helper text below the field.                           |
+| `error`       | `ReactNode`                                    | —                | Error message; marks the field invalid and shakes it. |
+| `invalid`     | `boolean`                                      | `false`          | Force the invalid state without a message.            |
+| `disabled`    | `boolean`                                      | `false`          | Disable the input.                                     |
+
+Also exported: `otpInputVariants` and the `OtpInputProps` / `OtpInputType` types.
+
+## Best practices
+
+- Keep codes short (4–8 characters); OTP is not meant for long secrets.
+- Prefer `type="numeric"` for SMS/email codes so mobile keyboards show digits.
+- Always provide a `label` (or rely on the built-in `aria-label`) for screen readers.
+- Surface verification results through `error` / `description` text, not color alone.

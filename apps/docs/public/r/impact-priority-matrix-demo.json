@@ -1,0 +1,16 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "impact-priority-matrix-demo",
+  "registryDependencies": [
+    "impact-priority-matrix"
+  ],
+  "files": [
+    {
+      "path": "components/matos-ui/examples/impact-priority-matrix-demo.tsx",
+      "content": "\"use client\";\n\nimport { ImpactPriorityMatrix } from \"@/components/matos-ui/impact-priority-matrix\";\n\nexport default function ImpactPriorityMatrixDemo() {\n  return (\n    <div className=\"flex w-full justify-center\">\n      <ImpactPriorityMatrix\n        title=\"Optimization Opportunities\"\n        description=\"Web performance improvements ranked by effort vs impact\"\n      />\n    </div>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/impact-priority-matrix-demo.tsx"
+    }
+  ],
+  "type": "registry:example"
+}

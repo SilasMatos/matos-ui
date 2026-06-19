@@ -1,0 +1,177 @@
+---
+title: Popover Card
+description: A premium hover/focus popover for quick previews — users, files and extra details — with blur entrance, an animated arrow and staggered content.
+---
+
+<ComponentPreview name="popover-card-demo" chromeless align="start" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/popover-card.json" />
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the following dependencies:</Step>
+
+<CodeBlockCommand command="npm install @base-ui/react class-variance-authority framer-motion" />
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="popover-card" title="components/matos-ui/popover-card.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import {
+  PopoverCard,
+  PopoverCardTrigger,
+  PopoverCardContent,
+  PopoverCardHeader,
+  PopoverCardTitle,
+  PopoverCardDescription,
+  PopoverCardBody,
+  PopoverCardFooter,
+  PopoverCardItem
+} from '@/components/matos-ui/popover-card'
+```
+
+```tsx
+<PopoverCard>
+  <PopoverCardTrigger underline>@sofia</PopoverCardTrigger>
+  <PopoverCardContent side="top">
+    <PopoverCardHeader>
+      <PopoverCardTitle>Sofia Ramos</PopoverCardTitle>
+      <PopoverCardDescription>Product Designer</PopoverCardDescription>
+    </PopoverCardHeader>
+    <PopoverCardBody>Crafting the design system.</PopoverCardBody>
+  </PopoverCardContent>
+</PopoverCard>
+```
+
+The card opens on hover and on keyboard focus, so it works for pointer and
+keyboard users alike. It is built on Base UI's Preview Card, so positioning,
+collision handling, portalling and focus management come for free.
+
+## When to use
+
+Reach for the Popover Card to surface **non-essential, contextual** information
+without navigating away:
+
+- **User preview** — avatar, name, role and quick actions on a mention.
+- **File preview** — type, size and metadata on a file chip.
+- **Quick details** — definitions, specs or a summary behind a link.
+- **Extra info** — anything that enriches the current view on demand.
+
+For information the user must act on, use a dialog or popover with a click
+trigger instead.
+
+## Examples
+
+### Custom trigger
+
+The trigger renders an `<a>` by default. Use the `render` prop to turn any
+element (a button, an avatar) into the trigger.
+
+```tsx
+<PopoverCardTrigger
+  render={<button type="button" className="rounded-lg border px-2 py-0.5" />}
+>
+  report.pdf
+</PopoverCardTrigger>
+```
+
+### Placement & size
+
+```tsx
+<PopoverCardContent side="right" align="start" size="lg" sideOffset={12}>
+  ...
+</PopoverCardContent>
+```
+
+### Delays
+
+`delay` and `closeDelay` live on the trigger (in milliseconds).
+
+```tsx
+<PopoverCardTrigger delay={200} closeDelay={120}>
+  Hover me
+</PopoverCardTrigger>
+```
+
+## Micro-interactions
+
+- **Blur entrance** — the popup fades in from a slight scale and blur, and blurs
+  back out on close (driven by Base UI's starting/ending styles).
+- **Animated arrow** — the arrow rotates with a transition as the card flips to
+  the opposite side on collision, and scales in with the popup.
+- **Staggered content** — `Header`, `Body`, `Footer` and `Item` rise and
+  de-blur one after another via Framer Motion.
+- **Trigger lift** — the trigger nudges up on hover and while open.
+- **Reduced motion** — all motion is disabled when the user prefers reduced motion.
+
+## Reference
+
+### PopoverCard
+
+Wraps Base UI `PreviewCard.Root`. Accepts `open`, `defaultOpen` and
+`onOpenChange` for controlled usage.
+
+### PopoverCardTrigger
+
+| Prop         | Type      | Default | Description                                          |
+| ------------ | --------- | ------- | ---------------------------------------------------- |
+| `render`     | `element` | `<a>`   | Render the trigger as a different element.            |
+| `underline`  | `boolean` | `false` | Dotted underline styling for inline text triggers.   |
+| `delay`      | `number`  | `600`   | Time to wait before opening (ms).                    |
+| `closeDelay` | `number`  | `300`   | Time to wait before closing (ms).                    |
+
+### PopoverCardContent
+
+| Prop          | Type                                    | Default    | Description                                  |
+| ------------- | --------------------------------------- | ---------- | -------------------------------------------- |
+| `size`        | `"sm" \| "md" \| "lg"`                  | `"md"`     | Width of the card.                           |
+| `side`        | `"top" \| "right" \| "bottom" \| "left"`| `"bottom"` | Preferred side relative to the trigger.      |
+| `align`       | `"start" \| "center" \| "end"`          | `"center"` | Alignment along the side.                    |
+| `sideOffset`  | `number`                                | `10`       | Gap between trigger and card.                |
+| `alignOffset` | `number`                                | `0`        | Offset along the alignment axis.             |
+| `showArrow`   | `boolean`                               | `true`     | Render the animated arrow.                   |
+
+### Layout subcomponents
+
+| Component                | Description                                         |
+| ------------------------ | --------------------------------------------------- |
+| `PopoverCardHeader`      | Staggered row, ideal for an avatar + title block.   |
+| `PopoverCardTitle`       | Primary label.                                      |
+| `PopoverCardDescription` | Muted secondary label.                              |
+| `PopoverCardBody`        | Staggered body text block.                          |
+| `PopoverCardItem`        | Generic staggered row for custom content.           |
+| `PopoverCardFooter`      | Staggered footer with a top divider for actions.    |
+
+Also exported: `popoverCardTriggerVariants` and `popoverCardPopupVariants`.
+
+## Best practices
+
+- Keep cards concise — they are a preview, not a full page.
+- Don't hide critical actions behind hover; mirror them elsewhere for touch users.
+- Provide accessible labels on icon-only action buttons inside the card.
+- Prefer `side="top"` for triggers near the bottom of the viewport.

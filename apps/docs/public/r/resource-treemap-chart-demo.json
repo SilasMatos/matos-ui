@@ -1,0 +1,16 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "resource-treemap-chart-demo",
+  "registryDependencies": [
+    "resource-treemap-chart"
+  ],
+  "files": [
+    {
+      "path": "components/matos-ui/examples/resource-treemap-chart-demo.tsx",
+      "content": "\"use client\";\n\nimport { ResourceTreemapChart } from \"@/components/matos-ui/resource-treemap-chart\";\n\nexport default function ResourceTreemapChartDemo() {\n  return (\n    <div className=\"flex w-full justify-center\">\n      <ResourceTreemapChart\n        title=\"Page Weight Breakdown\"\n        description=\"Total transferred bytes by resource category\"\n        data={[\n          { label: \"JavaScript\", value: 420, unit: \"KB\", tone: \"chart-1\" },\n          { label: \"Images\", value: 248, unit: \"KB\", tone: \"chart-2\" },\n          { label: \"CSS\", value: 112, unit: \"KB\", tone: \"chart-4\" },\n          { label: \"Fonts\", value: 68, unit: \"KB\", tone: \"chart-3\" },\n          { label: \"Other\", value: 32, unit: \"KB\", tone: \"muted-foreground\" },\n        ]}\n      />\n    </div>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/resource-treemap-chart-demo.tsx"
+    }
+  ],
+  "type": "registry:example"
+}
