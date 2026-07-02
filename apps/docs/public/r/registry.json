@@ -62,6 +62,23 @@
       ]
     },
     {
+      "name": "theme-toggler-button",
+      "type": "registry:ui",
+      "dependencies": [
+        "framer-motion",
+        "lucide-react",
+        "next-themes",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/theme-toggler-button.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "badge",
       "type": "registry:ui",
       "dependencies": [
@@ -767,6 +784,19 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/reactive-button-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "theme-toggler-button-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "theme-toggler-button"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/theme-toggler-button-demo.tsx",
           "type": "registry:example"
         }
       ]
