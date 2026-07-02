@@ -62,6 +62,29 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
   },
+  "theme-toggler-button": {
+    name: "theme-toggler-button",
+    type: "registry:ui",
+    registryDependencies: undefined,
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/theme-toggler-button.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/ui/theme-toggler-button.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
   badge: {
     name: "badge",
     type: "registry:ui",
@@ -1032,6 +1055,29 @@ export const Index: Record<string, any> = {
     component: React.lazy(async () => {
       const mod = await import(
         "@/registry/new-york-v4/examples/reactive-button-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "theme-toggler-button-demo": {
+    name: "theme-toggler-button-demo",
+    type: "registry:example",
+    registryDependencies: ["theme-toggler-button"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/theme-toggler-button-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/theme-toggler-button-demo.tsx"
       );
       const exportName =
         Object.keys(mod).find(

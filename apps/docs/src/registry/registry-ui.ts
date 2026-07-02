@@ -29,6 +29,23 @@ export const ui: Registry["items"] = [
     ],
   },
   {
+    name: "theme-toggler-button",
+    type: "registry:ui",
+    dependencies: [
+      "framer-motion",
+      "lucide-react",
+      "next-themes",
+      "tailwind-merge",
+      "tailwind-variants",
+    ],
+    files: [
+      {
+        path: "ui/theme-toggler-button.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
     name: "badge",
     type: "registry:ui",
     dependencies: ["tailwind-merge", "tailwind-variants"],

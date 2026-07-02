@@ -24,6 +24,17 @@ export const examples: Registry["items"] = [
     ],
   },
   {
+    name: "theme-toggler-button-demo",
+    type: "registry:example",
+    registryDependencies: ["theme-toggler-button"],
+    files: [
+      {
+        path: "examples/theme-toggler-button-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
     name: "badge-demo",
     type: "registry:example",
     registryDependencies: ["badge"],

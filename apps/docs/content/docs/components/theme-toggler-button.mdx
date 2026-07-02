@@ -1,0 +1,113 @@
+---
+title: Theme Toggler Button
+description: Icon button that switches theme with a full-page reveal animation, powered by the View Transitions API.
+---
+
+<ComponentPreview name="theme-toggler-button-demo" chromeless align="start" />
+
+## When To Use
+
+Use `ThemeTogglerButton` anywhere you need a light/dark (or light/dark/system) switch that feels like more than a plain icon swap. When the browser supports the View Transitions API, clicking the button plays a full-page reveal animation seeded at the button's own position; browsers without support (and users with reduced motion enabled) fall back to an instant theme change, so the component is safe to use everywhere.
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/theme-toggler-button.json" />
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the following dependencies:</Step>
+
+<CodeBlockCommand command="npm install framer-motion lucide-react next-themes tailwind-merge tailwind-variants" />
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource
+  name="theme-toggler-button"
+  title="components/matos-ui/theme-toggler-button.tsx"
+/>
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { ThemeTogglerButton } from "@/components/matos-ui/theme-toggler-button"
+
+<ThemeTogglerButton />
+```
+
+Requires a `ThemeProvider` from `next-themes` (with `attribute="class"`) somewhere above it in the tree.
+
+## Animation Variants
+
+`variant` controls the reveal animation played on the incoming theme:
+
+- `circle` — a circle expands outward from the button, revealing the new theme (default).
+- `circle-blur` — the same circle reveal, softened with a blur-to-sharp transition.
+- `iris` — a circle reveal with a spring overshoot, like a camera iris snapping into focus.
+- `polygon` — a diagonal wipe sweeps across the screen.
+- `slide` — a straight curtain wipe, axis-aligned to `direction`.
+- `fade` — a plain crossfade, also used automatically as the safe fallback.
+
+```tsx
+<ThemeTogglerButton variant="iris" />
+<ThemeTogglerButton variant="polygon" direction="rtl" />
+<ThemeTogglerButton variant="slide" direction="ttb" />
+```
+
+`direction` (`"ltr" | "rtl" | "ttb" | "btt"`) sets the sweep axis for `polygon` and `slide`, and the rotation direction of the icon swap. It has no visible effect on `circle`, `circle-blur`, `iris`, or `fade`, which always originate from the button itself.
+
+## Three-Way Toggle
+
+Pass `modes` to cycle through light, dark, and system instead of just light/dark. The icon switches to a monitor glyph while `system` is active.
+
+```tsx
+<ThemeTogglerButton modes={["light", "dark", "system"]} />
+```
+
+## Custom Icons
+
+Override any of the icons per mode:
+
+```tsx
+import { CloudMoon, CloudSun } from "lucide-react"
+
+<ThemeTogglerButton
+  icons={{ light: <CloudSun />, dark: <CloudMoon /> }}
+/>
+```
+
+## Reference
+
+### Props
+
+| Prop        | Type                                                                     | Default     |
+| ----------- | ------------------------------------------------------------------------- | ----------- |
+| `variant`   | `"circle" \| "circle-blur" \| "iris" \| "polygon" \| "slide" \| "fade"`     | `"circle"`  |
+| `size`      | `"sm" \| "md" \| "lg" \| "icon"`                                        | `"md"`      |
+| `direction` | `"ltr" \| "rtl" \| "ttb" \| "btt"`                                       | `"ltr"`     |
+| `modes`     | `("light" \| "dark" \| "system")[]`                                       | `["light", "dark"]` |
+| `duration`  | `number`                                                                   | `650`       |
+| `icons`     | `Partial<Record<"light" \| "dark" \| "system", ReactNode>>`               | -           |
+
+For icon-only buttons the component already sets an `aria-label` describing the next theme; pass your own `aria-label` to override it.
+
+Also exported: `themeTogglerButtonVariants`, `ThemeTogglerButtonVariant`, `ThemeTogglerButtonDirection`, `ThemeTogglerButtonMode`, and `ThemeTogglerButtonProps`.

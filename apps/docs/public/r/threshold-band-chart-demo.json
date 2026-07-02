@@ -7,7 +7,7 @@
   "files": [
     {
       "path": "components/matos-ui/examples/threshold-band-chart-demo.tsx",
-      "content": "\"use client\";\n\nimport { ThresholdBandChart } from \"@/components/matos-ui/threshold-band-chart\";\n\nexport default function ThresholdBandChartDemo() {\n  return (\n    <div className=\"flex w-full justify-center\">\n      <ThresholdBandChart\n        title=\"LCP Score\"\n        description=\"Largest Contentful Paint — measures perceived load speed\"\n        bands={[\n          { label: \"Good\", max: 2500, tone: \"chart-2\" },\n          { label: \"Needs improvement\", max: 4000, tone: \"oklch(0.75 0.16 70)\" },\n          { label: \"Poor\", tone: \"destructive\" },\n        ]}\n        value={2800}\n        unit=\"ms\"\n      />\n    </div>\n  );\n}\n",
+      "content": "\"use client\";\n\nimport { ThresholdBandChart } from \"@/components/matos-ui/threshold-band-chart\";\n\nexport default function ThresholdBandChartDemo() {\n  return (\n    <div className=\"flex w-full justify-center\">\n      <ThresholdBandChart\n        title=\"LCP Score\"\n        description=\"Largest Contentful Paint — measures perceived load speed\"\n        bands={[\n          { label: \"Good\", max: 2500, tone: \"chart-2\" },\n          {\n            label: \"Needs improvement\",\n            max: 4000,\n            tone: \"oklch(0.75 0.16 70)\",\n          },\n          { label: \"Poor\", tone: \"destructive\" },\n        ]}\n        value={2800}\n        unit=\"ms\"\n      />\n    </div>\n  );\n}\n",
       "type": "registry:example",
       "target": "components/matos-ui/examples/threshold-band-chart-demo.tsx"
     }
