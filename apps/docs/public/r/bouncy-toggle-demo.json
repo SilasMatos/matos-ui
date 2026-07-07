@@ -1,0 +1,16 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "bouncy-toggle-demo",
+  "registryDependencies": [
+    "bouncy-toggle"
+  ],
+  "files": [
+    {
+      "path": "components/matos-ui/examples/bouncy-toggle-demo.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport { BouncyToggle } from \"@/components/matos-ui/bouncy-toggle\";\n\nexport default function BouncyToggleDemo() {\n  const [wifi, setWifi] = useState(true);\n  const [sync, setSync] = useState(false);\n\n  return (\n    <div className=\"mx-auto w-full max-w-[300px] space-y-4 py-6\">\n      <div className=\"flex items-center justify-between rounded-xl border border-border bg-card px-4 py-3\">\n        <span className=\"text-sm font-medium\">Wi-Fi</span>\n        <BouncyToggle\n          aria-label=\"Wi-Fi\"\n          checked={wifi}\n          onCheckedChange={setWifi}\n        />\n      </div>\n      <div className=\"flex items-center justify-between rounded-xl border border-border bg-card px-4 py-3\">\n        <span className=\"text-sm font-medium\">Background sync</span>\n        <BouncyToggle\n          aria-label=\"Background sync\"\n          checked={sync}\n          onCheckedChange={setSync}\n        />\n      </div>\n    </div>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/bouncy-toggle-demo.tsx"
+    }
+  ],
+  "type": "registry:example"
+}

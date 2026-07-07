@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "bouncy-toggle",
+  "dependencies": [
+    "framer-motion",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "files": [
+    {
+      "path": "components/matos-ui/bouncy-toggle.tsx",
+      "content": "\"use client\";\n\nimport { motion } from \"framer-motion\";\nimport type { ComponentProps } from \"react\";\nimport { useCallback, useState } from \"react\";\nimport { twMerge } from \"tailwind-merge\";\nimport { tv, type VariantProps } from \"tailwind-variants\";\n\nexport const bouncyToggleVariants = tv({\n  base: [\n    \"relative inline-flex shrink-0 cursor-pointer items-center rounded-full p-1 outline-none transition-colors\",\n    \"focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background\",\n    \"disabled:cursor-not-allowed disabled:opacity-50\",\n  ],\n  variants: {\n    size: {\n      sm: \"h-6 w-11\",\n      md: \"h-7 w-[52px]\",\n      lg: \"h-8 w-[60px]\",\n    },\n  },\n  defaultVariants: {\n    size: \"md\",\n  },\n});\n\nconst knobSize: Record<string, string> = {\n  sm: \"size-4\",\n  md: \"size-5\",\n  lg: \"size-6\",\n};\n\nexport type BouncyToggleProps = Omit<\n  ComponentProps<\"button\">,\n  \"onChange\" | \"value\"\n> &\n  VariantProps<typeof bouncyToggleVariants> & {\n    checked?: boolean;\n    defaultChecked?: boolean;\n    onCheckedChange?: (checked: boolean) => void;\n    stiffness?: number;\n    damping?: number;\n  };\n\nexport function BouncyToggle({\n  className,\n  size = \"md\",\n  checked,\n  defaultChecked = false,\n  onCheckedChange,\n  disabled,\n  stiffness = 500,\n  damping = 15,\n  ...props\n}: BouncyToggleProps) {\n  const [internal, setInternal] = useState(defaultChecked);\n  const isOn = checked ?? internal;\n\n  const toggle = useCallback(() => {\n    const next = !isOn;\n    if (checked === undefined) {\n      setInternal(next);\n    }\n    onCheckedChange?.(next);\n  }, [checked, isOn, onCheckedChange]);\n\n  return (\n    <button\n      type=\"button\"\n      role=\"switch\"\n      aria-checked={isOn}\n      disabled={disabled}\n      onClick={toggle}\n      data-slot=\"bouncy-toggle\"\n      data-state={isOn ? \"checked\" : \"unchecked\"}\n      className={twMerge(\n        bouncyToggleVariants({ size }),\n        isOn ? \"bg-primary\" : \"bg-muted\",\n        className,\n      )}\n      {...props}\n    >\n      <motion.span\n        layout\n        transition={{ type: \"spring\", stiffness, damping, mass: 0.6 }}\n        className={twMerge(\n          \"rounded-full bg-background shadow-sm\",\n          knobSize[size ?? \"md\"],\n        )}\n        style={{ marginLeft: isOn ? \"auto\" : 0 }}\n        whileTap={{ scaleX: 1.25 }}\n      />\n    </button>\n  );\n}\n",
+      "type": "registry:ui",
+      "target": "components/matos-ui/bouncy-toggle.tsx"
+    }
+  ],
+  "type": "registry:ui"
+}

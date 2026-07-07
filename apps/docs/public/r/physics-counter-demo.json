@@ -1,0 +1,16 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "physics-counter-demo",
+  "registryDependencies": [
+    "physics-counter"
+  ],
+  "files": [
+    {
+      "path": "components/matos-ui/examples/physics-counter-demo.tsx",
+      "content": "\"use client\";\n\nimport { RefreshCw } from \"lucide-react\";\nimport { useState } from \"react\";\nimport { PhysicsCounter } from \"@/components/matos-ui/physics-counter\";\n\nexport default function PhysicsCounterDemo() {\n  const [value, setValue] = useState(1240);\n\n  return (\n    <div className=\"mx-auto flex w-full max-w-[320px] flex-col items-center gap-5 py-8\">\n      <div className=\"text-center\">\n        <p className=\"text-xs font-medium uppercase tracking-widest text-muted-foreground\">\n          Monthly revenue\n        </p>\n        <PhysicsCounter\n          value={value}\n          prefix=\"$\"\n          className=\"mt-2 text-foreground\"\n        />\n      </div>\n\n      <button\n        type=\"button\"\n        onClick={() => setValue(Math.round(500 + Math.random() * 9000))}\n        className=\"inline-flex items-center gap-2 rounded-lg border border-border bg-secondary px-3.5 py-2 text-sm font-medium text-foreground outline-none transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring\"\n      >\n        <RefreshCw className=\"size-4\" aria-hidden=\"true\" />\n        Randomize\n      </button>\n    </div>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/physics-counter-demo.tsx"
+    }
+  ],
+  "type": "registry:example"
+}

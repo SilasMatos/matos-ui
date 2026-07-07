@@ -1,6 +1,44 @@
 import type { Registry } from "shadcn/schema";
 
+const physicsDeps = ["framer-motion", "tailwind-merge", "tailwind-variants"];
+
 export const ui: Registry["items"] = [
+  {
+    name: "magnetic-card",
+    type: "registry:ui",
+    dependencies: physicsDeps,
+    files: [{ path: "ui/magnetic-card.tsx", type: "registry:ui" }],
+  },
+  {
+    name: "elastic-panel",
+    type: "registry:ui",
+    dependencies: [...physicsDeps, "lucide-react"],
+    files: [{ path: "ui/elastic-panel.tsx", type: "registry:ui" }],
+  },
+  {
+    name: "spring-slider",
+    type: "registry:ui",
+    dependencies: physicsDeps,
+    files: [{ path: "ui/spring-slider.tsx", type: "registry:ui" }],
+  },
+  {
+    name: "bouncy-toggle",
+    type: "registry:ui",
+    dependencies: physicsDeps,
+    files: [{ path: "ui/bouncy-toggle.tsx", type: "registry:ui" }],
+  },
+  {
+    name: "physics-counter",
+    type: "registry:ui",
+    dependencies: physicsDeps,
+    files: [{ path: "ui/physics-counter.tsx", type: "registry:ui" }],
+  },
+  {
+    name: "floating-action-menu",
+    type: "registry:ui",
+    dependencies: [...physicsDeps, "lucide-react"],
+    files: [{ path: "ui/floating-action-menu.tsx", type: "registry:ui" }],
+  },
   {
     name: "button",
     type: "registry:ui",

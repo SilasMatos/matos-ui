@@ -1,0 +1,78 @@
+---
+title: Floating Action Menu
+description: A floating action button that springs open into a staggered stack of labelled actions.
+---
+
+<ComponentPreview name="floating-action-menu-demo" chromeless align="start" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/floating-action-menu.json" />
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the following dependencies:</Step>
+
+<CodeBlockCommand command="npm install framer-motion lucide-react tailwind-merge tailwind-variants" />
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="floating-action-menu" title="components/matos-ui/floating-action-menu.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import {
+  FloatingActionMenu,
+  type FloatingActionItem
+} from '@/components/matos-ui/floating-action-menu'
+import { Pencil, Share2 } from 'lucide-react'
+```
+
+```tsx
+const items: FloatingActionItem[] = [
+  { id: 'edit', label: 'Edit', icon: <Pencil className="size-5" /> },
+  { id: 'share', label: 'Share', icon: <Share2 className="size-5" /> }
+]
+
+<FloatingActionMenu items={items} />
+```
+
+## Reference
+
+### FloatingActionMenu Props
+
+| Prop        | Type                    | Default | Description                                    |
+| ----------- | ----------------------- | ------- | ---------------------------------------------- |
+| `items`     | `FloatingActionItem[]`  | -       | Actions revealed when the menu opens.          |
+| `stiffness` | `number`                | `420`   | Spring stiffness for the reveal and rotation.  |
+| `damping`   | `number`                | `20`    | Spring damping for the reveal and rotation.    |
+
+### FloatingActionItem
+
+| Field     | Type         | Description                    |
+| --------- | ------------ | ------------------------------ |
+| `id`      | `string`     | Unique key for the action.     |
+| `label`   | `string`     | Tooltip label and aria-label.  |
+| `icon`    | `ReactNode`  | Icon rendered in the button.   |
+| `onClick` | `() => void` | Click handler for the action.  |

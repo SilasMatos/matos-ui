@@ -1,0 +1,16 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "elastic-panel-demo",
+  "registryDependencies": [
+    "elastic-panel"
+  ],
+  "files": [
+    {
+      "path": "components/matos-ui/examples/elastic-panel-demo.tsx",
+      "content": "\"use client\";\n\nimport { Layers } from \"lucide-react\";\nimport { ElasticPanel } from \"@/components/matos-ui/elastic-panel\";\n\nexport default function ElasticPanelDemo() {\n  return (\n    <div className=\"mx-auto w-full max-w-[420px] space-y-3 py-6\">\n      <ElasticPanel\n        title=\"What is spring physics?\"\n        icon={<Layers className=\"size-4\" aria-hidden=\"true\" />}\n        defaultOpen\n      >\n        Height animates with a real spring — it eases in with a subtle overshoot\n        instead of a fixed duration, so opening and closing feel physical.\n      </ElasticPanel>\n\n      <ElasticPanel title=\"Can I tune the feel?\">\n        Yes. Adjust{\" \"}\n        <span className=\"font-medium text-foreground\">stiffness</span> and{\" \"}\n        <span className=\"font-medium text-foreground\">damping</span> to make it\n        snappier or bouncier.\n      </ElasticPanel>\n    </div>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/elastic-panel-demo.tsx"
+    }
+  ],
+  "type": "registry:example"
+}

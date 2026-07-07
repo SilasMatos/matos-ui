@@ -1,0 +1,16 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "magnetic-card-demo",
+  "registryDependencies": [
+    "magnetic-card"
+  ],
+  "files": [
+    {
+      "path": "components/matos-ui/examples/magnetic-card-demo.tsx",
+      "content": "\"use client\";\n\nimport { ArrowUpRight, Sparkles } from \"lucide-react\";\nimport { MagneticCard } from \"@/components/matos-ui/magnetic-card\";\n\nexport default function MagneticCardDemo() {\n  return (\n    <div className=\"flex w-full items-center justify-center py-6\">\n      <MagneticCard>\n        <div className=\"flex items-center justify-between\">\n          <span className=\"inline-flex size-10 items-center justify-center rounded-xl border border-border bg-secondary text-foreground\">\n            <Sparkles className=\"size-5\" aria-hidden=\"true\" />\n          </span>\n          <ArrowUpRight\n            className=\"size-5 text-muted-foreground transition-colors group-hover:text-foreground\"\n            aria-hidden=\"true\"\n          />\n        </div>\n\n        <h3 className=\"mt-5 text-lg font-semibold tracking-tight\">\n          Magnetic Surface\n        </h3>\n        <p className=\"mt-2 text-sm leading-6 text-muted-foreground\">\n          Move your cursor across the card. It follows with spring physics and a\n          soft parallax tilt.\n        </p>\n\n        <div className=\"mt-5 flex items-center gap-2 text-xs font-medium text-muted-foreground\">\n          <span className=\"size-2 rounded-full bg-chart-2\" />\n          Spring · stiffness 220\n        </div>\n      </MagneticCard>\n    </div>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/magnetic-card-demo.tsx"
+    }
+  ],
+  "type": "registry:example"
+}
