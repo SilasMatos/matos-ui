@@ -297,6 +297,10 @@
         {
           "path": "src/registry/new-york-v4/ui/animated-area-chart.tsx",
           "type": "registry:ui"
+        },
+        {
+          "path": "src/registry/new-york-v4/ui/chart-interaction.ts",
+          "type": "registry:ui"
         }
       ]
     },
@@ -312,6 +316,10 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/allocation-performance-chart.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/registry/new-york-v4/ui/chart-interaction.ts",
           "type": "registry:ui"
         }
       ]
@@ -330,6 +338,10 @@
         {
           "path": "src/registry/new-york-v4/ui/sparkline-card.tsx",
           "type": "registry:ui"
+        },
+        {
+          "path": "src/registry/new-york-v4/ui/chart-interaction.ts",
+          "type": "registry:ui"
         }
       ]
     },
@@ -344,6 +356,10 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/signal-flow-chart.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/registry/new-york-v4/ui/chart-interaction.ts",
           "type": "registry:ui"
         }
       ]
@@ -360,6 +376,10 @@
         {
           "path": "src/registry/new-york-v4/ui/activity-heatmap-chart.tsx",
           "type": "registry:ui"
+        },
+        {
+          "path": "src/registry/new-york-v4/ui/chart-interaction.ts",
+          "type": "registry:ui"
         }
       ]
     },
@@ -374,6 +394,10 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/candlestick-chart.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/registry/new-york-v4/ui/chart-interaction.ts",
           "type": "registry:ui"
         }
       ]
@@ -390,6 +414,10 @@
         {
           "path": "src/registry/new-york-v4/ui/bubble-chart.tsx",
           "type": "registry:ui"
+        },
+        {
+          "path": "src/registry/new-york-v4/ui/chart-interaction.ts",
+          "type": "registry:ui"
         }
       ]
     },
@@ -404,6 +432,10 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/activity-waveform-chart.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/registry/new-york-v4/ui/chart-interaction.ts",
           "type": "registry:ui"
         }
       ]
@@ -420,6 +452,10 @@
         {
           "path": "src/registry/new-york-v4/ui/performance-waterfall-chart.tsx",
           "type": "registry:ui"
+        },
+        {
+          "path": "src/registry/new-york-v4/ui/chart-interaction.ts",
+          "type": "registry:ui"
         }
       ]
     },
@@ -434,6 +470,10 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/threshold-band-chart.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/registry/new-york-v4/ui/chart-interaction.ts",
           "type": "registry:ui"
         }
       ]
@@ -450,6 +490,10 @@
         {
           "path": "src/registry/new-york-v4/ui/impact-priority-matrix.tsx",
           "type": "registry:ui"
+        },
+        {
+          "path": "src/registry/new-york-v4/ui/chart-interaction.ts",
+          "type": "registry:ui"
         }
       ]
     },
@@ -465,6 +509,10 @@
         {
           "path": "src/registry/new-york-v4/ui/resource-treemap-chart.tsx",
           "type": "registry:ui"
+        },
+        {
+          "path": "src/registry/new-york-v4/ui/chart-interaction.ts",
+          "type": "registry:ui"
         }
       ]
     },
@@ -479,6 +527,10 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/score-radar-chart.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/registry/new-york-v4/ui/chart-interaction.ts",
           "type": "registry:ui"
         }
       ]

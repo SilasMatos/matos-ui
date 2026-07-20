@@ -7,10 +7,10 @@ import {
   useEffect,
   useId,
   useMemo,
-  useState,
 } from "react";
 import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
+import { useChartInteraction } from "./chart-interaction";
 
 export const signalFlowChartVariants = tv({
   base: "not-prose w-full text-foreground",
@@ -194,30 +194,13 @@ export function SignalFlowChart({
     [data, safeMax],
   );
 
-  const defaultActive = useMemo(() => {
-    if (!normalizedData.length) {
-      return 0;
-    }
-
-    let best = 0;
-    for (let index = 1; index < normalizedData.length; index += 1) {
-      if (normalizedData[index].value > normalizedData[best].value) {
-        best = index;
-      }
-    }
-    return best;
-  }, [normalizedData]);
-
-  const [activeIndex, setActiveIndex] = useState(defaultActive);
+  const { activeIndex, getItemProps, hasEnteredView, interactionProps } =
+    useChartInteraction(id, normalizedData.length);
+  const activeItem =
+    activeIndex === null ? null : (normalizedData[activeIndex] ?? null);
 
   useEffect(() => {
-    setActiveIndex(defaultActive);
-  }, [defaultActive]);
-
-  const activeItem = normalizedData[activeIndex] ?? normalizedData[0];
-
-  useEffect(() => {
-    if (activeItem) {
+    if (activeItem && activeIndex !== null) {
       onActiveChange?.(activeItem, activeIndex);
     }
   }, [activeIndex, activeItem, onActiveChange]);
@@ -234,7 +217,7 @@ export function SignalFlowChart({
     );
   }
 
-  if (!normalizedData.length || !activeItem) {
+  if (!normalizedData.length) {
     return (
       <div
         data-slot="signal-flow-chart"
@@ -283,7 +266,7 @@ export function SignalFlowChart({
     const tipY = cubicPoint(fillFraction, p0y, p1y, p2y, p3y);
 
     const particleCount = 2 + Math.round(fraction * 3);
-    const particleDuration = 6.4 / (0.55 + fraction);
+    const particleDuration = 0.72 - fraction * 0.18;
 
     return {
       ...item,
@@ -302,26 +285,29 @@ export function SignalFlowChart({
 
   const railTop = lanes[0].baseY;
   const railBottom = lanes[lanes.length - 1].baseY;
-  const active = lanes[activeIndex] ?? lanes[0];
+  const active = activeIndex === null ? null : (lanes[activeIndex] ?? null);
 
   const tooltipWidth = 158;
   const tooltipHeight = 58;
-  const tooltipX = clamp(
-    active.tipX - tooltipWidth / 2,
-    10,
-    viewBoxWidth - tooltipWidth - 10,
-  );
-  const tooltipY = clamp(active.baseY - tooltipHeight - 18, 6, viewBoxHeight);
-  const anchorX = clamp(active.tipX - tooltipX, 16, tooltipWidth - 16);
-
-  function activate(index: number) {
-    setActiveIndex(index);
-  }
+  const tooltipX = active
+    ? clamp(
+        active.tipX - tooltipWidth / 2,
+        10,
+        viewBoxWidth - tooltipWidth - 10,
+      )
+    : 0;
+  const tooltipY = active
+    ? clamp(active.baseY - tooltipHeight - 18, 6, viewBoxHeight)
+    : 0;
+  const anchorX = active
+    ? clamp(active.tipX - tooltipX, 16, tooltipWidth - 16)
+    : tooltipWidth / 2;
 
   return (
     <div
       data-slot="signal-flow-chart"
       className={twMerge(signalFlowChartVariants({ size }), className)}
+      {...interactionProps}
       {...props}
     >
       <div data-slot="signal-flow-chart-header" className="mb-3">
@@ -340,376 +326,354 @@ export function SignalFlowChart({
         className="overflow-hidden"
         style={{ height }}
       >
-        <svg
-          viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
-          className="size-full"
-          role="img"
-          aria-labelledby={`${id}-title ${id}-desc`}
-        >
-          <title id={`${id}-title`}>{String(title)}</title>
-          <desc id={`${id}-desc`}>
-            Signal flow chart with {itemCount} channels. Active channel:{" "}
-            {active.label}, {active.formattedValue}.
-          </desc>
-          <defs>
-            <filter
-              id={`${id}-glow`}
-              x="-40%"
-              y="-200%"
-              width="180%"
-              height="500%"
-            >
-              <feGaussianBlur stdDeviation="3.4" result="blur" />
-              <feMerge>
-                <feMergeNode in="blur" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-            <filter id={`${id}-tooltip-shadow`}>
-              <feDropShadow
-                dx="0"
-                dy="7"
-                floodColor="var(--foreground)"
-                floodOpacity="0.1"
-                stdDeviation="7"
-              />
-            </filter>
-          </defs>
-
-          {/* Source bus rail */}
-          <line
-            x1={railX}
-            x2={railX}
-            y1={railTop - 16}
-            y2={railBottom + 16}
-            stroke="var(--border)"
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
-          <line
-            x1={cableEndX}
-            x2={cableEndX}
-            y1={railTop - 10}
-            y2={railBottom + 10}
-            stroke="var(--border)"
-            strokeDasharray="3 7"
-            strokeLinecap="round"
-            opacity="0.5"
-          />
-
-          {lanes.map((lane) => {
-            const isActive = activeIndex === lane.index;
-            const laneId = `${id}-lane-${lane.index}`;
-            const dimmed = !isActive;
-
-            return (
-              <motion.g
-                key={lane.label}
-                data-slot="signal-flow-chart-lane"
-                tabIndex={0}
-                role="button"
-                aria-label={`${lane.label}: ${lane.formattedValue}`}
-                onPointerEnter={() => activate(lane.index)}
-                onFocus={() => activate(lane.index)}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter" || event.key === " ") {
-                    event.preventDefault();
-                    activate(lane.index);
-                  }
-                }}
-                animate={{ opacity: dimmed ? 0.58 : 1 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-                style={{ color: lane.color }}
-                className="cursor-pointer outline-none focus-visible:[&_[data-fill]]:[filter:drop-shadow(0_0_0.2rem_currentColor)]"
-              >
-                {/* Per-lane gradient keeps currentColor bound to the lane tone */}
-                <defs>
-                  <linearGradient
-                    id={`${laneId}-fill`}
-                    x1="0"
-                    y1="0"
-                    x2="1"
-                    y2="0"
-                  >
-                    <stop
-                      offset="0%"
-                      stopColor="currentColor"
-                      stopOpacity="0.18"
-                    />
-                    <stop
-                      offset="55%"
-                      stopColor="currentColor"
-                      stopOpacity="0.7"
-                    />
-                    <stop
-                      offset="100%"
-                      stopColor="currentColor"
-                      stopOpacity="1"
-                    />
-                  </linearGradient>
-                </defs>
-
-                {/* Hit area */}
-                <rect
-                  x={railX - 14}
-                  y={lane.baseY - laneGap / 2 + 4}
-                  width={valueX - railX + 24}
-                  height={laneGap - 8}
-                  fill="transparent"
+        {!motionEnabled || hasEnteredView ? (
+          <svg
+            viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
+            className="size-full"
+            role="img"
+            aria-labelledby={`${id}-title ${id}-desc`}
+          >
+            <title id={`${id}-title`}>{String(title)}</title>
+            <desc id={`${id}-desc`}>
+              Signal flow chart with {itemCount} channels. Use pointer, touch,
+              or arrow keys to inspect each channel.
+            </desc>
+            <defs>
+              <filter id={`${id}-tooltip-shadow`}>
+                <feDropShadow
+                  dx="0"
+                  dy="2"
+                  floodColor="var(--foreground)"
+                  floodOpacity="0.12"
+                  stdDeviation="3"
                 />
+              </filter>
+            </defs>
 
-                {/* Track */}
-                <path
-                  id={`${laneId}-track`}
-                  d={lane.trackPath}
-                  fill="none"
-                  stroke="var(--border)"
-                  strokeWidth="6"
-                  strokeLinecap="round"
-                  opacity="0.55"
-                />
-                <path
-                  d={lane.trackPath}
-                  fill="none"
-                  stroke="var(--muted)"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeDasharray="1 9"
-                  opacity="0.6"
-                />
+            {/* Source bus rail */}
+            <line
+              x1={railX}
+              x2={railX}
+              y1={railTop - 16}
+              y2={railBottom + 16}
+              stroke="var(--border)"
+              strokeWidth="2"
+              strokeLinecap="round"
+            />
+            <line
+              x1={cableEndX}
+              x2={cableEndX}
+              y1={railTop - 10}
+              y2={railBottom + 10}
+              stroke="var(--border)"
+              strokeDasharray="3 7"
+              strokeLinecap="round"
+              opacity="0.5"
+            />
 
-                {/* Animated fill up to throughput */}
-                <motion.path
-                  data-fill=""
-                  d={lane.trackPath}
-                  fill="none"
-                  stroke={`url(#${laneId}-fill)`}
-                  strokeWidth={isActive ? 6 : 5}
-                  strokeLinecap="round"
-                  filter={isActive ? `url(#${id}-glow)` : undefined}
-                  initial={
-                    motionEnabled ? { pathLength: 0, opacity: 0 } : false
-                  }
-                  animate={{
-                    pathLength: lane.fillFraction,
-                    opacity: 1,
-                  }}
-                  transition={{
-                    pathLength: {
-                      duration: motionDuration,
-                      ease: [0.16, 1, 0.3, 1],
-                      delay: motionDelay + lane.index * 0.08,
-                    },
-                    opacity: { duration: 0.3, delay: motionDelay },
-                    strokeWidth: { duration: 0.25 },
-                  }}
-                />
+            {lanes.map((lane) => {
+              const isActive = activeIndex === lane.index;
+              const laneId = `${id}-lane-${lane.index}`;
+              const dimmed = activeIndex !== null && !isActive;
 
-                {/* Flowing particles */}
-                {particlesEnabled
-                  ? Array.from({ length: lane.particleCount }).map(
-                      (_, particleIndex) => {
-                        const spacing =
-                          (lane.particleDuration / lane.particleCount) *
-                          particleIndex;
-
-                        return (
-                          <circle
-                            // biome-ignore lint/suspicious/noArrayIndexKey: particle slots are stable per lane
-                            key={particleIndex}
-                            r={isActive ? 3 : 2.4}
-                            fill="currentColor"
-                            opacity={isActive ? 0.95 : 0.7}
-                          >
-                            <animateMotion
-                              dur={`${lane.particleDuration}s`}
-                              begin={`-${spacing.toFixed(2)}s`}
-                              repeatCount="indefinite"
-                              keyPoints={`0;${lane.fillFraction.toFixed(3)}`}
-                              keyTimes="0;1"
-                              calcMode="linear"
-                            >
-                              <mpath
-                                href={`#${laneId}-track`}
-                                xlinkHref={`#${laneId}-track`}
-                              />
-                            </animateMotion>
-                            <animate
-                              attributeName="opacity"
-                              values={
-                                isActive ? "0;0.95;0.95;0" : "0;0.7;0.7;0"
-                              }
-                              keyTimes="0;0.12;0.85;1"
-                              dur={`${lane.particleDuration}s`}
-                              begin={`-${spacing.toFixed(2)}s`}
-                              repeatCount="indefinite"
-                            />
-                          </circle>
-                        );
-                      },
-                    )
-                  : null}
-
-                {/* Source node on the rail */}
-                <circle
-                  cx={railX}
-                  cy={lane.baseY}
-                  r="4.5"
-                  fill="var(--card)"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                />
-
-                {/* Sink node at the fill tip */}
+              return (
                 <motion.g
-                  initial={motionEnabled ? { scale: 0, opacity: 0 } : false}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{
-                    delay:
-                      motionDelay + motionDuration * 0.7 + lane.index * 0.08,
-                    duration: 0.3,
-                    ease: [0.16, 1, 0.3, 1],
-                  }}
-                  style={{ transformOrigin: `${lane.tipX}px ${lane.tipY}px` }}
+                  key={lane.label}
+                  data-slot="signal-flow-chart-lane"
+                  tabIndex={0}
+                  role="button"
+                  aria-label={`${lane.label}: ${lane.formattedValue}`}
+                  {...getItemProps(lane.index)}
+                  animate={{ opacity: dimmed ? 0.58 : 1 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  style={{ color: lane.color }}
+                  className="cursor-pointer outline-none focus-visible:[&_[data-fill]]:stroke-ring focus-visible:[&_[data-fill]]:stroke-[7]"
                 >
-                  {isActive && motionEnabled ? (
+                  {/* Per-lane gradient keeps currentColor bound to the lane tone */}
+                  <defs>
+                    <linearGradient
+                      id={`${laneId}-fill`}
+                      x1="0"
+                      y1="0"
+                      x2="1"
+                      y2="0"
+                    >
+                      <stop
+                        offset="0%"
+                        stopColor="currentColor"
+                        stopOpacity="0.18"
+                      />
+                      <stop
+                        offset="55%"
+                        stopColor="currentColor"
+                        stopOpacity="0.7"
+                      />
+                      <stop
+                        offset="100%"
+                        stopColor="currentColor"
+                        stopOpacity="1"
+                      />
+                    </linearGradient>
+                  </defs>
+
+                  {/* Hit area */}
+                  <rect
+                    x={railX - 14}
+                    y={lane.baseY - laneGap / 2 + 4}
+                    width={valueX - railX + 24}
+                    height={laneGap - 8}
+                    fill="transparent"
+                  />
+
+                  {/* Track */}
+                  <path
+                    id={`${laneId}-track`}
+                    d={lane.trackPath}
+                    fill="none"
+                    stroke="var(--border)"
+                    strokeWidth="6"
+                    strokeLinecap="round"
+                    opacity="0.55"
+                  />
+                  <path
+                    d={lane.trackPath}
+                    fill="none"
+                    stroke="var(--muted)"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeDasharray="1 9"
+                    opacity="0.6"
+                  />
+
+                  {/* Animated fill up to throughput */}
+                  <motion.path
+                    data-fill=""
+                    d={lane.trackPath}
+                    fill="none"
+                    stroke={`url(#${laneId}-fill)`}
+                    strokeWidth={isActive ? 6 : 5}
+                    strokeLinecap="round"
+                    initial={
+                      motionEnabled ? { pathLength: 0, opacity: 0 } : false
+                    }
+                    animate={{
+                      pathLength: lane.fillFraction,
+                      opacity: 1,
+                    }}
+                    transition={{
+                      pathLength: {
+                        duration: motionDuration,
+                        ease: [0.16, 1, 0.3, 1],
+                        delay: motionDelay + lane.index * 0.08,
+                      },
+                      opacity: { duration: 0.3, delay: motionDelay },
+                      strokeWidth: { duration: 0.25 },
+                    }}
+                  />
+
+                  {/* Flowing particles */}
+                  {particlesEnabled
+                    ? Array.from({ length: lane.particleCount }).map(
+                        (_, particleIndex) => {
+                          const spacing =
+                            (lane.particleDuration / lane.particleCount) *
+                            particleIndex;
+
+                          return (
+                            <circle
+                              // biome-ignore lint/suspicious/noArrayIndexKey: particle slots are stable per lane
+                              key={particleIndex}
+                              r={isActive ? 3 : 2.4}
+                              fill="currentColor"
+                              opacity={isActive ? 0.95 : 0.7}
+                            >
+                              <animateMotion
+                                dur={`${lane.particleDuration}s`}
+                                begin={`${(motionDelay + spacing).toFixed(2)}s`}
+                                repeatCount="1"
+                                keyPoints={`0;${lane.fillFraction.toFixed(3)}`}
+                                keyTimes="0;1"
+                                calcMode="linear"
+                              >
+                                <mpath
+                                  href={`#${laneId}-track`}
+                                  xlinkHref={`#${laneId}-track`}
+                                />
+                              </animateMotion>
+                              <animate
+                                attributeName="opacity"
+                                values={
+                                  isActive ? "0;0.95;0.95;0" : "0;0.7;0.7;0"
+                                }
+                                keyTimes="0;0.12;0.85;1"
+                                dur={`${lane.particleDuration}s`}
+                                begin={`${(motionDelay + spacing).toFixed(2)}s`}
+                                repeatCount="1"
+                              />
+                            </circle>
+                          );
+                        },
+                      )
+                    : null}
+
+                  {/* Source node on the rail */}
+                  <circle
+                    cx={railX}
+                    cy={lane.baseY}
+                    r="4.5"
+                    fill="var(--card)"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                  />
+
+                  {/* Sink node at the fill tip */}
+                  <motion.g
+                    initial={motionEnabled ? { scale: 0, opacity: 0 } : false}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{
+                      delay:
+                        motionDelay + motionDuration * 0.7 + lane.index * 0.08,
+                      duration: 0.3,
+                      ease: [0.16, 1, 0.3, 1],
+                    }}
+                    style={{ transformOrigin: `${lane.tipX}px ${lane.tipY}px` }}
+                  >
                     <motion.circle
                       cx={lane.tipX}
                       cy={lane.tipY}
-                      r="6"
                       fill="currentColor"
-                      animate={{ r: [5, 11, 5], opacity: [0.4, 0, 0.4] }}
-                      transition={{
-                        duration: 1.8,
-                        repeat: Number.POSITIVE_INFINITY,
-                        ease: "easeOut",
+                      animate={{
+                        r: isActive ? 8 : 5,
+                        opacity: isActive ? 0.14 : 0,
                       }}
+                      transition={{ duration: 0.18, ease: "easeOut" }}
                     />
-                  ) : null}
-                  <circle
-                    cx={lane.tipX}
-                    cy={lane.tipY}
-                    r="4"
-                    fill="currentColor"
-                    filter={isActive ? `url(#${id}-glow)` : undefined}
-                  />
-                  <circle
-                    cx={lane.tipX}
-                    cy={lane.tipY}
-                    r="1.6"
-                    fill="var(--card)"
-                  />
-                </motion.g>
+                    <circle
+                      cx={lane.tipX}
+                      cy={lane.tipY}
+                      r="4"
+                      fill="currentColor"
+                    />
+                    <circle
+                      cx={lane.tipX}
+                      cy={lane.tipY}
+                      r="1.6"
+                      fill="var(--card)"
+                    />
+                  </motion.g>
 
-                {/* Channel label */}
-                <text
-                  x={railX - 16}
-                  y={lane.baseY + 4}
-                  textAnchor="end"
-                  fill={
-                    isActive ? "var(--foreground)" : "var(--muted-foreground)"
-                  }
-                  className="text-[13px] font-medium"
-                >
-                  {lane.label}
-                </text>
-
-                {/* Value readout */}
-                {showValues ? (
-                  <motion.text
-                    x={valueX}
+                  {/* Channel label */}
+                  <text
+                    x={railX - 16}
                     y={lane.baseY + 4}
                     textAnchor="end"
                     fill={
                       isActive ? "var(--foreground)" : "var(--muted-foreground)"
                     }
-                    className="text-[13px] font-semibold tabular-nums"
-                    initial={
-                      motionEnabled ? { opacity: 0, x: valueX + 8 } : false
-                    }
-                    animate={{ opacity: isActive ? 1 : 0.85, x: valueX }}
-                    transition={{
-                      delay: motionDelay + 0.2 + lane.index * 0.07,
-                      duration: 0.3,
-                    }}
+                    className="text-[13px] font-medium"
                   >
-                    {lane.formattedValue}
-                  </motion.text>
-                ) : null}
-              </motion.g>
-            );
-          })}
+                    {lane.label}
+                  </text>
 
-          <AnimatePresence>
-            {showTooltip ? (
-              <motion.g
-                data-slot="signal-flow-chart-tooltip"
-                pointerEvents="none"
-                initial={
-                  motionEnabled
-                    ? {
-                        opacity: 0,
-                        x: tooltipX,
-                        y: tooltipY + 8,
-                        scale: 0.98,
+                  {/* Value readout */}
+                  {showValues ? (
+                    <motion.text
+                      x={valueX}
+                      y={lane.baseY + 4}
+                      textAnchor="end"
+                      fill={
+                        isActive
+                          ? "var(--foreground)"
+                          : "var(--muted-foreground)"
                       }
-                    : false
-                }
-                animate={{ opacity: 1, x: tooltipX, y: tooltipY, scale: 1 }}
-                exit={{
-                  opacity: 0,
-                  x: tooltipX,
-                  y: tooltipY + 6,
-                  scale: 0.98,
-                }}
-                transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <rect
-                  width={tooltipWidth}
-                  height={tooltipHeight}
-                  rx="14"
-                  fill="var(--popover)"
-                  stroke="var(--border)"
-                  filter={`url(#${id}-tooltip-shadow)`}
-                />
-                <path
-                  d={`M ${anchorX - 7} ${tooltipHeight - 1} L ${anchorX} ${
-                    tooltipHeight + 8
-                  } L ${anchorX + 7} ${tooltipHeight - 1} Z`}
-                  fill="var(--popover)"
-                  stroke="var(--border)"
-                  strokeLinejoin="round"
-                />
-                <text
-                  x="15"
-                  y="23"
-                  fill="var(--popover-foreground)"
-                  className="text-[13px] font-semibold"
+                      className="text-[13px] font-semibold tabular-nums"
+                      initial={
+                        motionEnabled ? { opacity: 0, x: valueX + 8 } : false
+                      }
+                      animate={{ opacity: isActive ? 1 : 0.85, x: valueX }}
+                      transition={{
+                        delay: motionDelay + 0.2 + lane.index * 0.07,
+                        duration: 0.3,
+                      }}
+                    >
+                      {lane.formattedValue}
+                    </motion.text>
+                  ) : null}
+                </motion.g>
+              );
+            })}
+
+            <AnimatePresence>
+              {showTooltip && active ? (
+                <motion.g
+                  data-slot="signal-flow-chart-tooltip"
+                  pointerEvents="none"
+                  initial={
+                    motionEnabled
+                      ? {
+                          opacity: 0,
+                          x: tooltipX,
+                          y: tooltipY + 8,
+                          scale: 0.98,
+                        }
+                      : false
+                  }
+                  animate={{ opacity: 1, x: tooltipX, y: tooltipY, scale: 1 }}
+                  exit={{
+                    opacity: 0,
+                    x: tooltipX,
+                    y: tooltipY + 6,
+                    scale: 0.98,
+                  }}
+                  transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  {active.label}
-                </text>
-                <circle cx="19" cy="43" r="4.5" fill={active.color} />
-                <text
-                  x="32"
-                  y="47"
-                  fill="var(--muted-foreground)"
-                  className="text-[12px] font-medium"
-                >
-                  {active.hint ?? metricLabel}
-                </text>
-                <text
-                  x={tooltipWidth - 15}
-                  y="47"
-                  textAnchor="end"
-                  fill="var(--popover-foreground)"
-                  className="text-[13px] font-semibold tabular-nums"
-                >
-                  {active.formattedValue}
-                </text>
-              </motion.g>
-            ) : null}
-          </AnimatePresence>
-        </svg>
+                  <rect
+                    width={tooltipWidth}
+                    height={tooltipHeight}
+                    rx="14"
+                    fill="var(--popover)"
+                    stroke="var(--border)"
+                    filter={`url(#${id}-tooltip-shadow)`}
+                  />
+                  <path
+                    d={`M ${anchorX - 7} ${tooltipHeight - 1} L ${anchorX} ${
+                      tooltipHeight + 8
+                    } L ${anchorX + 7} ${tooltipHeight - 1} Z`}
+                    fill="var(--popover)"
+                    stroke="var(--border)"
+                    strokeLinejoin="round"
+                  />
+                  <text
+                    x="15"
+                    y="23"
+                    fill="var(--popover-foreground)"
+                    className="text-[13px] font-semibold"
+                  >
+                    {active.label}
+                  </text>
+                  <circle cx="19" cy="43" r="4.5" fill={active.color} />
+                  <text
+                    x="32"
+                    y="47"
+                    fill="var(--muted-foreground)"
+                    className="text-[12px] font-medium"
+                  >
+                    {active.hint ?? metricLabel}
+                  </text>
+                  <text
+                    x={tooltipWidth - 15}
+                    y="47"
+                    textAnchor="end"
+                    fill="var(--popover-foreground)"
+                    className="text-[13px] font-semibold tabular-nums"
+                  >
+                    {active.formattedValue}
+                  </text>
+                </motion.g>
+              ) : null}
+            </AnimatePresence>
+          </svg>
+        ) : null}
       </div>
     </div>
   );

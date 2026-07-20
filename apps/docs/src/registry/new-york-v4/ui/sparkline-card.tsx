@@ -14,6 +14,7 @@ import {
 } from "recharts";
 import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
+import { useChartInteraction } from "./chart-interaction";
 
 export const sparklineCardVariants = tv({
   base: "not-prose w-full text-foreground",
@@ -192,15 +193,10 @@ function SparklineDot({
           fill="currentColor"
           opacity={0.16}
           initial={animated ? { r: 4, opacity: 0 } : false}
-          animate={
-            animated
-              ? { r: [7, 11, 7], opacity: [0.12, 0.22, 0.12] }
-              : { r: 9, opacity: 0.16 }
-          }
+          animate={{ r: 9, opacity: 0.14 }}
           transition={{
-            duration: 1.6,
-            repeat: animated ? Number.POSITIVE_INFINITY : 0,
-            ease: "easeInOut",
+            duration: 0.18,
+            ease: "easeOut",
           }}
         />
       ) : null}
@@ -279,7 +275,7 @@ function ChartTooltip({
       initial={{ opacity: 0, y: 6, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
-      className="rounded-xl border border-border bg-background/95 px-3 py-2 text-xs shadow-lg backdrop-blur"
+      className="rounded-xl border border-border bg-background/95 px-3 py-2 text-xs shadow-sm backdrop-blur tabular-nums"
     >
       <p className="text-[11px] font-medium text-muted-foreground">
         {labelFormatter?.(String(label)) ?? label}
@@ -328,6 +324,8 @@ export function SparklineCard({
   const patternId = `${generatedId}-sparkline-pattern`;
   const chartData = useMemo(() => data, [data]);
   const resolvedAnimated = animated && !shouldReduceMotion;
+  const { hasEnteredView, interactionProps, selectedIndex, selectIndex } =
+    useChartInteraction(generatedId, chartData.length);
   const latest = chartData.at(-1);
   const latestValue =
     typeof value === "number"
@@ -349,6 +347,7 @@ export function SparklineCard({
         sparklineCardVariants({ size, tone: resolvedTone }),
         className,
       )}
+      {...interactionProps}
       {...props}
     >
       {loading ? (
@@ -372,116 +371,129 @@ export function SparklineCard({
             className={twMerge("mt-3", toneStyle.chart)}
             style={{ height }}
           >
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart
-                data={chartData}
-                margin={{ top: 8, right: 8, bottom: 0, left: 8 }}
-              >
-                <defs>
-                  <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-                    <stop
-                      offset="0%"
-                      stopColor="currentColor"
-                      stopOpacity={0.2}
-                    />
-                    <stop
-                      offset="100%"
-                      stopColor="currentColor"
-                      stopOpacity={0}
-                    />
-                  </linearGradient>
-                  <pattern
-                    id={patternId}
-                    width="8"
-                    height="8"
-                    patternUnits="userSpaceOnUse"
-                  >
-                    <path
-                      d="M 0 8 L 8 0"
-                      stroke="currentColor"
-                      strokeWidth="0.5"
-                      className="text-border"
-                      opacity="0.35"
-                    />
-                  </pattern>
-                  <mask id={maskId}>
-                    <motion.rect
+            {!resolvedAnimated || hasEnteredView ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart
+                  data={chartData}
+                  margin={{ top: 8, right: 8, bottom: 0, left: 8 }}
+                  onClick={(state) => {
+                    const index = Number(state?.activeTooltipIndex);
+                    if (Number.isInteger(index)) selectIndex(index);
+                  }}
+                >
+                  <defs>
+                    <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+                      <stop
+                        offset="0%"
+                        stopColor="currentColor"
+                        stopOpacity={0.2}
+                      />
+                      <stop
+                        offset="100%"
+                        stopColor="currentColor"
+                        stopOpacity={0}
+                      />
+                    </linearGradient>
+                    <pattern
+                      id={patternId}
+                      width="8"
+                      height="8"
+                      patternUnits="userSpaceOnUse"
+                    >
+                      <path
+                        d="M 0 8 L 8 0"
+                        stroke="currentColor"
+                        strokeWidth="0.5"
+                        className="text-border"
+                        opacity="0.35"
+                      />
+                    </pattern>
+                    <mask id={maskId}>
+                      <motion.rect
+                        x="0"
+                        y="0"
+                        width="100%"
+                        height="100%"
+                        fill="white"
+                        initial={resolvedAnimated ? { scaleX: 0 } : false}
+                        animate={{ scaleX: 1 }}
+                        transition={{
+                          duration: motionDuration,
+                          delay: motionDelay,
+                          ease: [0.16, 1, 0.3, 1],
+                        }}
+                        style={{ transformOrigin: "left center" }}
+                      />
+                    </mask>
+                  </defs>
+                  {showGrid ? (
+                    <rect
                       x="0"
                       y="0"
                       width="100%"
                       height="100%"
-                      fill="white"
-                      initial={resolvedAnimated ? { scaleX: 0 } : false}
-                      animate={{ scaleX: 1 }}
-                      transition={{
-                        duration: motionDuration,
-                        delay: motionDelay,
-                        ease: [0.16, 1, 0.3, 1],
-                      }}
-                      style={{ transformOrigin: "left center" }}
+                      fill={`url(#${patternId})`}
+                      opacity={0.5}
                     />
-                  </mask>
-                </defs>
-                {showGrid ? (
-                  <rect
-                    x="0"
-                    y="0"
-                    width="100%"
-                    height="100%"
-                    fill={`url(#${patternId})`}
-                    opacity={0.5}
+                  ) : null}
+                  <XAxis dataKey={xKey} hide />
+                  <YAxis
+                    hide
+                    width={0}
+                    domain={["dataMin - 8", "dataMax + 8"]}
                   />
-                ) : null}
-                <XAxis dataKey={xKey} hide />
-                <YAxis hide width={0} domain={["dataMin - 8", "dataMax + 8"]} />
-                {showTooltip ? (
-                  <Tooltip
-                    cursor={<SparklineCursor />}
-                    content={
-                      <ChartTooltip
-                        valueFormatter={valueFormatter}
-                        labelFormatter={labelFormatter}
-                      />
+                  {showTooltip ? (
+                    <Tooltip
+                      key={selectedIndex ?? "hover"}
+                      active={selectedIndex === null ? undefined : true}
+                      defaultIndex={selectedIndex ?? undefined}
+                      cursor={<SparklineCursor />}
+                      content={
+                        <ChartTooltip
+                          valueFormatter={valueFormatter}
+                          labelFormatter={labelFormatter}
+                        />
+                      }
+                    />
+                  ) : null}
+                  <Area
+                    dataKey={yKey}
+                    type={curveType}
+                    fill={gradient ? `url(#${gradientId})` : "transparent"}
+                    stroke="currentColor"
+                    strokeWidth={strokeWidth}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    mask={`url(#${maskId})`}
+                    dot={
+                      showDots
+                        ? (dotProps: SparklineDotProps) => (
+                            <SparklineDot
+                              {...dotProps}
+                              animated={resolvedAnimated}
+                              motionDelay={motionDelay + motionDuration * 0.35}
+                            />
+                          )
+                        : false
                     }
+                    activeDot={
+                      highlightActivePoint
+                        ? (dotProps: SparklineDotProps) => (
+                            <SparklineDot
+                              {...dotProps}
+                              active
+                              animated={resolvedAnimated}
+                            />
+                          )
+                        : false
+                    }
+                    isAnimationActive={resolvedAnimated}
+                    animationBegin={motionDelay * 1000}
+                    animationDuration={motionDuration * 1000}
                   />
-                ) : null}
-                <Area
-                  dataKey={yKey}
-                  type={curveType}
-                  fill={gradient ? `url(#${gradientId})` : "transparent"}
-                  stroke="currentColor"
-                  strokeWidth={strokeWidth}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  mask={`url(#${maskId})`}
-                  dot={
-                    showDots
-                      ? (dotProps: SparklineDotProps) => (
-                          <SparklineDot
-                            {...dotProps}
-                            animated={resolvedAnimated}
-                            motionDelay={motionDelay + motionDuration * 0.35}
-                          />
-                        )
-                      : false
-                  }
-                  activeDot={
-                    highlightActivePoint
-                      ? (dotProps: SparklineDotProps) => (
-                          <SparklineDot
-                            {...dotProps}
-                            active
-                            animated={resolvedAnimated}
-                          />
-                        )
-                      : false
-                  }
-                  isAnimationActive={resolvedAnimated}
-                  animationBegin={motionDelay * 1000}
-                  animationDuration={motionDuration * 1000}
-                />
-              </AreaChart>
-            </ResponsiveContainer>
+                </AreaChart>
+              </ResponsiveContainer>
+            ) : null}
           </div>
           {trendLabel ? (
             <div className="mt-2 px-1 text-xs text-muted-foreground">

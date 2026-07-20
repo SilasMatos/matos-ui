@@ -354,7 +354,7 @@ function ChartsHeroBackground({ reducedMotion }: { reducedMotion: boolean }) {
         }
         transition={{
           duration: 10,
-          repeat: reducedMotion ? 0 : Number.POSITIVE_INFINITY,
+          repeat: 0,
           ease: "easeInOut",
         }}
       />
@@ -372,7 +372,7 @@ function ChartsHeroBackground({ reducedMotion }: { reducedMotion: boolean }) {
         }
         transition={{
           duration: 8,
-          repeat: reducedMotion ? 0 : Number.POSITIVE_INFINITY,
+          repeat: 0,
           ease: "easeInOut",
         }}
       />
@@ -503,7 +503,7 @@ function ChartsHeroBackground({ reducedMotion }: { reducedMotion: boolean }) {
                   <animateMotion
                     dur="4.8s"
                     begin={`${1.4 + particle * 1.6}s`}
-                    repeatCount="indefinite"
+                    repeatCount="1"
                     rotate="auto"
                     keyPoints="0;1"
                     keyTimes="0;1"
@@ -520,7 +520,7 @@ function ChartsHeroBackground({ reducedMotion }: { reducedMotion: boolean }) {
                     keyTimes="0;0.12;0.84;1"
                     dur="4.8s"
                     begin={`${1.4 + particle * 1.6}s`}
-                    repeatCount="indefinite"
+                    repeatCount="1"
                   />
                 </circle>
               ))}
@@ -564,7 +564,7 @@ function ChartsHeroBackground({ reducedMotion }: { reducedMotion: boolean }) {
                 transition={{
                   delay: reducedMotion ? 0 : 0.84 + point.delay,
                   duration: 3.2,
-                  repeat: reducedMotion ? 0 : Number.POSITIVE_INFINITY,
+                  repeat: 0,
                   ease: "easeInOut",
                 }}
               />
@@ -624,7 +624,7 @@ function ChartsHeroBackground({ reducedMotion }: { reducedMotion: boolean }) {
                 }
                 transition={{
                   duration: 6,
-                  repeat: reducedMotion ? 0 : Number.POSITIVE_INFINITY,
+                  repeat: 0,
                   ease: "easeInOut",
                 }}
                 style={{
@@ -750,6 +750,8 @@ function ChartRegistryCard({
   previewReady: boolean;
   reducedMotion: boolean;
 }) {
+  const [isInView, setIsInView] = useState(reducedMotion);
+
   function handlePointerMove(event: React.PointerEvent<HTMLElement>) {
     if (reducedMotion) {
       return;
@@ -768,7 +770,9 @@ function ChartRegistryCard({
       onPointerMove={handlePointerMove}
       variants={reducedMotion ? undefined : cardVariants}
       initial={reducedMotion ? false : "hidden"}
-      animate="visible"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.24 }}
+      onViewportEnter={() => setIsInView(true)}
       exit={reducedMotion ? undefined : "exit"}
       transition={{
         layout: { duration: 0.28, ease: [0.22, 1, 0.36, 1] },
@@ -778,14 +782,14 @@ function ChartRegistryCard({
         reducedMotion
           ? undefined
           : {
-              y: -5,
-              transition: { duration: 0.34, ease: [0.22, 1, 0.36, 1] },
+              y: -2,
+              transition: { duration: 0.2, ease: [0.22, 1, 0.36, 1] },
             }
       }
       className={cn(
         "group relative overflow-hidden rounded-2xl border border-border bg-secondary p-2 shadow-sm",
         "transition-[border-color,box-shadow] duration-300 hover:border-ring/40",
-        "hover:shadow-[0_18px_40px_-18px_color-mix(in_oklab,var(--foreground)_42%,transparent)]",
+        "hover:shadow-sm",
       )}
     >
       {/* Cursor spotlight */}
@@ -805,7 +809,7 @@ function ChartRegistryCard({
       >
         <div className="overflow-hidden rounded-xl border border-border/60 bg-card">
           <div className="relative h-40 overflow-hidden border-border/60 border-b bg-muted/25">
-            {previewReady ? (
+            {previewReady && isInView ? (
               <motion.div
                 initial={reducedMotion ? false : { opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -973,12 +977,16 @@ function AllocationPerformancePreview({
         "color-mix(in oklab, var(--muted-foreground) 58%, var(--background) 42%)",
     },
   ] as const;
-  const [activeBarId, setActiveBarId] = useState("stocks");
-  const activeBar = bars.find((bar) => bar.id === activeBarId) ?? bars[1];
-  const activeIndex = Math.max(
-    0,
-    bars.findIndex((bar) => bar.id === activeBar.id),
-  );
+  const [hoveredBarId, setHoveredBarId] = useState<string | null>(null);
+  const [selectedBarId, setSelectedBarId] = useState<string | null>(null);
+  const activeBarId = hoveredBarId ?? selectedBarId;
+  const activeBar = bars.find((bar) => bar.id === activeBarId) ?? null;
+  const activeIndex = activeBar
+    ? Math.max(
+        0,
+        bars.findIndex((bar) => bar.id === activeBar.id),
+      )
+    : 0;
   const activeX = 34 + activeIndex * 78;
   const tooltipWidth = 126;
   const tooltipX = Math.min(218, Math.max(24, activeX - 14));
@@ -986,15 +994,20 @@ function AllocationPerformancePreview({
 
   return (
     <PreviewFrame icon={<BarChart3 className="size-3.5" />} label="Allocation">
-      <svg viewBox="0 0 360 180" className="size-full" aria-hidden="true">
+      <svg
+        viewBox="0 0 360 180"
+        className="size-full"
+        aria-hidden="true"
+        onPointerLeave={() => setHoveredBarId(null)}
+      >
         <defs>
           <filter id="allocation-mini-tooltip-shadow">
             <feDropShadow
               dx="0"
-              dy="10"
+              dy="2"
               floodColor="var(--foreground)"
-              floodOpacity="0.14"
-              stdDeviation="10"
+              floodOpacity="0.12"
+              stdDeviation="3"
             />
           </filter>
           <pattern
@@ -1047,7 +1060,12 @@ function AllocationPerformancePreview({
             return (
               <motion.g
                 key={bar.id}
-                onPointerEnter={() => setActiveBarId(bar.id)}
+                onPointerEnter={() => setHoveredBarId(bar.id)}
+                onClick={() =>
+                  setSelectedBarId((current) =>
+                    current === bar.id ? null : bar.id,
+                  )
+                }
                 whileHover={{ y: -0.8, scale: 1.004 }}
                 transition={{ duration: 0.34, ease: [0.22, 1, 0.36, 1] }}
                 style={{ transformOrigin: `${x + width / 2}px ${trackY}px` }}
@@ -1060,7 +1078,8 @@ function AllocationPerformancePreview({
                   rx="8"
                   fill="url(#allocation-mini-stripes)"
                   animate={{
-                    opacity: activeBar.id === bar.id ? 1 : 0.72,
+                    opacity:
+                      activeBar === null || activeBar.id === bar.id ? 1 : 0.72,
                   }}
                   transition={{ duration: 0.3, ease: "easeOut" }}
                 />
@@ -1074,7 +1093,8 @@ function AllocationPerformancePreview({
                   initial={compact ? { scaleY: 0, opacity: 0 } : false}
                   animate={{
                     scaleY: 1,
-                    opacity: activeBar.id === bar.id ? 1 : 0.84,
+                    opacity:
+                      activeBar === null || activeBar.id === bar.id ? 1 : 0.84,
                   }}
                   transition={{
                     delay: index * 0.07,
@@ -1099,56 +1119,58 @@ function AllocationPerformancePreview({
           })}
         </g>
         <AnimatePresence mode="wait">
-          <motion.g
-            key={activeBar.id}
-            pointerEvents="none"
-            initial={compact ? { opacity: 0, y: 6, scale: 0.98 } : false}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 4, scale: 0.98 }}
-            transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <rect
-              x={tooltipX}
-              y={tooltipY}
-              width={tooltipWidth}
-              height="58"
-              rx="10"
-              fill="var(--popover)"
-              stroke="var(--border)"
-              filter="url(#allocation-mini-tooltip-shadow)"
-            />
-            <text
-              x={tooltipX + 13}
-              y={tooltipY + 22}
-              fill="var(--popover-foreground)"
-              className="text-[11px] font-semibold"
+          {activeBar ? (
+            <motion.g
+              key={activeBar.id}
+              pointerEvents="none"
+              initial={compact ? { opacity: 0, y: 6, scale: 0.98 } : false}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 4, scale: 0.98 }}
+              transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
             >
-              {activeBar.label}
-            </text>
-            <circle
-              cx={tooltipX + 16}
-              cy={tooltipY + 40}
-              r="4.5"
-              fill={activeBar.color}
-            />
-            <text
-              x={tooltipX + 28}
-              y={tooltipY + 44}
-              fill="var(--muted-foreground)"
-              className="text-[11px] font-medium"
-            >
-              Allocation
-            </text>
-            <text
-              x={tooltipX + tooltipWidth - 12}
-              y={tooltipY + 44}
-              textAnchor="end"
-              fill="var(--popover-foreground)"
-              className="text-[11px] font-semibold"
-            >
-              {activeBar.value}%
-            </text>
-          </motion.g>
+              <rect
+                x={tooltipX}
+                y={tooltipY}
+                width={tooltipWidth}
+                height="58"
+                rx="10"
+                fill="var(--popover)"
+                stroke="var(--border)"
+                filter="url(#allocation-mini-tooltip-shadow)"
+              />
+              <text
+                x={tooltipX + 13}
+                y={tooltipY + 22}
+                fill="var(--popover-foreground)"
+                className="text-[11px] font-semibold"
+              >
+                {activeBar.label}
+              </text>
+              <circle
+                cx={tooltipX + 16}
+                cy={tooltipY + 40}
+                r="4.5"
+                fill={activeBar.color}
+              />
+              <text
+                x={tooltipX + 28}
+                y={tooltipY + 44}
+                fill="var(--muted-foreground)"
+                className="text-[11px] font-medium"
+              >
+                Allocation
+              </text>
+              <text
+                x={tooltipX + tooltipWidth - 12}
+                y={tooltipY + 44}
+                textAnchor="end"
+                fill="var(--popover-foreground)"
+                className="text-[11px] font-semibold"
+              >
+                {activeBar.value}%
+              </text>
+            </motion.g>
+          ) : null}
         </AnimatePresence>
       </svg>
     </PreviewFrame>
@@ -1156,12 +1178,14 @@ function AllocationPerformancePreview({
 }
 
 function RiskScoreGaugePreview({ compact = false }: { compact?: boolean }) {
-  const accent = "oklch(0.75 0.16 70)";
+  const accent = "var(--chart-4)";
   const path = "M98 142 A92 92 0 0 1 282 142";
   const progressPath = "M98 142 A92 92 0 0 1 249 71";
   const markerX = 249;
   const markerY = 71;
-  const [tooltipVisible, setTooltipVisible] = useState(true);
+  const [tooltipHovered, setTooltipHovered] = useState(false);
+  const [tooltipSelected, setTooltipSelected] = useState(false);
+  const tooltipVisible = tooltipHovered || tooltipSelected;
   const shouldReduceMotion = useReducedMotion();
   const animate = compact && !shouldReduceMotion;
 
@@ -1172,10 +1196,10 @@ function RiskScoreGaugePreview({ compact = false }: { compact?: boolean }) {
           <filter id="risk-mini-tooltip-shadow">
             <feDropShadow
               dx="0"
-              dy="10"
+              dy="2"
               floodColor="var(--foreground)"
-              floodOpacity="0.13"
-              stdDeviation="10"
+              floodOpacity="0.12"
+              stdDeviation="3"
             />
           </filter>
           <pattern
@@ -1207,10 +1231,20 @@ function RiskScoreGaugePreview({ compact = false }: { compact?: boolean }) {
           </linearGradient>
         </defs>
 
-        <g
+        <motion.g
           transform="translate(0 10)"
-          onPointerEnter={() => setTooltipVisible(true)}
-          onPointerLeave={() => setTooltipVisible(false)}
+          tabIndex={0}
+          role="button"
+          aria-label="Inspect risk score"
+          onPointerEnter={() => setTooltipHovered(true)}
+          onPointerLeave={() => setTooltipHovered(false)}
+          onClick={() => setTooltipSelected((selected) => !selected)}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              setTooltipSelected((selected) => !selected);
+            }
+          }}
         >
           <path
             d={path}
@@ -1263,7 +1297,7 @@ function RiskScoreGaugePreview({ compact = false }: { compact?: boolean }) {
                   values="0.2;0.4;0.2"
                   begin="1.05s"
                   dur="2s"
-                  repeatCount="indefinite"
+                  repeatCount="1"
                 />
               </circle>
               <circle
@@ -1296,7 +1330,7 @@ function RiskScoreGaugePreview({ compact = false }: { compact?: boolean }) {
               <circle cx={markerX} cy={markerY} r="3" fill={accent} />
             </g>
           )}
-        </g>
+        </motion.g>
 
         {/* Centered value inside the gauge */}
         <text
@@ -1324,7 +1358,7 @@ function RiskScoreGaugePreview({ compact = false }: { compact?: boolean }) {
               initial={compact ? { opacity: 0, y: 6, scale: 0.98 } : false}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 4, scale: 0.98 }}
-              transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
             >
               <rect
                 x="214"
@@ -1509,7 +1543,7 @@ function MiniSignalFlowPreview() {
                       <animateMotion
                         dur="3.4s"
                         begin={`-${(particle * 1.13).toFixed(2)}s`}
-                        repeatCount="indefinite"
+                        repeatCount="1"
                         keyPoints={`0;${lane.fraction.toFixed(3)}`}
                         keyTimes="0;1"
                         calcMode="linear"
@@ -1711,7 +1745,7 @@ function MiniBubblePreview() {
               opacity: { duration: 0.3, delay: index * 0.08 },
               y: {
                 duration: 4 + index * 0.6,
-                repeat: Number.POSITIVE_INFINITY,
+                repeat: 0,
                 ease: "easeInOut",
               },
             }}
@@ -2373,7 +2407,7 @@ function ActivePoint({ cx, cy }: { cx: number; cy: number }) {
         fill="currentColor"
         opacity="0.14"
         animate={{ r: [8, 14, 8], opacity: [0.12, 0.22, 0.12] }}
-        transition={{ duration: 1.8, repeat: Number.POSITIVE_INFINITY }}
+        transition={{ duration: 0.18 }}
       />
       <circle cx={cx} cy={cy} r="4" fill="currentColor" />
       <circle

@@ -1,15 +1,10 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import {
-  type ComponentProps,
-  type ReactNode,
-  useId,
-  useMemo,
-  useState,
-} from "react";
+import { type ComponentProps, type ReactNode, useId, useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
+import { useChartInteraction } from "./chart-interaction";
 
 export const resourceTreemapChartVariants = tv({
   base: "not-prose w-full text-foreground",
@@ -137,7 +132,6 @@ export function ResourceTreemapChart({
   const shouldReduceMotion = useReducedMotion();
   const rawId = useId();
   const id = rawId.replace(/:/g, "");
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   const motionEnabled = animated && !shouldReduceMotion;
 
@@ -145,6 +139,8 @@ export function ResourceTreemapChart({
     () => data.filter((d) => Number.isFinite(d.value) && d.value > 0),
     [data],
   );
+  const { activeIndex, getItemProps, hasEnteredView, interactionProps } =
+    useChartInteraction(id, normalizedData.length);
 
   const total = useMemo(
     () => normalizedData.reduce((s, d) => s + d.value, 0),
@@ -209,6 +205,7 @@ export function ResourceTreemapChart({
     <div
       data-slot="resource-treemap-chart"
       className={twMerge(resourceTreemapChartVariants({ size }), className)}
+      {...interactionProps}
       {...props}
     >
       <div data-slot="resource-treemap-chart-header" className="mb-3">
@@ -227,250 +224,254 @@ export function ResourceTreemapChart({
         className="overflow-hidden rounded-xl"
         style={{ height }}
       >
-        <svg
-          viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
-          className="size-full"
-          role="img"
-          aria-labelledby={`${id}-title`}
-        >
-          <title id={`${id}-title`}>{String(title)}</title>
-          <defs>
-            {tiles.map((tile) => (
-              <radialGradient
-                key={`grad-${tile.i}`}
-                id={`${id}-grad-${tile.i}`}
-                cx="30%"
-                cy="28%"
-                r="80%"
-              >
-                <stop
-                  offset="0%"
-                  stopColor={`color-mix(in oklab, ${tile.color} 55%, white)`}
-                />
-                <stop offset="55%" stopColor={tile.color} />
-                <stop
-                  offset="100%"
-                  stopColor={`color-mix(in oklab, ${tile.color} 70%, black)`}
-                />
-              </radialGradient>
-            ))}
-          </defs>
+        {!motionEnabled || hasEnteredView ? (
+          <svg
+            viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
+            className="size-full"
+            role="img"
+            aria-labelledby={`${id}-title`}
+          >
+            <title id={`${id}-title`}>{String(title)}</title>
+            <defs>
+              {tiles.map((tile) => (
+                <radialGradient
+                  key={`grad-${tile.i}`}
+                  id={`${id}-grad-${tile.i}`}
+                  cx="30%"
+                  cy="28%"
+                  r="80%"
+                >
+                  <stop
+                    offset="0%"
+                    stopColor={`color-mix(in oklab, ${tile.color} 55%, white)`}
+                  />
+                  <stop offset="55%" stopColor={tile.color} />
+                  <stop
+                    offset="100%"
+                    stopColor={`color-mix(in oklab, ${tile.color} 70%, black)`}
+                  />
+                </radialGradient>
+              ))}
+            </defs>
 
-          {tiles.map((tile) => {
-            const isActive = activeIndex === tile.i;
-            const r = tile.rect;
-            const rx = r.x + gap / 2;
-            const ry = r.y + gap / 2;
-            const rw = Math.max(0, r.w - gap);
-            const rh = Math.max(0, r.h - gap);
-            const cx = rx + rw / 2;
-            const cy = ry + rh / 2;
-            const isLargest = tile.i === 0;
-            const showLabel = showLabels && rw > 60 && rh > 36;
-            const showValue = rw > 60 && rh > 54;
+            {tiles.map((tile) => {
+              const isActive = activeIndex === tile.i;
+              const r = tile.rect;
+              const rx = r.x + gap / 2;
+              const ry = r.y + gap / 2;
+              const rw = Math.max(0, r.w - gap);
+              const rh = Math.max(0, r.h - gap);
+              const cx = rx + rw / 2;
+              const cy = ry + rh / 2;
+              const isLargest = tile.i === 0;
+              const showLabel = showLabels && rw > 60 && rh > 36;
+              const showValue = rw > 60 && rh > 54;
 
-            return (
-              <motion.g
-                key={`tile-${tile.i}`}
-                data-slot="resource-treemap-chart-tile"
-                tabIndex={0}
-                role="button"
-                aria-label={`${tile.label}: ${fmt(tile)}, ${tile.percent}%`}
-                onPointerEnter={() => setActiveIndex(tile.i)}
-                onPointerLeave={() => setActiveIndex(null)}
-                onFocus={() => setActiveIndex(tile.i)}
-                onBlur={() => setActiveIndex(null)}
-                className="outline-none"
-                style={{ transformOrigin: `${cx}px ${cy}px` }}
-                animate={{
-                  scale: isActive ? 1.012 : 1,
-                }}
-                transition={{
-                  type: "spring",
-                  stiffness: 300,
-                  damping: 22,
-                }}
-              >
-                <motion.rect
-                  x={rx}
-                  y={ry}
-                  width={rw}
-                  height={rh}
-                  rx="6"
-                  fill={`url(#${id}-grad-${tile.i})`}
-                  fillOpacity={isActive ? 1 : 0.88}
-                  stroke="var(--background)"
-                  strokeWidth="0"
-                  initial={
-                    motionEnabled
-                      ? { scale: 0, opacity: 0 }
-                      : { scale: 1, opacity: 0.88 }
-                  }
-                  animate={{ scale: 1, opacity: isActive ? 1 : 0.88 }}
-                  transition={{
-                    scale: {
-                      delay: motionDelay + tile.i * 0.06,
-                      type: "spring",
-                      stiffness: 180,
-                      damping: 20,
-                    },
-                    opacity: {
-                      delay: motionDelay + tile.i * 0.06,
-                      duration: 0.32,
-                    },
-                  }}
+              return (
+                <motion.g
+                  key={`tile-${tile.i}`}
+                  data-slot="resource-treemap-chart-tile"
+                  tabIndex={0}
+                  role="button"
+                  aria-label={`${tile.label}: ${fmt(tile)}, ${tile.percent}%`}
+                  {...getItemProps(tile.i)}
+                  className="outline-none"
                   style={{ transformOrigin: `${cx}px ${cy}px` }}
-                />
-
-                {/* Highlight edge on active */}
-                {isActive ? (
-                  <rect
+                  animate={{
+                    scale: isActive ? 1.012 : 1,
+                  }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 300,
+                    damping: 22,
+                  }}
+                >
+                  <motion.rect
                     x={rx}
                     y={ry}
                     width={rw}
                     height={rh}
                     rx="6"
-                    fill="none"
-                    stroke="white"
-                    strokeOpacity="0.25"
-                    strokeWidth="1.5"
-                    pointerEvents="none"
+                    fill={`url(#${id}-grad-${tile.i})`}
+                    fillOpacity={isActive ? 1 : 0.88}
+                    stroke="var(--background)"
+                    strokeWidth="0"
+                    initial={
+                      motionEnabled
+                        ? { scale: 0, opacity: 0 }
+                        : { scale: 1, opacity: 0.88 }
+                    }
+                    animate={{ scale: 1, opacity: isActive ? 1 : 0.88 }}
+                    transition={{
+                      scale: {
+                        delay: motionDelay + tile.i * 0.06,
+                        type: "spring",
+                        stiffness: 180,
+                        damping: 20,
+                      },
+                      opacity: {
+                        delay: motionDelay + tile.i * 0.06,
+                        duration: 0.32,
+                      },
+                    }}
+                    style={{ transformOrigin: `${cx}px ${cy}px` }}
                   />
-                ) : null}
 
-                {/* Percentage badge for large tiles */}
-                {isLargest && rw > 100 ? (
-                  <motion.text
-                    x={rx + 10}
-                    y={ry + 18}
-                    fill="white"
-                    fillOpacity="0.55"
-                    className="text-[11px] font-semibold tabular-nums"
-                    initial={motionEnabled ? { opacity: 0 } : false}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: motionDelay + 0.5, duration: 0.3 }}
-                  >
-                    {tile.percent}%
-                  </motion.text>
-                ) : null}
+                  {/* Highlight edge on active */}
+                  {isActive ? (
+                    <rect
+                      x={rx}
+                      y={ry}
+                      width={rw}
+                      height={rh}
+                      rx="6"
+                      fill="none"
+                      stroke="white"
+                      strokeOpacity="0.25"
+                      strokeWidth="1.5"
+                      pointerEvents="none"
+                    />
+                  ) : null}
 
-                {showLabel ? (
-                  <motion.text
-                    x={cx}
-                    y={showValue ? cy - 8 : cy + 4}
-                    textAnchor="middle"
-                    dominantBaseline="middle"
-                    fill="white"
-                    fillOpacity="0.92"
+                  {/* Percentage badge for large tiles */}
+                  {isLargest && rw > 100 ? (
+                    <motion.text
+                      x={rx + 10}
+                      y={ry + 18}
+                      fill="white"
+                      fillOpacity="0.55"
+                      className="text-[11px] font-semibold tabular-nums"
+                      initial={motionEnabled ? { opacity: 0 } : false}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: motionDelay + 0.5, duration: 0.3 }}
+                    >
+                      {tile.percent}%
+                    </motion.text>
+                  ) : null}
+
+                  {showLabel ? (
+                    <motion.text
+                      x={cx}
+                      y={showValue ? cy - 8 : cy + 4}
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                      fill="white"
+                      fillOpacity="0.92"
+                      className="text-[12px] font-semibold"
+                      initial={motionEnabled ? { opacity: 0 } : false}
+                      animate={{ opacity: 1 }}
+                      transition={{
+                        delay: motionDelay + tile.i * 0.06 + 0.32,
+                        duration: 0.28,
+                      }}
+                    >
+                      {tile.label}
+                    </motion.text>
+                  ) : null}
+
+                  {showValue ? (
+                    <motion.text
+                      x={cx}
+                      y={cy + 10}
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                      fill="white"
+                      fillOpacity="0.65"
+                      className="text-[11px] font-medium tabular-nums"
+                      initial={motionEnabled ? { opacity: 0 } : false}
+                      animate={{ opacity: 1 }}
+                      transition={{
+                        delay: motionDelay + tile.i * 0.06 + 0.4,
+                        duration: 0.28,
+                      }}
+                    >
+                      {fmt(tile)}
+                    </motion.text>
+                  ) : null}
+                </motion.g>
+              );
+            })}
+
+            {/* Tooltip */}
+            <AnimatePresence>
+              {showTooltip && activePoint ? (
+                <motion.g
+                  data-slot="resource-treemap-chart-tooltip"
+                  pointerEvents="none"
+                  initial={
+                    motionEnabled
+                      ? {
+                          opacity: 0,
+                          x: tooltipX,
+                          y: tooltipY + 6,
+                          scale: 0.97,
+                        }
+                      : false
+                  }
+                  animate={{ opacity: 1, x: tooltipX, y: tooltipY, scale: 1 }}
+                  exit={{
+                    opacity: 0,
+                    x: tooltipX,
+                    y: tooltipY + 4,
+                    scale: 0.97,
+                  }}
+                  transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <rect
+                    width={tooltipWidth}
+                    height={tooltipHeight}
+                    rx="10"
+                    fill="var(--popover)"
+                    stroke="var(--border)"
+                  />
+                  <circle cx="14" cy="18" r="4.5" fill={activePoint.color} />
+                  <text
+                    x="26"
+                    y="22"
+                    fill="var(--popover-foreground)"
                     className="text-[12px] font-semibold"
-                    initial={motionEnabled ? { opacity: 0 } : false}
-                    animate={{ opacity: 1 }}
-                    transition={{
-                      delay: motionDelay + tile.i * 0.06 + 0.32,
-                      duration: 0.28,
-                    }}
                   >
-                    {tile.label}
-                  </motion.text>
-                ) : null}
-
-                {showValue ? (
-                  <motion.text
-                    x={cx}
-                    y={cy + 10}
-                    textAnchor="middle"
-                    dominantBaseline="middle"
-                    fill="white"
-                    fillOpacity="0.65"
-                    className="text-[11px] font-medium tabular-nums"
-                    initial={motionEnabled ? { opacity: 0 } : false}
-                    animate={{ opacity: 1 }}
-                    transition={{
-                      delay: motionDelay + tile.i * 0.06 + 0.4,
-                      duration: 0.28,
-                    }}
+                    {activePoint.label}
+                  </text>
+                  <text
+                    x="14"
+                    y="40"
+                    fill="var(--muted-foreground)"
+                    className="text-[10.5px] font-medium"
                   >
-                    {fmt(tile)}
-                  </motion.text>
-                ) : null}
-              </motion.g>
-            );
-          })}
-
-          {/* Tooltip */}
-          <AnimatePresence>
-            {showTooltip && activePoint ? (
-              <motion.g
-                data-slot="resource-treemap-chart-tooltip"
-                pointerEvents="none"
-                initial={
-                  motionEnabled
-                    ? {
-                        opacity: 0,
-                        x: tooltipX,
-                        y: tooltipY + 6,
-                        scale: 0.97,
-                      }
-                    : false
-                }
-                animate={{ opacity: 1, x: tooltipX, y: tooltipY, scale: 1 }}
-                exit={{ opacity: 0, x: tooltipX, y: tooltipY + 4, scale: 0.97 }}
-                transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <rect
-                  width={tooltipWidth}
-                  height={tooltipHeight}
-                  rx="10"
-                  fill="var(--popover)"
-                  stroke="var(--border)"
-                />
-                <circle cx="14" cy="18" r="4.5" fill={activePoint.color} />
-                <text
-                  x="26"
-                  y="22"
-                  fill="var(--popover-foreground)"
-                  className="text-[12px] font-semibold"
-                >
-                  {activePoint.label}
-                </text>
-                <text
-                  x="14"
-                  y="40"
-                  fill="var(--muted-foreground)"
-                  className="text-[10.5px] font-medium"
-                >
-                  Size
-                </text>
-                <text
-                  x={tooltipWidth - 14}
-                  y="40"
-                  textAnchor="end"
-                  fill="var(--popover-foreground)"
-                  className="text-[10.5px] font-semibold tabular-nums"
-                >
-                  {fmt(activePoint)}
-                </text>
-                <text
-                  x="14"
-                  y="54"
-                  fill="var(--muted-foreground)"
-                  className="text-[10.5px] font-medium"
-                >
-                  Share
-                </text>
-                <text
-                  x={tooltipWidth - 14}
-                  y="54"
-                  textAnchor="end"
-                  fill="var(--popover-foreground)"
-                  className="text-[10.5px] font-semibold tabular-nums"
-                >
-                  {activePoint.percent}%
-                </text>
-              </motion.g>
-            ) : null}
-          </AnimatePresence>
-        </svg>
+                    Size
+                  </text>
+                  <text
+                    x={tooltipWidth - 14}
+                    y="40"
+                    textAnchor="end"
+                    fill="var(--popover-foreground)"
+                    className="text-[10.5px] font-semibold tabular-nums"
+                  >
+                    {fmt(activePoint)}
+                  </text>
+                  <text
+                    x="14"
+                    y="54"
+                    fill="var(--muted-foreground)"
+                    className="text-[10.5px] font-medium"
+                  >
+                    Share
+                  </text>
+                  <text
+                    x={tooltipWidth - 14}
+                    y="54"
+                    textAnchor="end"
+                    fill="var(--popover-foreground)"
+                    className="text-[10.5px] font-semibold tabular-nums"
+                  >
+                    {activePoint.percent}%
+                  </text>
+                </motion.g>
+              ) : null}
+            </AnimatePresence>
+          </svg>
+        ) : null}
       </div>
     </div>
   );

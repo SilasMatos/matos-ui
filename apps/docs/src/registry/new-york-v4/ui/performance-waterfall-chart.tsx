@@ -1,15 +1,10 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import {
-  type ComponentProps,
-  type ReactNode,
-  useId,
-  useMemo,
-  useState,
-} from "react";
+import { type ComponentProps, type ReactNode, useId, useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
+import { useChartInteraction } from "./chart-interaction";
 
 export const performanceWaterfallChartVariants = tv({
   base: "not-prose w-full text-foreground",
@@ -104,7 +99,6 @@ export function PerformanceWaterfallChart({
   const shouldReduceMotion = useReducedMotion();
   const rawId = useId();
   const id = rawId.replace(/:/g, "");
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   const motionEnabled = animated && !shouldReduceMotion;
 
@@ -125,19 +119,9 @@ export function PerformanceWaterfallChart({
     [normalizedData],
   );
 
-  const slowestIndex = useMemo(() => {
-    let maxDur = 0;
-    let idx = 0;
-    normalizedData.forEach((d, i) => {
-      if (d.duration > maxDur) {
-        maxDur = d.duration;
-        idx = i;
-      }
-    });
-    return idx;
-  }, [normalizedData]);
-
   const n = normalizedData.length;
+  const { activeIndex, getItemProps, hasEnteredView, interactionProps } =
+    useChartInteraction(id, n);
 
   // Layout constants
   const viewBoxWidth = 760;
@@ -157,8 +141,7 @@ export function PerformanceWaterfallChart({
     const bw = Math.max(4, (d.duration / totalTime) * barAreaWidth);
     const by = topGutter + i * rowPitch + Math.round((rowPitch - barH) / 2);
     const color = resolveTone(d.tone, i);
-    const isSlowest = i === slowestIndex;
-    return { ...d, bx, bw, by, color, isSlowest, i };
+    return { ...d, bx, bw, by, color, i };
   });
 
   const activeBar = activeIndex !== null ? bars[activeIndex] : null;
@@ -191,6 +174,7 @@ export function PerformanceWaterfallChart({
         performanceWaterfallChartVariants({ size }),
         className,
       )}
+      {...interactionProps}
       {...props}
     >
       <div data-slot="performance-waterfall-chart-header" className="mb-3">
@@ -209,320 +193,302 @@ export function PerformanceWaterfallChart({
         className="overflow-hidden"
         style={{ height }}
       >
-        <svg
-          viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
-          className="size-full"
-          role="img"
-          aria-labelledby={`${id}-title`}
-        >
-          <title id={`${id}-title`}>{String(title)}</title>
-          <defs>
-            <filter id={`${id}-glow`}>
-              <feGaussianBlur stdDeviation="4" result="blur" />
-              <feMerge>
-                <feMergeNode in="blur" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-            {bars.map((bar) => (
-              <clipPath key={`clip-${bar.i}`} id={`${id}-bc-${bar.i}`}>
-                <motion.rect
-                  x={bar.bx}
-                  y={bar.by - 2}
-                  height={barH + 4}
-                  initial={motionEnabled ? { width: 0 } : { width: bar.bw }}
-                  animate={{ width: bar.bw }}
-                  transition={{
-                    delay: motionDelay + bar.i * 0.09,
-                    duration: 0.62,
-                    ease: [0.16, 1, 0.3, 1],
-                  }}
-                />
-              </clipPath>
-            ))}
-          </defs>
-
-          {/* Row tracks */}
-          {bars.map((bar) => (
-            <rect
-              key={`track-${bar.i}`}
-              x={barStartX}
-              y={bar.by}
-              width={barAreaWidth}
-              height={barH}
-              rx={barH / 2}
-              fill="var(--muted)"
-              fillOpacity="0.35"
-            />
-          ))}
-
-          {/* Grid lines */}
-          {ticks.slice(1, -1).map((tick) => (
-            <line
-              key={`grid-${tick.x}`}
-              x1={tick.x}
-              x2={tick.x}
-              y1={topGutter - 2}
-              y2={axisY}
-              stroke="var(--border)"
-              strokeDasharray="3 7"
-              strokeWidth="1"
-              opacity="0.5"
-            />
-          ))}
-
-          {/* Bars */}
-          {bars.map((bar) => {
-            const isActive = activeIndex === bar.i;
-            return (
-              <motion.g
-                key={`bar-${bar.i}`}
-                data-slot="performance-waterfall-chart-bar"
-                tabIndex={0}
-                role="button"
-                aria-label={`${bar.label}: ${valueFormatter(bar.start)} + ${valueFormatter(bar.duration)}`}
-                onPointerEnter={() => setActiveIndex(bar.i)}
-                onPointerLeave={() => setActiveIndex(null)}
-                onFocus={() => setActiveIndex(bar.i)}
-                onBlur={() => setActiveIndex(null)}
-                animate={{ opacity: isActive ? 1 : 0.78 }}
-                transition={{ duration: 0.22 }}
-                className="outline-none focus-visible:[filter:drop-shadow(0_0_0.2rem_currentColor)]"
-                style={{ color: bar.color }}
-              >
-                {/* Step label */}
-                <text
-                  x={labelWidth - 4}
-                  y={bar.by + barH / 2 + 1}
-                  textAnchor="end"
-                  dominantBaseline="middle"
-                  fill={
-                    isActive ? "var(--foreground)" : "var(--muted-foreground)"
-                  }
-                  className="text-[11.5px] font-medium"
-                >
-                  {bar.label}
-                </text>
-
-                {/* Glow ring behind slowest bar */}
-                {bar.isSlowest && motionEnabled ? (
+        {!motionEnabled || hasEnteredView ? (
+          <svg
+            viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
+            className="size-full"
+            role="img"
+            aria-labelledby={`${id}-title`}
+          >
+            <title id={`${id}-title`}>{String(title)}</title>
+            <defs>
+              {bars.map((bar) => (
+                <clipPath key={`clip-${bar.i}`} id={`${id}-bc-${bar.i}`}>
                   <motion.rect
-                    x={bar.bx - 2}
+                    x={bar.bx}
                     y={bar.by - 2}
-                    width={bar.bw + 4}
+                    width={bar.bw}
                     height={barH + 4}
-                    rx={(barH + 4) / 2}
-                    fill="currentColor"
-                    fillOpacity="0"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    animate={{ strokeOpacity: [0.2, 0.48, 0.2] }}
+                    initial={motionEnabled ? { scaleX: 0 } : false}
+                    animate={{ scaleX: 1 }}
                     transition={{
-                      duration: 2.2,
-                      repeat: Number.POSITIVE_INFINITY,
-                      ease: "easeInOut",
-                      delay: motionDelay + 0.8,
+                      delay: motionDelay + bar.i * 0.09,
+                      duration: 0.62,
+                      ease: [0.16, 1, 0.3, 1],
+                    }}
+                    style={{
+                      transformBox: "fill-box",
+                      transformOrigin: "left center",
                     }}
                   />
-                ) : null}
+                </clipPath>
+              ))}
+            </defs>
 
-                {/* Bar body */}
-                <rect
-                  x={bar.bx}
-                  y={bar.by}
-                  width={bar.bw}
-                  height={barH}
-                  rx={barH / 2}
-                  fill="currentColor"
-                  clipPath={`url(#${id}-bc-${bar.i})`}
-                />
+            {/* Row tracks */}
+            {bars.map((bar) => (
+              <rect
+                key={`track-${bar.i}`}
+                x={barStartX}
+                y={bar.by}
+                width={barAreaWidth}
+                height={barH}
+                rx={barH / 2}
+                fill="var(--muted)"
+                fillOpacity="0.35"
+              />
+            ))}
 
-                {/* Duration label inside bar if wide enough */}
-                {bar.bw > 52 ? (
-                  <motion.text
-                    x={bar.bx + bar.bw - 8}
+            {/* Grid lines */}
+            {ticks.slice(1, -1).map((tick) => (
+              <line
+                key={`grid-${tick.x}`}
+                x1={tick.x}
+                x2={tick.x}
+                y1={topGutter - 2}
+                y2={axisY}
+                stroke="var(--border)"
+                strokeDasharray="3 7"
+                strokeWidth="1"
+                opacity="0.5"
+              />
+            ))}
+
+            {/* Bars */}
+            {bars.map((bar) => {
+              const isActive = activeIndex === bar.i;
+              return (
+                <motion.g
+                  key={`bar-${bar.i}`}
+                  data-slot="performance-waterfall-chart-bar"
+                  tabIndex={0}
+                  role="button"
+                  aria-label={`${bar.label}: ${valueFormatter(bar.start)} + ${valueFormatter(bar.duration)}`}
+                  {...getItemProps(bar.i)}
+                  animate={{ opacity: isActive ? 1 : 0.78 }}
+                  transition={{ duration: 0.22 }}
+                  className="outline-none focus-visible:[&>rect]:stroke-ring focus-visible:[&>rect]:stroke-2"
+                  style={{ color: bar.color }}
+                >
+                  {/* Step label */}
+                  <text
+                    x={labelWidth - 4}
                     y={bar.by + barH / 2 + 1}
                     textAnchor="end"
                     dominantBaseline="middle"
-                    fill="var(--background)"
-                    fillOpacity="0.85"
-                    className="text-[10px] font-semibold tabular-nums"
-                    initial={motionEnabled ? { opacity: 0 } : false}
-                    animate={{ opacity: 1 }}
-                    transition={{
-                      delay: motionDelay + bar.i * 0.09 + 0.45,
-                      duration: 0.22,
-                    }}
-                    clipPath={`url(#${id}-bc-${bar.i})`}
+                    fill={
+                      isActive ? "var(--foreground)" : "var(--muted-foreground)"
+                    }
+                    className="text-[11.5px] font-medium"
                   >
-                    {valueFormatter(bar.duration)}
-                  </motion.text>
-                ) : null}
-              </motion.g>
-            );
-          })}
+                    {bar.label}
+                  </text>
 
-          {/* Baseline */}
-          <line
-            x1={barStartX}
-            x2={barStartX + barAreaWidth}
-            y1={axisY}
-            y2={axisY}
-            stroke="var(--border)"
-            strokeWidth="1.5"
-            opacity="0.7"
-          />
+                  {/* Bar body */}
+                  <rect
+                    x={bar.bx}
+                    y={bar.by}
+                    width={bar.bw}
+                    height={barH}
+                    rx={barH / 2}
+                    fill="currentColor"
+                    clipPath={`url(#${id}-bc-${bar.i})`}
+                  />
 
-          {/* Time axis ticks */}
-          {ticks.map((tick, ti) => (
-            <g key={`tick-${tick.label}-${tick.x.toFixed(2)}`}>
-              <line
-                x1={tick.x}
-                x2={tick.x}
-                y1={axisY}
-                y2={axisY + 5}
-                stroke="var(--border)"
-                strokeWidth="1"
-                opacity="0.6"
-              />
-              <text
-                x={tick.x}
-                y={axisY + 17}
-                textAnchor={
-                  ti === 0 ? "start" : ti === tickCount - 1 ? "end" : "middle"
-                }
-                fill="var(--muted-foreground)"
-                className="text-[10px] font-medium tabular-nums"
-              >
-                {tick.label}
-              </text>
-            </g>
-          ))}
+                  {/* Duration label inside bar if wide enough */}
+                  {bar.bw > 52 ? (
+                    <motion.text
+                      x={bar.bx + bar.bw - 8}
+                      y={bar.by + barH / 2 + 1}
+                      textAnchor="end"
+                      dominantBaseline="middle"
+                      fill="var(--background)"
+                      fillOpacity="0.85"
+                      className="text-[10px] font-semibold tabular-nums"
+                      initial={motionEnabled ? { opacity: 0 } : false}
+                      animate={{ opacity: 1 }}
+                      transition={{
+                        delay: motionDelay + bar.i * 0.09 + 0.45,
+                        duration: 0.22,
+                      }}
+                      clipPath={`url(#${id}-bc-${bar.i})`}
+                    >
+                      {valueFormatter(bar.duration)}
+                    </motion.text>
+                  ) : null}
+                </motion.g>
+              );
+            })}
 
-          {/* LCP / milestone marker */}
-          {showMarker && markerX !== null ? (
-            <g data-slot="performance-waterfall-chart-marker">
-              <motion.line
-                x1={markerX}
-                x2={markerX}
-                y1={topGutter - 4}
-                y2={axisY + 2}
-                stroke="var(--foreground)"
-                strokeWidth="1.5"
-                strokeDasharray="4 5"
-                strokeLinecap="round"
-                opacity="0.55"
-                initial={motionEnabled ? { pathLength: 0, opacity: 0 } : false}
-                animate={{ pathLength: 1, opacity: 0.55 }}
-                transition={{
-                  delay: motionDelay + 0.7,
-                  duration: 0.45,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
-              />
-              <motion.text
-                x={markerX + 5}
-                y={topGutter - 8}
-                fill="var(--foreground)"
-                className="text-[10px] font-semibold"
-                initial={motionEnabled ? { opacity: 0 } : false}
-                animate={{ opacity: 0.72 }}
-                transition={{ delay: motionDelay + 1.1, duration: 0.24 }}
-              >
-                {markerLabel}
-              </motion.text>
-              <circle
-                cx={markerX}
-                cy={topGutter - 4}
-                r="3"
-                fill="var(--foreground)"
-                opacity="0.55"
-              />
-            </g>
-          ) : null}
+            {/* Baseline */}
+            <line
+              x1={barStartX}
+              x2={barStartX + barAreaWidth}
+              y1={axisY}
+              y2={axisY}
+              stroke="var(--border)"
+              strokeWidth="1.5"
+              opacity="0.7"
+            />
 
-          {/* Tooltip */}
-          <AnimatePresence>
-            {showTooltip && activeBar ? (
-              <motion.g
-                data-slot="performance-waterfall-chart-tooltip"
-                pointerEvents="none"
-                initial={
-                  motionEnabled
-                    ? {
-                        opacity: 0,
-                        x: tooltipX,
-                        y: tooltipY + 6,
-                        scale: 0.97,
-                      }
-                    : false
-                }
-                animate={{ opacity: 1, x: tooltipX, y: tooltipY, scale: 1 }}
-                exit={{ opacity: 0, x: tooltipX, y: tooltipY + 4, scale: 0.97 }}
-                transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <rect
-                  width={tooltipWidth}
-                  height={tooltipHeight}
-                  rx="12"
-                  fill="var(--popover)"
-                  stroke="var(--border)"
-                />
-                <text
-                  x="14"
-                  y="22"
-                  fill="var(--popover-foreground)"
-                  className="text-[12px] font-semibold"
-                >
-                  {activeBar.label}
-                </text>
+            {/* Time axis ticks */}
+            {ticks.map((tick, ti) => (
+              <g key={`tick-${tick.label}-${tick.x.toFixed(2)}`}>
                 <line
-                  x1="14"
-                  x2={tooltipWidth - 14}
-                  y1="30"
-                  y2="30"
+                  x1={tick.x}
+                  x2={tick.x}
+                  y1={axisY}
+                  y2={axisY + 5}
                   stroke="var(--border)"
-                  opacity="0.5"
+                  strokeWidth="1"
+                  opacity="0.6"
                 />
                 <text
-                  x="14"
-                  y="45"
+                  x={tick.x}
+                  y={axisY + 17}
+                  textAnchor={
+                    ti === 0 ? "start" : ti === tickCount - 1 ? "end" : "middle"
+                  }
                   fill="var(--muted-foreground)"
-                  className="text-[11px] font-medium"
+                  className="text-[10px] font-medium tabular-nums"
                 >
-                  Start
+                  {tick.label}
                 </text>
-                <text
-                  x={tooltipWidth - 14}
-                  y="45"
-                  textAnchor="end"
-                  fill="var(--popover-foreground)"
-                  className="text-[11px] font-semibold tabular-nums"
+              </g>
+            ))}
+
+            {/* LCP / milestone marker */}
+            {showMarker && markerX !== null ? (
+              <g data-slot="performance-waterfall-chart-marker">
+                <motion.line
+                  x1={markerX}
+                  x2={markerX}
+                  y1={topGutter - 4}
+                  y2={axisY + 2}
+                  stroke="var(--foreground)"
+                  strokeWidth="1.5"
+                  strokeDasharray="4 5"
+                  strokeLinecap="round"
+                  opacity="0.55"
+                  initial={
+                    motionEnabled ? { pathLength: 0, opacity: 0 } : false
+                  }
+                  animate={{ pathLength: 1, opacity: 0.55 }}
+                  transition={{
+                    delay: motionDelay + 0.7,
+                    duration: 0.45,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
+                />
+                <motion.text
+                  x={markerX + 5}
+                  y={topGutter - 8}
+                  fill="var(--foreground)"
+                  className="text-[10px] font-semibold"
+                  initial={motionEnabled ? { opacity: 0 } : false}
+                  animate={{ opacity: 0.72 }}
+                  transition={{ delay: motionDelay + 1.1, duration: 0.24 }}
                 >
-                  {valueFormatter(activeBar.start)}
-                </text>
-                <text
-                  x="14"
-                  y="60"
-                  fill="var(--muted-foreground)"
-                  className="text-[11px] font-medium"
-                >
-                  Duration
-                </text>
-                <text
-                  x={tooltipWidth - 14}
-                  y="60"
-                  textAnchor="end"
-                  fill="var(--popover-foreground)"
-                  className="text-[11px] font-semibold tabular-nums"
-                  style={{ fill: activeBar.color }}
-                >
-                  {valueFormatter(activeBar.duration)}
-                </text>
-              </motion.g>
+                  {markerLabel}
+                </motion.text>
+                <circle
+                  cx={markerX}
+                  cy={topGutter - 4}
+                  r="3"
+                  fill="var(--foreground)"
+                  opacity="0.55"
+                />
+              </g>
             ) : null}
-          </AnimatePresence>
-        </svg>
+
+            {/* Tooltip */}
+            <AnimatePresence>
+              {showTooltip && activeBar ? (
+                <motion.g
+                  data-slot="performance-waterfall-chart-tooltip"
+                  pointerEvents="none"
+                  initial={
+                    motionEnabled
+                      ? {
+                          opacity: 0,
+                          x: tooltipX,
+                          y: tooltipY + 6,
+                          scale: 0.97,
+                        }
+                      : false
+                  }
+                  animate={{ opacity: 1, x: tooltipX, y: tooltipY, scale: 1 }}
+                  exit={{
+                    opacity: 0,
+                    x: tooltipX,
+                    y: tooltipY + 4,
+                    scale: 0.97,
+                  }}
+                  transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <rect
+                    width={tooltipWidth}
+                    height={tooltipHeight}
+                    rx="12"
+                    fill="var(--popover)"
+                    stroke="var(--border)"
+                  />
+                  <text
+                    x="14"
+                    y="22"
+                    fill="var(--popover-foreground)"
+                    className="text-[12px] font-semibold"
+                  >
+                    {activeBar.label}
+                  </text>
+                  <line
+                    x1="14"
+                    x2={tooltipWidth - 14}
+                    y1="30"
+                    y2="30"
+                    stroke="var(--border)"
+                    opacity="0.5"
+                  />
+                  <text
+                    x="14"
+                    y="45"
+                    fill="var(--muted-foreground)"
+                    className="text-[11px] font-medium"
+                  >
+                    Start
+                  </text>
+                  <text
+                    x={tooltipWidth - 14}
+                    y="45"
+                    textAnchor="end"
+                    fill="var(--popover-foreground)"
+                    className="text-[11px] font-semibold tabular-nums"
+                  >
+                    {valueFormatter(activeBar.start)}
+                  </text>
+                  <text
+                    x="14"
+                    y="60"
+                    fill="var(--muted-foreground)"
+                    className="text-[11px] font-medium"
+                  >
+                    Duration
+                  </text>
+                  <text
+                    x={tooltipWidth - 14}
+                    y="60"
+                    textAnchor="end"
+                    fill="var(--popover-foreground)"
+                    className="text-[11px] font-semibold tabular-nums"
+                    style={{ fill: activeBar.color }}
+                  >
+                    {valueFormatter(activeBar.duration)}
+                  </text>
+                </motion.g>
+              ) : null}
+            </AnimatePresence>
+          </svg>
+        ) : null}
       </div>
     </div>
   );

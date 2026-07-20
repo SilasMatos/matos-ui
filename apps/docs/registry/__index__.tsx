@@ -374,6 +374,11 @@ export const Index: Record<string, any> = {
         type: "registry:ui",
         target: "",
       },
+      {
+        path: "src/registry/new-york-v4/ui/chart-interaction.ts",
+        type: "registry:ui",
+        target: "",
+      },
     ],
     component: React.lazy(async () => {
       const mod = await import(
@@ -394,6 +399,11 @@ export const Index: Record<string, any> = {
     files: [
       {
         path: "src/registry/new-york-v4/ui/allocation-performance-chart.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+      {
+        path: "src/registry/new-york-v4/ui/chart-interaction.ts",
         type: "registry:ui",
         target: "",
       },
@@ -420,6 +430,11 @@ export const Index: Record<string, any> = {
         type: "registry:ui",
         target: "",
       },
+      {
+        path: "src/registry/new-york-v4/ui/chart-interaction.ts",
+        type: "registry:ui",
+        target: "",
+      },
     ],
     component: React.lazy(async () => {
       const mod = await import("@/registry/new-york-v4/ui/sparkline-card.tsx");
@@ -438,6 +453,11 @@ export const Index: Record<string, any> = {
     files: [
       {
         path: "src/registry/new-york-v4/ui/signal-flow-chart.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+      {
+        path: "src/registry/new-york-v4/ui/chart-interaction.ts",
         type: "registry:ui",
         target: "",
       },
@@ -464,6 +484,11 @@ export const Index: Record<string, any> = {
         type: "registry:ui",
         target: "",
       },
+      {
+        path: "src/registry/new-york-v4/ui/chart-interaction.ts",
+        type: "registry:ui",
+        target: "",
+      },
     ],
     component: React.lazy(async () => {
       const mod = await import(
@@ -484,6 +509,11 @@ export const Index: Record<string, any> = {
     files: [
       {
         path: "src/registry/new-york-v4/ui/candlestick-chart.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+      {
+        path: "src/registry/new-york-v4/ui/chart-interaction.ts",
         type: "registry:ui",
         target: "",
       },
@@ -510,6 +540,11 @@ export const Index: Record<string, any> = {
         type: "registry:ui",
         target: "",
       },
+      {
+        path: "src/registry/new-york-v4/ui/chart-interaction.ts",
+        type: "registry:ui",
+        target: "",
+      },
     ],
     component: React.lazy(async () => {
       const mod = await import("@/registry/new-york-v4/ui/bubble-chart.tsx");
@@ -528,6 +563,11 @@ export const Index: Record<string, any> = {
     files: [
       {
         path: "src/registry/new-york-v4/ui/activity-waveform-chart.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+      {
+        path: "src/registry/new-york-v4/ui/chart-interaction.ts",
         type: "registry:ui",
         target: "",
       },
@@ -554,6 +594,11 @@ export const Index: Record<string, any> = {
         type: "registry:ui",
         target: "",
       },
+      {
+        path: "src/registry/new-york-v4/ui/chart-interaction.ts",
+        type: "registry:ui",
+        target: "",
+      },
     ],
     component: React.lazy(async () => {
       const mod = await import(
@@ -574,6 +619,11 @@ export const Index: Record<string, any> = {
     files: [
       {
         path: "src/registry/new-york-v4/ui/threshold-band-chart.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+      {
+        path: "src/registry/new-york-v4/ui/chart-interaction.ts",
         type: "registry:ui",
         target: "",
       },
@@ -600,6 +650,11 @@ export const Index: Record<string, any> = {
         type: "registry:ui",
         target: "",
       },
+      {
+        path: "src/registry/new-york-v4/ui/chart-interaction.ts",
+        type: "registry:ui",
+        target: "",
+      },
     ],
     component: React.lazy(async () => {
       const mod = await import(
@@ -623,6 +678,11 @@ export const Index: Record<string, any> = {
         type: "registry:ui",
         target: "",
       },
+      {
+        path: "src/registry/new-york-v4/ui/chart-interaction.ts",
+        type: "registry:ui",
+        target: "",
+      },
     ],
     component: React.lazy(async () => {
       const mod = await import(
@@ -643,6 +703,11 @@ export const Index: Record<string, any> = {
     files: [
       {
         path: "src/registry/new-york-v4/ui/score-radar-chart.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+      {
+        path: "src/registry/new-york-v4/ui/chart-interaction.ts",
         type: "registry:ui",
         target: "",
       },

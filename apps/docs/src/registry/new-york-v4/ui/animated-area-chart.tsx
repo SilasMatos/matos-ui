@@ -15,6 +15,7 @@ import {
 } from "recharts";
 import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
+import { useChartInteraction } from "./chart-interaction";
 
 export const animatedAreaChartVariants = tv({
   base: "not-prose w-full text-foreground",
@@ -163,15 +164,10 @@ function AreaDot({
           className="text-chart-2"
           fill="currentColor"
           initial={animated ? { r: 4, opacity: 0 } : false}
-          animate={
-            animated
-              ? { r: [8, 13, 8], opacity: [0.12, 0.22, 0.12] }
-              : { r: ringRadius, opacity: 0.16 }
-          }
+          animate={{ r: ringRadius, opacity: 0.14 }}
           transition={{
-            duration: 1.8,
-            repeat: animated ? Number.POSITIVE_INFINITY : 0,
-            ease: "easeInOut",
+            duration: 0.18,
+            ease: "easeOut",
           }}
         />
       ) : null}
@@ -256,7 +252,7 @@ function ChartTooltip({
       initial={{ opacity: 0, y: 6, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
-      className="rounded-xl border border-border bg-background/95 px-3 py-2 text-xs shadow-lg backdrop-blur"
+      className="rounded-xl border border-border bg-background/95 px-3 py-2 text-xs shadow-sm backdrop-blur tabular-nums"
     >
       <p className="text-[11px] font-medium text-muted-foreground">
         {labelFormatter?.(String(label)) ?? label}
@@ -303,6 +299,8 @@ export function AnimatedAreaChart({
   const clipId = `${generatedId}-area-reveal`;
   const resolvedAnimated = animated && !shouldReduceMotion;
   const chartData = useMemo(() => data, [data]);
+  const { hasEnteredView, interactionProps, selectedIndex, selectIndex } =
+    useChartInteraction(generatedId, chartData.length);
 
   const latest = chartData.at(-1);
   const latestValue = latest ? getNumericValue(latest[yKey]) : 0;
@@ -315,6 +313,7 @@ export function AnimatedAreaChart({
         latestValue,
       )}`}
       className={twMerge(animatedAreaChartVariants({ size }), className)}
+      {...interactionProps}
       {...props}
     >
       <div data-slot="animated-area-chart-header" className="mb-3">
@@ -338,145 +337,158 @@ export function AnimatedAreaChart({
           className="text-chart-2"
           style={{ height }}
         >
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart
-              data={chartData}
-              margin={{ top: 20, right: 18, bottom: 8, left: 0 }}
-            >
-              <defs>
-                <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-                  <stop
-                    offset="0%"
-                    stopColor="currentColor"
-                    stopOpacity={0.28}
-                  />
-                  <stop
-                    offset="56%"
-                    stopColor="currentColor"
-                    stopOpacity={0.09}
-                  />
-                  <stop
-                    offset="100%"
-                    stopColor="currentColor"
-                    stopOpacity={0}
-                  />
-                </linearGradient>
-                <pattern
-                  id={patternId}
-                  width="10"
-                  height="10"
-                  patternUnits="userSpaceOnUse"
-                >
-                  <path
-                    d="M 10 0 L 0 0 0 10"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="0.5"
-                    className="text-border"
-                    opacity="0.45"
-                  />
-                </pattern>
-                <clipPath id={clipId} clipPathUnits="objectBoundingBox">
-                  <motion.rect
-                    x="0"
-                    y="0"
-                    height="1"
-                    initial={resolvedAnimated ? { width: 0 } : false}
-                    animate={{ width: 1 }}
-                    transition={{
-                      duration: motionDuration,
-                      delay: motionDelay,
-                      ease: [0.16, 1, 0.3, 1],
-                    }}
-                  />
-                </clipPath>
-              </defs>
-              <rect
-                x="0"
-                y="0"
-                width="100%"
-                height="100%"
-                fill={`url(#${patternId})`}
-                opacity={gradient ? 0.42 : 0}
-              />
-              {showGrid ? (
-                <CartesianGrid
-                  vertical={false}
-                  stroke="currentColor"
-                  strokeDasharray="2 8"
-                  className="text-border/75"
-                />
-              ) : null}
-              <XAxis
-                dataKey={xKey}
-                axisLine={false}
-                tickLine={false}
-                tickMargin={10}
-                tick={{ fill: "var(--muted-foreground)", fontSize: 11 }}
-              />
-              <YAxis hide width={0} domain={["dataMin - 8", "dataMax + 10"]} />
-              {showTooltip ? (
-                <Tooltip
-                  cursor={<AreaCursor />}
-                  content={
-                    <ChartTooltip
-                      valueFormatter={valueFormatter}
-                      labelFormatter={labelFormatter}
+          {!resolvedAnimated || hasEnteredView ? (
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart
+                data={chartData}
+                margin={{ top: 20, right: 18, bottom: 8, left: 0 }}
+                onClick={(state) => {
+                  const index = Number(state?.activeTooltipIndex);
+                  if (Number.isInteger(index)) selectIndex(index);
+                }}
+              >
+                <defs>
+                  <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+                    <stop
+                      offset="0%"
+                      stopColor="currentColor"
+                      stopOpacity={0.28}
                     />
-                  }
+                    <stop
+                      offset="56%"
+                      stopColor="currentColor"
+                      stopOpacity={0.09}
+                    />
+                    <stop
+                      offset="100%"
+                      stopColor="currentColor"
+                      stopOpacity={0}
+                    />
+                  </linearGradient>
+                  <pattern
+                    id={patternId}
+                    width="10"
+                    height="10"
+                    patternUnits="userSpaceOnUse"
+                  >
+                    <path
+                      d="M 10 0 L 0 0 0 10"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="0.5"
+                      className="text-border"
+                      opacity="0.45"
+                    />
+                  </pattern>
+                  <clipPath id={clipId} clipPathUnits="objectBoundingBox">
+                    <motion.rect
+                      x="0"
+                      y="0"
+                      height="1"
+                      initial={resolvedAnimated ? { width: 0 } : false}
+                      animate={{ width: 1 }}
+                      transition={{
+                        duration: motionDuration,
+                        delay: motionDelay,
+                        ease: [0.16, 1, 0.3, 1],
+                      }}
+                    />
+                  </clipPath>
+                </defs>
+                <rect
+                  x="0"
+                  y="0"
+                  width="100%"
+                  height="100%"
+                  fill={`url(#${patternId})`}
+                  opacity={gradient ? 0.42 : 0}
                 />
-              ) : null}
-              <Area
-                dataKey={yKey}
-                type={curveType}
-                fill={gradient ? `url(#${gradientId})` : "transparent"}
-                fillOpacity={1}
-                stroke="none"
-                clipPath={`url(#${clipId})`}
-                dot={false}
-                activeDot={false}
-                isAnimationActive={resolvedAnimated}
-                animationBegin={motionDelay * 1000}
-                animationDuration={motionDuration * 1000}
-              />
-              <Line
-                dataKey={yKey}
-                type={curveType}
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={strokeWidth}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                clipPath={`url(#${clipId})`}
-                dot={
-                  showDots
-                    ? (dotProps: AreaDotProps) => (
-                        <AreaDot
-                          {...dotProps}
-                          animated={resolvedAnimated}
-                          motionDelay={motionDelay + motionDuration * 0.35}
-                        />
-                      )
-                    : false
-                }
-                activeDot={
-                  highlightActivePoint
-                    ? (dotProps: AreaDotProps) => (
-                        <AreaDot
-                          {...dotProps}
-                          active
-                          animated={resolvedAnimated}
-                          motionDelay={0}
-                        />
-                      )
-                    : false
-                }
-                isAnimationActive={resolvedAnimated}
-                animationBegin={motionDelay * 1000}
-                animationDuration={motionDuration * 1000}
-              />
-            </AreaChart>
-          </ResponsiveContainer>
+                {showGrid ? (
+                  <CartesianGrid
+                    vertical={false}
+                    stroke="currentColor"
+                    strokeDasharray="2 8"
+                    className="text-border/75"
+                  />
+                ) : null}
+                <XAxis
+                  dataKey={xKey}
+                  axisLine={false}
+                  tickLine={false}
+                  tickMargin={10}
+                  tick={{ fill: "var(--muted-foreground)", fontSize: 11 }}
+                />
+                <YAxis
+                  hide
+                  width={0}
+                  domain={["dataMin - 8", "dataMax + 10"]}
+                />
+                {showTooltip ? (
+                  <Tooltip
+                    key={selectedIndex ?? "hover"}
+                    active={selectedIndex === null ? undefined : true}
+                    defaultIndex={selectedIndex ?? undefined}
+                    cursor={<AreaCursor />}
+                    content={
+                      <ChartTooltip
+                        valueFormatter={valueFormatter}
+                        labelFormatter={labelFormatter}
+                      />
+                    }
+                  />
+                ) : null}
+                <Area
+                  dataKey={yKey}
+                  type={curveType}
+                  fill={gradient ? `url(#${gradientId})` : "transparent"}
+                  fillOpacity={1}
+                  stroke="none"
+                  clipPath={`url(#${clipId})`}
+                  dot={false}
+                  activeDot={false}
+                  isAnimationActive={resolvedAnimated}
+                  animationBegin={motionDelay * 1000}
+                  animationDuration={motionDuration * 1000}
+                />
+                <Line
+                  dataKey={yKey}
+                  type={curveType}
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={strokeWidth}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  clipPath={`url(#${clipId})`}
+                  dot={
+                    showDots
+                      ? (dotProps: AreaDotProps) => (
+                          <AreaDot
+                            {...dotProps}
+                            animated={resolvedAnimated}
+                            motionDelay={motionDelay + motionDuration * 0.35}
+                          />
+                        )
+                      : false
+                  }
+                  activeDot={
+                    highlightActivePoint
+                      ? (dotProps: AreaDotProps) => (
+                          <AreaDot
+                            {...dotProps}
+                            active
+                            animated={resolvedAnimated}
+                            motionDelay={0}
+                          />
+                        )
+                      : false
+                  }
+                  isAnimationActive={resolvedAnimated}
+                  animationBegin={motionDelay * 1000}
+                  animationDuration={motionDuration * 1000}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          ) : null}
         </div>
       )}
     </div>

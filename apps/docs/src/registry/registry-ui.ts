@@ -248,6 +248,7 @@ export const ui: Registry["items"] = [
         path: "ui/animated-area-chart.tsx",
         type: "registry:ui",
       },
+      { path: "ui/chart-interaction.ts", type: "registry:ui" },
     ],
   },
   {
@@ -264,6 +265,7 @@ export const ui: Registry["items"] = [
         path: "ui/allocation-performance-chart.tsx",
         type: "registry:ui",
       },
+      { path: "ui/chart-interaction.ts", type: "registry:ui" },
     ],
   },
   {
@@ -281,6 +283,7 @@ export const ui: Registry["items"] = [
         path: "ui/sparkline-card.tsx",
         type: "registry:ui",
       },
+      { path: "ui/chart-interaction.ts", type: "registry:ui" },
     ],
   },
   {
@@ -292,6 +295,7 @@ export const ui: Registry["items"] = [
         path: "ui/signal-flow-chart.tsx",
         type: "registry:ui",
       },
+      { path: "ui/chart-interaction.ts", type: "registry:ui" },
     ],
   },
   {
@@ -303,6 +307,7 @@ export const ui: Registry["items"] = [
         path: "ui/activity-heatmap-chart.tsx",
         type: "registry:ui",
       },
+      { path: "ui/chart-interaction.ts", type: "registry:ui" },
     ],
   },
   {
@@ -314,6 +319,7 @@ export const ui: Registry["items"] = [
         path: "ui/candlestick-chart.tsx",
         type: "registry:ui",
       },
+      { path: "ui/chart-interaction.ts", type: "registry:ui" },
     ],
   },
   {
@@ -325,6 +331,7 @@ export const ui: Registry["items"] = [
         path: "ui/bubble-chart.tsx",
         type: "registry:ui",
       },
+      { path: "ui/chart-interaction.ts", type: "registry:ui" },
     ],
   },
   {
@@ -336,6 +343,7 @@ export const ui: Registry["items"] = [
         path: "ui/activity-waveform-chart.tsx",
         type: "registry:ui",
       },
+      { path: "ui/chart-interaction.ts", type: "registry:ui" },
     ],
   },
   {
@@ -347,6 +355,7 @@ export const ui: Registry["items"] = [
         path: "ui/performance-waterfall-chart.tsx",
         type: "registry:ui",
       },
+      { path: "ui/chart-interaction.ts", type: "registry:ui" },
     ],
   },
   {
@@ -358,6 +367,7 @@ export const ui: Registry["items"] = [
         path: "ui/threshold-band-chart.tsx",
         type: "registry:ui",
       },
+      { path: "ui/chart-interaction.ts", type: "registry:ui" },
     ],
   },
   {
@@ -369,6 +379,7 @@ export const ui: Registry["items"] = [
         path: "ui/impact-priority-matrix.tsx",
         type: "registry:ui",
       },
+      { path: "ui/chart-interaction.ts", type: "registry:ui" },
     ],
   },
   {
@@ -380,6 +391,7 @@ export const ui: Registry["items"] = [
         path: "ui/resource-treemap-chart.tsx",
         type: "registry:ui",
       },
+      { path: "ui/chart-interaction.ts", type: "registry:ui" },
     ],
   },
   {
@@ -391,6 +403,7 @@ export const ui: Registry["items"] = [
         path: "ui/score-radar-chart.tsx",
         type: "registry:ui",
       },
+      { path: "ui/chart-interaction.ts", type: "registry:ui" },
     ],
   },
   {
