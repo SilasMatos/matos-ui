@@ -1,5 +1,91 @@
 import type { Registry } from "shadcn/schema";
 
+// Surface elevation tokens shipped with the `elevated` primitive so that
+// `npx shadcn add elevated.json` also installs the 8-level ladder into the
+// consumer's globals.css (both the raw vars and the Tailwind theme mapping).
+const surfaceCssVars = {
+  light: {
+    "surface-1": "#fafafa",
+    "surface-2": "#fcfcfc",
+    "surface-3": "#ffffff",
+    "surface-4": "#ffffff",
+    "surface-5": "#ffffff",
+    "surface-6": "#ffffff",
+    "surface-7": "#ffffff",
+    "surface-8": "#ffffff",
+    "shadow-color": "rgb(0 0 0 / 0.06)",
+    "shadow-1": "0 0 0 1px var(--shadow-color)",
+    "shadow-2":
+      "0 0 0 1px var(--shadow-color), 0 1px 1px -0.5px var(--shadow-color)",
+    "shadow-3":
+      "0 0 0 1px var(--shadow-color), 0 1px 1px -0.5px var(--shadow-color), 0 3px 3px -1.5px var(--shadow-color)",
+    "shadow-4":
+      "0 0 0 1px var(--shadow-color), 0 1px 1px -0.5px var(--shadow-color), 0 3px 3px -1.5px var(--shadow-color), 0 6px 6px -3px var(--shadow-color)",
+    "shadow-5":
+      "0 0 0 1px var(--shadow-color), 0 1px 1px -0.5px var(--shadow-color), 0 3px 3px -1.5px var(--shadow-color), 0 6px 6px -3px var(--shadow-color), 0 12px 12px -6px var(--shadow-color)",
+    "shadow-6":
+      "0 0 0 1px var(--shadow-color), 0 1px 1px -0.5px var(--shadow-color), 0 3px 3px -1.5px var(--shadow-color), 0 6px 6px -3px var(--shadow-color), 0 12px 12px -6px var(--shadow-color), 0 24px 24px -12px var(--shadow-color)",
+    "shadow-7":
+      "0 0 0 1px var(--shadow-color), 0 1px 1px -0.5px var(--shadow-color), 0 3px 3px -1.5px var(--shadow-color), 0 6px 6px -3px var(--shadow-color), 0 12px 12px -6px var(--shadow-color), 0 24px 24px -12px var(--shadow-color), 0 48px 48px -24px var(--shadow-color)",
+    "shadow-8":
+      "0 0 0 1px var(--shadow-color), 0 1px 1px -0.5px var(--shadow-color), 0 3px 3px -1.5px var(--shadow-color), 0 6px 6px -3px var(--shadow-color), 0 12px 12px -6px var(--shadow-color), 0 24px 24px -12px var(--shadow-color), 0 48px 48px -24px var(--shadow-color), 0 96px 96px -48px var(--shadow-color)",
+  },
+  dark: {
+    "surface-1": "#171717",
+    "surface-2": "#1e1e1e",
+    "surface-3": "#252525",
+    "surface-4": "#2c2c2c",
+    "surface-5": "#333333",
+    "surface-6": "#3a3a3a",
+    "surface-7": "#414141",
+    "surface-8": "#484848",
+    "dm-hi-base": "rgba(255,255,255,0.01)",
+    "dm-hi-mid": "rgba(255,255,255,0.02)",
+    "dm-hi-high": "rgba(255,255,255,0.04)",
+    "dm-hi-peak": "rgba(255,255,255,0.06)",
+    "dm-ring-base": "rgba(255,255,255,0.02)",
+    "dm-ring-mid": "rgba(255,255,255,0.04)",
+    "dm-ring-high": "rgba(255,255,255,0.06)",
+    "dm-drop": "rgba(0,0,0,0.18)",
+    "shadow-1": "inset 0 0 0 1px var(--dm-ring-base)",
+    "shadow-2":
+      "inset 0 1px 0 0 var(--dm-hi-base), inset 0 0 0 1px var(--dm-ring-base), 0 1px 1px -0.5px var(--dm-drop)",
+    "shadow-3":
+      "inset 0 1px 0 0 var(--dm-hi-mid), inset 0 0 0 1px var(--dm-ring-base), 0 0 0 1px rgba(0,0,0,0.12), 0 1px 1px -0.5px var(--dm-drop), 0 3px 3px -1.5px var(--dm-drop)",
+    "shadow-4":
+      "inset 0 1px 0 0 var(--dm-hi-mid), inset 0 0 0 1px var(--dm-ring-mid), 0 0 0 1px rgba(0,0,0,0.14), 0 1px 1px -0.5px var(--dm-drop), 0 3px 3px -1.5px var(--dm-drop), 0 6px 6px -3px var(--dm-drop)",
+    "shadow-5":
+      "inset 0 1px 0 0 var(--dm-hi-high), inset 0 0 0 1px var(--dm-ring-mid), 0 0 0 1px rgba(0,0,0,0.16), 0 1px 1px -0.5px var(--dm-drop), 0 3px 3px -1.5px var(--dm-drop), 0 6px 6px -3px var(--dm-drop), 0 12px 12px -6px var(--dm-drop)",
+    "shadow-6":
+      "inset 0 1px 0 0 var(--dm-hi-high), inset 0 0 0 1px var(--dm-ring-high), 0 0 0 1px rgba(0,0,0,0.18), 0 1px 1px -0.5px var(--dm-drop), 0 3px 3px -1.5px var(--dm-drop), 0 6px 6px -3px var(--dm-drop), 0 12px 12px -6px var(--dm-drop), 0 24px 24px -12px var(--dm-drop)",
+    "shadow-7":
+      "inset 0 1px 0 0 var(--dm-hi-peak), inset 0 0 0 1px var(--dm-ring-high), 0 0 0 1px rgba(0,0,0,0.2), 0 1px 1px -0.5px var(--dm-drop), 0 3px 3px -1.5px var(--dm-drop), 0 6px 6px -3px var(--dm-drop), 0 12px 12px -6px var(--dm-drop), 0 24px 24px -12px var(--dm-drop), 0 48px 48px -24px var(--dm-drop)",
+    "shadow-8":
+      "inset 0 1px 0 0 var(--dm-hi-peak), inset 0 0 0 1px var(--dm-ring-high), 0 0 0 1px rgba(0,0,0,0.22), 0 1px 1px -0.5px var(--dm-drop), 0 3px 3px -1.5px var(--dm-drop), 0 6px 6px -3px var(--dm-drop), 0 12px 12px -6px var(--dm-drop), 0 24px 24px -12px var(--dm-drop), 0 48px 48px -24px var(--dm-drop), 0 96px 96px -48px var(--dm-drop)",
+  },
+};
+
+const surfaceCss = {
+  "@theme inline": {
+    "--color-surface-1": "var(--surface-1)",
+    "--color-surface-2": "var(--surface-2)",
+    "--color-surface-3": "var(--surface-3)",
+    "--color-surface-4": "var(--surface-4)",
+    "--color-surface-5": "var(--surface-5)",
+    "--color-surface-6": "var(--surface-6)",
+    "--color-surface-7": "var(--surface-7)",
+    "--color-surface-8": "var(--surface-8)",
+    "--shadow-surface-1": "var(--shadow-1)",
+    "--shadow-surface-2": "var(--shadow-2)",
+    "--shadow-surface-3": "var(--shadow-3)",
+    "--shadow-surface-4": "var(--shadow-4)",
+    "--shadow-surface-5": "var(--shadow-5)",
+    "--shadow-surface-6": "var(--shadow-6)",
+    "--shadow-surface-7": "var(--shadow-7)",
+    "--shadow-surface-8": "var(--shadow-8)",
+  },
+};
+
 export const ui: Registry["items"] = [
   {
     name: "button",
@@ -642,6 +728,42 @@ export const ui: Registry["items"] = [
     files: [
       {
         path: "ui/sheet-panel.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "surface-context",
+    type: "registry:lib",
+    files: [
+      {
+        path: "lib/surface-context.tsx",
+        type: "registry:lib",
+      },
+    ],
+  },
+  {
+    name: "surface-classes",
+    type: "registry:lib",
+    files: [
+      {
+        path: "lib/surface-classes.ts",
+        type: "registry:lib",
+      },
+    ],
+  },
+  {
+    name: "elevated",
+    type: "registry:ui",
+    registryDependencies: [
+      "https://matos-ui.com/r/surface-context.json",
+      "https://matos-ui.com/r/surface-classes.json",
+    ],
+    cssVars: surfaceCssVars,
+    css: surfaceCss,
+    files: [
+      {
+        path: "ui/elevated.tsx",
         type: "registry:ui",
       },
     ],

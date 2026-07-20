@@ -1083,6 +1083,151 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
   },
+  "surface-context": {
+    name: "surface-context",
+    type: "registry:lib",
+    registryDependencies: undefined,
+    files: [
+      {
+        path: "src/registry/new-york-v4/lib/surface-context.tsx",
+        type: "registry:lib",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/lib/surface-context.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "surface-classes": {
+    name: "surface-classes",
+    type: "registry:lib",
+    registryDependencies: undefined,
+    files: [
+      {
+        path: "src/registry/new-york-v4/lib/surface-classes.ts",
+        type: "registry:lib",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/lib/surface-classes.ts");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  elevated: {
+    name: "elevated",
+    type: "registry:ui",
+    registryDependencies: [
+      "https://matos-ui.com/r/surface-context.json",
+      "https://matos-ui.com/r/surface-classes.json",
+    ],
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/elevated.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/ui/elevated.tsx");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "sidebar-surface-01": {
+    name: "sidebar-surface-01",
+    type: "registry:block",
+    registryDependencies: [
+      "https://matos-ui.com/r/elevated.json",
+      "https://matos-ui.com/r/surface-context.json",
+      "https://matos-ui.com/r/surface-classes.json",
+      "https://matos-ui.com/r/badge.json",
+    ],
+    files: [
+      {
+        path: "src/registry/new-york-v4/blocks/sidebar-surface-01/sidebar-surface-01.tsx",
+        type: "registry:block",
+        target: "",
+      },
+      {
+        path: "src/registry/new-york-v4/blocks/sidebar-surface-01/components/nav-section.tsx",
+        type: "registry:component",
+        target: "",
+      },
+      {
+        path: "src/registry/new-york-v4/blocks/sidebar-surface-01/components/user-menu.tsx",
+        type: "registry:component",
+        target: "",
+      },
+      {
+        path: "src/registry/new-york-v4/blocks/sidebar-surface-01/data.tsx",
+        type: "registry:component",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/blocks/sidebar-surface-01/sidebar-surface-01.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "sign-in-01": {
+    name: "sign-in-01",
+    type: "registry:block",
+    registryDependencies: [
+      "https://matos-ui.com/r/button.json",
+      "https://matos-ui.com/r/badge.json",
+      "https://matos-ui.com/r/input.json",
+      "https://matos-ui.com/r/password-input.json",
+      "https://matos-ui.com/r/checkbox.json",
+    ],
+    files: [
+      {
+        path: "src/registry/new-york-v4/blocks/sign-in-01/sign-in-01.tsx",
+        type: "registry:block",
+        target: "",
+      },
+      {
+        path: "src/registry/new-york-v4/blocks/sign-in-01/components/auth-aside.tsx",
+        type: "registry:component",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/blocks/sign-in-01/sign-in-01.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
   "button-demo": {
     name: "button-demo",
     type: "registry:example",
@@ -2147,6 +2292,29 @@ export const Index: Record<string, any> = {
     component: React.lazy(async () => {
       const mod = await import(
         "@/registry/new-york-v4/examples/signup-form-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "elevated-demo": {
+    name: "elevated-demo",
+    type: "registry:example",
+    registryDependencies: ["elevated"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/elevated-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/elevated-demo.tsx"
       );
       const exportName =
         Object.keys(mod).find(

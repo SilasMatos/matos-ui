@@ -526,4 +526,15 @@ export const examples: Registry["items"] = [
       },
     ],
   },
+  {
+    name: "elevated-demo",
+    type: "registry:example",
+    registryDependencies: ["elevated"],
+    files: [
+      {
+        path: "examples/elevated-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
 ];

@@ -286,3 +286,36 @@ Estes arquivos são **gerados automaticamente** pelo build:
 - Se o componente depende de outro componente do registry, use `registryDependencies` (ex: um `AlertDialog` que usa `Button` → `registryDependencies: ["button"]`).
 - Para hooks compartilhados, coloque em `new-york-v4/hooks/` e registre com `type: "registry:hook"`.
 - Para utilitários, coloque em `new-york-v4/lib/` e registre com `type: "registry:lib"`.
+
+---
+
+## Como Criar um Novo Block
+
+Blocks são composições prontas (dashboards, telas de auth, etc.) construídas **com os componentes existentes** do Matos UI. Eles vivem em:
+
+```
+apps/docs/src/registry/new-york-v4/blocks/<slug>/
+  <slug>.tsx            # componente principal (único export nomeado)
+  components/*.tsx       # sub-componentes do block
+  data.ts               # dados demonstrativos
+```
+
+Convenções:
+
+- **Imports internos do block** usam caminho relativo (`./components/x`, `./data`) — assim continuam resolvendo após a instalação.
+- **Componentes do Matos UI** são importados de `@/registry/new-york-v4/ui/...` (o build reescreve para `@/components/matos-ui/...`) e declarados em `registryDependencies`. **Nunca duplique** Button, Card, Chart, etc.
+- Use container queries (`@container/<name>` + `@md/<name>:`) para reflow por largura do container, e apenas tokens semânticos do tema.
+- Respeite `prefers-reduced-motion` (`useReducedMotion`).
+
+### Passos
+
+1. Crie os arquivos do block em `blocks/<slug>/`.
+2. Registre o item em `apps/docs/src/registry/registry-blocks.ts` com `type: "registry:block"`, `dependencies` (npm), `registryDependencies` (URLs `https://matos-ui.com/r/<name>.json`) e a lista de `files`.
+3. Adicione os metadados de exibição em `apps/docs/src/lib/blocks.ts` e o componente em `apps/docs/src/components/block-previews.tsx`.
+4. Rode `bun run registry:build` — o block aparece em `/blocks` e gera `public/r/<slug>.json`.
+
+Instalação pelo usuário final:
+
+```bash
+npx shadcn@latest add https://matos-ui.com/r/<slug>.json
+```

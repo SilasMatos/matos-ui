@@ -11,7 +11,8 @@
   "nav": {
     "docs": "Documentação",
     "components": "Componentes",
-    "charts": "Charts"
+    "charts": "Charts",
+    "blocks": "Blocks"
   },
   "command": {
     "searchLong": "Buscar na documentação...",

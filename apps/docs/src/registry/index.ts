@@ -1,5 +1,6 @@
 import type { Registry } from "shadcn/schema";
 import { getSiteUrl } from "../lib/site-url";
+import { blocks } from "./registry-blocks";
 import { examples } from "./registry-examples";
 import { ui } from "./registry-ui";
 
@@ -25,6 +26,7 @@ export const registry = {
       ...TEMPLATE_STYLE,
     },
     ...ui,
+    ...blocks,
     ...examples,
   ] satisfies Registry["items"],
 } satisfies Registry;

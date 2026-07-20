@@ -221,6 +221,11 @@ async function cleanupGeneratedPaths() {
           else if (cleanPath.startsWith("new-york-v4/examples/")) {
             cleanPath = `components/matos-ui/${cleanPath.replace(/^new-york-v4\//, "")}`;
           }
+          // For blocks, install under components/<slug>/ so relative imports
+          // between the block's own files keep resolving after install.
+          else if (cleanPath.startsWith("new-york-v4/blocks/")) {
+            cleanPath = `components/${cleanPath.replace(/^new-york-v4\/blocks\//, "")}`;
+          }
 
           file.path = cleanPath;
           file.target = cleanPath;

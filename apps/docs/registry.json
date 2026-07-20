@@ -708,6 +708,160 @@
       ]
     },
     {
+      "name": "surface-context",
+      "type": "registry:lib",
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/lib/surface-context.tsx",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "surface-classes",
+      "type": "registry:lib",
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/lib/surface-classes.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "elevated",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "https://matos-ui.com/r/surface-context.json",
+        "https://matos-ui.com/r/surface-classes.json"
+      ],
+      "cssVars": {
+        "light": {
+          "surface-1": "#fafafa",
+          "surface-2": "#fcfcfc",
+          "surface-3": "#ffffff",
+          "surface-4": "#ffffff",
+          "surface-5": "#ffffff",
+          "surface-6": "#ffffff",
+          "surface-7": "#ffffff",
+          "surface-8": "#ffffff",
+          "shadow-color": "rgb(0 0 0 / 0.06)",
+          "shadow-1": "0 0 0 1px var(--shadow-color)",
+          "shadow-2": "0 0 0 1px var(--shadow-color), 0 1px 1px -0.5px var(--shadow-color)",
+          "shadow-3": "0 0 0 1px var(--shadow-color), 0 1px 1px -0.5px var(--shadow-color), 0 3px 3px -1.5px var(--shadow-color)",
+          "shadow-4": "0 0 0 1px var(--shadow-color), 0 1px 1px -0.5px var(--shadow-color), 0 3px 3px -1.5px var(--shadow-color), 0 6px 6px -3px var(--shadow-color)",
+          "shadow-5": "0 0 0 1px var(--shadow-color), 0 1px 1px -0.5px var(--shadow-color), 0 3px 3px -1.5px var(--shadow-color), 0 6px 6px -3px var(--shadow-color), 0 12px 12px -6px var(--shadow-color)",
+          "shadow-6": "0 0 0 1px var(--shadow-color), 0 1px 1px -0.5px var(--shadow-color), 0 3px 3px -1.5px var(--shadow-color), 0 6px 6px -3px var(--shadow-color), 0 12px 12px -6px var(--shadow-color), 0 24px 24px -12px var(--shadow-color)",
+          "shadow-7": "0 0 0 1px var(--shadow-color), 0 1px 1px -0.5px var(--shadow-color), 0 3px 3px -1.5px var(--shadow-color), 0 6px 6px -3px var(--shadow-color), 0 12px 12px -6px var(--shadow-color), 0 24px 24px -12px var(--shadow-color), 0 48px 48px -24px var(--shadow-color)",
+          "shadow-8": "0 0 0 1px var(--shadow-color), 0 1px 1px -0.5px var(--shadow-color), 0 3px 3px -1.5px var(--shadow-color), 0 6px 6px -3px var(--shadow-color), 0 12px 12px -6px var(--shadow-color), 0 24px 24px -12px var(--shadow-color), 0 48px 48px -24px var(--shadow-color), 0 96px 96px -48px var(--shadow-color)"
+        },
+        "dark": {
+          "surface-1": "#171717",
+          "surface-2": "#1e1e1e",
+          "surface-3": "#252525",
+          "surface-4": "#2c2c2c",
+          "surface-5": "#333333",
+          "surface-6": "#3a3a3a",
+          "surface-7": "#414141",
+          "surface-8": "#484848",
+          "dm-hi-base": "rgba(255,255,255,0.01)",
+          "dm-hi-mid": "rgba(255,255,255,0.02)",
+          "dm-hi-high": "rgba(255,255,255,0.04)",
+          "dm-hi-peak": "rgba(255,255,255,0.06)",
+          "dm-ring-base": "rgba(255,255,255,0.02)",
+          "dm-ring-mid": "rgba(255,255,255,0.04)",
+          "dm-ring-high": "rgba(255,255,255,0.06)",
+          "dm-drop": "rgba(0,0,0,0.18)",
+          "shadow-1": "inset 0 0 0 1px var(--dm-ring-base)",
+          "shadow-2": "inset 0 1px 0 0 var(--dm-hi-base), inset 0 0 0 1px var(--dm-ring-base), 0 1px 1px -0.5px var(--dm-drop)",
+          "shadow-3": "inset 0 1px 0 0 var(--dm-hi-mid), inset 0 0 0 1px var(--dm-ring-base), 0 0 0 1px rgba(0,0,0,0.12), 0 1px 1px -0.5px var(--dm-drop), 0 3px 3px -1.5px var(--dm-drop)",
+          "shadow-4": "inset 0 1px 0 0 var(--dm-hi-mid), inset 0 0 0 1px var(--dm-ring-mid), 0 0 0 1px rgba(0,0,0,0.14), 0 1px 1px -0.5px var(--dm-drop), 0 3px 3px -1.5px var(--dm-drop), 0 6px 6px -3px var(--dm-drop)",
+          "shadow-5": "inset 0 1px 0 0 var(--dm-hi-high), inset 0 0 0 1px var(--dm-ring-mid), 0 0 0 1px rgba(0,0,0,0.16), 0 1px 1px -0.5px var(--dm-drop), 0 3px 3px -1.5px var(--dm-drop), 0 6px 6px -3px var(--dm-drop), 0 12px 12px -6px var(--dm-drop)",
+          "shadow-6": "inset 0 1px 0 0 var(--dm-hi-high), inset 0 0 0 1px var(--dm-ring-high), 0 0 0 1px rgba(0,0,0,0.18), 0 1px 1px -0.5px var(--dm-drop), 0 3px 3px -1.5px var(--dm-drop), 0 6px 6px -3px var(--dm-drop), 0 12px 12px -6px var(--dm-drop), 0 24px 24px -12px var(--dm-drop)",
+          "shadow-7": "inset 0 1px 0 0 var(--dm-hi-peak), inset 0 0 0 1px var(--dm-ring-high), 0 0 0 1px rgba(0,0,0,0.2), 0 1px 1px -0.5px var(--dm-drop), 0 3px 3px -1.5px var(--dm-drop), 0 6px 6px -3px var(--dm-drop), 0 12px 12px -6px var(--dm-drop), 0 24px 24px -12px var(--dm-drop), 0 48px 48px -24px var(--dm-drop)",
+          "shadow-8": "inset 0 1px 0 0 var(--dm-hi-peak), inset 0 0 0 1px var(--dm-ring-high), 0 0 0 1px rgba(0,0,0,0.22), 0 1px 1px -0.5px var(--dm-drop), 0 3px 3px -1.5px var(--dm-drop), 0 6px 6px -3px var(--dm-drop), 0 12px 12px -6px var(--dm-drop), 0 24px 24px -12px var(--dm-drop), 0 48px 48px -24px var(--dm-drop), 0 96px 96px -48px var(--dm-drop)"
+        }
+      },
+      "css": {
+        "@theme inline": {
+          "--color-surface-1": "var(--surface-1)",
+          "--color-surface-2": "var(--surface-2)",
+          "--color-surface-3": "var(--surface-3)",
+          "--color-surface-4": "var(--surface-4)",
+          "--color-surface-5": "var(--surface-5)",
+          "--color-surface-6": "var(--surface-6)",
+          "--color-surface-7": "var(--surface-7)",
+          "--color-surface-8": "var(--surface-8)",
+          "--shadow-surface-1": "var(--shadow-1)",
+          "--shadow-surface-2": "var(--shadow-2)",
+          "--shadow-surface-3": "var(--shadow-3)",
+          "--shadow-surface-4": "var(--shadow-4)",
+          "--shadow-surface-5": "var(--shadow-5)",
+          "--shadow-surface-6": "var(--shadow-6)",
+          "--shadow-surface-7": "var(--shadow-7)",
+          "--shadow-surface-8": "var(--shadow-8)"
+        }
+      },
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/elevated.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "sidebar-surface-01",
+      "type": "registry:block",
+      "description": "Application sidebar built on the Surfaces system — the panel lifts off the app background, the active item and the user menu popover elevate one and two steps, and collapsible nav groups keep everything readable in light and dark.",
+      "dependencies": ["framer-motion", "lucide-react", "tailwind-merge"],
+      "registryDependencies": [
+        "https://matos-ui.com/r/elevated.json",
+        "https://matos-ui.com/r/surface-context.json",
+        "https://matos-ui.com/r/surface-classes.json",
+        "https://matos-ui.com/r/badge.json"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/blocks/sidebar-surface-01/sidebar-surface-01.tsx",
+          "type": "registry:block"
+        },
+        {
+          "path": "src/registry/new-york-v4/blocks/sidebar-surface-01/components/nav-section.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/registry/new-york-v4/blocks/sidebar-surface-01/components/user-menu.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/registry/new-york-v4/blocks/sidebar-surface-01/data.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "sign-in-01",
+      "type": "registry:block",
+      "description": "Split sign-in screen with social auth, email and password validation, loading, error and success states, and a responsive marketing aside.",
+      "dependencies": ["framer-motion", "lucide-react", "tailwind-merge"],
+      "registryDependencies": [
+        "https://matos-ui.com/r/button.json",
+        "https://matos-ui.com/r/badge.json",
+        "https://matos-ui.com/r/input.json",
+        "https://matos-ui.com/r/password-input.json",
+        "https://matos-ui.com/r/checkbox.json"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/blocks/sign-in-01/sign-in-01.tsx",
+          "type": "registry:block"
+        },
+        {
+          "path": "src/registry/new-york-v4/blocks/sign-in-01/components/auth-aside.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
       "name": "button-demo",
       "type": "registry:example",
       "registryDependencies": ["button"],
@@ -1233,6 +1387,17 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/signup-form-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "elevated-demo",
+      "type": "registry:example",
+      "registryDependencies": ["elevated"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/elevated-demo.tsx",
           "type": "registry:example"
         }
       ]
