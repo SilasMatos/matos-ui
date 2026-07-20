@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "spring-slider-demo",
+  "registryDependencies": [
+    "spring-slider"
+  ],
+  "files": [
+    {
+      "path": "src/registry/new-york-v4/examples/spring-slider-demo.tsx",
+      "content": "\"use client\";\r\n\r\nimport { useState } from \"react\";\r\nimport { SpringSlider } from \"@/registry/new-york-v4/ui/spring-slider\";\r\n\r\nexport default function SpringSliderDemo() {\r\n  const [value, setValue] = useState(40);\r\n\r\n  return (\r\n    <div className=\"mx-auto w-full max-w-[320px] space-y-4 py-8\">\r\n      <div className=\"flex items-baseline justify-between\">\r\n        <span className=\"text-sm font-medium text-muted-foreground\">\r\n          Volume\r\n        </span>\r\n        <span className=\"text-sm font-semibold tabular-nums\">{value}%</span>\r\n      </div>\r\n      <SpringSlider value={value} onValueChange={setValue} />\r\n    </div>\r\n  );\r\n}\r\n",
+      "type": "registry:example"
+    }
+  ],
+  "type": "registry:example"
+}

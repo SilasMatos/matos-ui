@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "physics-counter",
+  "dependencies": [
+    "framer-motion",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "files": [
+    {
+      "path": "src/registry/new-york-v4/ui/physics-counter.tsx",
+      "content": "\"use client\";\r\n\r\nimport { motion, useSpring, useTransform } from \"framer-motion\";\r\nimport type { ComponentProps } from \"react\";\r\nimport { useEffect } from \"react\";\r\nimport { twMerge } from \"tailwind-merge\";\r\nimport { tv, type VariantProps } from \"tailwind-variants\";\r\n\r\nexport const physicsCounterVariants = tv({\r\n  base: [\r\n    \"inline-flex items-baseline font-semibold tabular-nums tracking-tight\",\r\n  ],\r\n  variants: {\r\n    size: {\r\n      sm: \"text-2xl\",\r\n      md: \"text-4xl\",\r\n      lg: \"text-6xl\",\r\n    },\r\n  },\r\n  defaultVariants: {\r\n    size: \"md\",\r\n  },\r\n});\r\n\r\nexport type PhysicsCounterProps = ComponentProps<\"span\"> &\r\n  VariantProps<typeof physicsCounterVariants> & {\r\n    value: number;\r\n    decimals?: number;\r\n    prefix?: string;\r\n    suffix?: string;\r\n    stiffness?: number;\r\n    damping?: number;\r\n  };\r\n\r\nexport function PhysicsCounter({\r\n  className,\r\n  size,\r\n  value,\r\n  decimals = 0,\r\n  prefix,\r\n  suffix,\r\n  stiffness = 90,\r\n  damping = 18,\r\n  ...props\r\n}: PhysicsCounterProps) {\r\n  const spring = useSpring(value, { stiffness, damping, mass: 1 });\r\n  const display = useTransform(spring, (latest) =>\r\n    latest.toLocaleString(undefined, {\r\n      minimumFractionDigits: decimals,\r\n      maximumFractionDigits: decimals,\r\n    }),\r\n  );\r\n\r\n  useEffect(() => {\r\n    spring.set(value);\r\n  }, [spring, value]);\r\n\r\n  return (\r\n    <span\r\n      data-slot=\"physics-counter\"\r\n      className={twMerge(physicsCounterVariants({ size }), className)}\r\n      {...props}\r\n    >\r\n      {prefix ? <span className=\"text-muted-foreground\">{prefix}</span> : null}\r\n      <motion.span>{display}</motion.span>\r\n      {suffix ? (\r\n        <span className=\"ml-1 text-[0.5em] font-medium text-muted-foreground\">\r\n          {suffix}\r\n        </span>\r\n      ) : null}\r\n    </span>\r\n  );\r\n}\r\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

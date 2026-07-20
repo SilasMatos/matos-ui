@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "floating-action-menu-demo",
+  "registryDependencies": [
+    "floating-action-menu"
+  ],
+  "files": [
+    {
+      "path": "src/registry/new-york-v4/examples/floating-action-menu-demo.tsx",
+      "content": "\"use client\";\r\n\r\nimport { ImagePlus, Link2, Pencil, Share2 } from \"lucide-react\";\r\nimport {\r\n  type FloatingActionItem,\r\n  FloatingActionMenu,\r\n} from \"@/registry/new-york-v4/ui/floating-action-menu\";\r\n\r\nconst items: FloatingActionItem[] = [\r\n  {\r\n    id: \"edit\",\r\n    label: \"Edit\",\r\n    icon: <Pencil className=\"size-5\" aria-hidden=\"true\" />,\r\n  },\r\n  {\r\n    id: \"image\",\r\n    label: \"Image\",\r\n    icon: <ImagePlus className=\"size-5\" aria-hidden=\"true\" />,\r\n  },\r\n  {\r\n    id: \"link\",\r\n    label: \"Link\",\r\n    icon: <Link2 className=\"size-5\" aria-hidden=\"true\" />,\r\n  },\r\n  {\r\n    id: \"share\",\r\n    label: \"Share\",\r\n    icon: <Share2 className=\"size-5\" aria-hidden=\"true\" />,\r\n  },\r\n];\r\n\r\nexport default function FloatingActionMenuDemo() {\r\n  return (\r\n    <div className=\"flex min-h-[320px] w-full items-end justify-center pb-6\">\r\n      <FloatingActionMenu items={items} />\r\n    </div>\r\n  );\r\n}\r\n",
+      "type": "registry:example"
+    }
+  ],
+  "type": "registry:example"
+}

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "bouncy-toggle-demo",
+  "registryDependencies": [
+    "bouncy-toggle"
+  ],
+  "files": [
+    {
+      "path": "src/registry/new-york-v4/examples/bouncy-toggle-demo.tsx",
+      "content": "\"use client\";\r\n\r\nimport { useState } from \"react\";\r\nimport { BouncyToggle } from \"@/registry/new-york-v4/ui/bouncy-toggle\";\r\n\r\nexport default function BouncyToggleDemo() {\r\n  const [wifi, setWifi] = useState(true);\r\n  const [sync, setSync] = useState(false);\r\n\r\n  return (\r\n    <div className=\"mx-auto w-full max-w-[300px] space-y-4 py-6\">\r\n      <div className=\"flex items-center justify-between rounded-xl border border-border bg-card px-4 py-3\">\r\n        <span className=\"text-sm font-medium\">Wi-Fi</span>\r\n        <BouncyToggle\r\n          aria-label=\"Wi-Fi\"\r\n          checked={wifi}\r\n          onCheckedChange={setWifi}\r\n        />\r\n      </div>\r\n      <div className=\"flex items-center justify-between rounded-xl border border-border bg-card px-4 py-3\">\r\n        <span className=\"text-sm font-medium\">Background sync</span>\r\n        <BouncyToggle\r\n          aria-label=\"Background sync\"\r\n          checked={sync}\r\n          onCheckedChange={setSync}\r\n        />\r\n      </div>\r\n    </div>\r\n  );\r\n}\r\n",
+      "type": "registry:example"
+    }
+  ],
+  "type": "registry:example"
+}

@@ -6,10 +6,9 @@
   ],
   "files": [
     {
-      "path": "components/matos-ui/examples/input-demo.tsx",
-      "content": "\"use client\";\n\nimport { useState } from \"react\";\n\nimport { InputField } from \"@/components/matos-ui/input\";\n\nexport default function InputDemo() {\n  const [email, setEmail] = useState(\"hello@studio.com\");\n  const error =\n    email.length > 0 && !email.includes(\"@\")\n      ? \"Enter a valid email address.\"\n      : undefined;\n\n  return (\n    <div className=\"mx-auto w-full max-w-sm\">\n      <InputField\n        type=\"email\"\n        label=\"Email\"\n        placeholder=\"hello@studio.com\"\n        description=\"Used for workspace notifications.\"\n        error={error}\n        value={email}\n        onChange={(event) => setEmail(event.target.value)}\n      />\n    </div>\n  );\n}\n",
-      "type": "registry:example",
-      "target": "components/matos-ui/examples/input-demo.tsx"
+      "path": "src/registry/new-york-v4/examples/input-demo.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\n\nimport { InputField } from \"@/registry/new-york-v4/ui/input\";\n\nexport default function InputDemo() {\n  const [email, setEmail] = useState(\"hello@studio.com\");\n  const error =\n    email.length > 0 && !email.includes(\"@\")\n      ? \"Enter a valid email address.\"\n      : undefined;\n\n  return (\n    <div className=\"mx-auto w-full max-w-sm\">\n      <InputField\n        type=\"email\"\n        label=\"Email\"\n        placeholder=\"hello@studio.com\"\n        description=\"Used for workspace notifications.\"\n        error={error}\n        value={email}\n        onChange={(event) => setEmail(event.target.value)}\n      />\n    </div>\n  );\n}\n",
+      "type": "registry:example"
     }
   ],
   "type": "registry:example"

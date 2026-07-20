@@ -6,10 +6,9 @@
   ],
   "files": [
     {
-      "path": "components/matos-ui/examples/candlestick-chart-demo.tsx",
-      "content": "\"use client\";\n\nimport { CandlestickChart } from \"@/components/matos-ui/candlestick-chart\";\n\nexport default function CandlestickChartDemo() {\n  return (\n    <div className=\"flex w-full justify-center\">\n      <CandlestickChart\n        title=\"Sales Report\"\n        description=\"Daily price action over 16 sessions\"\n        valueFormatter={(value) => `$${value.toFixed(0)}`}\n      />\n    </div>\n  );\n}\n",
-      "type": "registry:example",
-      "target": "components/matos-ui/examples/candlestick-chart-demo.tsx"
+      "path": "src/registry/new-york-v4/examples/candlestick-chart-demo.tsx",
+      "content": "\"use client\";\n\nimport { CandlestickChart } from \"@/registry/new-york-v4/ui/candlestick-chart\";\n\nexport default function CandlestickChartDemo() {\n  return (\n    <div className=\"flex w-full justify-center\">\n      <CandlestickChart\n        title=\"Sales Report\"\n        description=\"Daily price action over 16 sessions\"\n        valueFormatter={(value) => `$${value.toFixed(0)}`}\n      />\n    </div>\n  );\n}\n",
+      "type": "registry:example"
     }
   ],
   "type": "registry:example"

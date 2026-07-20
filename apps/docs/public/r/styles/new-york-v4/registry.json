@@ -19,6 +19,82 @@
       "files": []
     },
     {
+      "name": "magnetic-card",
+      "type": "registry:ui",
+      "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/magnetic-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "elastic-panel",
+      "type": "registry:ui",
+      "dependencies": [
+        "framer-motion",
+        "tailwind-merge",
+        "tailwind-variants",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/elastic-panel.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "spring-slider",
+      "type": "registry:ui",
+      "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/spring-slider.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "bouncy-toggle",
+      "type": "registry:ui",
+      "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/bouncy-toggle.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "physics-counter",
+      "type": "registry:ui",
+      "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/physics-counter.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "floating-action-menu",
+      "type": "registry:ui",
+      "dependencies": [
+        "framer-motion",
+        "tailwind-merge",
+        "tailwind-variants",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/floating-action-menu.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "button",
       "type": "registry:ui",
       "dependencies": ["@base-ui/react"],
@@ -858,6 +934,72 @@
         {
           "path": "src/registry/new-york-v4/blocks/sign-in-01/components/auth-aside.tsx",
           "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "magnetic-card-demo",
+      "type": "registry:example",
+      "registryDependencies": ["magnetic-card"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/magnetic-card-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "elastic-panel-demo",
+      "type": "registry:example",
+      "registryDependencies": ["elastic-panel"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/elastic-panel-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "spring-slider-demo",
+      "type": "registry:example",
+      "registryDependencies": ["spring-slider"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/spring-slider-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "bouncy-toggle-demo",
+      "type": "registry:example",
+      "registryDependencies": ["bouncy-toggle"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/bouncy-toggle-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "physics-counter-demo",
+      "type": "registry:example",
+      "registryDependencies": ["physics-counter"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/physics-counter-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "floating-action-menu-demo",
+      "type": "registry:example",
+      "registryDependencies": ["floating-action-menu"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/floating-action-menu-demo.tsx",
+          "type": "registry:example"
         }
       ]
     },

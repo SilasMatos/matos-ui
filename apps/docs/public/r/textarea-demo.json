@@ -6,10 +6,9 @@
   ],
   "files": [
     {
-      "path": "components/matos-ui/examples/textarea-demo.tsx",
-      "content": "import { TextareaField } from \"@/components/matos-ui/textarea\";\n\nexport default function TextareaDemo() {\n  return (\n    <div className=\"mx-auto w-full max-w-sm\">\n      <TextareaField\n        label=\"Additional notes\"\n        description=\"Optional. Add useful context for your request.\"\n        placeholder=\"What would you like to build?\"\n      />\n    </div>\n  );\n}\n",
-      "type": "registry:example",
-      "target": "components/matos-ui/examples/textarea-demo.tsx"
+      "path": "src/registry/new-york-v4/examples/textarea-demo.tsx",
+      "content": "import { TextareaField } from \"@/registry/new-york-v4/ui/textarea\";\n\nexport default function TextareaDemo() {\n  return (\n    <div className=\"mx-auto w-full max-w-sm\">\n      <TextareaField\n        label=\"Additional notes\"\n        description=\"Optional. Add useful context for your request.\"\n        placeholder=\"What would you like to build?\"\n      />\n    </div>\n  );\n}\n",
+      "type": "registry:example"
     }
   ],
   "type": "registry:example"

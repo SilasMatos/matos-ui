@@ -1,0 +1,68 @@
+---
+title: Spring Slider
+description: A draggable slider whose fill and thumb settle with spring physics for a natural, springy feel.
+---
+
+<ComponentPreview name="spring-slider-demo" chromeless align="start" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/spring-slider.json" />
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the following dependencies:</Step>
+
+<CodeBlockCommand command="npm install framer-motion tailwind-merge tailwind-variants" />
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="spring-slider" title="components/matos-ui/spring-slider.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { SpringSlider } from '@/components/matos-ui/spring-slider'
+```
+
+```tsx
+const [value, setValue] = useState(40)
+
+<SpringSlider value={value} onValueChange={setValue} />
+```
+
+## Reference
+
+### SpringSlider Props
+
+| Prop            | Type                             | Default | Description                                  |
+| --------------- | -------------------------------- | ------- | -------------------------------------------- |
+| `value`         | `number`                         | -       | Controlled value.                            |
+| `defaultValue`  | `number`                         | `50`    | Initial value when uncontrolled.             |
+| `onValueChange` | `(value: number) => void`        | -       | Fires when the value changes.                |
+| `min`           | `number`                         | `0`     | Minimum value.                               |
+| `max`           | `number`                         | `100`   | Maximum value.                               |
+| `step`          | `number`                         | `1`     | Snap increment.                              |
+| `size`          | `"sm" \| "md" \| "lg" \| "full"` | `"md"`  | Maximum width preset.                        |
+| `stiffness`     | `number`                         | `380`   | Spring stiffness for the fill and thumb.     |
+| `damping`       | `number`                         | `24`    | Spring damping for the fill and thumb.       |

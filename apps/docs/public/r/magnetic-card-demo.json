@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "magnetic-card-demo",
+  "registryDependencies": [
+    "magnetic-card"
+  ],
+  "files": [
+    {
+      "path": "src/registry/new-york-v4/examples/magnetic-card-demo.tsx",
+      "content": "\"use client\";\r\n\r\nimport { ArrowUpRight, Sparkles } from \"lucide-react\";\r\nimport { MagneticCard } from \"@/registry/new-york-v4/ui/magnetic-card\";\r\n\r\nexport default function MagneticCardDemo() {\r\n  return (\r\n    <div className=\"flex w-full items-center justify-center py-6\">\r\n      <MagneticCard>\r\n        <div className=\"flex items-center justify-between\">\r\n          <span className=\"inline-flex size-10 items-center justify-center rounded-xl border border-border bg-secondary text-foreground\">\r\n            <Sparkles className=\"size-5\" aria-hidden=\"true\" />\r\n          </span>\r\n          <ArrowUpRight\r\n            className=\"size-5 text-muted-foreground transition-colors group-hover:text-foreground\"\r\n            aria-hidden=\"true\"\r\n          />\r\n        </div>\r\n\r\n        <h3 className=\"mt-5 text-lg font-semibold tracking-tight\">\r\n          Magnetic Surface\r\n        </h3>\r\n        <p className=\"mt-2 text-sm leading-6 text-muted-foreground\">\r\n          Move your cursor across the card. It follows with spring physics and a\r\n          soft parallax tilt.\r\n        </p>\r\n\r\n        <div className=\"mt-5 flex items-center gap-2 text-xs font-medium text-muted-foreground\">\r\n          <span className=\"size-2 rounded-full bg-chart-2\" />\r\n          Spring · stiffness 220\r\n        </div>\r\n      </MagneticCard>\r\n    </div>\r\n  );\r\n}\r\n",
+      "type": "registry:example"
+    }
+  ],
+  "type": "registry:example"
+}

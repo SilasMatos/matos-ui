@@ -6,10 +6,9 @@
   ],
   "files": [
     {
-      "path": "components/matos-ui/examples/sparkline-card-demo.tsx",
-      "content": "\"use client\";\n\nimport { SparklineCard } from \"@/components/matos-ui/sparkline-card\";\n\nconst conversionData = [\n  { label: \"01\", value: 18 },\n  { label: \"02\", value: 24 },\n  { label: \"03\", value: 21 },\n  { label: \"04\", value: 32 },\n  { label: \"05\", value: 28 },\n  { label: \"06\", value: 38 },\n  { label: \"07\", value: 44 },\n  { label: \"08\", value: 41 },\n  { label: \"09\", value: 52 },\n];\n\nexport default function SparklineCardDemo() {\n  return (\n    <div className=\"flex w-full flex-wrap justify-center gap-4\">\n      <SparklineCard\n        data={conversionData}\n        label=\"Conversion\"\n        suffix=\"%\"\n        trend={12.4}\n        trendLabel=\"Improving over the last 9 periods\"\n      />\n      <SparklineCard\n        data={conversionData.map((item) => ({\n          ...item,\n          value: 72 - Number(item.value),\n        }))}\n        label=\"Churn risk\"\n        suffix=\"%\"\n        trend={-4.8}\n        trendLabel=\"Lower than last week\"\n      />\n    </div>\n  );\n}\n",
-      "type": "registry:example",
-      "target": "components/matos-ui/examples/sparkline-card-demo.tsx"
+      "path": "src/registry/new-york-v4/examples/sparkline-card-demo.tsx",
+      "content": "\"use client\";\n\nimport { SparklineCard } from \"@/registry/new-york-v4/ui/sparkline-card\";\n\nconst conversionData = [\n  { label: \"01\", value: 18 },\n  { label: \"02\", value: 24 },\n  { label: \"03\", value: 21 },\n  { label: \"04\", value: 32 },\n  { label: \"05\", value: 28 },\n  { label: \"06\", value: 38 },\n  { label: \"07\", value: 44 },\n  { label: \"08\", value: 41 },\n  { label: \"09\", value: 52 },\n];\n\nexport default function SparklineCardDemo() {\n  return (\n    <div className=\"flex w-full flex-wrap justify-center gap-4\">\n      <SparklineCard\n        data={conversionData}\n        label=\"Conversion\"\n        suffix=\"%\"\n        trend={12.4}\n        trendLabel=\"Improving over the last 9 periods\"\n      />\n      <SparklineCard\n        data={conversionData.map((item) => ({\n          ...item,\n          value: 72 - Number(item.value),\n        }))}\n        label=\"Churn risk\"\n        suffix=\"%\"\n        trend={-4.8}\n        trendLabel=\"Lower than last week\"\n      />\n    </div>\n  );\n}\n",
+      "type": "registry:example"
     }
   ],
   "type": "registry:example"

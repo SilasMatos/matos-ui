@@ -2,6 +2,57 @@ import type { Registry } from "shadcn/schema";
 
 export const examples: Registry["items"] = [
   {
+    name: "magnetic-card-demo",
+    type: "registry:example",
+    registryDependencies: ["magnetic-card"],
+    files: [
+      { path: "examples/magnetic-card-demo.tsx", type: "registry:example" },
+    ],
+  },
+  {
+    name: "elastic-panel-demo",
+    type: "registry:example",
+    registryDependencies: ["elastic-panel"],
+    files: [
+      { path: "examples/elastic-panel-demo.tsx", type: "registry:example" },
+    ],
+  },
+  {
+    name: "spring-slider-demo",
+    type: "registry:example",
+    registryDependencies: ["spring-slider"],
+    files: [
+      { path: "examples/spring-slider-demo.tsx", type: "registry:example" },
+    ],
+  },
+  {
+    name: "bouncy-toggle-demo",
+    type: "registry:example",
+    registryDependencies: ["bouncy-toggle"],
+    files: [
+      { path: "examples/bouncy-toggle-demo.tsx", type: "registry:example" },
+    ],
+  },
+  {
+    name: "physics-counter-demo",
+    type: "registry:example",
+    registryDependencies: ["physics-counter"],
+    files: [
+      { path: "examples/physics-counter-demo.tsx", type: "registry:example" },
+    ],
+  },
+  {
+    name: "floating-action-menu-demo",
+    type: "registry:example",
+    registryDependencies: ["floating-action-menu"],
+    files: [
+      {
+        path: "examples/floating-action-menu-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
     name: "button-demo",
     type: "registry:example",
     registryDependencies: ["button"],

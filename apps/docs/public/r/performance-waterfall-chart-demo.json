@@ -6,10 +6,9 @@
   ],
   "files": [
     {
-      "path": "components/matos-ui/examples/performance-waterfall-chart-demo.tsx",
-      "content": "\"use client\";\n\nimport { PerformanceWaterfallChart } from \"@/components/matos-ui/performance-waterfall-chart\";\n\nexport default function PerformanceWaterfallChartDemo() {\n  return (\n    <div className=\"flex w-full justify-center\">\n      <PerformanceWaterfallChart\n        title=\"Page Load Waterfall\"\n        description=\"Network resource timing breakdown for dashboard.example.com\"\n        markerLabel=\"LCP\"\n        markerAt={256}\n      />\n    </div>\n  );\n}\n",
-      "type": "registry:example",
-      "target": "components/matos-ui/examples/performance-waterfall-chart-demo.tsx"
+      "path": "src/registry/new-york-v4/examples/performance-waterfall-chart-demo.tsx",
+      "content": "\"use client\";\n\nimport { PerformanceWaterfallChart } from \"@/registry/new-york-v4/ui/performance-waterfall-chart\";\n\nexport default function PerformanceWaterfallChartDemo() {\n  return (\n    <div className=\"flex w-full justify-center\">\n      <PerformanceWaterfallChart\n        title=\"Page Load Waterfall\"\n        description=\"Network resource timing breakdown for dashboard.example.com\"\n        markerLabel=\"LCP\"\n        markerAt={256}\n      />\n    </div>\n  );\n}\n",
+      "type": "registry:example"
     }
   ],
   "type": "registry:example"

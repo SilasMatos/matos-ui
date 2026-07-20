@@ -3,10 +3,9 @@
   "name": "surface-context",
   "files": [
     {
-      "path": "new-york-v4/lib/surface-context.tsx",
+      "path": "src/registry/new-york-v4/lib/surface-context.tsx",
       "content": "\"use client\";\n\nimport { createContext, type ReactNode, useContext } from \"react\";\n\nconst SurfaceContext = createContext<number>(1);\n\nexport function useSurface(): number {\n  return useContext(SurfaceContext);\n}\n\nexport function SurfaceProvider({\n  value,\n  children,\n}: {\n  value: number;\n  children: ReactNode;\n}) {\n  return (\n    <SurfaceContext.Provider value={Math.max(1, Math.min(8, value))}>\n      {children}\n    </SurfaceContext.Provider>\n  );\n}\n",
-      "type": "registry:lib",
-      "target": "new-york-v4/lib/surface-context.tsx"
+      "type": "registry:lib"
     }
   ],
   "type": "registry:lib"
