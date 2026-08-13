@@ -885,6 +885,42 @@
       ]
     },
     {
+      "name": "dashboard-overview-01",
+      "type": "registry:block",
+      "description": "Responsive analytics dashboard with selectable date ranges, animated metrics, export actions, and a recent activity feed.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": [
+        "https://matos-ui.com/r/activity-feed.json",
+        "https://matos-ui.com/r/badge.json",
+        "https://matos-ui.com/r/button.json",
+        "https://matos-ui.com/r/metric-card.json"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/blocks/dashboard-overview-01/dashboard-overview-01.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "profile-settings-01",
+      "type": "registry:block",
+      "description": "Responsive account settings screen with profile navigation, editable identity fields, validation, and saving feedback.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": [
+        "https://matos-ui.com/r/badge.json",
+        "https://matos-ui.com/r/button.json",
+        "https://matos-ui.com/r/input.json",
+        "https://matos-ui.com/r/textarea.json"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/blocks/profile-settings-01/profile-settings-01.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
       "name": "sidebar-surface-01",
       "type": "registry:block",
       "description": "Application sidebar built on the Surfaces system — the panel lifts off the app background, the active item and the user menu popover elevate one and two steps, and collapsible nav groups keep everything readable in light and dark.",

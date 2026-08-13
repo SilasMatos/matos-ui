@@ -6,9 +6,10 @@
   ],
   "files": [
     {
-      "path": "src/registry/new-york-v4/examples/bouncy-toggle-demo.tsx",
-      "content": "\"use client\";\r\n\r\nimport { useState } from \"react\";\r\nimport { BouncyToggle } from \"@/registry/new-york-v4/ui/bouncy-toggle\";\r\n\r\nexport default function BouncyToggleDemo() {\r\n  const [wifi, setWifi] = useState(true);\r\n  const [sync, setSync] = useState(false);\r\n\r\n  return (\r\n    <div className=\"mx-auto w-full max-w-[300px] space-y-4 py-6\">\r\n      <div className=\"flex items-center justify-between rounded-xl border border-border bg-card px-4 py-3\">\r\n        <span className=\"text-sm font-medium\">Wi-Fi</span>\r\n        <BouncyToggle\r\n          aria-label=\"Wi-Fi\"\r\n          checked={wifi}\r\n          onCheckedChange={setWifi}\r\n        />\r\n      </div>\r\n      <div className=\"flex items-center justify-between rounded-xl border border-border bg-card px-4 py-3\">\r\n        <span className=\"text-sm font-medium\">Background sync</span>\r\n        <BouncyToggle\r\n          aria-label=\"Background sync\"\r\n          checked={sync}\r\n          onCheckedChange={setSync}\r\n        />\r\n      </div>\r\n    </div>\r\n  );\r\n}\r\n",
-      "type": "registry:example"
+      "path": "components/matos-ui/examples/bouncy-toggle-demo.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport { BouncyToggle } from \"@/components/matos-ui/bouncy-toggle\";\n\nexport default function BouncyToggleDemo() {\n  const [wifi, setWifi] = useState(true);\n  const [sync, setSync] = useState(false);\n\n  return (\n    <div className=\"mx-auto w-full max-w-[300px] space-y-4 py-6\">\n      <div className=\"flex items-center justify-between rounded-xl border border-border bg-card px-4 py-3\">\n        <span className=\"text-sm font-medium\">Wi-Fi</span>\n        <BouncyToggle\n          aria-label=\"Wi-Fi\"\n          checked={wifi}\n          onCheckedChange={setWifi}\n        />\n      </div>\n      <div className=\"flex items-center justify-between rounded-xl border border-border bg-card px-4 py-3\">\n        <span className=\"text-sm font-medium\">Background sync</span>\n        <BouncyToggle\n          aria-label=\"Background sync\"\n          checked={sync}\n          onCheckedChange={setSync}\n        />\n      </div>\n    </div>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/bouncy-toggle-demo.tsx"
     }
   ],
   "type": "registry:example"

@@ -6,9 +6,10 @@
   ],
   "files": [
     {
-      "path": "src/registry/new-york-v4/examples/process-timeline-engine-demo.tsx",
-      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport {\n  ProcessTimelineEngine,\n  type ProcessTimelineItem,\n} from \"@/registry/new-york-v4/ui/process-timeline-engine\";\n\nconst timelineItems: ProcessTimelineItem[] = [\n  {\n    id: \"profit-8k\",\n    title: \"$8,000\",\n    description: \"Profit Target\",\n    status: \"complete\",\n    progress: 100,\n    result: \"$8,000\",\n    target: \"$8,000\",\n    badge: \"Passed\",\n  },\n];\n\nexport default function ProcessTimelineEngineDemo() {\n  const [activeId, setActiveId] = useState(\"profit-10k\");\n\n  return (\n    <div className=\"flex w-full justify-center p-4\">\n      <ProcessTimelineEngine\n        items={timelineItems}\n        activeId={activeId}\n        onItemSelect={(item) => setActiveId(item.id)}\n      />\n    </div>\n  );\n}\n",
-      "type": "registry:example"
+      "path": "components/matos-ui/examples/process-timeline-engine-demo.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport {\n  ProcessTimelineEngine,\n  type ProcessTimelineItem,\n} from \"@/components/matos-ui/process-timeline-engine\";\n\nconst timelineItems: ProcessTimelineItem[] = [\n  {\n    id: \"profit-8k\",\n    title: \"$8,000\",\n    description: \"Profit Target\",\n    status: \"complete\",\n    progress: 100,\n    result: \"$8,000\",\n    target: \"$8,000\",\n    badge: \"Passed\",\n  },\n];\n\nexport default function ProcessTimelineEngineDemo() {\n  const [activeId, setActiveId] = useState(\"profit-10k\");\n\n  return (\n    <div className=\"flex w-full justify-center p-4\">\n      <ProcessTimelineEngine\n        items={timelineItems}\n        activeId={activeId}\n        onItemSelect={(item) => setActiveId(item.id)}\n      />\n    </div>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/process-timeline-engine-demo.tsx"
     }
   ],
   "type": "registry:example"

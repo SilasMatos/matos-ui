@@ -6,9 +6,10 @@
   ],
   "files": [
     {
-      "path": "src/registry/new-york-v4/examples/checkbox-demo.tsx",
-      "content": "\"use client\";\n\nimport { useState } from \"react\";\n\nimport { CheckboxField } from \"@/registry/new-york-v4/ui/checkbox\";\n\nexport default function CheckboxDemo() {\n  const [accepted, setAccepted] = useState(false);\n\n  return (\n    <div className=\"mx-auto w-full max-w-sm\">\n      <CheckboxField\n        label=\"I agree to the workspace terms\"\n        description=\"Required before creating an account.\"\n        checked={accepted}\n        onCheckedChange={setAccepted}\n        error={accepted ? undefined : \"Accept the terms to continue.\"}\n        required\n      />\n    </div>\n  );\n}\n",
-      "type": "registry:example"
+      "path": "components/matos-ui/examples/checkbox-demo.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\n\nimport { CheckboxField } from \"@/components/matos-ui/checkbox\";\n\nexport default function CheckboxDemo() {\n  const [accepted, setAccepted] = useState(false);\n\n  return (\n    <div className=\"mx-auto w-full max-w-sm\">\n      <CheckboxField\n        label=\"I agree to the workspace terms\"\n        description=\"Required before creating an account.\"\n        checked={accepted}\n        onCheckedChange={setAccepted}\n        error={accepted ? undefined : \"Accept the terms to continue.\"}\n        required\n      />\n    </div>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/checkbox-demo.tsx"
     }
   ],
   "type": "registry:example"

@@ -6,9 +6,10 @@
   ],
   "files": [
     {
-      "path": "src/registry/new-york-v4/examples/signal-flow-chart-demo.tsx",
-      "content": "\"use client\";\n\nimport { SignalFlowChart } from \"@/registry/new-york-v4/ui/signal-flow-chart\";\n\nconst channels = [\n  { label: \"API Gateway\", value: 92, hint: \"Edge ingress\" },\n  { label: \"Auth Service\", value: 58, tone: \"chart-4\", hint: \"Token mint\" },\n  { label: \"Media CDN\", value: 76, hint: \"Asset stream\" },\n  { label: \"Webhooks\", value: 34, tone: \"destructive\", hint: \"Outbound\" },\n  { label: \"Analytics\", value: 61, hint: \"Event sink\" },\n];\n\nexport default function SignalFlowChartDemo() {\n  return (\n    <div className=\"flex w-full justify-center\">\n      <SignalFlowChart\n        data={channels}\n        title=\"Signal Flow\"\n        description=\"Live throughput across service channels\"\n        valueFormatter={(value) => `${Math.round(value)}%`}\n      />\n    </div>\n  );\n}\n",
-      "type": "registry:example"
+      "path": "components/matos-ui/examples/signal-flow-chart-demo.tsx",
+      "content": "\"use client\";\n\nimport { SignalFlowChart } from \"@/components/matos-ui/signal-flow-chart\";\n\nconst channels = [\n  { label: \"API Gateway\", value: 92, hint: \"Edge ingress\" },\n  { label: \"Auth Service\", value: 58, tone: \"chart-4\", hint: \"Token mint\" },\n  { label: \"Media CDN\", value: 76, hint: \"Asset stream\" },\n  { label: \"Webhooks\", value: 34, tone: \"destructive\", hint: \"Outbound\" },\n  { label: \"Analytics\", value: 61, hint: \"Event sink\" },\n];\n\nexport default function SignalFlowChartDemo() {\n  return (\n    <div className=\"flex w-full justify-center\">\n      <SignalFlowChart\n        data={channels}\n        title=\"Signal Flow\"\n        description=\"Live throughput across service channels\"\n        valueFormatter={(value) => `${Math.round(value)}%`}\n      />\n    </div>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/signal-flow-chart-demo.tsx"
     }
   ],
   "type": "registry:example"

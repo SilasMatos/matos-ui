@@ -4,6 +4,8 @@ export const blockCategories = [
   "All",
   "Application",
   "Authentication",
+  "Dashboard",
+  "Settings",
 ] as const;
 
 export type BlockCategory = (typeof blockCategories)[number];
@@ -25,6 +27,30 @@ export type BlockMeta = {
 };
 
 export const blockCollection: BlockMeta[] = [
+  {
+    id: "dashboard-overview-01",
+    name: "Dashboard Overview",
+    description:
+      "Responsive analytics overview with date ranges, animated metrics, actions, and a recent activity feed.",
+    category: "Dashboard",
+    tags: ["dashboard", "analytics", "metrics", "activity"],
+    status: "stable",
+    isNew: true,
+    dependencies: ["lucide-react"],
+    matosComponents: ["metric-card", "activity-feed", "button", "badge"],
+  },
+  {
+    id: "profile-settings-01",
+    name: "Profile Settings",
+    description:
+      "Account settings with profile navigation, editable fields, validation, and saving feedback.",
+    category: "Settings",
+    tags: ["settings", "profile", "form", "account"],
+    status: "stable",
+    isNew: true,
+    dependencies: ["lucide-react"],
+    matosComponents: ["input", "textarea", "button", "badge"],
+  },
   {
     id: "sidebar-surface-01",
     name: "Surface Sidebar",

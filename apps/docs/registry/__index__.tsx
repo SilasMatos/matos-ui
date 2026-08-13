@@ -1279,6 +1279,62 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
   },
+  "dashboard-overview-01": {
+    name: "dashboard-overview-01",
+    type: "registry:block",
+    registryDependencies: [
+      "https://matos-ui.com/r/activity-feed.json",
+      "https://matos-ui.com/r/badge.json",
+      "https://matos-ui.com/r/button.json",
+      "https://matos-ui.com/r/metric-card.json",
+    ],
+    files: [
+      {
+        path: "src/registry/new-york-v4/blocks/dashboard-overview-01/dashboard-overview-01.tsx",
+        type: "registry:block",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/blocks/dashboard-overview-01/dashboard-overview-01.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "profile-settings-01": {
+    name: "profile-settings-01",
+    type: "registry:block",
+    registryDependencies: [
+      "https://matos-ui.com/r/badge.json",
+      "https://matos-ui.com/r/button.json",
+      "https://matos-ui.com/r/input.json",
+      "https://matos-ui.com/r/textarea.json",
+    ],
+    files: [
+      {
+        path: "src/registry/new-york-v4/blocks/profile-settings-01/profile-settings-01.tsx",
+        type: "registry:block",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/blocks/profile-settings-01/profile-settings-01.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
   "sidebar-surface-01": {
     name: "sidebar-surface-01",
     type: "registry:block",

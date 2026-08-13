@@ -6,9 +6,10 @@
   ],
   "files": [
     {
-      "path": "src/registry/new-york-v4/examples/floating-action-menu-demo.tsx",
-      "content": "\"use client\";\r\n\r\nimport { ImagePlus, Link2, Pencil, Share2 } from \"lucide-react\";\r\nimport {\r\n  type FloatingActionItem,\r\n  FloatingActionMenu,\r\n} from \"@/registry/new-york-v4/ui/floating-action-menu\";\r\n\r\nconst items: FloatingActionItem[] = [\r\n  {\r\n    id: \"edit\",\r\n    label: \"Edit\",\r\n    icon: <Pencil className=\"size-5\" aria-hidden=\"true\" />,\r\n  },\r\n  {\r\n    id: \"image\",\r\n    label: \"Image\",\r\n    icon: <ImagePlus className=\"size-5\" aria-hidden=\"true\" />,\r\n  },\r\n  {\r\n    id: \"link\",\r\n    label: \"Link\",\r\n    icon: <Link2 className=\"size-5\" aria-hidden=\"true\" />,\r\n  },\r\n  {\r\n    id: \"share\",\r\n    label: \"Share\",\r\n    icon: <Share2 className=\"size-5\" aria-hidden=\"true\" />,\r\n  },\r\n];\r\n\r\nexport default function FloatingActionMenuDemo() {\r\n  return (\r\n    <div className=\"flex min-h-[320px] w-full items-end justify-center pb-6\">\r\n      <FloatingActionMenu items={items} />\r\n    </div>\r\n  );\r\n}\r\n",
-      "type": "registry:example"
+      "path": "components/matos-ui/examples/floating-action-menu-demo.tsx",
+      "content": "\"use client\";\n\nimport { ImagePlus, Link2, Pencil, Share2 } from \"lucide-react\";\nimport {\n  type FloatingActionItem,\n  FloatingActionMenu,\n} from \"@/components/matos-ui/floating-action-menu\";\n\nconst items: FloatingActionItem[] = [\n  {\n    id: \"edit\",\n    label: \"Edit\",\n    icon: <Pencil className=\"size-5\" aria-hidden=\"true\" />,\n  },\n  {\n    id: \"image\",\n    label: \"Image\",\n    icon: <ImagePlus className=\"size-5\" aria-hidden=\"true\" />,\n  },\n  {\n    id: \"link\",\n    label: \"Link\",\n    icon: <Link2 className=\"size-5\" aria-hidden=\"true\" />,\n  },\n  {\n    id: \"share\",\n    label: \"Share\",\n    icon: <Share2 className=\"size-5\" aria-hidden=\"true\" />,\n  },\n];\n\nexport default function FloatingActionMenuDemo() {\n  return (\n    <div className=\"flex min-h-[320px] w-full items-end justify-center pb-6\">\n      <FloatingActionMenu items={items} />\n    </div>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/floating-action-menu-demo.tsx"
     }
   ],
   "type": "registry:example"

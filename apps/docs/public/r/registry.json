@@ -5,23 +5,41 @@
     {
       "name": "index",
       "type": "registry:style",
-      "dependencies": ["class-variance-authority", "lucide-react"],
-      "devDependencies": ["tw-animate-css"],
-      "registryDependencies": ["utils"],
+      "dependencies": [
+        "class-variance-authority",
+        "lucide-react"
+      ],
+      "devDependencies": [
+        "tw-animate-css"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
       "files": []
     },
     {
       "name": "style",
       "type": "registry:style",
-      "dependencies": ["class-variance-authority", "lucide-react"],
-      "devDependencies": ["tw-animate-css"],
-      "registryDependencies": ["utils"],
+      "dependencies": [
+        "class-variance-authority",
+        "lucide-react"
+      ],
+      "devDependencies": [
+        "tw-animate-css"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
       "files": []
     },
     {
       "name": "magnetic-card",
       "type": "registry:ui",
-      "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "dependencies": [
+        "framer-motion",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/magnetic-card.tsx",
@@ -48,7 +66,11 @@
     {
       "name": "spring-slider",
       "type": "registry:ui",
-      "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "dependencies": [
+        "framer-motion",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/spring-slider.tsx",
@@ -59,7 +81,11 @@
     {
       "name": "bouncy-toggle",
       "type": "registry:ui",
-      "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "dependencies": [
+        "framer-motion",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/bouncy-toggle.tsx",
@@ -70,7 +96,11 @@
     {
       "name": "physics-counter",
       "type": "registry:ui",
-      "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "dependencies": [
+        "framer-motion",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/physics-counter.tsx",
@@ -97,7 +127,9 @@
     {
       "name": "button",
       "type": "registry:ui",
-      "dependencies": ["@base-ui/react"],
+      "dependencies": [
+        "@base-ui/react"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/button.tsx",
@@ -141,7 +173,10 @@
     {
       "name": "badge",
       "type": "registry:ui",
-      "dependencies": ["tailwind-merge", "tailwind-variants"],
+      "dependencies": [
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/badge.tsx",
@@ -152,7 +187,10 @@
     {
       "name": "data-table",
       "type": "registry:ui",
-      "dependencies": ["@tanstack/react-table", "lucide-react"],
+      "dependencies": [
+        "@tanstack/react-table",
+        "lucide-react"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/data-table.tsx",
@@ -243,8 +281,14 @@
     {
       "name": "action-bar",
       "type": "registry:ui",
-      "dependencies": ["lucide-react", "tailwind-merge", "tailwind-variants"],
-      "registryDependencies": ["button"],
+      "dependencies": [
+        "lucide-react",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
+      "registryDependencies": [
+        "button"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/action-bar.tsx",
@@ -396,7 +440,11 @@
     {
       "name": "signal-flow-chart",
       "type": "registry:ui",
-      "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "dependencies": [
+        "framer-motion",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/signal-flow-chart.tsx",
@@ -411,7 +459,11 @@
     {
       "name": "activity-heatmap-chart",
       "type": "registry:ui",
-      "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "dependencies": [
+        "framer-motion",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/activity-heatmap-chart.tsx",
@@ -426,7 +478,11 @@
     {
       "name": "candlestick-chart",
       "type": "registry:ui",
-      "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "dependencies": [
+        "framer-motion",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/candlestick-chart.tsx",
@@ -441,7 +497,11 @@
     {
       "name": "bubble-chart",
       "type": "registry:ui",
-      "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "dependencies": [
+        "framer-motion",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/bubble-chart.tsx",
@@ -456,7 +516,11 @@
     {
       "name": "activity-waveform-chart",
       "type": "registry:ui",
-      "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "dependencies": [
+        "framer-motion",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/activity-waveform-chart.tsx",
@@ -471,7 +535,11 @@
     {
       "name": "performance-waterfall-chart",
       "type": "registry:ui",
-      "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "dependencies": [
+        "framer-motion",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/performance-waterfall-chart.tsx",
@@ -486,7 +554,11 @@
     {
       "name": "threshold-band-chart",
       "type": "registry:ui",
-      "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "dependencies": [
+        "framer-motion",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/threshold-band-chart.tsx",
@@ -501,7 +573,11 @@
     {
       "name": "impact-priority-matrix",
       "type": "registry:ui",
-      "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "dependencies": [
+        "framer-motion",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/impact-priority-matrix.tsx",
@@ -516,7 +592,11 @@
     {
       "name": "resource-treemap-chart",
       "type": "registry:ui",
-      "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "dependencies": [
+        "framer-motion",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/resource-treemap-chart.tsx",
@@ -531,7 +611,11 @@
     {
       "name": "score-radar-chart",
       "type": "registry:ui",
-      "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "dependencies": [
+        "framer-motion",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/score-radar-chart.tsx",
@@ -546,7 +630,11 @@
     {
       "name": "motion-tabs",
       "type": "registry:ui",
-      "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "dependencies": [
+        "framer-motion",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/motion-tabs.tsx",
@@ -573,7 +661,11 @@
     {
       "name": "spotlight-card",
       "type": "registry:ui",
-      "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "dependencies": [
+        "framer-motion",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/spotlight-card.tsx",
@@ -584,7 +676,11 @@
     {
       "name": "kinetic-card",
       "type": "registry:ui",
-      "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "dependencies": [
+        "framer-motion",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/kinetic-card.tsx",
@@ -649,7 +745,9 @@
         "framer-motion",
         "lucide-react"
       ],
-      "registryDependencies": ["field"],
+      "registryDependencies": [
+        "field"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/input.tsx",
@@ -666,7 +764,10 @@
         "tailwind-merge",
         "tailwind-variants"
       ],
-      "registryDependencies": ["field", "input"],
+      "registryDependencies": [
+        "field",
+        "input"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/password-input.tsx",
@@ -682,7 +783,9 @@
         "class-variance-authority",
         "lucide-react"
       ],
-      "registryDependencies": ["field"],
+      "registryDependencies": [
+        "field"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/select.tsx",
@@ -693,8 +796,13 @@
     {
       "name": "textarea",
       "type": "registry:ui",
-      "dependencies": ["tailwind-merge", "tailwind-variants"],
-      "registryDependencies": ["field"],
+      "dependencies": [
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
+      "registryDependencies": [
+        "field"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/textarea.tsx",
@@ -705,7 +813,10 @@
     {
       "name": "form-grid",
       "type": "registry:ui",
-      "dependencies": ["tailwind-merge", "tailwind-variants"],
+      "dependencies": [
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/form-grid.tsx",
@@ -716,7 +827,11 @@
     {
       "name": "form-section",
       "type": "registry:ui",
-      "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "dependencies": [
+        "framer-motion",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/form-section.tsx",
@@ -732,7 +847,9 @@
         "class-variance-authority",
         "lucide-react"
       ],
-      "registryDependencies": ["field"],
+      "registryDependencies": [
+        "field"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/checkbox.tsx",
@@ -743,8 +860,14 @@
     {
       "name": "otp-input",
       "type": "registry:ui",
-      "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
-      "registryDependencies": ["field"],
+      "dependencies": [
+        "framer-motion",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
+      "registryDependencies": [
+        "field"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/otp-input.tsx",
@@ -885,10 +1008,54 @@
       ]
     },
     {
+      "name": "dashboard-overview-01",
+      "type": "registry:block",
+      "description": "Responsive analytics dashboard with selectable date ranges, animated metrics, export actions, and a recent activity feed.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "https://matos-ui.com/r/activity-feed.json",
+        "https://matos-ui.com/r/badge.json",
+        "https://matos-ui.com/r/button.json",
+        "https://matos-ui.com/r/metric-card.json"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/blocks/dashboard-overview-01/dashboard-overview-01.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "profile-settings-01",
+      "type": "registry:block",
+      "description": "Responsive account settings screen with profile navigation, editable identity fields, validation, and saving feedback.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "https://matos-ui.com/r/badge.json",
+        "https://matos-ui.com/r/button.json",
+        "https://matos-ui.com/r/input.json",
+        "https://matos-ui.com/r/textarea.json"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/blocks/profile-settings-01/profile-settings-01.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
       "name": "sidebar-surface-01",
       "type": "registry:block",
       "description": "Application sidebar built on the Surfaces system — the panel lifts off the app background, the active item and the user menu popover elevate one and two steps, and collapsible nav groups keep everything readable in light and dark.",
-      "dependencies": ["framer-motion", "lucide-react", "tailwind-merge"],
+      "dependencies": [
+        "framer-motion",
+        "lucide-react",
+        "tailwind-merge"
+      ],
       "registryDependencies": [
         "https://matos-ui.com/r/elevated.json",
         "https://matos-ui.com/r/surface-context.json",
@@ -918,7 +1085,11 @@
       "name": "sign-in-01",
       "type": "registry:block",
       "description": "Split sign-in screen with social auth, email and password validation, loading, error and success states, and a responsive marketing aside.",
-      "dependencies": ["framer-motion", "lucide-react", "tailwind-merge"],
+      "dependencies": [
+        "framer-motion",
+        "lucide-react",
+        "tailwind-merge"
+      ],
       "registryDependencies": [
         "https://matos-ui.com/r/button.json",
         "https://matos-ui.com/r/badge.json",
@@ -940,7 +1111,9 @@
     {
       "name": "magnetic-card-demo",
       "type": "registry:example",
-      "registryDependencies": ["magnetic-card"],
+      "registryDependencies": [
+        "magnetic-card"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/magnetic-card-demo.tsx",
@@ -951,7 +1124,9 @@
     {
       "name": "elastic-panel-demo",
       "type": "registry:example",
-      "registryDependencies": ["elastic-panel"],
+      "registryDependencies": [
+        "elastic-panel"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/elastic-panel-demo.tsx",
@@ -962,7 +1137,9 @@
     {
       "name": "spring-slider-demo",
       "type": "registry:example",
-      "registryDependencies": ["spring-slider"],
+      "registryDependencies": [
+        "spring-slider"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/spring-slider-demo.tsx",
@@ -973,7 +1150,9 @@
     {
       "name": "bouncy-toggle-demo",
       "type": "registry:example",
-      "registryDependencies": ["bouncy-toggle"],
+      "registryDependencies": [
+        "bouncy-toggle"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/bouncy-toggle-demo.tsx",
@@ -984,7 +1163,9 @@
     {
       "name": "physics-counter-demo",
       "type": "registry:example",
-      "registryDependencies": ["physics-counter"],
+      "registryDependencies": [
+        "physics-counter"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/physics-counter-demo.tsx",
@@ -995,7 +1176,9 @@
     {
       "name": "floating-action-menu-demo",
       "type": "registry:example",
-      "registryDependencies": ["floating-action-menu"],
+      "registryDependencies": [
+        "floating-action-menu"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/floating-action-menu-demo.tsx",
@@ -1006,7 +1189,9 @@
     {
       "name": "button-demo",
       "type": "registry:example",
-      "registryDependencies": ["button"],
+      "registryDependencies": [
+        "button"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/button-demo.tsx",
@@ -1017,7 +1202,9 @@
     {
       "name": "reactive-button-demo",
       "type": "registry:example",
-      "registryDependencies": ["reactive-button"],
+      "registryDependencies": [
+        "reactive-button"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/reactive-button-demo.tsx",
@@ -1028,7 +1215,9 @@
     {
       "name": "theme-toggler-button-demo",
       "type": "registry:example",
-      "registryDependencies": ["theme-toggler-button"],
+      "registryDependencies": [
+        "theme-toggler-button"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/theme-toggler-button-demo.tsx",
@@ -1039,7 +1228,9 @@
     {
       "name": "badge-demo",
       "type": "registry:example",
-      "registryDependencies": ["badge"],
+      "registryDependencies": [
+        "badge"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/badge-demo.tsx",
@@ -1050,7 +1241,9 @@
     {
       "name": "data-table-demo",
       "type": "registry:example",
-      "registryDependencies": ["data-table"],
+      "registryDependencies": [
+        "data-table"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/data-table-demo.tsx",
@@ -1061,7 +1254,9 @@
     {
       "name": "activity-feed-demo",
       "type": "registry:example",
-      "registryDependencies": ["activity-feed"],
+      "registryDependencies": [
+        "activity-feed"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/activity-feed-demo.tsx",
@@ -1072,7 +1267,9 @@
     {
       "name": "status-pulse-card-demo",
       "type": "registry:example",
-      "registryDependencies": ["status-pulse-card"],
+      "registryDependencies": [
+        "status-pulse-card"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/status-pulse-card-demo.tsx",
@@ -1083,7 +1280,9 @@
     {
       "name": "inset-command-dock-demo",
       "type": "registry:example",
-      "registryDependencies": ["inset-command-dock"],
+      "registryDependencies": [
+        "inset-command-dock"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/inset-command-dock-demo.tsx",
@@ -1094,7 +1293,9 @@
     {
       "name": "dynamic-island-demo",
       "type": "registry:example",
-      "registryDependencies": ["dynamic-island"],
+      "registryDependencies": [
+        "dynamic-island"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/dynamic-island-demo.tsx",
@@ -1105,7 +1306,9 @@
     {
       "name": "accordion-demo",
       "type": "registry:example",
-      "registryDependencies": ["accordion"],
+      "registryDependencies": [
+        "accordion"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/accordion-demo.tsx",
@@ -1116,7 +1319,9 @@
     {
       "name": "action-bar-demo",
       "type": "registry:example",
-      "registryDependencies": ["action-bar"],
+      "registryDependencies": [
+        "action-bar"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/action-bar-demo.tsx",
@@ -1127,7 +1332,10 @@
     {
       "name": "detail-panel-demo",
       "type": "registry:example",
-      "registryDependencies": ["detail-panel", "button"],
+      "registryDependencies": [
+        "detail-panel",
+        "button"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/detail-panel-demo.tsx",
@@ -1138,7 +1346,9 @@
     {
       "name": "command-dock-demo",
       "type": "registry:example",
-      "registryDependencies": ["command-dock"],
+      "registryDependencies": [
+        "command-dock"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/command-dock-demo.tsx",
@@ -1149,7 +1359,9 @@
     {
       "name": "file-upload-demo",
       "type": "registry:example",
-      "registryDependencies": ["file-upload"],
+      "registryDependencies": [
+        "file-upload"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/file-upload-demo.tsx",
@@ -1160,7 +1372,9 @@
     {
       "name": "notification-stack-demo",
       "type": "registry:example",
-      "registryDependencies": ["notification-stack"],
+      "registryDependencies": [
+        "notification-stack"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/notification-stack-demo.tsx",
@@ -1171,7 +1385,9 @@
     {
       "name": "metric-card-demo",
       "type": "registry:example",
-      "registryDependencies": ["metric-card"],
+      "registryDependencies": [
+        "metric-card"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/metric-card-demo.tsx",
@@ -1182,7 +1398,9 @@
     {
       "name": "animated-area-chart-demo",
       "type": "registry:example",
-      "registryDependencies": ["animated-area-chart"],
+      "registryDependencies": [
+        "animated-area-chart"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/animated-area-chart-demo.tsx",
@@ -1193,7 +1411,9 @@
     {
       "name": "allocation-performance-chart-demo",
       "type": "registry:example",
-      "registryDependencies": ["allocation-performance-chart"],
+      "registryDependencies": [
+        "allocation-performance-chart"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/allocation-performance-chart-demo.tsx",
@@ -1204,7 +1424,9 @@
     {
       "name": "sparkline-card-demo",
       "type": "registry:example",
-      "registryDependencies": ["sparkline-card"],
+      "registryDependencies": [
+        "sparkline-card"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/sparkline-card-demo.tsx",
@@ -1215,7 +1437,9 @@
     {
       "name": "signal-flow-chart-demo",
       "type": "registry:example",
-      "registryDependencies": ["signal-flow-chart"],
+      "registryDependencies": [
+        "signal-flow-chart"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/signal-flow-chart-demo.tsx",
@@ -1226,7 +1450,9 @@
     {
       "name": "activity-heatmap-chart-demo",
       "type": "registry:example",
-      "registryDependencies": ["activity-heatmap-chart"],
+      "registryDependencies": [
+        "activity-heatmap-chart"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/activity-heatmap-chart-demo.tsx",
@@ -1237,7 +1463,9 @@
     {
       "name": "candlestick-chart-demo",
       "type": "registry:example",
-      "registryDependencies": ["candlestick-chart"],
+      "registryDependencies": [
+        "candlestick-chart"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/candlestick-chart-demo.tsx",
@@ -1248,7 +1476,9 @@
     {
       "name": "bubble-chart-demo",
       "type": "registry:example",
-      "registryDependencies": ["bubble-chart"],
+      "registryDependencies": [
+        "bubble-chart"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/bubble-chart-demo.tsx",
@@ -1259,7 +1489,9 @@
     {
       "name": "activity-waveform-chart-demo",
       "type": "registry:example",
-      "registryDependencies": ["activity-waveform-chart"],
+      "registryDependencies": [
+        "activity-waveform-chart"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/activity-waveform-chart-demo.tsx",
@@ -1270,7 +1502,9 @@
     {
       "name": "performance-waterfall-chart-demo",
       "type": "registry:example",
-      "registryDependencies": ["performance-waterfall-chart"],
+      "registryDependencies": [
+        "performance-waterfall-chart"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/performance-waterfall-chart-demo.tsx",
@@ -1281,7 +1515,9 @@
     {
       "name": "threshold-band-chart-demo",
       "type": "registry:example",
-      "registryDependencies": ["threshold-band-chart"],
+      "registryDependencies": [
+        "threshold-band-chart"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/threshold-band-chart-demo.tsx",
@@ -1292,7 +1528,9 @@
     {
       "name": "impact-priority-matrix-demo",
       "type": "registry:example",
-      "registryDependencies": ["impact-priority-matrix"],
+      "registryDependencies": [
+        "impact-priority-matrix"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/impact-priority-matrix-demo.tsx",
@@ -1303,7 +1541,9 @@
     {
       "name": "resource-treemap-chart-demo",
       "type": "registry:example",
-      "registryDependencies": ["resource-treemap-chart"],
+      "registryDependencies": [
+        "resource-treemap-chart"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/resource-treemap-chart-demo.tsx",
@@ -1314,7 +1554,9 @@
     {
       "name": "score-radar-chart-demo",
       "type": "registry:example",
-      "registryDependencies": ["score-radar-chart"],
+      "registryDependencies": [
+        "score-radar-chart"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/score-radar-chart-demo.tsx",
@@ -1325,7 +1567,9 @@
     {
       "name": "motion-tabs-demo",
       "type": "registry:example",
-      "registryDependencies": ["motion-tabs"],
+      "registryDependencies": [
+        "motion-tabs"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/motion-tabs-demo.tsx",
@@ -1336,7 +1580,9 @@
     {
       "name": "feedback-card-demo",
       "type": "registry:example",
-      "registryDependencies": ["feedback-card"],
+      "registryDependencies": [
+        "feedback-card"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/feedback-card-demo.tsx",
@@ -1347,7 +1593,9 @@
     {
       "name": "progress-orbit-demo",
       "type": "registry:example",
-      "registryDependencies": ["progress-orbit"],
+      "registryDependencies": [
+        "progress-orbit"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/progress-orbit-demo.tsx",
@@ -1358,7 +1606,9 @@
     {
       "name": "spotlight-card-demo",
       "type": "registry:example",
-      "registryDependencies": ["spotlight-card"],
+      "registryDependencies": [
+        "spotlight-card"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/spotlight-card-demo.tsx",
@@ -1369,7 +1619,9 @@
     {
       "name": "kinetic-card-demo",
       "type": "registry:example",
-      "registryDependencies": ["kinetic-card"],
+      "registryDependencies": [
+        "kinetic-card"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/kinetic-card-demo.tsx",
@@ -1380,7 +1632,9 @@
     {
       "name": "process-timeline-engine-demo",
       "type": "registry:example",
-      "registryDependencies": ["process-timeline-engine"],
+      "registryDependencies": [
+        "process-timeline-engine"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/process-timeline-engine-demo.tsx",
@@ -1391,7 +1645,9 @@
     {
       "name": "input-demo",
       "type": "registry:example",
-      "registryDependencies": ["input"],
+      "registryDependencies": [
+        "input"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/input-demo.tsx",
@@ -1402,7 +1658,9 @@
     {
       "name": "password-input-demo",
       "type": "registry:example",
-      "registryDependencies": ["password-input"],
+      "registryDependencies": [
+        "password-input"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/password-input-demo.tsx",
@@ -1413,7 +1671,9 @@
     {
       "name": "select-demo",
       "type": "registry:example",
-      "registryDependencies": ["select"],
+      "registryDependencies": [
+        "select"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/select-demo.tsx",
@@ -1424,7 +1684,9 @@
     {
       "name": "textarea-demo",
       "type": "registry:example",
-      "registryDependencies": ["textarea"],
+      "registryDependencies": [
+        "textarea"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/textarea-demo.tsx",
@@ -1435,7 +1697,9 @@
     {
       "name": "checkbox-demo",
       "type": "registry:example",
-      "registryDependencies": ["checkbox"],
+      "registryDependencies": [
+        "checkbox"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/checkbox-demo.tsx",
@@ -1462,7 +1726,11 @@
     {
       "name": "form-with-zod-demo",
       "type": "registry:example",
-      "dependencies": ["react-hook-form", "@hookform/resolvers", "zod"],
+      "dependencies": [
+        "react-hook-form",
+        "@hookform/resolvers",
+        "zod"
+      ],
       "registryDependencies": [
         "button",
         "input",
@@ -1480,7 +1748,9 @@
     {
       "name": "otp-input-demo",
       "type": "registry:example",
-      "registryDependencies": ["otp-input"],
+      "registryDependencies": [
+        "otp-input"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/otp-input-demo.tsx",
@@ -1491,8 +1761,12 @@
     {
       "name": "popover-card-demo",
       "type": "registry:example",
-      "dependencies": ["lucide-react"],
-      "registryDependencies": ["popover-card"],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "popover-card"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/popover-card-demo.tsx",
@@ -1503,8 +1777,12 @@
     {
       "name": "sheet-panel-demo",
       "type": "registry:example",
-      "dependencies": ["lucide-react"],
-      "registryDependencies": ["sheet-panel"],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "sheet-panel"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/sheet-panel-demo.tsx",
@@ -1515,7 +1793,11 @@
     {
       "name": "signup-form-demo",
       "type": "registry:example",
-      "dependencies": ["react-hook-form", "@hookform/resolvers", "zod"],
+      "dependencies": [
+        "react-hook-form",
+        "@hookform/resolvers",
+        "zod"
+      ],
       "registryDependencies": [
         "button",
         "checkbox",
@@ -1536,7 +1818,9 @@
     {
       "name": "elevated-demo",
       "type": "registry:example",
-      "registryDependencies": ["elevated"],
+      "registryDependencies": [
+        "elevated"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/elevated-demo.tsx",

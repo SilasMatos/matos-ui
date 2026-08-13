@@ -6,9 +6,10 @@
   ],
   "files": [
     {
-      "path": "src/registry/new-york-v4/examples/bubble-chart-demo.tsx",
-      "content": "\"use client\";\n\nimport { BubbleChart } from \"@/registry/new-york-v4/ui/bubble-chart\";\n\nconst segments = [\n  { label: \"Mobile\", value: 54.621, tone: \"chart-1\", x: 33, y: 62 },\n  { label: \"Desktop\", value: 43.401, tone: \"foreground\", x: 66, y: 58 },\n  { label: \"Tablet\", value: 24.331, tone: \"chart-4\", x: 38, y: 30 },\n  { label: \"Watch\", value: 12.4, tone: \"chart-2\", x: 64, y: 28 },\n  { label: \"TV\", value: 8.9, tone: \"chart-3\", x: 82, y: 76 },\n];\n\nexport default function BubbleChartDemo() {\n  return (\n    <div className=\"flex w-full justify-center\">\n      <BubbleChart\n        title=\"Sales Report\"\n        description=\"Revenue weight by device segment\"\n        data={segments}\n        valueFormatter={(value) => value.toLocaleString(\"en-US\")}\n      />\n    </div>\n  );\n}\n",
-      "type": "registry:example"
+      "path": "components/matos-ui/examples/bubble-chart-demo.tsx",
+      "content": "\"use client\";\n\nimport { BubbleChart } from \"@/components/matos-ui/bubble-chart\";\n\nconst segments = [\n  { label: \"Mobile\", value: 54.621, tone: \"chart-1\", x: 33, y: 62 },\n  { label: \"Desktop\", value: 43.401, tone: \"foreground\", x: 66, y: 58 },\n  { label: \"Tablet\", value: 24.331, tone: \"chart-4\", x: 38, y: 30 },\n  { label: \"Watch\", value: 12.4, tone: \"chart-2\", x: 64, y: 28 },\n  { label: \"TV\", value: 8.9, tone: \"chart-3\", x: 82, y: 76 },\n];\n\nexport default function BubbleChartDemo() {\n  return (\n    <div className=\"flex w-full justify-center\">\n      <BubbleChart\n        title=\"Sales Report\"\n        description=\"Revenue weight by device segment\"\n        data={segments}\n        valueFormatter={(value) => value.toLocaleString(\"en-US\")}\n      />\n    </div>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/bubble-chart-demo.tsx"
     }
   ],
   "type": "registry:example"

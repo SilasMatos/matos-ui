@@ -8,6 +8,44 @@ function dep(name: string) {
 
 export const blocks: Registry["items"] = [
   {
+    name: "dashboard-overview-01",
+    type: "registry:block",
+    description:
+      "Responsive analytics dashboard with selectable date ranges, animated metrics, export actions, and a recent activity feed.",
+    dependencies: ["lucide-react"],
+    registryDependencies: [
+      dep("activity-feed"),
+      dep("badge"),
+      dep("button"),
+      dep("metric-card"),
+    ],
+    files: [
+      {
+        path: "blocks/dashboard-overview-01/dashboard-overview-01.tsx",
+        type: "registry:block",
+      },
+    ],
+  },
+  {
+    name: "profile-settings-01",
+    type: "registry:block",
+    description:
+      "Responsive account settings screen with profile navigation, editable identity fields, validation, and saving feedback.",
+    dependencies: ["lucide-react"],
+    registryDependencies: [
+      dep("badge"),
+      dep("button"),
+      dep("input"),
+      dep("textarea"),
+    ],
+    files: [
+      {
+        path: "blocks/profile-settings-01/profile-settings-01.tsx",
+        type: "registry:block",
+      },
+    ],
+  },
+  {
     name: "sidebar-surface-01",
     type: "registry:block",
     description:

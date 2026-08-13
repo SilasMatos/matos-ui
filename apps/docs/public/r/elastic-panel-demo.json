@@ -6,9 +6,10 @@
   ],
   "files": [
     {
-      "path": "src/registry/new-york-v4/examples/elastic-panel-demo.tsx",
-      "content": "\"use client\";\r\n\r\nimport { Layers } from \"lucide-react\";\r\nimport { ElasticPanel } from \"@/registry/new-york-v4/ui/elastic-panel\";\r\n\r\nexport default function ElasticPanelDemo() {\r\n  return (\r\n    <div className=\"mx-auto w-full max-w-[420px] space-y-3 py-6\">\r\n      <ElasticPanel\r\n        title=\"What is spring physics?\"\r\n        icon={<Layers className=\"size-4\" aria-hidden=\"true\" />}\r\n        defaultOpen\r\n      >\r\n        Height animates with a real spring — it eases in with a subtle overshoot\r\n        instead of a fixed duration, so opening and closing feel physical.\r\n      </ElasticPanel>\r\n\r\n      <ElasticPanel title=\"Can I tune the feel?\">\r\n        Yes. Adjust{\" \"}\r\n        <span className=\"font-medium text-foreground\">stiffness</span> and{\" \"}\r\n        <span className=\"font-medium text-foreground\">damping</span> to make it\r\n        snappier or bouncier.\r\n      </ElasticPanel>\r\n    </div>\r\n  );\r\n}\r\n",
-      "type": "registry:example"
+      "path": "components/matos-ui/examples/elastic-panel-demo.tsx",
+      "content": "\"use client\";\n\nimport { Layers } from \"lucide-react\";\nimport { ElasticPanel } from \"@/components/matos-ui/elastic-panel\";\n\nexport default function ElasticPanelDemo() {\n  return (\n    <div className=\"mx-auto w-full max-w-[420px] space-y-3 py-6\">\n      <ElasticPanel\n        title=\"What is spring physics?\"\n        icon={<Layers className=\"size-4\" aria-hidden=\"true\" />}\n        defaultOpen\n      >\n        Height animates with a real spring — it eases in with a subtle overshoot\n        instead of a fixed duration, so opening and closing feel physical.\n      </ElasticPanel>\n\n      <ElasticPanel title=\"Can I tune the feel?\">\n        Yes. Adjust{\" \"}\n        <span className=\"font-medium text-foreground\">stiffness</span> and{\" \"}\n        <span className=\"font-medium text-foreground\">damping</span> to make it\n        snappier or bouncier.\n      </ElasticPanel>\n    </div>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/elastic-panel-demo.tsx"
     }
   ],
   "type": "registry:example"
