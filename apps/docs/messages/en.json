@@ -12,7 +12,8 @@
     "docs": "Docs",
     "components": "Components",
     "charts": "Charts",
-    "blocks": "Blocks"
+    "blocks": "Blocks",
+    "customize": "Customize"
   },
   "command": {
     "searchLong": "Search documentation...",

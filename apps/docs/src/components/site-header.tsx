@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import logoLightSrc from "@/assets/logo-black.png";
 import logoDarkSrc from "@/assets/logo-white.png";
 import { CommandMenu } from "@/components/command-menu";
+import { CustomizeMenu } from "@/components/customize-menu";
 import { GitHubLink } from "@/components/github-link";
 import { LinkedIn } from "@/components/icons/linkedin";
 import { MainNav } from "@/components/main-nav";
@@ -116,6 +117,7 @@ export function SiteHeader({ pageTree }: { pageTree: DocsPageTree }) {
             <XformerlyTwitter className="size-4" aria-hidden="true" />
           </Button>
           <Separator orientation="vertical" className="hidden 3xl:flex" />
+          <CustomizeMenu />
           <ModeSwitcher />
         </div>
       </div>

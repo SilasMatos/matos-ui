@@ -5,7 +5,11 @@
 :root {
   --radius: 0.65rem;
   --hero-block-rgb: 0, 0, 0;
-  --background: oklch(1 0 0);
+  /* The page is the floor here too, mirroring dark. It used to be pure white,
+     which put it *above* --surface-1 (#fafafa) and inverted the ladder: the
+     canvas was the brightest thing on screen and levels 3-8 landed back on the
+     page's exact colour. Same low-chroma cool cast (hue 264) as dark. */
+  --background: oklch(0.968 0.004 264);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
@@ -46,39 +50,53 @@
   --surface-6: #ffffff;
   --surface-7: #ffffff;
   --surface-8: #ffffff;
+  /* Light-mode elevation is carried by shadow, because the fill flattens to
+     pure white from level 3 up. For that to work the ring has to *ramp* — a
+     fixed 6% at every level meant a dialog and a card drew the same 1px line.
+     The ring alpha now climbs with the level; the drops accumulate as before. */
   --shadow-color: rgb(0 0 0 / 0.06);
+  --lm-ring-2: rgb(0 0 0 / 0.07);
+  --lm-ring-3: rgb(0 0 0 / 0.08);
+  --lm-ring-4: rgb(0 0 0 / 0.09);
+  --lm-ring-5: rgb(0 0 0 / 0.1);
+  --lm-ring-6: rgb(0 0 0 / 0.11);
+  --lm-ring-7: rgb(0 0 0 / 0.12);
+  --lm-ring-8: rgb(0 0 0 / 0.13);
+  --lm-drop: rgb(0 0 0 / 0.07);
   --shadow-1: 0 0 0 1px var(--shadow-color);
-  --shadow-2:
-    0 0 0 1px var(--shadow-color), 0 1px 1px -0.5px var(--shadow-color);
+  --shadow-2: 0 0 0 1px var(--lm-ring-2), 0 1px 1px -0.5px var(--lm-drop);
   --shadow-3:
-    0 0 0 1px var(--shadow-color), 0 1px 1px -0.5px var(--shadow-color),
-    0 3px 3px -1.5px var(--shadow-color);
+    0 0 0 1px var(--lm-ring-3), 0 1px 1px -0.5px var(--lm-drop),
+    0 3px 3px -1.5px var(--lm-drop);
   --shadow-4:
-    0 0 0 1px var(--shadow-color), 0 1px 1px -0.5px var(--shadow-color),
-    0 3px 3px -1.5px var(--shadow-color), 0 6px 6px -3px var(--shadow-color);
+    0 0 0 1px var(--lm-ring-4), 0 1px 1px -0.5px var(--lm-drop),
+    0 3px 3px -1.5px var(--lm-drop), 0 6px 6px -3px var(--lm-drop);
   --shadow-5:
-    0 0 0 1px var(--shadow-color), 0 1px 1px -0.5px var(--shadow-color),
-    0 3px 3px -1.5px var(--shadow-color), 0 6px 6px -3px var(--shadow-color),
-    0 12px 12px -6px var(--shadow-color);
+    0 0 0 1px var(--lm-ring-5), 0 1px 1px -0.5px var(--lm-drop),
+    0 3px 3px -1.5px var(--lm-drop), 0 6px 6px -3px var(--lm-drop),
+    0 12px 12px -6px var(--lm-drop);
   --shadow-6:
-    0 0 0 1px var(--shadow-color), 0 1px 1px -0.5px var(--shadow-color),
-    0 3px 3px -1.5px var(--shadow-color), 0 6px 6px -3px var(--shadow-color),
-    0 12px 12px -6px var(--shadow-color), 0 24px 24px -12px var(--shadow-color);
+    0 0 0 1px var(--lm-ring-6), 0 1px 1px -0.5px var(--lm-drop),
+    0 3px 3px -1.5px var(--lm-drop), 0 6px 6px -3px var(--lm-drop),
+    0 12px 12px -6px var(--lm-drop), 0 24px 24px -12px var(--lm-drop);
   --shadow-7:
-    0 0 0 1px var(--shadow-color), 0 1px 1px -0.5px var(--shadow-color),
-    0 3px 3px -1.5px var(--shadow-color), 0 6px 6px -3px var(--shadow-color),
-    0 12px 12px -6px var(--shadow-color), 0 24px 24px -12px var(--shadow-color),
-    0 48px 48px -24px var(--shadow-color);
+    0 0 0 1px var(--lm-ring-7), 0 1px 1px -0.5px var(--lm-drop),
+    0 3px 3px -1.5px var(--lm-drop), 0 6px 6px -3px var(--lm-drop),
+    0 12px 12px -6px var(--lm-drop), 0 24px 24px -12px var(--lm-drop),
+    0 48px 48px -24px var(--lm-drop);
   --shadow-8:
-    0 0 0 1px var(--shadow-color), 0 1px 1px -0.5px var(--shadow-color),
-    0 3px 3px -1.5px var(--shadow-color), 0 6px 6px -3px var(--shadow-color),
-    0 12px 12px -6px var(--shadow-color), 0 24px 24px -12px var(--shadow-color),
-    0 48px 48px -24px var(--shadow-color), 0 96px 96px -48px var(--shadow-color);
+    0 0 0 1px var(--lm-ring-8), 0 1px 1px -0.5px var(--lm-drop),
+    0 3px 3px -1.5px var(--lm-drop), 0 6px 6px -3px var(--lm-drop),
+    0 12px 12px -6px var(--lm-drop), 0 24px 24px -12px var(--lm-drop),
+    0 48px 48px -24px var(--lm-drop), 0 96px 96px -48px var(--lm-drop);
 }
 
 .dark {
   --hero-block-rgb: 255, 255, 255;
-  --background: oklch(0.145 0 0);
+  /* Not pure black: a low-chroma cool cast (hue 264) with just enough
+     lightness to read as a deliberate floor rather than an absence of colour.
+     Stays a full ladder step below --surface-1 (#191919, L* 8.76). */
+  --background: oklch(0.17 0.006 264);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);

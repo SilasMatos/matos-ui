@@ -20,6 +20,8 @@ import {
   getBlockInstallCommand,
 } from "@/lib/blocks";
 import { cn } from "@/lib/utils";
+import { motionForOffset } from "@/registry/new-york-v4/lib/motion-tokens";
+import { Elevated } from "@/registry/new-york-v4/ui/elevated";
 
 const cardVariants: Variants = {
   hidden: { opacity: 0, y: 14, scale: 0.985 },
@@ -124,9 +126,7 @@ export function BlocksShowcase() {
                     layoutId="blocks-filter-indicator"
                     className="absolute inset-0 rounded-lg border border-border bg-card shadow-xs"
                     transition={
-                      shouldReduceMotion
-                        ? { duration: 0 }
-                        : { type: "spring", stiffness: 420, damping: 34 }
+                      shouldReduceMotion ? { duration: 0 } : motionForOffset(1)
                     }
                   />
                 ) : null}
@@ -215,87 +215,105 @@ function BlockCard({
         layout: { duration: 0.28, ease: [0.22, 1, 0.36, 1] },
         delay: reducedMotion ? 0 : Math.min(index * 0.04, 0.24),
       }}
-      className={cn(
-        "group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm",
-        "transition-colors duration-300 hover:border-ring/40 focus-within:border-ring/50",
-      )}
+      className="group relative flex flex-col"
     >
-      {/* Stretched navigation link — covers the whole card. */}
-      <Link
-        href={href}
-        aria-label={`Open ${block.name} block`}
-        className="absolute inset-0 z-0 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-      />
-
-      <div className="pointer-events-none relative z-0 h-[240px] overflow-hidden border-border/60 border-b bg-muted/15 dark:bg-background">
-        {Preview ? (
-          <div
-            inert
-            aria-hidden="true"
-            className="absolute inset-0 origin-top overflow-hidden p-4 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.015]"
-          >
-            <Preview />
-          </div>
-        ) : null}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-linear-to-t from-card via-card/70 to-transparent"
+      {/* The card is the navigation frame (surface-2); the preview well below
+          is a step above it (surface-3), so the live block render reads as
+          content sitting *in* the card rather than as more card. */}
+      <Elevated
+        offset={1}
+        className="relative flex flex-1 flex-col overflow-hidden rounded-2xl"
+      >
+        {/* Stretched navigation link — covers the whole card. */}
+        <Link
+          href={href}
+          aria-label={`Open ${block.name} block`}
+          className="absolute inset-0 z-0 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         />
-      </div>
 
-      <div className="pointer-events-none relative z-10 flex flex-1 flex-col gap-3 p-4">
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
-            <div className="flex items-center gap-2">
-              <h3 className="truncate text-sm font-semibold text-foreground">
-                {block.name}
-              </h3>
-              <span className="shrink-0 rounded-full border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
-                {block.category}
-              </span>
-            </div>
-            <p className="mt-1 line-clamp-2 text-xs leading-5 text-muted-foreground">
-              {block.description}
-            </p>
-          </div>
-        </div>
-
-        <div className="flex flex-wrap gap-1.5">
-          {block.tags.slice(0, 3).map((tag) => (
-            <span
-              key={tag}
-              className="rounded-md border border-border/70 bg-muted/50 px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-
-        <div className="mt-auto flex items-center justify-between gap-2 pt-1">
-          <span
-            className={cn(
-              "inline-flex items-center gap-1 text-xs font-medium text-muted-foreground",
-              "transition-colors duration-200 group-hover:text-foreground",
-            )}
-          >
-            Open block
-            <ArrowUpRight
-              className="size-3.5 transition-transform duration-300 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+        <Elevated
+          offset={1}
+          className="pointer-events-none relative z-0 h-[240px] overflow-hidden rounded-none"
+        >
+          {Preview ? (
+            <div
+              inert
               aria-hidden="true"
-            />
-          </span>
+              className="absolute inset-0 origin-top overflow-hidden p-4 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.015]"
+            >
+              <Preview />
+            </div>
+          ) : null}
+          {/* Fades to the preview well's own surface, not the card's. */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-linear-to-t from-surface-3 via-surface-3/70 to-transparent"
+          />
+        </Elevated>
+
+        <div className="pointer-events-none relative z-10 flex flex-1 flex-col gap-3 p-4">
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <h3 className="truncate text-sm font-semibold text-foreground">
+                  {block.name}
+                </h3>
+                <span className="shrink-0 rounded-full border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
+                  {block.category}
+                </span>
+              </div>
+              <p className="mt-1 line-clamp-1 text-xs leading-5 text-muted-foreground">
+                {block.description}
+              </p>
+            </div>
+          </div>
+
+          {/* Tags are secondary: they hold their layout slot but only surface
+              on hover/focus, so the grid reads quietly at rest. */}
           <div
             className={cn(
-              "pointer-events-auto relative z-10 transition-opacity duration-200",
+              "flex flex-wrap gap-1.5 transition-opacity duration-200",
               reducedMotion
                 ? "opacity-100"
                 : "opacity-0 group-hover:opacity-100 group-focus-within:opacity-100",
             )}
           >
-            <CopyInstallButton command={getBlockInstallCommand(block.id)} />
+            {block.tags.slice(0, 3).map((tag) => (
+              <span
+                key={tag}
+                className="rounded-md border border-border/70 bg-muted/50 px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+
+          <div className="mt-auto flex items-center justify-between gap-2 pt-1">
+            <span
+              className={cn(
+                "inline-flex items-center gap-1 text-xs font-medium text-muted-foreground",
+                "transition-colors duration-200 group-hover:text-foreground",
+              )}
+            >
+              Open block
+              <ArrowUpRight
+                className="size-3.5 transition-transform duration-300 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                aria-hidden="true"
+              />
+            </span>
+            <div
+              className={cn(
+                "pointer-events-auto relative z-10 transition-opacity duration-200",
+                reducedMotion
+                  ? "opacity-100"
+                  : "opacity-0 group-hover:opacity-100 group-focus-within:opacity-100",
+              )}
+            >
+              <CopyInstallButton command={getBlockInstallCommand(block.id)} />
+            </div>
           </div>
         </div>
-      </div>
+      </Elevated>
     </motion.article>
   );
 }

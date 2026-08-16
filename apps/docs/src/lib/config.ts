@@ -15,5 +15,6 @@ export const siteConfig = {
     { href: "/docs/components", labelKey: "components" },
     { href: "/charts", labelKey: "charts" },
     { href: "/blocks", labelKey: "blocks" },
+    { href: "/customize", labelKey: "customize" },
   ] as const,
 };

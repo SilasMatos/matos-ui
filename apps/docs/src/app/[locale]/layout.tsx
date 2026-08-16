@@ -8,6 +8,7 @@ import { getMessages, setRequestLocale } from "next-intl/server";
 
 import { Provider } from "@/components/provider";
 import { SiteHeader } from "@/components/site-header";
+import { ThemeCustomizerScript } from "@/components/theme-customizer-script";
 import { routing } from "@/i18n/routing";
 import { siteConfig } from "@/lib/config";
 import {
@@ -110,6 +111,7 @@ export default async function LocaleLayout({ children, params }: Props) {
         className="font-sans flex flex-col min-h-screen [--header-height:calc(var(--spacing)*13)]"
         suppressHydrationWarning
       >
+        <ThemeCustomizerScript />
         <NextIntlClientProvider locale={locale} messages={messages}>
           <Provider>
             <SiteHeader pageTree={pageTree} />

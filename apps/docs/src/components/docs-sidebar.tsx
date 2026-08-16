@@ -25,7 +25,12 @@ import {
   type PageTreePage,
 } from "@/lib/page-tree";
 import { cn } from "@/lib/utils";
+import { Elevated } from "@/registry/new-york-v4/ui/elevated";
 import { Sidebar, SidebarContent } from "@/registry/new-york-v4/ui/sidebar";
+
+// The active indicator animates via layoutId and also sits on the elevation
+// ladder, so it has to be both a motion element and an <Elevated>.
+const MotionElevated = motion.create(Elevated);
 
 type NavigationPage = {
   id: string;
@@ -158,15 +163,16 @@ function SidebarActiveIndicator({
   shouldReduceMotion: boolean;
 }) {
   return (
-    <motion.span
+    <MotionElevated
+      offset={1}
       layoutId="docs-sidebar-active-indicator"
-      className="absolute inset-0 overflow-hidden rounded-md bg-background shadow-[0_0_0_1px_color-mix(in_oklab,var(--border)_70%,transparent)] dark:bg-muted/45 dark:shadow-none"
+      className="absolute inset-0 overflow-hidden rounded-md"
       initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.98 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={shouldReduceMotion ? { duration: 0 } : activeSpring}
     >
       <span className="absolute inset-y-2 left-1.5 w-0.5 rounded-full bg-foreground/80 dark:bg-foreground/70" />
-    </motion.span>
+    </MotionElevated>
   );
 }
 
@@ -297,19 +303,23 @@ function SidebarGroup({
             }
             className="overflow-hidden"
           >
-            <motion.ul
-              variants={shouldReduceMotion ? undefined : containerVariants}
-              className="space-y-px rounded-lg border border-border/65 bg-muted/55 p-0.5 dark:border-transparent dark:bg-muted/20"
-            >
-              {group.pages.map((page) => (
-                <SidebarLink
-                  key={page.id}
-                  page={page}
-                  pathname={pathname}
-                  shouldReduceMotion={shouldReduceMotion}
-                />
-              ))}
-            </motion.ul>
+            {/* Elevated wraps rather than replaces the <ul>: SidebarLink
+                renders <li>, so the list element has to stay a list. */}
+            <Elevated offset={1} className="rounded-lg p-0.5">
+              <motion.ul
+                variants={shouldReduceMotion ? undefined : containerVariants}
+                className="space-y-px"
+              >
+                {group.pages.map((page) => (
+                  <SidebarLink
+                    key={page.id}
+                    page={page}
+                    pathname={pathname}
+                    shouldReduceMotion={shouldReduceMotion}
+                  />
+                ))}
+              </motion.ul>
+            </Elevated>
           </motion.div>
         ) : null}
       </AnimatePresence>
@@ -362,7 +372,12 @@ export function DocsSidebar({
       collapsible="none"
       {...props}
     >
-      <SidebarContent className="relative mx-auto w-(--sidebar-menu-width) overflow-hidden bg-muted/35 py-0 dark:bg-background">
+      <SidebarContent className="relative mx-auto w-(--sidebar-menu-width) overflow-hidden py-0">
+        {/* No <Elevated> here on purpose. Persistent navigation chrome is not a
+            floating card: painting it as its own surface reads as a seamed box
+            rather than part of the page. The nested groups and the active
+            indicator still elevate — they lift off the page directly, since
+            the surface context defaults to 1 without a provider. */}
         <nav
           aria-label="Documentation navigation"
           className="flex min-h-0 flex-1 flex-col"
