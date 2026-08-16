@@ -1,0 +1,37 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "palette-emerald",
+  "cssVars": {
+    "light": {
+      "primary": "oklch(0.596 0.145 163)",
+      "primary-foreground": "oklch(0.145 0 0)",
+      "accent": "oklch(0.97 0.02 163)",
+      "accent-foreground": "oklch(0.31 0.09 163)",
+      "ring": "oklch(0.596 0.145 163 / 0.5)",
+      "chart-1": "oklch(0.596 0.145 163)",
+      "chart-2": "oklch(0.64 0.13 148)",
+      "chart-3": "oklch(0.71 0.11 176)",
+      "chart-4": "oklch(0.76 0.1 132)",
+      "chart-5": "oklch(0.55 0.14 190)",
+      "sidebar-primary": "oklch(0.596 0.145 163)",
+      "sidebar-primary-foreground": "oklch(0.145 0 0)",
+      "sidebar-ring": "oklch(0.596 0.145 163 / 0.5)"
+    },
+    "dark": {
+      "primary": "oklch(0.7 0.16 163)",
+      "primary-foreground": "oklch(0.145 0 0)",
+      "accent": "oklch(0.269 0.035 163)",
+      "accent-foreground": "oklch(0.985 0 0)",
+      "ring": "oklch(0.7 0.16 163 / 0.5)",
+      "chart-1": "oklch(0.7 0.16 163)",
+      "chart-2": "oklch(0.74 0.13 148)",
+      "chart-3": "oklch(0.78 0.11 176)",
+      "chart-4": "oklch(0.72 0.13 132)",
+      "chart-5": "oklch(0.67 0.14 190)",
+      "sidebar-primary": "oklch(0.7 0.16 163)",
+      "sidebar-primary-foreground": "oklch(0.145 0 0)",
+      "sidebar-ring": "oklch(0.7 0.16 163 / 0.5)"
+    }
+  },
+  "type": "registry:theme"
+}

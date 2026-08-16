@@ -1,6 +1,11 @@
+"use client";
+
 import type { ComponentProps, MouseEvent, ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
+
+import { surfaceClasses } from "@/registry/new-york-v4/lib/surface-classes";
+import { useSurface } from "@/registry/new-york-v4/lib/surface-context";
 
 export const badgeVariants = tv({
   base: [
@@ -201,12 +206,20 @@ export function Badge({
   onClick,
   ...props
 }: BadgeProps) {
+  const substrate = useSurface();
   const isLive = variant === "live" || variant === "pulse";
   const showDot = Boolean(dot || pulse || isLive || shape === "dot");
   const showPulse = Boolean(pulse || isLive);
   const content = count ?? children;
+  const surfaceClassName =
+    variant === "surface"
+      ? surfaceClasses(Math.min(substrate + 1, 8), substrate)
+      : variant === "inset"
+        ? surfaceClasses(Math.max(substrate - 1, 1), substrate)
+        : undefined;
   const badgeClassName = twMerge(
     badgeVariants({ variant, size, shape, interactive, selected }),
+    surfaceClassName,
     className,
   );
 

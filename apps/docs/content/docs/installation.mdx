@@ -39,22 +39,22 @@ npx shadcn@latest init
 Install a component from the production registry:
 
 ```bash
-npx shadcn@latest add https://matos-ui.com/r/button.json
+npx shadcn@latest add https://matos-ui.com/r/badge.json
 ```
 
 Install more components:
 
 ```bash
-npx shadcn@latest add https://matos-ui.com/r/badge.json
 npx shadcn@latest add https://matos-ui.com/r/command-dock.json
 npx shadcn@latest add https://matos-ui.com/r/dynamic-island.json
 npx shadcn@latest add https://matos-ui.com/r/file-upload.json
+npx shadcn@latest add https://matos-ui.com/r/motion-tabs.json
 ```
 
 Install a demo:
 
 ```bash
-npx shadcn@latest add https://matos-ui.com/r/button-demo.json
+npx shadcn@latest add https://matos-ui.com/r/badge-demo.json
 ```
 
 ## Common Dependencies
@@ -76,10 +76,10 @@ bun add @base-ui/react framer-motion lucide-react tailwind-merge tailwind-varian
 After installation, import the component from your local components folder:
 
 ```tsx
-import { Button } from "@/components/matos-ui/button"
+import { Badge } from "@/components/matos-ui/badge"
 
 export function Example() {
-  return <Button>Save changes</Button>
+  return <Badge>Ready</Badge>
 }
 ```
 
@@ -152,7 +152,7 @@ bun run check
 When the docs dev server is running, you can install components from the local registry:
 
 ```bash
-npx shadcn@latest add http://localhost:4000/r/button.json
+npx shadcn@latest add http://localhost:4000/r/badge.json
 ```
 
 This is useful when testing new components before publishing.

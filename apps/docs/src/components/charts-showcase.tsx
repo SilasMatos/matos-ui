@@ -294,7 +294,7 @@ function ChartsHero({ reducedMotion }: { reducedMotion: boolean }) {
           initial={reducedMotion ? false : { opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: reducedMotion ? 0 : 0.14, duration: 0.42 }}
-          className="text-balance text-[2.75rem] font-semibold leading-[1.02] tracking-normal text-foreground sm:text-6xl dark:drop-shadow-[0_2px_24px_rgba(0,0,0,0.52)]"
+          className="text-balance font-display text-[2.75rem] font-semibold leading-[1.02] tracking-normal text-foreground sm:text-6xl dark:drop-shadow-[0_2px_24px_rgba(0,0,0,0.52)]"
         >
           Ready to go Charts
         </motion.h1>

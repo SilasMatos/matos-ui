@@ -226,6 +226,14 @@ async function cleanupGeneratedPaths() {
           else if (cleanPath.startsWith("new-york-v4/blocks/")) {
             cleanPath = `components/${cleanPath.replace(/^new-york-v4\/blocks\//, "")}`;
           }
+          // For hooks, install under hooks/.
+          else if (cleanPath.startsWith("new-york-v4/hooks/")) {
+            cleanPath = `hooks/${cleanPath.replace(/^new-york-v4\/hooks\//, "")}`;
+          }
+          // For libs, install under lib/.
+          else if (cleanPath.startsWith("new-york-v4/lib/")) {
+            cleanPath = `lib/${cleanPath.replace(/^new-york-v4\/lib\//, "")}`;
+          }
 
           file.path = cleanPath;
           file.target = cleanPath;

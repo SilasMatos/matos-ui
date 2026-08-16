@@ -10,14 +10,6 @@ export const examples: Registry["items"] = [
     ],
   },
   {
-    name: "elastic-panel-demo",
-    type: "registry:example",
-    registryDependencies: ["elastic-panel"],
-    files: [
-      { path: "examples/elastic-panel-demo.tsx", type: "registry:example" },
-    ],
-  },
-  {
     name: "spring-slider-demo",
     type: "registry:example",
     registryDependencies: ["spring-slider"],
@@ -53,17 +45,6 @@ export const examples: Registry["items"] = [
     ],
   },
   {
-    name: "button-demo",
-    type: "registry:example",
-    registryDependencies: ["button"],
-    files: [
-      {
-        path: "examples/button-demo.tsx",
-        type: "registry:example",
-      },
-    ],
-  },
-  {
     name: "reactive-button-demo",
     type: "registry:example",
     registryDependencies: ["reactive-button"],
@@ -77,7 +58,7 @@ export const examples: Registry["items"] = [
   {
     name: "theme-toggler-button-demo",
     type: "registry:example",
-    registryDependencies: ["theme-toggler-button"],
+    registryDependencies: ["theme-toggler-button", "elevated"],
     files: [
       {
         path: "examples/theme-toggler-button-demo.tsx",
@@ -103,28 +84,6 @@ export const examples: Registry["items"] = [
     files: [
       {
         path: "examples/data-table-demo.tsx",
-        type: "registry:example",
-      },
-    ],
-  },
-  {
-    name: "activity-feed-demo",
-    type: "registry:example",
-    registryDependencies: ["activity-feed"],
-    files: [
-      {
-        path: "examples/activity-feed-demo.tsx",
-        type: "registry:example",
-      },
-    ],
-  },
-  {
-    name: "status-pulse-card-demo",
-    type: "registry:example",
-    registryDependencies: ["status-pulse-card"],
-    files: [
-      {
-        path: "examples/status-pulse-card-demo.tsx",
         type: "registry:example",
       },
     ],
@@ -169,17 +128,6 @@ export const examples: Registry["items"] = [
     files: [
       {
         path: "examples/action-bar-demo.tsx",
-        type: "registry:example",
-      },
-    ],
-  },
-  {
-    name: "detail-panel-demo",
-    type: "registry:example",
-    registryDependencies: ["detail-panel", "button"],
-    files: [
-      {
-        path: "examples/detail-panel-demo.tsx",
         type: "registry:example",
       },
     ],
@@ -394,34 +342,12 @@ export const examples: Registry["items"] = [
     ],
   },
   {
-    name: "progress-orbit-demo",
-    type: "registry:example",
-    registryDependencies: ["progress-orbit"],
-    files: [
-      {
-        path: "examples/progress-orbit-demo.tsx",
-        type: "registry:example",
-      },
-    ],
-  },
-  {
     name: "spotlight-card-demo",
     type: "registry:example",
     registryDependencies: ["spotlight-card"],
     files: [
       {
         path: "examples/spotlight-card-demo.tsx",
-        type: "registry:example",
-      },
-    ],
-  },
-  {
-    name: "kinetic-card-demo",
-    type: "registry:example",
-    registryDependencies: ["kinetic-card"],
-    files: [
-      {
-        path: "examples/kinetic-card-demo.tsx",
         type: "registry:example",
       },
     ],

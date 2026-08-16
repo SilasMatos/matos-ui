@@ -3,14 +3,31 @@
 import { PreviewCard as PreviewCardPrimitive } from "@base-ui/react/preview-card";
 import { cva, type VariantProps } from "class-variance-authority";
 import { motion, useReducedMotion } from "framer-motion";
-import type { ComponentProps, ReactNode } from "react";
+import type * as React from "react";
+import {
+  type ComponentProps,
+  type CSSProperties,
+  createContext,
+  type ReactNode,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
 
 import { cn } from "@/lib/utils";
+import {
+  motionForOffset,
+  stagger,
+  staggerContainer,
+  useExitAnimation,
+} from "@/registry/new-york-v4/lib/motion-tokens";
+import { Elevated } from "@/registry/new-york-v4/ui/elevated";
 
 export const popoverCardTriggerVariants = cva(
   [
     "not-prose inline-flex cursor-pointer items-center rounded-md outline-none",
-    "transition-[transform,opacity,color] duration-200 ease-out",
+    "transition-[transform,opacity,color] duration-[var(--motion-duration)]",
     "hover:-translate-y-px data-popup-open:-translate-y-px motion-reduce:transform-none",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
   ],
@@ -29,11 +46,12 @@ export const popoverCardTriggerVariants = cva(
 
 export const popoverCardPopupVariants = cva(
   [
-    "not-prose relative z-50 origin-(--transform-origin) rounded-2xl border border-border bg-popover/95 text-popover-foreground shadow-xl shadow-black/5 backdrop-blur-xl outline-none",
+    // Border comes from the shadow-surface-N ring on the <Elevated> popup.
+    "not-prose relative z-50 origin-(--transform-origin) rounded-2xl text-popover-foreground outline-none",
     "max-w-(--available-width) will-change-[opacity,transform,filter]",
-    "transition-[opacity,transform,filter] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
+    "transition-[opacity,transform,filter] duration-[var(--motion-duration)]",
     "data-starting-style:translate-y-[-6px] data-starting-style:scale-[0.96] data-starting-style:opacity-0 data-starting-style:blur-[6px]",
-    "data-ending-style:translate-y-[-4px] data-ending-style:scale-[0.98] data-ending-style:opacity-0 data-ending-style:blur-[3px] data-ending-style:duration-[180ms] data-ending-style:ease-in",
+    "data-ending-style:translate-y-[-4px] data-ending-style:scale-[0.98] data-ending-style:opacity-0 data-ending-style:blur-[3px] data-ending-style:duration-[var(--motion-exit-duration)]",
     "motion-reduce:transition-none motion-reduce:data-starting-style:blur-none motion-reduce:data-ending-style:blur-none",
   ],
   {
@@ -50,18 +68,31 @@ export const popoverCardPopupVariants = cva(
   },
 );
 
-const STAGGER_EASE = [0.22, 1, 0.36, 1] as const;
+const popoverCardMotion = motionForOffset(2);
+
+type PopoverCardMotionContextValue = {
+  open: boolean;
+};
+
+const PopoverCardMotionContext =
+  createContext<PopoverCardMotionContextValue | null>(null);
+
+function usePopoverCardMotionContext() {
+  return useContext(PopoverCardMotionContext) ?? { open: true };
+}
+
+function getMotionStyle(style?: CSSProperties): CSSProperties {
+  return {
+    "--motion-duration": `${popoverCardMotion.duration}s`,
+    "--motion-exit-duration": `${popoverCardMotion.exit.duration}s`,
+    ...style,
+  } as CSSProperties;
+}
 
 function getContainerVariants(reduce: boolean) {
-  return {
-    hidden: {},
-    visible: {
-      transition: {
-        delayChildren: reduce ? 0 : 0.06,
-        staggerChildren: reduce ? 0 : 0.05,
-      },
-    },
-  };
+  return reduce
+    ? { hidden: {}, visible: {} }
+    : staggerContainer("moderate", stagger.moderate);
 }
 
 function getItemVariants(reduce: boolean) {
@@ -75,8 +106,37 @@ function getItemVariants(reduce: boolean) {
 
 export type PopoverCardProps = PreviewCardPrimitive.Root.Props;
 
-export function PopoverCard(props: PopoverCardProps) {
-  return <PreviewCardPrimitive.Root {...props} />;
+export function PopoverCard({
+  open: openProp,
+  defaultOpen = false,
+  onOpenChange,
+  ...props
+}: PopoverCardProps) {
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
+  const open = openProp ?? uncontrolledOpen;
+  const contextValue = useMemo(() => ({ open }), [open]);
+
+  const handleOpenChange = useCallback<
+    NonNullable<PreviewCardPrimitive.Root.Props["onOpenChange"]>
+  >(
+    (nextOpen, eventDetails) => {
+      if (openProp === undefined) {
+        setUncontrolledOpen(nextOpen);
+      }
+      onOpenChange?.(nextOpen, eventDetails);
+    },
+    [onOpenChange, openProp],
+  );
+
+  return (
+    <PopoverCardMotionContext.Provider value={contextValue}>
+      <PreviewCardPrimitive.Root
+        open={open}
+        onOpenChange={handleOpenChange}
+        {...props}
+      />
+    </PopoverCardMotionContext.Provider>
+  );
 }
 
 export type PopoverCardTriggerProps = Omit<
@@ -90,12 +150,16 @@ export type PopoverCardTriggerProps = Omit<
 export function PopoverCardTrigger({
   className,
   underline,
+  style,
   ...props
 }: PopoverCardTriggerProps) {
+  const motionStyle = useMemo(() => getMotionStyle(style), [style]);
+
   return (
     <PreviewCardPrimitive.Trigger
       data-slot="popover-card-trigger"
       className={cn(popoverCardTriggerVariants({ underline }), className)}
+      style={motionStyle}
       {...props}
     />
   );
@@ -128,9 +192,36 @@ export function PopoverCardContent({
   sideOffset = 10,
   alignOffset = 0,
   showArrow = true,
+  style,
+  onTransitionEnd,
   ...props
 }: PopoverCardContentProps) {
   const shouldReduceMotion = useReducedMotion() ?? false;
+  const { open } = usePopoverCardMotionContext();
+  const { mounted, onAnimationComplete } = useExitAnimation(
+    open,
+    popoverCardMotion,
+  );
+  const motionStyle = useMemo(() => getMotionStyle(style), [style]);
+  const handleTransitionEnd = useCallback<
+    React.TransitionEventHandler<HTMLDivElement>
+  >(
+    (event) => {
+      onTransitionEnd?.(
+        event as Parameters<
+          NonNullable<PreviewCardPrimitive.Popup.Props["onTransitionEnd"]>
+        >[0],
+      );
+      if (event.currentTarget === event.target) {
+        onAnimationComplete();
+      }
+    },
+    [onAnimationComplete, onTransitionEnd],
+  );
+
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <PreviewCardPrimitive.Portal>
@@ -142,15 +233,18 @@ export function PopoverCardContent({
         className={cn("z-50 outline-none", positionerClassName)}
       >
         <PreviewCardPrimitive.Popup
+          render={<Elevated offset={2} />}
           data-slot="popover-card"
           className={cn(popoverCardPopupVariants({ size }), className)}
+          style={motionStyle}
+          onTransitionEnd={handleTransitionEnd}
           {...props}
         >
           {showArrow ? (
             <PreviewCardPrimitive.Arrow
               data-slot="popover-card-arrow"
               className={cn(
-                "transition-[transform,top,bottom,left,right] duration-200 ease-out",
+                "transition-[transform,top,bottom,left,right] duration-[var(--motion-duration)]",
                 "data-[side=top]:rotate-180 data-[side=left]:-rotate-90 data-[side=right]:rotate-90",
                 "data-starting-style:scale-75 data-starting-style:opacity-0",
               )}
@@ -205,10 +299,7 @@ export function PopoverCardHeader({ className, ...props }: ItemProps) {
       data-slot="popover-card-header"
       className={cn("flex items-center gap-3", className)}
       variants={getItemVariants(shouldReduceMotion)}
-      transition={{
-        duration: shouldReduceMotion ? 0 : 0.3,
-        ease: STAGGER_EASE,
-      }}
+      transition={shouldReduceMotion ? undefined : popoverCardMotion}
       {...(props as object)}
     >
       {props.children}
@@ -224,10 +315,7 @@ export function PopoverCardBody({ className, ...props }: ItemProps) {
       data-slot="popover-card-body"
       className={cn("text-sm leading-relaxed text-muted-foreground", className)}
       variants={getItemVariants(shouldReduceMotion)}
-      transition={{
-        duration: shouldReduceMotion ? 0 : 0.3,
-        ease: STAGGER_EASE,
-      }}
+      transition={shouldReduceMotion ? undefined : popoverCardMotion}
       {...(props as object)}
     >
       {props.children}
@@ -246,10 +334,7 @@ export function PopoverCardFooter({ className, ...props }: ItemProps) {
         className,
       )}
       variants={getItemVariants(shouldReduceMotion)}
-      transition={{
-        duration: shouldReduceMotion ? 0 : 0.3,
-        ease: STAGGER_EASE,
-      }}
+      transition={shouldReduceMotion ? undefined : popoverCardMotion}
       {...(props as object)}
     >
       {props.children}
@@ -265,10 +350,7 @@ export function PopoverCardItem({ className, ...props }: ItemProps) {
       data-slot="popover-card-item"
       className={className}
       variants={getItemVariants(shouldReduceMotion)}
-      transition={{
-        duration: shouldReduceMotion ? 0 : 0.3,
-        ease: STAGGER_EASE,
-      }}
+      transition={shouldReduceMotion ? undefined : popoverCardMotion}
       {...(props as object)}
     >
       {props.children}

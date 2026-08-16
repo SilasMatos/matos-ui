@@ -15,7 +15,7 @@ import {
 
 export const checkboxVariants = cva(
   [
-    "not-prose group/checkbox inline-flex size-4.5 shrink-0 items-center justify-center rounded-[0.35rem] border border-border bg-background text-foreground shadow-xs",
+    "not-prose group/checkbox inline-flex size-4.5 shrink-0 items-center justify-center rounded-sm border border-border bg-background text-foreground shadow-xs",
     "transition-[background-color,border-color,box-shadow,transform] duration-300 ease-in-out hover:border-ring/60 hover:bg-muted/40 active:scale-[0.98]",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
     "data-checked:border-ring data-checked:bg-muted data-[invalid=true]:border-destructive data-[invalid=true]:bg-destructive/10 data-[invalid=true]:focus-visible:ring-destructive/20",

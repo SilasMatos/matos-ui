@@ -6,7 +6,6 @@
  */
 export const NEW_COMPONENTS = new Set<string>([
   "/docs/components/bouncy-toggle",
-  "/docs/components/elastic-panel",
   "/docs/components/floating-action-menu",
   "/docs/components/magnetic-card",
   "/docs/components/otp-input",

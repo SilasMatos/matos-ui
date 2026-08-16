@@ -37,7 +37,7 @@ export const blockCollection: BlockMeta[] = [
     status: "stable",
     isNew: true,
     dependencies: ["lucide-react"],
-    matosComponents: ["metric-card", "activity-feed", "button", "badge"],
+    matosComponents: ["metric-card", "elevated", "button", "badge"],
   },
   {
     id: "profile-settings-01",

@@ -12,5 +12,15 @@
     "utils"
   ],
   "files": [],
+  "css": {
+    "@theme inline": {
+      "--radius-sm": "calc(var(--radius) - 4px)",
+      "--radius-md": "calc(var(--radius) - 2px)",
+      "--radius-lg": "var(--radius)",
+      "--radius-xl": "calc(var(--radius) + 4px)",
+      "--radius-2xl": "calc(var(--radius) + 10px)",
+      "--radius-3xl": "calc(var(--radius) + 18px)"
+    }
+  },
   "type": "registry:style"
 }

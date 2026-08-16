@@ -100,7 +100,7 @@ export function TestimonialsSection() {
                 transition: { duration: 0.5 },
               },
             }}
-            className="mt-4 text-3xl font-semibold tracking-tight text-secondary-foreground md:text-4xl"
+            className="mt-4 font-display text-3xl font-semibold tracking-tight text-secondary-foreground md:text-4xl"
           >
             {t("title")}{" "}
             <span className="font-logo italic">{t("titleAccent")}</span>

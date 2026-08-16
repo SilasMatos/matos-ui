@@ -46,13 +46,13 @@ http://localhost:4000/r
 Use the shadcn CLI with a component JSON URL:
 
 ```bash
-npx shadcn@latest add https://matos-ui.com/r/button.json
+npx shadcn@latest add https://matos-ui.com/r/badge.json
 ```
 
 More examples:
 
 ```bash
-npx shadcn@latest add https://matos-ui.com/r/breadcrumb.json
+npx shadcn@latest add https://matos-ui.com/r/data-table.json
 npx shadcn@latest add https://matos-ui.com/r/command-dock.json
 npx shadcn@latest add https://matos-ui.com/r/file-upload.json
 npx shadcn@latest add https://matos-ui.com/r/notification-stack.json
@@ -65,8 +65,8 @@ The CLI downloads the component source, places it in your project, and installs 
 Each component can also ship with a demo:
 
 ```bash
-npx shadcn@latest add https://matos-ui.com/r/button-demo.json
-npx shadcn@latest add https://matos-ui.com/r/breadcrumb-demo.json
+npx shadcn@latest add https://matos-ui.com/r/badge-demo.json
+npx shadcn@latest add https://matos-ui.com/r/data-table-demo.json
 npx shadcn@latest add https://matos-ui.com/r/command-dock-demo.json
 ```
 
@@ -75,32 +75,79 @@ npx shadcn@latest add https://matos-ui.com/r/command-dock-demo.json
 After installation, import it from your local components folder:
 
 ```tsx
-import { Button } from "@/components/matos-ui/button"
+import { Badge } from "@/components/matos-ui/badge"
 
 export function Example() {
-  return <Button>Save changes</Button>
+  return <Badge>Ready</Badge>
 }
 ```
 
-## Available Components
+## Available Components and Charts
 
-- `button`
-- `badge`
-- `breadcrumb`
-- `divider`
-- `dynamic-island`
+The generated registry currently publishes 47 `registry:ui` items. `button` remains available as an internal registry dependency for composed components and blocks, but is no longer documented as a standalone component.
+
+Core UI:
+
 - `accordion`
 - `action-bar`
-- `detail-panel`
-- `command-dock`
-- `file-upload`
-- `notification-stack`
-- `metric-card`
-- `feedback-card`
-- `spotlight-card`
-- `kinetic-card`
+- `badge`
+- `elevated`
+- `motion-tabs`
+- `popover-card`
+- `sheet-panel`
+- `theme-toggler-button`
 
-Most components include a matching `*-demo` registry item.
+Data and operations:
+
+- `command-dock`
+- `data-table`
+- `dynamic-island`
+- `file-upload`
+- `floating-action-menu`
+- `inset-command-dock`
+- `metric-card`
+- `notification-stack`
+
+Motion and cards:
+
+- `bouncy-toggle`
+- `feedback-card`
+- `magnetic-card`
+- `physics-counter`
+- `process-timeline-engine`
+- `reactive-button`
+- `spotlight-card`
+- `spring-slider`
+
+Forms:
+
+- `checkbox`
+- `field`
+- `form-grid`
+- `form-section`
+- `input`
+- `otp-input`
+- `password-input`
+- `select`
+- `textarea`
+
+Charts:
+
+- `activity-heatmap-chart`
+- `activity-waveform-chart`
+- `allocation-performance-chart`
+- `animated-area-chart`
+- `bubble-chart`
+- `candlestick-chart`
+- `impact-priority-matrix`
+- `performance-waterfall-chart`
+- `resource-treemap-chart`
+- `score-radar-chart`
+- `signal-flow-chart`
+- `sparkline-card`
+- `threshold-band-chart`
+
+Most items include a matching `*-demo` registry item. The source of truth is `apps/docs/src/registry/registry-ui.ts`; generated JSON is written to `apps/docs/public/r`.
 
 ## Project Structure
 
@@ -159,7 +206,7 @@ bun run --cwd apps/docs types:check
 
 ## Deployment
 
-This repository builds the `apps/docs` Next.js app and serves the static output through Docker and Nginx.
+This repository builds the `apps/docs` Next.js app and serves it with the Next.js production server. The Docker runtime runs `bun run --filter docs start`, which starts `next start -p 4000`. It is not a static Nginx image.
 
 Build the image:
 
@@ -170,13 +217,13 @@ docker build -t matos-ui/docs:prod .
 Run the container:
 
 ```bash
-docker run -d --name matos-ui-docs -p 8080:80 --restart unless-stopped matos-ui/docs:prod
+docker run -d --name matos-ui-docs -p 4000:4000 --restart unless-stopped matos-ui/docs:prod
 ```
 
-Run with Docker Compose:
+If a host reverse proxy should own public ports 80 and 443, bind the container to localhost instead:
 
 ```bash
-docker compose -f docker-compose.prod.yml up -d --build
+docker run -d --name matos-ui-docs -p 127.0.0.1:8080:4000 --restart unless-stopped matos-ui/docs:prod
 ```
 
 ## DNS and HTTPS
@@ -185,8 +232,8 @@ For `matos-ui.com`:
 
 1. Add an **A** record for `@` pointing to the public server IP.
 2. Add `www` as a **CNAME** to `matos-ui.com`, or as an **A** record to the same IP.
-3. Use Nginx or Caddy on the host for HTTPS with Let's Encrypt and proxy traffic to `http://127.0.0.1:8080`.
+3. Use Nginx or Caddy on the host for HTTPS with Let's Encrypt and proxy traffic to the local port bound by Docker, for example `http://127.0.0.1:8080` when using the localhost binding above.
 
 ## License
 
-This project is currently maintained as a public component registry. Add a license file before distributing it under a formal open-source license.
+Matos UI is distributed under the MIT License. See [LICENSE](LICENSE).

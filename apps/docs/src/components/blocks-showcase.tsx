@@ -79,7 +79,7 @@ export function BlocksShowcase() {
         </div>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div className="max-w-2xl">
-            <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+            <h1 className="font-display text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
               Blocks
             </h1>
             <p className="mt-3 text-balance text-base leading-7 text-muted-foreground">

@@ -57,7 +57,7 @@ export function FeaturesSection() {
           <span className="mb-4 inline-block rounded-full border border-border/60 bg-muted/50 px-4 py-1.5 text-xs font-medium uppercase tracking-widest text-muted-foreground">
             {t("badge")}
           </span>
-          <h2 className="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">
+          <h2 className="mt-4 font-display text-3xl font-semibold tracking-tight md:text-4xl">
             {t("title")}{" "}
             <span className="text-muted-foreground/60">{t("titleAccent")}</span>
           </h2>

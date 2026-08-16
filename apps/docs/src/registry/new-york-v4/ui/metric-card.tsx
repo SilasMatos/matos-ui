@@ -8,7 +8,7 @@ import { tv, type VariantProps } from "tailwind-variants";
 
 export const metricCardVariants = tv({
   base: [
-    " not-prose w-full overflow-hidden rounded-[20px] border border-border",
+    " not-prose w-full overflow-hidden rounded-2xl border border-border",
     "bg-secondary text-foreground",
   ],
   variants: {

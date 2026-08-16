@@ -14,9 +14,9 @@ export const blocks: Registry["items"] = [
       "Responsive analytics dashboard with selectable date ranges, animated metrics, export actions, and a recent activity feed.",
     dependencies: ["lucide-react"],
     registryDependencies: [
-      dep("activity-feed"),
       dep("badge"),
       dep("button"),
+      dep("elevated"),
       dep("metric-card"),
     ],
     files: [

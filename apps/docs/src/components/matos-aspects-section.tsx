@@ -64,7 +64,7 @@ export function MatosAspectsSection() {
               <span className="mb-4 inline-flex rounded-full border border-border/60 bg-muted/45 px-4 py-1.5 text-muted-foreground text-xs font-medium uppercase tracking-widest">
                 {t("badge")}
               </span>
-              <h2 className="max-w-xl font-semibold text-3xl text-foreground tracking-normal md:text-4xl">
+              <h2 className="max-w-xl font-display font-semibold text-3xl text-foreground tracking-normal md:text-4xl">
                 {t("title")}
               </h2>
             </motion.div>

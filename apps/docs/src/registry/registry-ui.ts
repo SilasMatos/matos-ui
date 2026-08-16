@@ -31,14 +31,16 @@ const surfaceCssVars = {
       "0 0 0 1px var(--shadow-color), 0 1px 1px -0.5px var(--shadow-color), 0 3px 3px -1.5px var(--shadow-color), 0 6px 6px -3px var(--shadow-color), 0 12px 12px -6px var(--shadow-color), 0 24px 24px -12px var(--shadow-color), 0 48px 48px -24px var(--shadow-color), 0 96px 96px -48px var(--shadow-color)",
   },
   dark: {
-    "surface-1": "#171717",
-    "surface-2": "#1e1e1e",
-    "surface-3": "#252525",
-    "surface-4": "#2c2c2c",
-    "surface-5": "#333333",
-    "surface-6": "#3a3a3a",
-    "surface-7": "#414141",
-    "surface-8": "#484848",
+    // Spaced in CIE L* (~4-6 per level), not in raw sRGB: a uniform sRGB step
+    // decays to ~3 L* at the top of the ladder and stops reading as elevation.
+    "surface-1": "#191919",
+    "surface-2": "#242424",
+    "surface-3": "#2e2e2e",
+    "surface-4": "#393939",
+    "surface-5": "#444444",
+    "surface-6": "#4e4e4e",
+    "surface-7": "#575757",
+    "surface-8": "#616161",
     "dm-hi-base": "rgba(255,255,255,0.01)",
     "dm-hi-mid": "rgba(255,255,255,0.02)",
     "dm-hi-high": "rgba(255,255,255,0.04)",
@@ -96,12 +98,6 @@ export const ui: Registry["items"] = [
     files: [{ path: "ui/magnetic-card.tsx", type: "registry:ui" }],
   },
   {
-    name: "elastic-panel",
-    type: "registry:ui",
-    dependencies: [...physicsDeps, "lucide-react"],
-    files: [{ path: "ui/elastic-panel.tsx", type: "registry:ui" }],
-  },
-  {
     name: "spring-slider",
     type: "registry:ui",
     dependencies: physicsDeps,
@@ -123,6 +119,7 @@ export const ui: Registry["items"] = [
     name: "floating-action-menu",
     type: "registry:ui",
     dependencies: [...physicsDeps, "lucide-react"],
+    registryDependencies: ["elevated", "motion-tokens"],
     files: [{ path: "ui/floating-action-menu.tsx", type: "registry:ui" }],
   },
   {
@@ -173,6 +170,7 @@ export const ui: Registry["items"] = [
     name: "badge",
     type: "registry:ui",
     dependencies: ["tailwind-merge", "tailwind-variants"],
+    registryDependencies: ["surface-context", "surface-classes"],
     files: [
       {
         path: "ui/badge.tsx",
@@ -184,41 +182,10 @@ export const ui: Registry["items"] = [
     name: "data-table",
     type: "registry:ui",
     dependencies: ["@tanstack/react-table", "lucide-react"],
+    registryDependencies: ["elevated"],
     files: [
       {
         path: "ui/data-table.tsx",
-        type: "registry:ui",
-      },
-    ],
-  },
-  {
-    name: "activity-feed",
-    type: "registry:ui",
-    dependencies: [
-      "framer-motion",
-      "lucide-react",
-      "tailwind-merge",
-      "tailwind-variants",
-    ],
-    files: [
-      {
-        path: "ui/activity-feed.tsx",
-        type: "registry:ui",
-      },
-    ],
-  },
-  {
-    name: "status-pulse-card",
-    type: "registry:ui",
-    dependencies: [
-      "framer-motion",
-      "lucide-react",
-      "tailwind-merge",
-      "tailwind-variants",
-    ],
-    files: [
-      {
-        path: "ui/status-pulse-card.tsx",
         type: "registry:ui",
       },
     ],
@@ -270,26 +237,10 @@ export const ui: Registry["items"] = [
     name: "action-bar",
     type: "registry:ui",
     dependencies: ["lucide-react", "tailwind-merge", "tailwind-variants"],
-    registryDependencies: ["button"],
+    registryDependencies: ["button", "elevated"],
     files: [
       {
         path: "ui/action-bar.tsx",
-        type: "registry:ui",
-      },
-    ],
-  },
-  {
-    name: "detail-panel",
-    type: "registry:ui",
-    dependencies: [
-      "framer-motion",
-      "lucide-react",
-      "tailwind-merge",
-      "tailwind-variants",
-    ],
-    files: [
-      {
-        path: "ui/detail-panel.tsx",
         type: "registry:ui",
       },
     ],
@@ -319,6 +270,7 @@ export const ui: Registry["items"] = [
       "tailwind-merge",
       "tailwind-variants",
     ],
+    registryDependencies: ["elevated", "motion-tokens"],
     files: [
       {
         path: "ui/file-upload.tsx",
@@ -335,6 +287,7 @@ export const ui: Registry["items"] = [
       "tailwind-merge",
       "tailwind-variants",
     ],
+    registryDependencies: ["elevated", "motion-tokens"],
     files: [
       {
         path: "ui/notification-stack.tsx",
@@ -534,6 +487,7 @@ export const ui: Registry["items"] = [
     name: "motion-tabs",
     type: "registry:ui",
     dependencies: ["framer-motion", "tailwind-merge", "tailwind-variants"],
+    registryDependencies: ["elevated", "motion-tokens"],
     files: [
       {
         path: "ui/motion-tabs.tsx",
@@ -550,6 +504,7 @@ export const ui: Registry["items"] = [
       "tailwind-merge",
       "tailwind-variants",
     ],
+    registryDependencies: ["elevated", "motion-tokens"],
     files: [
       {
         path: "ui/feedback-card.tsx",
@@ -564,33 +519,6 @@ export const ui: Registry["items"] = [
     files: [
       {
         path: "ui/spotlight-card.tsx",
-        type: "registry:ui",
-      },
-    ],
-  },
-  {
-    name: "kinetic-card",
-    type: "registry:ui",
-    dependencies: ["framer-motion", "tailwind-merge", "tailwind-variants"],
-    files: [
-      {
-        path: "ui/kinetic-card.tsx",
-        type: "registry:ui",
-      },
-    ],
-  },
-  {
-    name: "progress-orbit",
-    type: "registry:ui",
-    dependencies: [
-      "framer-motion",
-      "lucide-react",
-      "tailwind-merge",
-      "tailwind-variants",
-    ],
-    files: [
-      {
-        path: "ui/progress-orbit.tsx",
         type: "registry:ui",
       },
     ],
@@ -747,6 +675,7 @@ export const ui: Registry["items"] = [
       "class-variance-authority",
       "framer-motion",
     ],
+    registryDependencies: ["elevated", "motion-tokens"],
     files: [
       {
         path: "ui/popover-card.tsx",
@@ -763,6 +692,7 @@ export const ui: Registry["items"] = [
       "framer-motion",
       "lucide-react",
     ],
+    registryDependencies: ["elevated", "motion-tokens"],
     files: [
       {
         path: "ui/sheet-panel.tsx",
@@ -786,6 +716,17 @@ export const ui: Registry["items"] = [
     files: [
       {
         path: "lib/surface-classes.ts",
+        type: "registry:lib",
+      },
+    ],
+  },
+  {
+    name: "motion-tokens",
+    type: "registry:lib",
+    dependencies: ["framer-motion"],
+    files: [
+      {
+        path: "lib/motion-tokens.ts",
         type: "registry:lib",
       },
     ],

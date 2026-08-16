@@ -7,6 +7,7 @@ import {
   Rocket,
   ShieldCheck,
 } from "lucide-react";
+import { Elevated } from "@/registry/new-york-v4/ui/elevated";
 import {
   type MotionTabItem,
   MotionTabs,
@@ -105,7 +106,7 @@ function Metric({
   delta: string;
 }) {
   return (
-    <div className="rounded-lg border border-border bg-muted/20 p-3">
+    <Elevated offset={1} className="rounded-lg p-3">
       <p className="text-muted-foreground text-xs">{label}</p>
       <div className="mt-2 flex items-end justify-between gap-2">
         <span className="font-semibold text-2xl tracking-[-0.04em]">
@@ -115,7 +116,7 @@ function Metric({
           {delta}
         </span>
       </div>
-    </div>
+    </Elevated>
   );
 }
 

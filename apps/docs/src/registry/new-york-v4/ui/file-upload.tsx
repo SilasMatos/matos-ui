@@ -20,11 +20,17 @@ import {
 import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
 
+import {
+  spring,
+  staggerContainer,
+} from "@/registry/new-york-v4/lib/motion-tokens";
+import { Elevated } from "@/registry/new-york-v4/ui/elevated";
+
 export const fileUploadVariants = tv({
   slots: {
-    root: "not-prose w-full rounded-2xl border border-border bg-secondary p-2 text-foreground",
+    root: "not-prose w-full rounded-2xl p-2 text-foreground",
     dropzone: [
-      "group/dropzone relative flex w-full cursor-pointer items-center gap-3 rounded-xl border border-border/60 bg-card p-3 text-left shadow-xs",
+      "group/dropzone relative flex w-full cursor-pointer items-center gap-3 rounded-xl border border-border/60 p-3 text-left",
       "transition-[background-color,border-color,box-shadow,transform] duration-200 ease-out",
       "hover:bg-muted/35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
       "data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50",
@@ -42,7 +48,7 @@ export const fileUploadVariants = tv({
       "max-w-full shrink-0 truncate rounded-md border border-border/70 bg-muted px-1.5 py-0.5 text-[10px] font-medium leading-none text-muted-foreground",
     list: "mt-2 flex flex-col gap-1.5",
     item: [
-      "group/item grid grid-cols-[1rem_minmax(0,1fr)_auto_auto] items-center gap-2 rounded-lg border border-border/60 bg-card px-2.5 py-2 text-xs shadow-xs",
+      "group/item grid grid-cols-[1rem_minmax(0,1fr)_auto_auto] items-center gap-2 rounded-lg border border-border/60 bg-background px-2.5 py-2 text-xs",
       "transition-colors duration-200 hover:bg-muted/30",
     ],
     fileIcon: "size-4 text-muted-foreground",
@@ -158,7 +164,7 @@ const listVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.035 },
+    ...staggerContainer("fast").visible,
   },
 };
 
@@ -168,13 +174,13 @@ const itemVariants: Variants = {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { duration: 0.2, ease: smoothEase },
+    transition: spring.fast,
   },
   exit: {
     opacity: 0,
     x: 8,
     scale: 0.98,
-    transition: { duration: 0.16, ease: smoothEase },
+    transition: spring.fast,
   },
 };
 
@@ -405,74 +411,83 @@ export function FileUpload({
     : "Drag a file here or choose from your device";
 
   return (
-    <div
+    <Elevated
       data-slot="file-upload"
+      offset={1}
       className={twMerge(styles.root(), className)}
       {...props}
     >
-      <motion.div
-        data-slot="file-upload-dropzone"
-        role="button"
-        tabIndex={disabled ? -1 : 0}
-        aria-label={title ?? defaultTitle}
-        aria-disabled={disabled}
-        data-disabled={disabled}
-        onClick={openFileDialog}
-        onKeyDown={handleKeyDown}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
-        className={styles.dropzone()}
-        animate={
-          shouldReduceMotion
-            ? undefined
-            : hasError
-              ? { x: [0, -2, 2, -1, 1, 0] }
-              : { scale: dragging ? 1.01 : 1 }
-        }
-        whileHover={
-          shouldReduceMotion || disabled ? undefined : { y: -1, scale: 1.002 }
-        }
-        whileTap={shouldReduceMotion || disabled ? undefined : { scale: 0.998 }}
-        transition={{ duration: hasError ? 0.24 : 0.2, ease: smoothEase }}
-      >
-        <motion.span
-          className={styles.iconWrap()}
+      <Elevated offset={1} className="rounded-xl">
+        <motion.div
+          data-slot="file-upload-dropzone"
+          role="button"
+          tabIndex={disabled ? -1 : 0}
+          aria-label={title ?? defaultTitle}
+          aria-disabled={disabled}
+          data-disabled={disabled}
+          onClick={openFileDialog}
+          onKeyDown={handleKeyDown}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+          className={styles.dropzone()}
           animate={
             shouldReduceMotion
               ? undefined
-              : { y: dragging ? -1 : 0, scale: dragging ? 1.04 : 1 }
+              : hasError
+                ? { x: [0, -2, 2, -1, 1, 0] }
+                : { scale: dragging ? 1.01 : 1 }
           }
-          transition={{ duration: 0.22, ease: smoothEase }}
-          aria-hidden="true"
+          whileHover={
+            shouldReduceMotion || disabled ? undefined : { y: -1, scale: 1.002 }
+          }
+          whileTap={
+            shouldReduceMotion || disabled ? undefined : { scale: 0.998 }
+          }
+          transition={
+            hasError ? { duration: 0.24, ease: smoothEase } : spring.fast
+          }
         >
-          {resolvedState === "uploading" ? (
-            <Loader2 className="size-4 animate-spin" />
-          ) : resolvedState === "success" ? (
-            <motion.span
-              initial={shouldReduceMotion ? false : { scale: 0.7, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.18, ease: smoothEase }}
-            >
-              <Check className="size-4" />
-            </motion.span>
-          ) : resolvedState === "error" ? (
-            <AlertCircle className="size-4" />
-          ) : (
-            <Upload className="size-4" />
-          )}
-        </motion.span>
+          <motion.span
+            className={styles.iconWrap()}
+            animate={
+              shouldReduceMotion
+                ? undefined
+                : { y: dragging ? -1 : 0, scale: dragging ? 1.04 : 1 }
+            }
+            transition={{ duration: 0.22, ease: smoothEase }}
+            aria-hidden="true"
+          >
+            {resolvedState === "uploading" ? (
+              <Loader2 className="size-4 animate-spin" />
+            ) : resolvedState === "success" ? (
+              <motion.span
+                initial={
+                  shouldReduceMotion ? false : { scale: 0.7, opacity: 0 }
+                }
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.18, ease: smoothEase }}
+              >
+                <Check className="size-4" />
+              </motion.span>
+            ) : resolvedState === "error" ? (
+              <AlertCircle className="size-4" />
+            ) : (
+              <Upload className="size-4" />
+            )}
+          </motion.span>
 
-        <div className={styles.copy()}>
-          <div className={styles.header()}>
-            <span className={styles.title()}>{title ?? defaultTitle}</span>
-            <span className={styles.badge()}>{formatAccept(accept)}</span>
+          <div className={styles.copy()}>
+            <div className={styles.header()}>
+              <span className={styles.title()}>{title ?? defaultTitle}</span>
+              <span className={styles.badge()}>{formatAccept(accept)}</span>
+            </div>
+            <p className={styles.description()}>
+              {description ?? defaultDescription}
+            </p>
           </div>
-          <p className={styles.description()}>
-            {description ?? defaultDescription}
-          </p>
-        </div>
-      </motion.div>
+        </motion.div>
+      </Elevated>
 
       <input
         ref={inputRef}
@@ -491,7 +506,7 @@ export function FileUpload({
             initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 4 }}
             animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
             exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -4 }}
-            transition={{ duration: 0.18, ease: smoothEase }}
+            transition={spring.fast}
           >
             {lastError ? (
               <p className={styles.error()} aria-live="polite">
@@ -581,6 +596,6 @@ export function FileUpload({
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </Elevated>
   );
 }

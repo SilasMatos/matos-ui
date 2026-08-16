@@ -19,7 +19,7 @@ export const commandDockVariants = tv({
       "bg-card/90 p-4 text-card-foreground shadow-sm backdrop-blur-xl",
     ],
     dock: [
-      "relative flex max-w-full items-end gap-1.5 overflow-x-auto rounded-[24px] border border-border",
+      "relative flex max-w-full items-end gap-1.5 overflow-x-auto rounded-2xl border border-border",
       "bg-background/75 px-2.5 py-2 shadow-lg backdrop-blur-xl",
       "supports-[backdrop-filter]:bg-background/55",
     ],
@@ -38,13 +38,13 @@ export const commandDockVariants = tv({
   variants: {
     size: {
       sm: {
-        dock: "gap-1 rounded-[20px] px-2 py-1.5",
+        dock: "gap-1 rounded-2xl px-2 py-1.5",
         item: "size-10 rounded-xl",
         icon: "size-8 rounded-lg",
       },
       md: {},
       lg: {
-        dock: "gap-2 rounded-[28px] px-3 py-2.5",
+        dock: "gap-2 rounded-3xl px-3 py-2.5",
         item: "size-14 rounded-[20px]",
         icon: "size-12 rounded-2xl",
       },

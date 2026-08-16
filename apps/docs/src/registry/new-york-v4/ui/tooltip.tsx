@@ -1,8 +1,43 @@
 "use client";
 
 import { Tooltip as TooltipPrimitive } from "@base-ui/react/tooltip";
+import type * as React from "react";
+import {
+  type CSSProperties,
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
 
 import { cn } from "@/lib/utils";
+import {
+  motionForOffset,
+  useExitAnimation,
+} from "@/registry/new-york-v4/lib/motion-tokens";
+
+const tooltipMotion = motionForOffset(1);
+
+type TooltipMotionContextValue = {
+  open: boolean;
+};
+
+const TooltipMotionContext = createContext<TooltipMotionContextValue | null>(
+  null,
+);
+
+function useTooltipMotionContext() {
+  return useContext(TooltipMotionContext) ?? { open: true };
+}
+
+function getMotionStyle(style?: CSSProperties): CSSProperties {
+  return {
+    "--motion-duration": `${tooltipMotion.duration}s`,
+    "--motion-exit-duration": `${tooltipMotion.exit.duration}s`,
+    ...style,
+  } as CSSProperties;
+}
 
 function TooltipProvider({
   delay = 0,
@@ -17,8 +52,38 @@ function TooltipProvider({
   );
 }
 
-function Tooltip({ ...props }: TooltipPrimitive.Root.Props) {
-  return <TooltipPrimitive.Root data-slot="tooltip" {...props} />;
+function Tooltip({
+  open: openProp,
+  defaultOpen = false,
+  onOpenChange,
+  ...props
+}: TooltipPrimitive.Root.Props) {
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
+  const open = openProp ?? uncontrolledOpen;
+  const contextValue = useMemo(() => ({ open }), [open]);
+
+  const handleOpenChange = useCallback<
+    NonNullable<TooltipPrimitive.Root.Props["onOpenChange"]>
+  >(
+    (nextOpen, eventDetails) => {
+      if (openProp === undefined) {
+        setUncontrolledOpen(nextOpen);
+      }
+      onOpenChange?.(nextOpen, eventDetails);
+    },
+    [onOpenChange, openProp],
+  );
+
+  return (
+    <TooltipMotionContext.Provider value={contextValue}>
+      <TooltipPrimitive.Root
+        data-slot="tooltip"
+        open={open}
+        onOpenChange={handleOpenChange}
+        {...props}
+      />
+    </TooltipMotionContext.Provider>
+  );
 }
 
 function TooltipTrigger({ ...props }: TooltipPrimitive.Trigger.Props) {
@@ -32,12 +97,40 @@ function TooltipContent({
   align = "center",
   alignOffset = 0,
   children,
+  style,
+  onTransitionEnd,
   ...props
 }: TooltipPrimitive.Popup.Props &
   Pick<
     TooltipPrimitive.Positioner.Props,
     "align" | "alignOffset" | "side" | "sideOffset"
   >) {
+  const { open } = useTooltipMotionContext();
+  const { mounted, onAnimationComplete } = useExitAnimation(
+    open,
+    tooltipMotion,
+  );
+  const motionStyle = useMemo(() => getMotionStyle(style), [style]);
+  const handleTransitionEnd = useCallback<
+    React.TransitionEventHandler<HTMLDivElement>
+  >(
+    (event) => {
+      onTransitionEnd?.(
+        event as Parameters<
+          NonNullable<TooltipPrimitive.Popup.Props["onTransitionEnd"]>
+        >[0],
+      );
+      if (event.currentTarget === event.target) {
+        onAnimationComplete();
+      }
+    },
+    [onAnimationComplete, onTransitionEnd],
+  );
+
+  if (!mounted) {
+    return null;
+  }
+
   return (
     <TooltipPrimitive.Portal>
       <TooltipPrimitive.Positioner
@@ -50,9 +143,11 @@ function TooltipContent({
         <TooltipPrimitive.Popup
           data-slot="tooltip-content"
           className={cn(
-            "data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-[state=delayed-open]:animate-in data-[state=delayed-open]:fade-in-0 data-[state=delayed-open]:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs has-data-[slot=kbd]:pr-1.5 **:data-[slot=kbd]:relative **:data-[slot=kbd]:isolate **:data-[slot=kbd]:z-50 **:data-[slot=kbd]:rounded-sm data-[side=inline-start]:slide-in-from-right-2 data-[side=inline-end]:slide-in-from-left-2 z-50 w-fit max-w-xs origin-(--transform-origin) bg-foreground text-background",
+            "data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-[state=delayed-open]:animate-in data-[state=delayed-open]:fade-in-0 data-[state=delayed-open]:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs duration-[var(--motion-duration)] data-ending-style:duration-[var(--motion-exit-duration)] motion-reduce:transition-none has-data-[slot=kbd]:pr-1.5 **:data-[slot=kbd]:relative **:data-[slot=kbd]:isolate **:data-[slot=kbd]:z-50 **:data-[slot=kbd]:rounded-sm data-[side=inline-start]:slide-in-from-right-2 data-[side=inline-end]:slide-in-from-left-2 z-50 w-fit max-w-xs origin-(--transform-origin) bg-foreground text-background",
             className,
           )}
+          style={motionStyle}
+          onTransitionEnd={handleTransitionEnd}
           {...props}
         >
           {children}

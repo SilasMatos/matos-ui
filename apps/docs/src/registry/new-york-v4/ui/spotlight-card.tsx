@@ -8,7 +8,7 @@ import { tv, type VariantProps } from "tailwind-variants";
 
 export const spotlightCardVariants = tv({
   base: [
-    "group relative w-full overflow-hidden rounded-[20px] border border-border",
+    "group relative w-full overflow-hidden rounded-2xl border border-border",
     "bg-secondary text-foreground transition-colors",
   ],
   variants: {
@@ -90,13 +90,13 @@ export function SpotlightCard({
       {...props}
     >
       <motion.div
-        className="pointer-events-none absolute -inset-px rounded-[20px] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
         style={{ background: borderBackground }}
         aria-hidden="true"
       />
 
       <motion.div
-        className="pointer-events-none absolute inset-0 rounded-[20px] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
         style={{ background: spotlightBackground }}
         aria-hidden="true"
       />

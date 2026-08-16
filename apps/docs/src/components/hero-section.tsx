@@ -208,7 +208,7 @@ export function HeroSection() {
         </motion.div>
 
         <motion.div variants={fadeUp} className="flex flex-col gap-4">
-          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-7xl lg:text-8xl">
+          <h1 className="font-display text-4xl font-bold tracking-tight sm:text-5xl md:text-7xl lg:text-8xl">
             <span className="text-foreground/40">{t("titleLine1")} </span>
             <br className="hidden sm:block" />
             <span className="text-foreground/40">{t("titleLine2")} </span>

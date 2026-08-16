@@ -2,20 +2,19 @@
 
 import {
   ArrowDownToLine,
+  ArrowUpRight,
   CheckCircle2,
+  Clock3,
   GitCommitHorizontal,
   Plus,
   Radio,
   Sparkles,
 } from "lucide-react";
-import { useState } from "react";
+import { type ReactNode, useState } from "react";
 
-import {
-  ActivityFeed,
-  type ActivityFeedItem,
-} from "@/registry/new-york-v4/ui/activity-feed";
 import { Badge } from "@/registry/new-york-v4/ui/badge";
 import { Button } from "@/registry/new-york-v4/ui/button";
+import { Elevated } from "@/registry/new-york-v4/ui/elevated";
 import { MetricCard } from "@/registry/new-york-v4/ui/metric-card";
 
 const ranges = ["7 days", "30 days", "90 days"] as const;
@@ -71,7 +70,23 @@ const metricsByRange: Record<
   },
 };
 
-const activityItems: ActivityFeedItem[] = [
+type DashboardActivityItem = {
+  id: string;
+  title: ReactNode;
+  description: ReactNode;
+  time: ReactNode;
+  badge?: ReactNode;
+  checks?: ReactNode;
+  actor?: {
+    name: string;
+    initials?: string;
+  };
+  icon: ReactNode;
+  tone?: "neutral" | "info" | "success" | "violet";
+  unread?: boolean;
+};
+
+const activityItems: DashboardActivityItem[] = [
   {
     id: "deployment",
     title: "Production deployment completed",
@@ -111,6 +126,25 @@ const activityItems: ActivityFeedItem[] = [
     tone: "info",
   },
 ];
+
+const activityToneStyles = {
+  neutral: {
+    icon: "border-border/70 bg-muted text-muted-foreground",
+    badge: "border-border/70 bg-secondary text-muted-foreground",
+  },
+  info: {
+    icon: "border-border/70 bg-secondary text-muted-foreground",
+    badge: "border-border/70 bg-muted text-muted-foreground",
+  },
+  success: {
+    icon: "border-primary/20 bg-primary/10 text-foreground",
+    badge: "border-primary/15 bg-primary/5 text-foreground",
+  },
+  violet: {
+    icon: "border-border/70 bg-secondary text-muted-foreground",
+    badge: "border-border/70 bg-muted text-muted-foreground",
+  },
+} as const;
 
 export function DashboardOverview01() {
   const [range, setRange] = useState<Range>("7 days");
@@ -214,16 +248,140 @@ export function DashboardOverview01() {
         </section>
 
         <section aria-label="Recent workspace activity" className="min-w-0">
-          <ActivityFeed
-            items={activityItems}
-            title="Recent activity"
-            description="Updates from your team and connected services."
-            showAction
-            actionLabel="View all"
-            compact
-          />
+          <RecentActivity items={activityItems} />
         </section>
       </div>
     </div>
+  );
+}
+
+function RecentActivity({ items }: { items: DashboardActivityItem[] }) {
+  return (
+    <Elevated
+      offset={2}
+      data-slot="dashboard-recent-activity"
+      className="not-prose w-full overflow-hidden rounded-2xl p-2.5 text-foreground sm:p-3"
+    >
+      <div className="flex items-start justify-between gap-3 border-border/60 border-b px-3 py-3">
+        <div className="min-w-0">
+          <h2 className="truncate text-[13px] font-semibold leading-none text-foreground">
+            Recent activity
+          </h2>
+          <p className="mt-1 text-muted-foreground text-xs leading-4">
+            Updates from your team and connected services.
+          </p>
+        </div>
+        <button
+          type="button"
+          className="inline-flex h-7 shrink-0 items-center gap-1 rounded-lg border border-border/60 bg-secondary px-2 text-muted-foreground text-xs font-medium shadow-xs transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          <span>View all</span>
+          <ArrowUpRight className="size-3.5" aria-hidden="true" />
+        </button>
+      </div>
+
+      <ol className="space-y-0.5 p-1">
+        {items.map((item, index) => (
+          <RecentActivityRow
+            key={item.id}
+            item={item}
+            isLast={index === items.length - 1}
+          />
+        ))}
+      </ol>
+    </Elevated>
+  );
+}
+
+function RecentActivityRow({
+  item,
+  isLast,
+}: {
+  item: DashboardActivityItem;
+  isLast: boolean;
+}) {
+  const tone = activityToneStyles[item.tone ?? "neutral"];
+
+  return (
+    <li className="group relative grid grid-cols-[1.75rem_minmax(0,1fr)_1.5rem] gap-2.5 rounded-lg px-2 py-1.5 outline-none transition-colors hover:bg-muted/35 focus-within:bg-muted/35">
+      <div className="relative flex justify-center pt-0.5">
+        {!isLast ? (
+          <span
+            aria-hidden="true"
+            className="absolute top-8 bottom-[-1rem] w-px bg-border"
+          />
+        ) : null}
+
+        <span
+          className={[
+            "relative z-10 flex size-7 items-center justify-center rounded-full border shadow-xs",
+            "[&_svg]:size-3.5 [&_svg]:shrink-0",
+            tone.icon,
+          ].join(" ")}
+        >
+          {item.unread ? (
+            <span
+              aria-hidden="true"
+              className="absolute top-0 right-0 size-2 rounded-full border border-card bg-primary"
+            />
+          ) : null}
+          <span aria-hidden="true" className="flex items-center justify-center">
+            {item.icon}
+          </span>
+        </span>
+      </div>
+
+      <div className="min-w-0 pt-0.5">
+        <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+          <p className="min-w-0 truncate text-[13px] font-medium leading-5 text-foreground">
+            {item.title}
+          </p>
+          {item.badge ? (
+            <span
+              className={[
+                "inline-flex shrink-0 items-center rounded-md border px-1.5 py-0.5 text-[10px] font-medium leading-none",
+                "transition-colors group-hover:border-border group-hover:bg-muted group-hover:text-foreground",
+                tone.badge,
+              ].join(" ")}
+            >
+              {item.badge}
+            </span>
+          ) : null}
+        </div>
+
+        <p className="mt-0.5 line-clamp-1 text-muted-foreground text-xs leading-5">
+          {item.description}
+        </p>
+
+        <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-muted-foreground">
+          {item.actor ? (
+            <span className="inline-flex min-w-0 items-center gap-1.5">
+              <span className="flex size-5 shrink-0 items-center justify-center rounded-full border border-border/70 bg-secondary text-[9px] font-medium text-muted-foreground">
+                {item.actor.initials ?? item.actor.name.slice(0, 2)}
+              </span>
+              <span className="truncate">{item.actor.name}</span>
+            </span>
+          ) : null}
+          <span className="inline-flex items-center gap-1.5">
+            <Clock3 className="size-3" aria-hidden="true" />
+            <span>{item.time}</span>
+          </span>
+          {item.checks ? (
+            <span className="inline-flex items-center gap-1.5">
+              <CheckCircle2 className="size-3" aria-hidden="true" />
+              <span>{item.checks}</span>
+            </span>
+          ) : null}
+        </div>
+      </div>
+
+      <button
+        type="button"
+        aria-label="Open activity details"
+        className="-translate-x-1 mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-lg text-muted-foreground opacity-0 transition-[background-color,color,opacity,transform] hover:bg-secondary hover:text-foreground group-focus-within:translate-x-0 group-focus-within:opacity-100 group-hover:translate-x-0 group-hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        <ArrowUpRight className="size-3.5" aria-hidden="true" />
+      </button>
+    </li>
   );
 }

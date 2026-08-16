@@ -110,15 +110,18 @@
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
 
-  /* Surfaces — 8-level elevation ladder (dark) */
-  --surface-1: #171717;
-  --surface-2: #1e1e1e;
-  --surface-3: #252525;
-  --surface-4: #2c2c2c;
-  --surface-5: #333333;
-  --surface-6: #3a3a3a;
-  --surface-7: #414141;
-  --surface-8: #484848;
+  /* Surfaces — 8-level elevation ladder (dark).
+     Steps are spaced in CIE L* (~4–6 per level), not in raw sRGB, so every
+     adjacent pair separates by roughly the same perceived amount. A uniform
+     sRGB step would collapse to ~3 L* at the top of the ladder. */
+  --surface-1: #191919;
+  --surface-2: #242424;
+  --surface-3: #2e2e2e;
+  --surface-4: #393939;
+  --surface-5: #444444;
+  --surface-6: #4e4e4e;
+  --surface-7: #575757;
+  --surface-8: #616161;
   --dm-hi-base: rgba(255, 255, 255, 0.01);
   --dm-hi-mid: rgba(255, 255, 255, 0.02);
   --dm-hi-high: rgba(255, 255, 255, 0.04);
@@ -218,12 +221,30 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 10px);
+  --radius-3xl: calc(var(--radius) + 18px);
+  /* Typography roles. The source variables come from next/font on <html>
+     (see app/[locale]/layout.tsx). Registry components never name a typeface —
+     they use `font-sans`/`font-mono`, so they pick up whatever the host app
+     maps here, and stay neutral when installed elsewhere. */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display:
+    var(--font-satoshi), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
   --font-logo: "Trebuchet MS", ui-sans-serif, system-ui, sans-serif;
 }
 
 @layer components {
   html {
     scrollbar-gutter: stable;
+  }
+
+  /* MDX headings rendered by Fumadocs' DocsBody (.prose) take the display face.
+     Body copy inside .prose stays on Inter, and the `not-prose` guard keeps the
+     rule off registry components rendered inside preview canvases — those must
+     stay typography-neutral. */
+  .prose :is(h1, h2):not(:where(.not-prose, .not-prose *)) {
+    font-family: var(--font-display);
   }
 
   .steps {

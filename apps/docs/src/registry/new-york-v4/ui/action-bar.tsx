@@ -5,11 +5,12 @@ import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
 
 import { Button } from "@/registry/new-york-v4/ui/button";
+import { Elevated } from "@/registry/new-york-v4/ui/elevated";
 
 export const actionBarVariants = tv({
   base: [
-    "fixed z-50 flex w-[calc(100vw-2rem)] max-w-[calc(100vw-2rem)] flex-col gap-3 border shadow-lg sm:w-auto sm:max-w-[calc(100vw-3rem)] sm:flex-row sm:items-center",
-    "backdrop-blur-sm supports-[backdrop-filter]:bg-background/20",
+    "fixed z-50 flex w-[calc(100vw-2rem)] max-w-[calc(100vw-2rem)] flex-col gap-3 border sm:w-auto sm:max-w-[calc(100vw-3rem)] sm:flex-row sm:items-center",
+    "supports-[backdrop-filter]:backdrop-blur-sm",
   ],
   variants: {
     placement: {
@@ -21,10 +22,11 @@ export const actionBarVariants = tv({
         "bottom-4 right-4 left-4 translate-x-0 sm:bottom-6 sm:right-auto sm:left-6",
     },
     tone: {
-      default: "border-border bg-surface-raised",
-      destructive: "border-destructive/50 bg-destructive/10",
-      success: "border-green-500/30 bg-green-500/10",
-      warning: "border-yellow-500/30 bg-yellow-500/10",
+      default: "border-border",
+      destructive: "border-destructive/45",
+      success: "border-primary/35",
+      warning: "border-ring/50",
+      info: "border-primary/30",
     },
     size: {
       sm: "rounded-lg px-3 py-2",
@@ -106,8 +108,9 @@ export function ActionBar(props: ActionBarProps) {
       {/* Backdrop blur layer */}
       <div className="" aria-hidden />
 
-      <div
+      <Elevated
         data-slot="action-bar"
+        offset={3}
         role="dialog"
         aria-label={ariaLabel}
         data-loading={isLoading ? "" : undefined}
@@ -159,7 +162,7 @@ export function ActionBar(props: ActionBarProps) {
             {isLoading ? confirmLabelLoading : confirmLabel}
           </Button>
         </div>
-      </div>
+      </Elevated>
     </>
   );
 }
