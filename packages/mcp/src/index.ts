@@ -1,7 +1,11 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { registerFindComponentFor } from "./tools/find-component-for.js";
 import { registerGetInstallCommand } from "./tools/get-install-command.js";
 import { registerGetItem } from "./tools/get-item.js";
+import { registerGetMotionGuidance } from "./tools/get-motion-guidance.js";
+import { registerGetSurfacePhilosophy } from "./tools/get-surface-philosophy.js";
+import { registerGetThemeOptions } from "./tools/get-theme-options.js";
 import { registerListBlocks } from "./tools/list-blocks.js";
 import { registerListComponents } from "./tools/list-components.js";
 import { registerListPalettes } from "./tools/list-palettes.js";
@@ -16,6 +20,10 @@ registerListBlocks(server);
 registerListPalettes(server);
 registerGetItem(server);
 registerGetInstallCommand(server);
+registerFindComponentFor(server);
+registerGetSurfacePhilosophy(server);
+registerGetMotionGuidance(server);
+registerGetThemeOptions(server);
 
 async function main() {
 	const transport = new StdioServerTransport();

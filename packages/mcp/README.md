@@ -31,6 +31,8 @@ claude mcp add matos-ui -- npx -y @matos-ui/mcp@latest
 
 ## Tools
 
+Registry-backed (need `MATOS_UI_REGISTRY_URL`):
+
 | Tool | Description |
 | --- | --- |
 | `list_components` | List components (`registry:ui`/`registry:lib`/`registry:hook`), optionally filtered by `type`. |
@@ -38,8 +40,15 @@ claude mcp add matos-ui -- npx -y @matos-ui/mcp@latest
 | `list_palettes` | List color palettes with a primary-color preview for light/dark. |
 | `get_item` | Fetch the full registry entry for a single item by name (file contents, deps, cssVars). |
 | `get_install_command` | Build the ready-to-run `shadcn add` command for an item, for npm/pnpm/yarn/bun. |
+| `find_component_for` | Keyword-search components/blocks by use case (name/description/dependency overlap, no embeddings). |
 
-More tools ship as the Surface Philosophy / Motion Tokens knowledge layer lands.
+Docs-sourced (read live from GitHub, no registry needed):
+
+| Tool | Description |
+| --- | --- |
+| `get_surface_philosophy` | The Elevated primitive, substrate context, and elevation offset conventions — fetched from `elevated.mdx` so it can't drift from what's documented. |
+| `get_motion_guidance` | The Motion Tokens spring tiers, `motionForOffset`, `staggerContainer` — returns the actual `motion-tokens.ts` source (code + JSDoc). |
+| `get_theme_options` | The 4 color palettes (registry, needs config) + the 4 radius presets (docs source, no config needed) in one call. |
 
 ## Development
 
