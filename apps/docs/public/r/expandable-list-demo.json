@@ -1,0 +1,16 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "expandable-list-demo",
+  "registryDependencies": [
+    "expandable-list"
+  ],
+  "files": [
+    {
+      "path": "components/matos-ui/examples/expandable-list-demo.tsx",
+      "content": "\"use client\";\n\nimport {\n  ExpandableList,\n  ExpandableListItem,\n} from \"@/components/matos-ui/expandable-list\";\n\nconst items = [\n  {\n    value: \"billing\",\n    title: \"How does billing work?\",\n    body: \"You're billed monthly based on active seats. Adding or removing a teammate prorates the next invoice automatically — no manual adjustment needed.\",\n  },\n  {\n    value: \"export\",\n    title: \"Can I export my data?\",\n    body: \"Yes. Every workspace can export a full JSON snapshot from Settings → Data, and it includes everything: components, blocks, and customization presets.\",\n  },\n  {\n    value: \"sso\",\n    title: \"Do you support SSO?\",\n    body: \"SSO via SAML and OIDC is available on the Team plan. Once configured, members can also enforce it for the whole workspace from the security tab.\",\n  },\n  {\n    value: \"limits\",\n    title: \"What happens if I hit a usage limit?\",\n    body: \"Nothing breaks. You'll see a warning banner and an email a few days ahead — existing projects keep working while you decide whether to upgrade.\",\n  },\n];\n\nexport default function ExpandableListDemo() {\n  return (\n    <div className=\"w-full max-w-md\">\n      <ExpandableList defaultOpenValues={[\"billing\"]}>\n        {items.map((item) => (\n          <ExpandableListItem\n            key={item.value}\n            value={item.value}\n            title={item.title}\n          >\n            {item.body}\n          </ExpandableListItem>\n        ))}\n      </ExpandableList>\n    </div>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/expandable-list-demo.tsx"
+    }
+  ],
+  "type": "registry:example"
+}

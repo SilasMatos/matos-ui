@@ -1,0 +1,119 @@
+---
+title: Live Queue
+description: An operational list — deploy queue, approvals, tasks — where items enter with a stagger, each item is its own Elevated surface, and finished items leave individually.
+---
+
+<ComponentPreview name="live-queue-demo" chromeless align="start" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/live-queue.json" />
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the following dependencies:</Step>
+
+<CodeBlockCommand command="npm install framer-motion lucide-react" />
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="live-queue" title="components/matos-ui/live-queue.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import {
+  LiveQueue,
+  LiveQueueItem,
+  type LiveQueueItemData
+} from '@/components/matos-ui/live-queue'
+```
+
+```tsx
+const [items, setItems] = useState<LiveQueueItemData[]>([
+  { id: '1', title: 'Deploy to production', status: 'running' },
+])
+
+function handleItemComplete(id: string) {
+  setItems(current => current.filter(item => item.id !== id))
+}
+
+;<LiveQueue items={items} onItemComplete={handleItemComplete}>
+  {(item) => <LiveQueueItem key={item.id} item={item} />}
+</LiveQueue>
+```
+
+## How it's built
+
+- The list is `staggerContainer("fast")` — the tier this token exists for:
+  a queue that can grow shouldn't make new arrivals wait through a slow
+  cascade. It orchestrates the entrance of items already in the array on
+  mount; items appended later animate in on their own via
+  `AnimatePresence`, without inheriting a stagger delay.
+- Each `LiveQueueItem` is `Elevated offset={1}` above the list — its own
+  surface, not a flat row.
+- Exit uses `spring.fast` and `AnimatePresence mode="popLayout"`, so a
+  finished item leaves on its own and its neighbors resettle into place
+  instead of the whole list snapping to a new layout at once.
+- Status color follows the same acromatic convention as
+  [Badge](/docs/components/badge) and Action Bar: `done` uses `--primary`,
+  `failed` uses `--destructive`, `pending`/`running` stay on
+  `--foreground`/`--muted-foreground`. No new literal green/red.
+- The `running` progress bar loops on a raw linear/infinite transition —
+  the same deliberate exception `Reactive Button`'s loading state uses.
+  Continuous, looping motion doesn't fit any `spring.*` tier, so it isn't
+  forced into one.
+- `done` items clear themselves after a short delay via `onItemComplete`
+  — `failed` items don't auto-clear, so an error can't disappear before
+  it's noticed. Both states also expose a manual dismiss control.
+- `prefers-reduced-motion` drops the stagger, the layout reflow, and the
+  progress bar's motion — state changes remain visible through opacity
+  alone.
+
+## Reference
+
+### LiveQueue Props
+
+| Prop             | Type                        | Default       | Description                                    |
+| ----------------- | --------------------------- | ------------- | ------------------------------------------------ |
+| `items`            | `LiveQueueItemData[]`        | —             | The current queue, in order.                      |
+| `onItemComplete`   | `(id: string) => void`       | —             | Called to remove a terminal (done/failed) item.    |
+| `children`         | `(item) => ReactNode`        | —             | Render prop — typically `LiveQueueItem`.           |
+| `aria-label`       | `string`                     | `"Live queue"`| Label for the `aria-live="polite"` region.         |
+
+### LiveQueueItemData
+
+| Field         | Type                                          | Description                     |
+| ------------- | ---------------------------------------------- | -------------------------------- |
+| `id`          | `string`                                       | Unique identifier.                |
+| `title`       | `string`                                       | Primary line.                     |
+| `description` | `string?`                                      | Secondary line.                   |
+| `status`      | `"pending" \| "running" \| "done" \| "failed"` | Drives icon, tone, and behavior.  |
+
+### Interactions
+
+- New items fade + slide in with a stagger when the list first mounts;
+  items added afterward enter individually, no extra delay.
+- `done` and `failed` items show a dismiss button; `done` also
+  auto-dismisses after ~2.4s.
+- `running` items show a looping progress bar along the bottom edge.

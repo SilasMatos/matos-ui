@@ -1,0 +1,133 @@
+---
+title: Stacked Dialog
+description: A dialog built to open another dialog on top of it — editing something and confirming a destructive action inside that edit, without losing the dialog behind it.
+---
+
+<ComponentPreview name="stacked-dialog-demo" chromeless align="start" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/stacked-dialog.json" />
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the following dependencies:</Step>
+
+<CodeBlockCommand command="npm install @base-ui/react class-variance-authority framer-motion lucide-react" />
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="stacked-dialog" title="components/matos-ui/stacked-dialog.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import {
+  StackedDialog,
+  StackedDialogClose,
+  StackedDialogContent,
+  StackedDialogDescription,
+  StackedDialogFooter,
+  StackedDialogHeader,
+  StackedDialogTitle,
+  StackedDialogTrigger
+} from '@/components/matos-ui/stacked-dialog'
+```
+
+```tsx
+<StackedDialog open={open} onOpenChange={setOpen}>
+  <StackedDialogTrigger>Edit item</StackedDialogTrigger>
+  <StackedDialogContent>
+    <StackedDialogHeader>
+      <StackedDialogTitle>Edit item</StackedDialogTitle>
+    </StackedDialogHeader>
+
+    {/* Nested — opens a second dialog on top of this one */}
+    <StackedDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+      <StackedDialogTrigger>Delete</StackedDialogTrigger>
+      <StackedDialogContent variant="danger">
+        <StackedDialogHeader>
+          <StackedDialogTitle>Delete this item?</StackedDialogTitle>
+        </StackedDialogHeader>
+      </StackedDialogContent>
+    </StackedDialog>
+  </StackedDialogContent>
+</StackedDialog>
+```
+
+## How it's built
+
+- Built on Base UI's `Dialog`, which has first-class support for dialogs
+  nested inside other dialogs: only the innermost layer closes on **Esc** or
+  an outside click, focus traps to whichever dialog is topmost, and closing
+  it returns focus to the dialog behind it — none of that is custom code
+  here.
+- Each `StackedDialogContent` is `Elevated offset={4}` — the same relative
+  lift every time, resolved against whatever substrate it's nested in. A
+  top-level dialog reads 4 steps above the page; a dialog opened from
+  *inside* that dialog reads 4 steps above the first one's own level. Neither
+  computes an absolute surface level by hand — that's what nesting the
+  offset through [Elevated](/docs/foundations/elevated) buys you.
+- The entrance/exit spring comes from `motionForOffset` applied to that
+  *resolved* level, not the raw `+4`. In practice both the outer and the
+  inner dialog land on `spring.slow` — a fresh substrate starts at level 1,
+  so `1 + 4 = 5` for the first dialog and `5 + 4 = 8` (capped) for the
+  second, and both exceed the `spring.moderate` cutoff. Nothing forces that
+  outcome; it falls out of the token.
+- When a nested dialog opens, Base UI marks its parent's popup
+  `data-nested-dialog-open` — the parent dims and blurs slightly in place
+  rather than disappearing, so the user keeps their bearings in the stack.
+  It stays interactive-looking but is actually inert underneath the open
+  child.
+- Closing a dialog that still has an open child closes both: each
+  `StackedDialog` registers a "close me" callback with its parent, so a
+  parent close cascades down before either one unmounts. No orphaned
+  portals left behind, and no stale open state waiting to flash back the
+  next time the parent reopens.
+- `prefers-reduced-motion` drops the scale/slide entrance in favor of a
+  plain opacity change; the dimming on the parent still applies instantly
+  (no spatial motion involved) but the transition itself is skipped.
+
+## Reference
+
+### StackedDialog Props
+
+| Prop            | Type                              | Default | Description                          |
+| ---------------- | ---------------------------------- | ------- | -------------------------------------- |
+| `open`            | `boolean`                          | —       | Controlled open state.                  |
+| `defaultOpen`     | `boolean`                          | `false` | Initial open state, uncontrolled.       |
+| `onOpenChange`    | `(open: boolean) => void`          | —       | Called when the open state changes.     |
+
+### StackedDialogContent Props
+
+| Prop        | Type                    | Default     | Description                                |
+| ------------ | ------------------------ | ----------- | -------------------------------------------- |
+| `variant`     | `"default" \| "danger"`  | `"default"` | Tints the title for destructive confirmations. |
+| `showClose`   | `boolean`                | `true`      | Shows the top-right close button.             |
+
+### Interactions
+
+- **Esc** or an outside click closes only the topmost open dialog.
+- Closing an ancestor dialog closes every dialog nested inside it.
+- Focus moves to the newest dialog on open, and back to the dialog behind
+  it on close — not the original page trigger.

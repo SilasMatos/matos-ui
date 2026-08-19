@@ -289,6 +289,30 @@ export const ui: Registry["items"] = [
     ],
   },
   {
+    name: "expandable-list",
+    type: "registry:ui",
+    dependencies: ["framer-motion", "lucide-react"],
+    registryDependencies: ["elevated", "motion-tokens"],
+    files: [
+      {
+        path: "ui/expandable-list.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "live-queue",
+    type: "registry:ui",
+    dependencies: ["framer-motion", "lucide-react"],
+    registryDependencies: ["elevated", "motion-tokens"],
+    files: [
+      {
+        path: "ui/live-queue.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
     name: "notification-stack",
     type: "registry:ui",
     dependencies: [
@@ -706,6 +730,23 @@ export const ui: Registry["items"] = [
     files: [
       {
         path: "ui/sheet-panel.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "stacked-dialog",
+    type: "registry:ui",
+    dependencies: [
+      "@base-ui/react",
+      "class-variance-authority",
+      "framer-motion",
+      "lucide-react",
+    ],
+    registryDependencies: ["elevated", "motion-tokens"],
+    files: [
+      {
+        path: "ui/stacked-dialog.tsx",
         type: "registry:ui",
       },
     ],

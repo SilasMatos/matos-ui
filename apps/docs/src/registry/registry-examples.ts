@@ -155,6 +155,39 @@ export const examples: Registry["items"] = [
     ],
   },
   {
+    name: "expandable-list-demo",
+    type: "registry:example",
+    registryDependencies: ["expandable-list"],
+    files: [
+      {
+        path: "examples/expandable-list-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "live-queue-demo",
+    type: "registry:example",
+    registryDependencies: ["live-queue"],
+    files: [
+      {
+        path: "examples/live-queue-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "stacked-dialog-demo",
+    type: "registry:example",
+    registryDependencies: ["stacked-dialog"],
+    files: [
+      {
+        path: "examples/stacked-dialog-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
     name: "notification-stack-demo",
     type: "registry:example",
     registryDependencies: ["notification-stack"],
