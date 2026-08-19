@@ -81,8 +81,8 @@ export function CustomizeMenu() {
             <div className="mt-2 grid grid-cols-4 gap-1.5">
               {PALETTES.map((item) => {
                 const selected = item.name === paletteName;
-                const swatch =
-                  item.cssVars[isDark ? "dark" : "light"].primary ?? "";
+                const vars = item.cssVars[isDark ? "dark" : "light"];
+                const swatch = vars.primary ?? "";
                 return (
                   <Elevated
                     key={item.name}
@@ -102,7 +102,13 @@ export function CustomizeMenu() {
                         style={{ background: swatch }}
                       >
                         {selected ? (
-                          <Check className="size-3 text-background" />
+                          // The palette's own foreground, not `background`:
+                          // light primaries (amber, lime) leave a white check
+                          // barely visible on their own swatch.
+                          <Check
+                            className="size-3"
+                            style={{ color: vars["primary-foreground"] }}
+                          />
                         ) : null}
                       </span>
                       <span className="sr-only">{paletteLabel(item.name)}</span>

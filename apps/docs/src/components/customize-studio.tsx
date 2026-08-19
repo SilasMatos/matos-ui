@@ -32,8 +32,16 @@ export function CustomizeStudio() {
           <div className="mt-3 grid grid-cols-2 gap-2">
             {PALETTES.map((item) => {
               const selected = item.name === paletteName;
-              const swatch =
-                item.cssVars[isDark ? "dark" : "light"].primary ?? "";
+              const vars = item.cssVars[isDark ? "dark" : "light"];
+              // Three real tokens instead of one: with a dozen palettes on
+              // screen, `primary` alone leaves neighbours like teal/emerald
+              // indistinguishable. Values come straight from the registry —
+              // never a hand-picked stand-in.
+              const swatches = [
+                vars.primary,
+                vars["chart-2"],
+                vars["chart-4"],
+              ].filter(Boolean);
               return (
                 <Elevated
                   key={item.name}
@@ -51,11 +59,16 @@ export function CustomizeStudio() {
                   >
                     <span
                       aria-hidden="true"
-                      className="size-5 shrink-0 rounded-full"
-                      // Swatch is the palette's real `primary`, read straight
-                      // from the registry — never a hand-picked stand-in.
-                      style={{ background: swatch }}
-                    />
+                      className="flex h-5 w-10 shrink-0 overflow-hidden rounded-full"
+                    >
+                      {swatches.map((color) => (
+                        <span
+                          key={color}
+                          className="h-full flex-1"
+                          style={{ background: color }}
+                        />
+                      ))}
+                    </span>
                     <span className="min-w-0 flex-1 truncate font-medium text-foreground">
                       {paletteLabel(item.name)}
                     </span>
@@ -172,6 +185,17 @@ function OutputBlock({ caption, value }: { caption: string; value: string }) {
   );
 }
 
+// The five chart tokens ship with every palette but nothing in the preview used
+// to reference them, so half of what a palette changes was invisible. Class
+// names stay literal — Tailwind cannot see an interpolated `bg-chart-${n}`.
+const SERIES = [
+  { label: "Direct", value: 38, className: "bg-chart-1" },
+  { label: "Search", value: 24, className: "bg-chart-2" },
+  { label: "Social", value: 18, className: "bg-chart-3" },
+  { label: "Email", value: 12, className: "bg-chart-4" },
+  { label: "Other", value: 8, className: "bg-chart-5" },
+] as const;
+
 /** Small, realistic composition — not a lone control floating on a canvas. */
 function PreviewCard() {
   return (
@@ -204,10 +228,40 @@ function PreviewCard() {
               68%
             </p>
           </div>
-          <Badge variant="secondary">+12%</Badge>
+          <span className="rounded-full bg-accent px-2 py-0.5 font-medium text-[11px] text-accent-foreground">
+            +12%
+          </span>
         </div>
         <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-foreground/10">
           <div className="h-full w-[68%] rounded-full bg-primary" />
+        </div>
+      </Elevated>
+
+      <Elevated offset={1} className="mt-3 rounded-xl p-3">
+        <p className="text-muted-foreground text-xs">Traffic by source</p>
+        <div className="mt-2 flex h-2 w-full gap-0.5">
+          {SERIES.map((item) => (
+            <span
+              key={item.label}
+              aria-hidden="true"
+              className={cn("h-full rounded-full", item.className)}
+              style={{ width: `${item.value}%` }}
+            />
+          ))}
+        </div>
+        <div className="mt-2.5 flex flex-wrap gap-x-3 gap-y-1">
+          {SERIES.map((item) => (
+            <span
+              key={item.label}
+              className="flex items-center gap-1.5 text-[11px] text-muted-foreground"
+            >
+              <span
+                aria-hidden="true"
+                className={cn("size-2 rounded-full", item.className)}
+              />
+              {item.label}
+            </span>
+          ))}
         </div>
       </Elevated>
 
