@@ -1,0 +1,107 @@
+---
+title: Expandable List
+description: A list where each item reveals an inline Elevated panel on click — nesting the Surface system in-page instead of in an overlay. Multiple items can stay open at once.
+---
+
+<ComponentPreview name="expandable-list-demo" chromeless align="start" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/expandable-list.json" />
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the following dependencies:</Step>
+
+<CodeBlockCommand command="npm install framer-motion lucide-react" />
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="expandable-list" title="components/matos-ui/expandable-list.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import {
+  ExpandableList,
+  ExpandableListItem
+} from '@/components/matos-ui/expandable-list'
+```
+
+```tsx
+<ExpandableList defaultOpenValues={['billing']}>
+  <ExpandableListItem value="billing" title="How does billing work?">
+    You're billed monthly based on active seats.
+  </ExpandableListItem>
+  <ExpandableListItem value="export" title="Can I export my data?">
+    Yes — every workspace can export a full JSON snapshot.
+  </ExpandableListItem>
+</ExpandableList>
+```
+
+## How it's built
+
+- Each closed row is a flat trigger — no `Elevated` of its own. The panel
+  revealed on expand is `Elevated offset={1}` relative to the list, so it
+  reads a step above it — the same outer/inner relationship the
+  [Elevated](/docs/foundations/elevated) primitive uses everywhere else,
+  just nested inline instead of in a portal.
+- Expand/collapse uses `spring.moderate` — the tier the
+  [Motion Tokens](/docs/foundations/elevated) reserve for panels that need
+  to settle precisely.
+- The height change is never animated directly (`height: "auto"` never
+  tweens cleanly). Instead the item wrapper has Framer Motion's `layout`
+  prop, and only the panel's opacity/position animate — Framer measures the
+  before/after box and turns that into a smooth resize on its own.
+- Multiple items can be open at the same time by default — this is
+  deliberately not an accordion. Reach for
+  [Accordion](/docs/components/accordion) when only one panel should ever
+  be open.
+- `prefers-reduced-motion` drops the `layout` animation and the panel's
+  spatial offset; only the opacity fade remains.
+
+## Reference
+
+### ExpandableList Props
+
+| Prop                | Type        | Default | Description                                    |
+| -------------------- | ----------- | ------- | ----------------------------------------------- |
+| `children`            | `ReactNode` | —       | `ExpandableListItem` children.                   |
+| `defaultOpenValues`   | `string[]`  | `[]`    | Item values expanded on mount.                   |
+
+### ExpandableListItem Props
+
+| Prop       | Type        | Default | Description                                  |
+| ---------- | ----------- | ------- | --------------------------------------------- |
+| `value`    | `string`    | —       | Unique identifier for the item.                |
+| `title`    | `ReactNode` | —       | Trigger row content.                           |
+| `children` | `ReactNode` | —       | Content revealed inside the `Elevated` panel.  |
+
+### Interactions
+
+- **Click** a row (or press **Enter**/**Space** while it's focused) to
+  toggle it open or closed.
+- **Arrow Up** / **Arrow Down** moves focus between triggers, regardless of
+  which items are currently open.
+- Each trigger sets `aria-expanded` and `aria-controls`; the revealed panel
+  is a labelled `role="region"`.

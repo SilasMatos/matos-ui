@@ -1,5 +1,6 @@
 "use client";
 
+import { Select as SelectPrimitive } from "@base-ui/react/select";
 import {
   AnimatePresence,
   motion,
@@ -9,23 +10,27 @@ import {
 import {
   Activity,
   AlignLeft,
-  ArrowRight,
   ArrowUpRight,
   AudioWaveform,
   BarChart3,
   Circle as BubbleIcon,
   CandlestickChart as CandlestickIcon,
+  Check,
+  ChevronDown,
   Gauge,
   LayoutDashboard,
   LayoutGrid,
   LineChart,
   Network,
   Radar,
+  Search,
   SlidersHorizontal,
   Target,
+  X,
 } from "lucide-react";
 import {
   type ComponentProps,
+  type CSSProperties,
   type ReactNode,
   useEffect,
   useMemo,
@@ -39,6 +44,11 @@ import {
   chartCollection,
 } from "@/lib/charts";
 import { cn } from "@/lib/utils";
+import {
+  motionForOffset,
+  useExitAnimation,
+} from "@/registry/new-york-v4/lib/motion-tokens";
+import { Elevated } from "@/registry/new-york-v4/ui/elevated";
 
 type ChartCard = (typeof chartCollection)[number] & {
   href: `/charts/${ChartId}`;
@@ -129,38 +139,116 @@ const chartPreviews: Record<ChartId, ReactNode> = {
   "risk-score-gauge": <RiskScoreGaugePreview compact />,
 };
 
-const heroNetworkPoints = [
-  { id: "a", cx: 104, cy: 300, delay: 0 },
-  { id: "b", cx: 214, cy: 264, delay: 0.1 },
-  { id: "c", cx: 320, cy: 236, delay: 0.2 },
-  { id: "d", cx: 402, cy: 184, delay: 0.3 },
-] as const;
+const categorySelectMotion = motionForOffset(2);
+const categorySelectItems = chartCategories.map((category) => ({
+  value: category,
+  label: category === "All" ? "All categories" : category,
+}));
 
-const heroBottomBars = [
-  { id: "bar-1", x: 0, height: 24 },
-  { id: "bar-2", x: 24, height: 42 },
-  { id: "bar-3", x: 48, height: 32 },
-  { id: "bar-4", x: 72, height: 58 },
-  { id: "bar-5", x: 96, height: 38 },
-] as const;
+function getCategorySelectMotionStyle(): CSSProperties {
+  return {
+    "--motion-duration": `${categorySelectMotion.duration}s`,
+    "--motion-exit-duration": `${categorySelectMotion.exit.duration}s`,
+  } as CSSProperties;
+}
 
-const heroCardConfigs = [
-  {
-    id: "signal-card",
-    x: 904,
-    y: 120,
-    width: 202,
-    height: 116,
-    delay: 0,
-    sparkline:
-      "M24 78 C44 62 58 72 78 52 C100 28 118 66 140 46 C162 26 174 42 184 30",
-  },
-] as const;
+function CategorySelect({
+  value,
+  onValueChange,
+}: {
+  value: ChartCategory;
+  onValueChange: (next: ChartCategory) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const { mounted, onAnimationComplete } = useExitAnimation(
+    open,
+    categorySelectMotion,
+  );
+  const motionStyle = useMemo(getCategorySelectMotionStyle, []);
+
+  return (
+    <SelectPrimitive.Root
+      items={categorySelectItems}
+      value={value}
+      onValueChange={(next) => onValueChange(next as ChartCategory)}
+      open={open}
+      onOpenChange={setOpen}
+    >
+      <SelectPrimitive.Trigger
+        aria-label="Filter chart components by category"
+        style={motionStyle}
+        className={cn(
+          "flex h-9 w-full items-center justify-between gap-2 rounded-xl border border-border bg-surface-1 px-3 text-left text-sm text-foreground shadow-xs outline-none sm:w-56",
+          "transition-[background-color,border-color,box-shadow,transform] duration-[var(--motion-duration)]",
+          "hover:bg-surface-2 focus-visible:-translate-y-px focus-visible:border-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25",
+          "data-popup-open:-translate-y-px data-popup-open:border-ring data-popup-open:bg-surface-2 data-popup-open:ring-2 data-popup-open:ring-ring/20",
+        )}
+      >
+        <SelectPrimitive.Value>
+          {(current: ChartCategory | null) =>
+            !current || current === "All" ? "All categories" : current
+          }
+        </SelectPrimitive.Value>
+        <SelectPrimitive.Icon className="shrink-0 text-muted-foreground transition-transform duration-[var(--motion-duration)] data-popup-open:rotate-180">
+          <ChevronDown className="size-4" aria-hidden="true" />
+        </SelectPrimitive.Icon>
+      </SelectPrimitive.Trigger>
+
+      {mounted ? (
+        <SelectPrimitive.Portal>
+          <SelectPrimitive.Positioner
+            sideOffset={6}
+            align="start"
+            className="z-50 outline-none"
+          >
+            <SelectPrimitive.Popup
+              render={<Elevated offset={2} />}
+              style={motionStyle}
+              onTransitionEnd={(event) => {
+                if (event.currentTarget === event.target) {
+                  onAnimationComplete();
+                }
+              }}
+              className={cn(
+                "min-w-(--anchor-width) max-w-(--available-width) overflow-hidden rounded-xl p-1 outline-none will-change-[opacity,transform,filter]",
+                "origin-(--transform-origin) transition-[opacity,transform,filter] duration-[var(--motion-duration)]",
+                "data-starting-style:translate-y-[-6px] data-starting-style:scale-[0.975] data-starting-style:opacity-0 data-starting-style:blur-[3px]",
+                "data-ending-style:translate-y-[-3px] data-ending-style:scale-[0.99] data-ending-style:opacity-0 data-ending-style:blur-[1px] data-ending-style:duration-[var(--motion-exit-duration)]",
+                "motion-reduce:transition-none motion-reduce:data-starting-style:blur-none motion-reduce:data-ending-style:blur-none",
+              )}
+            >
+              <SelectPrimitive.List className="max-h-72 overflow-x-hidden overflow-y-auto outline-none">
+                {chartCategories.map((category) => (
+                  <SelectPrimitive.Item
+                    key={category}
+                    value={category}
+                    className={cn(
+                      "group/category-item relative flex cursor-default items-center gap-2 rounded-lg px-2.5 py-1.5 text-sm text-foreground outline-none",
+                      "transition-colors duration-[var(--motion-duration)] data-highlighted:bg-muted/70",
+                    )}
+                  >
+                    <SelectPrimitive.ItemText>
+                      {category === "All" ? "All categories" : category}
+                    </SelectPrimitive.ItemText>
+                    <SelectPrimitive.ItemIndicator className="ml-auto flex size-4 shrink-0 items-center justify-center text-foreground">
+                      <Check className="size-3.5" aria-hidden="true" />
+                    </SelectPrimitive.ItemIndicator>
+                  </SelectPrimitive.Item>
+                ))}
+              </SelectPrimitive.List>
+            </SelectPrimitive.Popup>
+          </SelectPrimitive.Positioner>
+        </SelectPrimitive.Portal>
+      ) : null}
+    </SelectPrimitive.Root>
+  );
+}
 
 export function ChartsShowcase() {
   const shouldReduceMotion = useReducedMotion();
   const previewReady = usePreviewReady();
   const [activeCategory, setActiveCategory] = useState<ChartCategory>("All");
+  const [query, setQuery] = useState("");
 
   const charts = useMemo<ChartCard[]>(
     () =>
@@ -172,570 +260,107 @@ export function ChartsShowcase() {
     [],
   );
 
-  const filteredCharts =
-    activeCategory === "All"
-      ? charts
-      : charts.filter((chart) => chart.category === activeCategory);
+  const filteredCharts = useMemo(() => {
+    const normalized = query.trim().toLowerCase();
+
+    return charts.filter((chart) => {
+      const matchesCategory =
+        activeCategory === "All" || chart.category === activeCategory;
+
+      if (!matchesCategory) {
+        return false;
+      }
+
+      if (!normalized) {
+        return true;
+      }
+
+      const haystack = [chart.name, chart.description, chart.category]
+        .join(" ")
+        .toLowerCase();
+
+      return haystack.includes(normalized);
+    });
+  }, [charts, activeCategory, query]);
 
   return (
-    <section className="not-prose space-y-10">
-      <ChartsHero reducedMotion={Boolean(shouldReduceMotion)} />
-
-      <div className="space-y-5">
-        <div
-          id="chart-components"
-          className="flex scroll-mt-24 flex-col gap-3 border-border border-b pb-4 md:flex-row md:items-end md:justify-between"
-        >
-          <div>
-            <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
-              Registry
-            </p>
-            <h2 className="mt-1 text-xl font-semibold tracking-tight text-foreground">
-              Chart Components
-            </h2>
-          </div>
-
-          <div
-            data-slot="charts-filter"
-            role="tablist"
-            aria-label="Filter chart components"
-            className="relative flex max-w-full gap-1 overflow-x-auto rounded-xl border border-border bg-muted/45 p-1"
-          >
-            {chartCategories.map((category) => {
-              const active = category === activeCategory;
-
-              return (
-                <motion.button
-                  key={category}
-                  type="button"
-                  role="tab"
-                  aria-selected={active}
-                  onClick={() => setActiveCategory(category)}
-                  whileHover={shouldReduceMotion ? undefined : { y: -1 }}
-                  whileTap={shouldReduceMotion ? undefined : { scale: 0.98 }}
-                  className={cn(
-                    "relative min-h-8 shrink-0 rounded-lg px-3 text-sm font-medium outline-none transition-colors",
-                    "focus-visible:ring-2 focus-visible:ring-ring",
-                    active
-                      ? "text-foreground"
-                      : "text-muted-foreground hover:text-foreground",
-                  )}
-                >
-                  {active ? (
-                    <motion.span
-                      layoutId="charts-filter-indicator"
-                      className="absolute inset-0 rounded-lg border border-border bg-card"
-                      transition={{
-                        type: "spring",
-                        stiffness: 420,
-                        damping: 34,
-                        mass: 0.8,
-                      }}
-                    />
-                  ) : null}
-                  <span className="relative z-10">{category}</span>
-                </motion.button>
-              );
-            })}
-          </div>
+    <section className="not-prose space-y-8">
+      <header className="space-y-3">
+        <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-widest text-muted-foreground">
+          <LineChart className="size-3.5" aria-hidden="true" />
+          Registry
         </div>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div className="max-w-2xl">
+            <h1 className="font-display text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+              Charts
+            </h1>
+            <p className="mt-3 text-balance text-base leading-7 text-muted-foreground">
+              Beautiful, animated chart components for dashboards and analytics.
+              Copy and paste into your apps — works with any React framework.
+            </p>
+          </div>
+          <p className="shrink-0 text-sm text-muted-foreground tabular-nums">
+            {chartCollection.length} chart components available
+          </p>
+        </div>
+      </header>
 
-        <motion.div layout className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-          <AnimatePresence mode="popLayout">
-            {filteredCharts.map((chart, index) => (
-              <ChartRegistryCard
-                key={chart.id}
-                chart={chart}
-                index={index}
-                previewReady={previewReady}
-                reducedMotion={Boolean(shouldReduceMotion)}
-              />
-            ))}
-          </AnimatePresence>
-        </motion.div>
+      <div className="flex flex-col gap-3 border-border border-b pb-4 lg:flex-row lg:items-center lg:justify-between">
+        <CategorySelect
+          value={activeCategory}
+          onValueChange={setActiveCategory}
+        />
 
-        {filteredCharts.length === 0 ? <ChartsEmptyState /> : null}
-      </div>
-    </section>
-  );
-}
-
-function ChartsHero({ reducedMotion }: { reducedMotion: boolean }) {
-  return (
-    <motion.div
-      initial={reducedMotion ? false : { opacity: 0, y: 14 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
-      className={cn(
-        "relative isolate -mx-4 min-h-[450px] overflow-hidden bg-background px-4 py-20 text-center text-foreground sm:-mx-6 sm:min-h-[510px] sm:px-8 sm:py-24",
-        "[--charts-hero-bg:var(--background)] [--charts-hero-card-from:#ffffff] [--charts-hero-card-to:#fafafa] [--charts-hero-edge:var(--background)] [--charts-hero-fg:#171717] [--charts-hero-grid:rgba(0,0,0,.36)] [--charts-hero-muted:#525252] [--charts-hero-soft:#737373]",
-        "[--charts-hero-center:rgba(255,255,255,0.96)] [--charts-hero-center-mid:rgba(255,255,255,0.78)] [--charts-hero-glow-a:rgba(255,255,255,0.92)] [--charts-hero-glow-b:rgba(212,212,212,0.28)] [--charts-hero-vignette:rgba(255,255,255,0.52)]",
-        "dark:[--charts-hero-card-from:rgba(255,255,255,0.12)] dark:[--charts-hero-card-to:rgba(255,255,255,0.025)] dark:[--charts-hero-fg:#ffffff] dark:[--charts-hero-grid:rgba(255,255,255,.38)] dark:[--charts-hero-muted:#d4d4d4] dark:[--charts-hero-soft:#a3a3a3]",
-        "dark:[--charts-hero-center:rgba(23,23,23,0.94)] dark:[--charts-hero-center-mid:rgba(23,23,23,0.76)] dark:[--charts-hero-glow-a:rgba(255,255,255,0.09)] dark:[--charts-hero-glow-b:rgba(148,148,148,0.045)] dark:[--charts-hero-vignette:rgba(0,0,0,0.34)]",
-      )}
-    >
-      <ChartsHeroBackground reducedMotion={reducedMotion} />
-
-      <div className="relative z-20 mx-auto flex max-w-3xl flex-col items-center pt-2">
-        <motion.div
-          initial={reducedMotion ? false : { opacity: 0, y: 8, scale: 0.98 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ delay: reducedMotion ? 0 : 0.08, duration: 0.38 }}
-          className="mb-7 inline-flex min-h-8 items-center rounded-full border border-black/10 bg-white/70 px-3.5 py-1 text-xs font-medium text-neutral-600 shadow-[inset_0_1px_0_rgba(255,255,255,0.85),0_0_0_1px_rgba(255,255,255,0.55),0_14px_34px_rgba(0,0,0,0.06)] backdrop-blur dark:border-white/15 dark:bg-black/35 dark:text-white/72 dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_0_0_1px_rgba(255,255,255,0.04),0_14px_34px_rgba(0,0,0,0.34)]"
-        >
-          Studio{" "}
-          <span className="mx-1.5 text-neutral-400 dark:text-white/45">
-            {"\u00B7"}
-          </span>{" "}
-          Version 2
-        </motion.div>
-
-        <motion.h1
-          initial={reducedMotion ? false : { opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: reducedMotion ? 0 : 0.14, duration: 0.42 }}
-          className="text-balance font-display text-[2.75rem] font-semibold leading-[1.02] tracking-normal text-foreground sm:text-6xl dark:drop-shadow-[0_2px_24px_rgba(0,0,0,0.52)]"
-        >
-          Ready to go Charts
-        </motion.h1>
-        <motion.p
-          initial={reducedMotion ? false : { opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: reducedMotion ? 0 : 0.2, duration: 0.42 }}
-          className="mt-6 max-w-2xl text-balance text-base leading-7 text-muted-foreground sm:text-xl sm:leading-8"
-        >
-          Beautiful open-source chart blocks for dashboards and analytics. Copy
-          and paste into your apps. Works with any React framework.
-        </motion.p>
-
-        <motion.a
-          href="#chart-components"
-          initial={reducedMotion ? false : { opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          whileHover={reducedMotion ? undefined : "hover"}
-          whileTap={reducedMotion ? undefined : { scale: 0.98 }}
-          transition={{ delay: reducedMotion ? 0 : 0.26, duration: 0.34 }}
-          className="group mt-8 inline-flex min-h-11 items-center gap-2 rounded-lg bg-foreground px-5 text-sm font-medium text-background shadow-[0_14px_34px_rgba(0,0,0,0.16),inset_0_1px_0_rgba(255,255,255,0.16)] outline-none transition-colors hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:shadow-[0_14px_34px_rgba(0,0,0,0.28),inset_0_-1px_0_rgba(0,0,0,0.16)]"
-        >
-          Browse Charts
-          <motion.span
-            variants={{ hover: { x: 3 } }}
-            transition={{ duration: 0.18, ease: "easeOut" }}
-            className="inline-flex"
-          >
-            <ArrowRight className="size-4" aria-hidden="true" />
-          </motion.span>
-        </motion.a>
-      </div>
-    </motion.div>
-  );
-}
-
-function ChartsHeroBackground({ reducedMotion }: { reducedMotion: boolean }) {
-  const signalCurve =
-    "M104 300 C148 250 180 238 214 264 C254 294 286 274 320 236 C348 204 370 216 402 184";
-
-  return (
-    <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-      <motion.div
-        className="absolute inset-0 opacity-[0.055]"
-        style={{
-          backgroundImage:
-            "linear-gradient(var(--charts-hero-grid) 1px, transparent 1px), linear-gradient(90deg, var(--charts-hero-grid) 1px, transparent 1px)",
-          backgroundPosition: "center",
-          backgroundSize: "68px 68px",
-        }}
-        animate={
-          reducedMotion
-            ? { opacity: 0.055 }
-            : {
-                opacity: [0.045, 0.075, 0.045],
-              }
-        }
-        transition={{
-          duration: 10,
-          repeat: 0,
-          ease: "easeInOut",
-        }}
-      />
-
-      <motion.div
-        className="absolute inset-x-[8%] top-10 h-80 blur-3xl"
-        style={{
-          background:
-            "radial-gradient(ellipse at center, var(--charts-hero-glow-a), var(--charts-hero-glow-b) 44%, transparent 74%)",
-        }}
-        animate={
-          reducedMotion
-            ? { opacity: 0.75 }
-            : { opacity: [0.58, 0.86, 0.58], scale: [1, 1.05, 1] }
-        }
-        transition={{
-          duration: 8,
-          repeat: 0,
-          ease: "easeInOut",
-        }}
-      />
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse at center, transparent 0%, transparent 36%, var(--charts-hero-vignette) 78%)",
-        }}
-      />
-
-      <svg
-        viewBox="0 0 1200 560"
-        preserveAspectRatio="xMidYMid slice"
-        className="absolute inset-0 size-full"
-        aria-hidden="true"
-        focusable="false"
-      >
-        <defs>
-          <linearGradient id="charts-hero-line" x1="0" y1="0" x2="1" y2="0">
-            <stop
-              offset="0%"
-              stopColor="var(--charts-hero-fg)"
-              stopOpacity="0.18"
-            />
-            <stop
-              offset="50%"
-              stopColor="var(--charts-hero-fg)"
-              stopOpacity="0.52"
-            />
-            <stop
-              offset="100%"
-              stopColor="var(--charts-hero-soft)"
-              stopOpacity="0.28"
-            />
-          </linearGradient>
-          <linearGradient id="charts-hero-card" x1="0" y1="0" x2="1" y2="1">
-            <stop
-              offset="0%"
-              stopColor="var(--charts-hero-card-from)"
-              stopOpacity="0.92"
-            />
-            <stop
-              offset="100%"
-              stopColor="var(--charts-hero-card-to)"
-              stopOpacity="0.64"
-            />
-          </linearGradient>
-          <filter id="charts-hero-soft-glow">
-            <feDropShadow
-              dx="0"
-              dy="0"
-              floodColor="var(--charts-hero-soft)"
-              floodOpacity="0.18"
-              stdDeviation="8"
-            />
-          </filter>
-          <filter id="charts-hero-card-blur">
-            <feGaussianBlur
-              in="SourceGraphic"
-              result="blur"
-              stdDeviation="0.2"
-            />
-          </filter>
-          <radialGradient id="charts-hero-center-mask">
-            <stop offset="0%" stopColor="black" />
-            <stop offset="58%" stopColor="black" />
-            <stop offset="100%" stopColor="white" />
-          </radialGradient>
-          <mask id="charts-hero-readable-mask">
-            <rect width="1200" height="560" fill="white" />
-            <ellipse
-              cx="600"
-              cy="250"
-              rx="390"
-              ry="190"
-              fill="url(#charts-hero-center-mask)"
-            />
-          </mask>
-        </defs>
-
-        <g mask="url(#charts-hero-readable-mask)">
-          <g opacity="0.13">
-            {[118, 204, 290, 376, 462].map((y) => (
-              <line
-                key={y}
-                x1="54"
-                x2="1146"
-                y1={y}
-                y2={y}
-                stroke="var(--charts-hero-fg)"
-                strokeDasharray="2 18"
-                strokeLinecap="round"
-              />
-            ))}
-          </g>
-
-          <motion.path
-            id="charts-hero-curve"
-            d={signalCurve}
-            fill="none"
-            stroke="url(#charts-hero-line)"
-            strokeDasharray="520"
-            strokeDashoffset={reducedMotion ? 0 : 520}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2.4"
-            filter="url(#charts-hero-soft-glow)"
-            opacity="0.56"
-            animate={{ strokeDashoffset: 0 }}
-            transition={{
-              delay: 0.2,
-              duration: reducedMotion ? 0 : 1.35,
-              ease: [0.16, 1, 0.3, 1],
-            }}
+        <div className="relative w-full lg:max-w-xs">
+          <Search
+            className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+            aria-hidden="true"
           />
+          <input
+            type="search"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Search charts…"
+            aria-label="Search charts"
+            className="h-9 w-full rounded-xl border border-border bg-background pl-9 pr-9 text-sm text-foreground shadow-xs outline-none transition-[border-color,box-shadow] duration-200 placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/25"
+          />
+          {query ? (
+            <button
+              type="button"
+              onClick={() => setQuery("")}
+              aria-label="Clear search"
+              className="absolute right-2 top-1/2 grid size-6 -translate-y-1/2 place-items-center rounded-md text-muted-foreground outline-none transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <X className="size-3.5" aria-hidden="true" />
+            </button>
+          ) : null}
+        </div>
+      </div>
 
-          {/* Signals flowing along the curve */}
-          {reducedMotion
-            ? null
-            : [0, 1, 2].map((particle) => (
-                <circle
-                  key={`hero-flow-${particle}`}
-                  r="3.2"
-                  fill="var(--charts-hero-fg)"
-                  filter="url(#charts-hero-soft-glow)"
-                >
-                  <animateMotion
-                    dur="4.8s"
-                    begin={`${1.4 + particle * 1.6}s`}
-                    repeatCount="1"
-                    rotate="auto"
-                    keyPoints="0;1"
-                    keyTimes="0;1"
-                    calcMode="linear"
-                  >
-                    <mpath
-                      href="#charts-hero-curve"
-                      xlinkHref="#charts-hero-curve"
-                    />
-                  </animateMotion>
-                  <animate
-                    attributeName="opacity"
-                    values="0;0.65;0.65;0"
-                    keyTimes="0;0.12;0.84;1"
-                    dur="4.8s"
-                    begin={`${1.4 + particle * 1.6}s`}
-                    repeatCount="1"
-                  />
-                </circle>
-              ))}
-
-          <g className="hidden sm:block" opacity="0.18">
-            <polyline
-              points="104,300 214,264 320,236 402,184"
-              fill="none"
-              stroke="var(--charts-hero-fg)"
-              strokeDasharray="3 10"
-              strokeLinecap="round"
+      <motion.div layout className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+        <AnimatePresence mode="popLayout">
+          {filteredCharts.map((chart, index) => (
+            <ChartRegistryCard
+              key={chart.id}
+              chart={chart}
+              index={index}
+              previewReady={previewReady}
+              reducedMotion={Boolean(shouldReduceMotion)}
             />
-          </g>
-
-          {heroNetworkPoints.map((point) => (
-            <motion.g
-              key={point.id}
-              className="hidden sm:block"
-              initial={reducedMotion ? false : { opacity: 0, scale: 0.82 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{
-                delay: reducedMotion ? 0 : 0.54 + point.delay,
-                duration: 0.24,
-                ease: [0.16, 1, 0.3, 1],
-              }}
-              style={{
-                transformOrigin: `${point.cx}px ${point.cy}px`,
-              }}
-            >
-              <motion.circle
-                cx={point.cx}
-                cy={point.cy}
-                r="10"
-                fill="var(--charts-hero-fg)"
-                opacity="0.08"
-                animate={
-                  reducedMotion
-                    ? { opacity: 0.08 }
-                    : { r: [7, 12, 7], opacity: [0.04, 0.12, 0.04] }
-                }
-                transition={{
-                  delay: reducedMotion ? 0 : 0.84 + point.delay,
-                  duration: 3.2,
-                  repeat: 0,
-                  ease: "easeInOut",
-                }}
-              />
-              <circle
-                cx={point.cx}
-                cy={point.cy}
-                r="3"
-                fill="var(--charts-hero-muted)"
-              />
-            </motion.g>
           ))}
+        </AnimatePresence>
+      </motion.div>
 
-          <g transform="translate(92 438)" opacity="0.24">
-            {heroBottomBars.map((bar, index) => (
-              <motion.rect
-                key={bar.id}
-                x={bar.x}
-                y={92 - bar.height}
-                width="12"
-                height={bar.height}
-                rx="5"
-                fill={
-                  index === 3
-                    ? "var(--charts-hero-muted)"
-                    : "var(--charts-hero-soft)"
-                }
-                initial={reducedMotion ? false : { scaleY: 0.35, opacity: 0 }}
-                animate={{ scaleY: 1, opacity: index === 3 ? 0.38 : 0.22 }}
-                transition={{
-                  delay: reducedMotion ? 0 : 0.18 + index * 0.045,
-                  duration: 0.42,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
-                style={{ transformOrigin: `${bar.x + 6}px 92px` }}
-              />
-            ))}
-          </g>
-
-          {heroCardConfigs.map((card) => (
-            <motion.g
-              key={card.id}
-              className="hidden sm:block"
-              initial={reducedMotion ? false : { opacity: 0, y: 12 }}
-              animate={{ opacity: 0.46, y: 0 }}
-              transition={{
-                delay: reducedMotion ? 0 : 0.42 + card.delay,
-                duration: reducedMotion ? 0 : 0.38,
-                ease: [0.16, 1, 0.3, 1],
-              }}
-              filter="url(#charts-hero-card-blur)"
-            >
-              <motion.g
-                animate={
-                  reducedMotion
-                    ? undefined
-                    : { y: [0, -6, 0], rotate: [0, 0.4, 0] }
-                }
-                transition={{
-                  duration: 6,
-                  repeat: 0,
-                  ease: "easeInOut",
-                }}
-                style={{
-                  transformOrigin: `${card.x + card.width / 2}px ${
-                    card.y + card.height / 2
-                  }px`,
-                }}
-              >
-                <rect
-                  x={card.x}
-                  y={card.y}
-                  width={card.width}
-                  height={card.height}
-                  rx="14"
-                  fill="url(#charts-hero-card)"
-                  stroke="var(--charts-hero-fg)"
-                  strokeOpacity="0.1"
-                />
-                <line
-                  x1={card.x + 18}
-                  x2={card.x + card.width - 18}
-                  y1={card.y + 54}
-                  y2={card.y + 54}
-                  stroke="var(--charts-hero-fg)"
-                  strokeOpacity="0.08"
-                />
-                <rect
-                  x={card.x + 18}
-                  y={card.y + 18}
-                  width="62"
-                  height="7"
-                  rx="3.5"
-                  fill="var(--charts-hero-fg)"
-                  opacity="0.16"
-                />
-                <rect
-                  x={card.x + 18}
-                  y={card.y + 35}
-                  width="104"
-                  height="7"
-                  rx="3.5"
-                  fill="var(--charts-hero-fg)"
-                  opacity="0.08"
-                />
-                <motion.path
-                  d={card.sparkline}
-                  transform={`translate(${card.x} ${card.y})`}
-                  fill="none"
-                  stroke="var(--charts-hero-muted)"
-                  strokeDasharray="260"
-                  strokeDashoffset={reducedMotion ? 0 : 260}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  opacity="0.58"
-                  animate={{ strokeDashoffset: 0 }}
-                  transition={{
-                    delay: 0.34 + card.delay,
-                    duration: reducedMotion ? 0 : 1.15,
-                    ease: [0.16, 1, 0.3, 1],
-                  }}
-                />
-                <circle
-                  cx={card.x + card.width - 24}
-                  cy={card.y + 24}
-                  r="4"
-                  fill="var(--charts-hero-muted)"
-                  opacity="0.56"
-                />
-              </motion.g>
-            </motion.g>
-          ))}
-        </g>
-      </svg>
-
-      <div
-        className="absolute left-1/2 top-[47%] h-72 w-[min(720px,92%)] -translate-x-1/2 -translate-y-1/2"
-        style={{
-          background:
-            "radial-gradient(ellipse at center, var(--charts-hero-center) 0%, var(--charts-hero-center-mid) 48%, transparent 74%)",
-        }}
-      />
-      <div
-        className="absolute inset-x-0 top-0 h-28"
-        style={{
-          background:
-            "linear-gradient(to bottom, var(--charts-hero-edge), transparent)",
-        }}
-      />
-      <div
-        className="absolute inset-x-0 bottom-0 h-36"
-        style={{
-          background:
-            "linear-gradient(to top, var(--charts-hero-edge), transparent)",
-        }}
-      />
-      <div
-        className="absolute inset-y-0 left-0 w-28"
-        style={{
-          background:
-            "linear-gradient(to right, var(--charts-hero-edge), transparent)",
-        }}
-      />
-      <div
-        className="absolute inset-y-0 right-0 w-28"
-        style={{
-          background:
-            "linear-gradient(to left, var(--charts-hero-edge), transparent)",
-        }}
-      />
-    </div>
+      {filteredCharts.length === 0 ? (
+        <ChartsEmptyState
+          onReset={() => {
+            setQuery("");
+            setActiveCategory("All");
+          }}
+        />
+      ) : null}
+    </section>
   );
 }
 
@@ -843,7 +468,7 @@ function ChartRegistryCard({
               <h3 className="truncate text-sm font-semibold text-foreground">
                 {chart.name}
               </h3>
-              <p className="mt-1 line-clamp-2 text-xs leading-5 text-muted-foreground">
+              <p className="mt-1 line-clamp-2 min-h-10 text-xs leading-5 text-muted-foreground">
                 {chart.description}
               </p>
             </div>
@@ -876,7 +501,7 @@ function PreviewSkeleton() {
   );
 }
 
-function ChartsEmptyState() {
+function ChartsEmptyState({ onReset }: { onReset: () => void }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
@@ -885,14 +510,22 @@ function ChartsEmptyState() {
     >
       <div className="max-w-sm">
         <div className="mx-auto mb-4 grid size-12 place-items-center rounded-xl border border-border bg-muted text-muted-foreground">
-          <BarChart3 className="size-5" aria-hidden="true" />
+          <Search className="size-5" aria-hidden="true" />
         </div>
         <h3 className="text-sm font-semibold text-foreground">
           No charts found
         </h3>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          This category has no chart previews yet.
+          No charts match your search or filter. Try a different keyword or
+          category.
         </p>
+        <button
+          type="button"
+          onClick={onReset}
+          className="mt-4 inline-flex h-8 items-center rounded-lg border border-border bg-card px-3 text-xs font-medium text-foreground shadow-xs outline-none transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          Reset filters
+        </button>
       </div>
     </motion.div>
   );

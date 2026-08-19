@@ -2,7 +2,7 @@
 
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { ArrowDown, ArrowUp, Minus } from "lucide-react";
-import { type ComponentProps, type ReactNode, useEffect } from "react";
+import { type ComponentProps, type ReactNode, useEffect, useId } from "react";
 import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
 
@@ -222,7 +222,10 @@ function Sparkline({ data, trend = 0 }: SparklineProps) {
         ? "var(--destructive)"
         : "var(--muted-foreground)";
 
-  const gradientId = `sparkline-gradient-${Math.random().toString(36).slice(2, 8)}`;
+  // useId (not Math.random) so the id matches between server and client
+  // render; colons stripped since `url(#...)` can't reference them.
+  const rawId = useId();
+  const gradientId = `sparkline-gradient-${rawId.replace(/:/g, "")}`;
 
   return (
     <motion.div

@@ -17,7 +17,6 @@ type Agent = {
   agent: string;
   status: AgentStatus;
   confidence: number;
-  cost: string;
   tasks: number;
   assignee: DataTableAvatarItem[];
 };
@@ -27,7 +26,6 @@ const agents: Agent[] = [
     agent: "Researcher",
     status: "running",
     confidence: 94,
-    cost: "$0.034",
     tasks: 12,
     assignee: [
       {
@@ -41,7 +39,6 @@ const agents: Agent[] = [
     agent: "Proposal Drafter",
     status: "idle",
     confidence: 87,
-    cost: "$0.018",
     tasks: 3,
     assignee: [
       {
@@ -54,24 +51,36 @@ const agents: Agent[] = [
         image:
           "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&crop=face",
       },
-      { name: "John Lima", initials: "JL" },
-      { name: "Bia Torres", initials: "BT" },
-      { name: "Rafa Alves", initials: "RA" },
+      {
+        name: "John Lima",
+        initials: "JL",
+      },
+      {
+        name: "Bia Torres",
+        initials: "BT",
+      },
+      {
+        name: "Rafa Alves",
+        initials: "RA",
+      },
     ],
   },
   {
     agent: "Data Extractor",
     status: "error",
     confidence: 61,
-    cost: "$0.052",
     tasks: 2,
-    assignee: [{ name: "Agent Group", initials: "AG" }],
+    assignee: [
+      {
+        name: "Agent Group",
+        initials: "AG",
+      },
+    ],
   },
   {
     agent: "UX Reviewer",
     status: "running",
     confidence: 91,
-    cost: "$0.027",
     tasks: 7,
     assignee: [
       {
@@ -95,7 +104,6 @@ const agents: Agent[] = [
     agent: "Composer",
     status: "running",
     confidence: 88,
-    cost: "$0.011",
     tasks: 5,
     assignee: [
       {
@@ -108,15 +116,20 @@ const agents: Agent[] = [
         image:
           "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&crop=face",
       },
-      { name: "Nina Reis", initials: "NR" },
-      { name: "Theo Ramos", initials: "TR" },
+      {
+        name: "Nina Reis",
+        initials: "NR",
+      },
+      {
+        name: "Theo Ramos",
+        initials: "TR",
+      },
     ],
   },
   {
     agent: "Code Reviewer",
     status: "scheduled",
     confidence: 96,
-    cost: "$0.041",
     tasks: 21,
     assignee: [
       {
@@ -134,9 +147,18 @@ const agents: Agent[] = [
         image:
           "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face",
       },
-      { name: "Sofia Dias", initials: "SD" },
-      { name: "Luan Castro", initials: "LC" },
-      { name: "Eva Moraes", initials: "EM" },
+      {
+        name: "Sofia Dias",
+        initials: "SD",
+      },
+      {
+        name: "Luan Castro",
+        initials: "LC",
+      },
+      {
+        name: "Eva Moraes",
+        initials: "EM",
+      },
     ],
   },
 ];
@@ -179,16 +201,6 @@ const columns: ColumnDef<Agent>[] = [
         value={row.original.confidence}
         showPercent={row.original.confidence > 70}
       />
-    ),
-  },
-  {
-    accessorKey: "cost",
-    size: 110,
-    header: "Cost",
-    cell: ({ row }) => (
-      <span className="font-medium text-foreground/85">
-        {row.original.cost}
-      </span>
     ),
   },
   {

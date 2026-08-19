@@ -362,6 +362,48 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
   },
+  "expandable-list": {
+    name: "expandable-list",
+    type: "registry:ui",
+    registryDependencies: ["elevated", "motion-tokens"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/expandable-list.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/ui/expandable-list.tsx");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "live-queue": {
+    name: "live-queue",
+    type: "registry:ui",
+    registryDependencies: ["elevated", "motion-tokens"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/live-queue.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/ui/live-queue.tsx");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
   "notification-stack": {
     name: "notification-stack",
     type: "registry:ui",
@@ -1083,6 +1125,27 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
   },
+  "stacked-dialog": {
+    name: "stacked-dialog",
+    type: "registry:ui",
+    registryDependencies: ["elevated", "motion-tokens"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/stacked-dialog.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/ui/stacked-dialog.tsx");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
   "surface-context": {
     name: "surface-context",
     type: "registry:lib",
@@ -1641,6 +1704,75 @@ export const Index: Record<string, any> = {
     component: React.lazy(async () => {
       const mod = await import(
         "@/registry/new-york-v4/examples/file-upload-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "expandable-list-demo": {
+    name: "expandable-list-demo",
+    type: "registry:example",
+    registryDependencies: ["expandable-list"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/expandable-list-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/expandable-list-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "live-queue-demo": {
+    name: "live-queue-demo",
+    type: "registry:example",
+    registryDependencies: ["live-queue"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/live-queue-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/live-queue-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "stacked-dialog-demo": {
+    name: "stacked-dialog-demo",
+    type: "registry:example",
+    registryDependencies: ["stacked-dialog"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/stacked-dialog-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/stacked-dialog-demo.tsx"
       );
       const exportName =
         Object.keys(mod).find(

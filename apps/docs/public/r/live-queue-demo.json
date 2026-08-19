@@ -1,0 +1,16 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "live-queue-demo",
+  "registryDependencies": [
+    "live-queue"
+  ],
+  "files": [
+    {
+      "path": "components/matos-ui/examples/live-queue-demo.tsx",
+      "content": "\"use client\";\n\nimport { useCallback, useRef, useState } from \"react\";\nimport {\n  LiveQueue,\n  LiveQueueItem,\n  type LiveQueueItemData,\n} from \"@/components/matos-ui/live-queue\";\n\nconst seedItems: LiveQueueItemData[] = [\n  {\n    id: \"deploy-1\",\n    title: \"Deploy to production\",\n    description: \"apps/docs · main@a91f3c2\",\n    status: \"running\",\n  },\n  {\n    id: \"deploy-2\",\n    title: \"Run test suite\",\n    description: \"24 suites · 312 tests\",\n    status: \"pending\",\n  },\n  {\n    id: \"deploy-3\",\n    title: \"Build preview\",\n    description: \"PR #482 · feature/customize-radius\",\n    status: \"done\",\n  },\n];\n\nexport default function LiveQueueDemo() {\n  const [items, setItems] = useState<LiveQueueItemData[]>(seedItems);\n  const counterRef = useRef(seedItems.length);\n\n  const addItem = useCallback(() => {\n    counterRef.current += 1;\n    const id = `deploy-${counterRef.current}`;\n    const prNumber = 480 + counterRef.current;\n\n    setItems((current) => [\n      ...current,\n      {\n        id,\n        title: \"Deploy to staging\",\n        description: `PR #${prNumber} · queued just now`,\n        status: \"pending\",\n      },\n    ]);\n\n    // Simulate the queue actually moving, so the entrance/exit motion has\n    // something real to demonstrate: pending -> running -> done/failed.\n    window.setTimeout(() => {\n      setItems((current) =>\n        current.map((item) =>\n          item.id === id ? { ...item, status: \"running\" } : item,\n        ),\n      );\n    }, 900);\n\n    window.setTimeout(() => {\n      setItems((current) =>\n        current.map((item) =>\n          item.id === id\n            ? { ...item, status: Math.random() > 0.25 ? \"done\" : \"failed\" }\n            : item,\n        ),\n      );\n    }, 2800);\n  }, []);\n\n  const handleItemComplete = useCallback((id: string) => {\n    setItems((current) => current.filter((item) => item.id !== id));\n  }, []);\n\n  return (\n    <div className=\"flex w-full max-w-md flex-col gap-4\">\n      <button\n        type=\"button\"\n        onClick={addItem}\n        className=\"inline-flex h-8 w-fit items-center justify-center rounded-lg border border-border bg-card px-3 text-xs font-medium text-foreground shadow-xs outline-none transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring\"\n      >\n        Queue a deploy\n      </button>\n\n      {items.length > 0 ? (\n        <LiveQueue\n          items={items}\n          onItemComplete={handleItemComplete}\n          aria-label=\"Deploy queue\"\n        >\n          {(item) => <LiveQueueItem key={item.id} item={item} />}\n        </LiveQueue>\n      ) : (\n        <p className=\"text-sm text-muted-foreground\">Queue is empty.</p>\n      )}\n    </div>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/live-queue-demo.tsx"
+    }
+  ],
+  "type": "registry:example"
+}

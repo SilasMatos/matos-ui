@@ -261,6 +261,30 @@
       ]
     },
     {
+      "name": "expandable-list",
+      "type": "registry:ui",
+      "dependencies": ["framer-motion", "lucide-react"],
+      "registryDependencies": ["elevated", "motion-tokens"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/expandable-list.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "live-queue",
+      "type": "registry:ui",
+      "dependencies": ["framer-motion", "lucide-react"],
+      "registryDependencies": ["elevated", "motion-tokens"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/live-queue.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "notification-stack",
       "type": "registry:ui",
       "dependencies": [
@@ -717,6 +741,23 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/sheet-panel.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "stacked-dialog",
+      "type": "registry:ui",
+      "dependencies": [
+        "@base-ui/react",
+        "class-variance-authority",
+        "framer-motion",
+        "lucide-react"
+      ],
+      "registryDependencies": ["elevated", "motion-tokens"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/stacked-dialog.tsx",
           "type": "registry:ui"
         }
       ]
@@ -1235,6 +1276,39 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/file-upload-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "expandable-list-demo",
+      "type": "registry:example",
+      "registryDependencies": ["expandable-list"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/expandable-list-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "live-queue-demo",
+      "type": "registry:example",
+      "registryDependencies": ["live-queue"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/live-queue-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "stacked-dialog-demo",
+      "type": "registry:example",
+      "registryDependencies": ["stacked-dialog"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/stacked-dialog-demo.tsx",
           "type": "registry:example"
         }
       ]
