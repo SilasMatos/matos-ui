@@ -313,6 +313,30 @@ export const ui: Registry["items"] = [
     ],
   },
   {
+    name: "achievement-toast",
+    type: "registry:ui",
+    dependencies: ["framer-motion", "lucide-react"],
+    registryDependencies: ["elevated", "motion-tokens"],
+    files: [
+      {
+        path: "ui/achievement-toast.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "context-menu",
+    type: "registry:ui",
+    dependencies: ["@base-ui/react", "framer-motion", "lucide-react"],
+    registryDependencies: ["elevated", "motion-tokens"],
+    files: [
+      {
+        path: "ui/context-menu.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
     name: "notification-stack",
     type: "registry:ui",
     dependencies: [

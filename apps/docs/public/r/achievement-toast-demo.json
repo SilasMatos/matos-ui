@@ -1,0 +1,16 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "achievement-toast-demo",
+  "registryDependencies": [
+    "achievement-toast"
+  ],
+  "files": [
+    {
+      "path": "components/matos-ui/examples/achievement-toast-demo.tsx",
+      "content": "\"use client\";\n\nimport { CheckCircle2, Rocket, ShieldCheck, Trophy } from \"lucide-react\";\nimport { useCallback, useState } from \"react\";\nimport {\n  type AchievementData,\n  AchievementToast,\n  AchievementToastGroup,\n} from \"@/components/matos-ui/achievement-toast\";\n\nconst buttonClassName =\n  \"inline-flex h-9 w-fit items-center justify-center rounded-lg border border-border bg-card px-4 text-sm font-medium text-foreground shadow-xs outline-none transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring\";\n\nconst milestone: AchievementData[] = [\n  {\n    id: \"build\",\n    title: \"Build passed\",\n    description: \"124 components compiled with no type errors.\",\n    icon: <CheckCircle2 />,\n  },\n  {\n    id: \"audit\",\n    title: \"Audit clean\",\n    description: \"No high-severity advisories in the dependency tree.\",\n    icon: <ShieldCheck />,\n  },\n  {\n    id: \"milestone\",\n    title: \"Milestone complete\",\n    description: \"Every issue in the v2 motion milestone is closed.\",\n    icon: <Trophy />,\n  },\n];\n\nexport default function AchievementToastDemo() {\n  const [open, setOpen] = useState(false);\n  const [achievements, setAchievements] = useState<AchievementData[]>([]);\n\n  const celebrateMilestone = useCallback(() => {\n    // Reset first, so pressing the button twice replays the stagger instead of\n    // appending to a list that is already on screen.\n    setAchievements([]);\n    window.setTimeout(() => setAchievements(milestone), 80);\n  }, []);\n\n  const dismissAchievement = useCallback((id: string) => {\n    setAchievements((current) => current.filter((item) => item.id !== id));\n  }, []);\n\n  return (\n    <div className=\"flex w-full max-w-md flex-col gap-3\">\n      <p className=\"text-sm text-muted-foreground\">\n        One toast for a single win, a staggered group when several land at once.\n      </p>\n\n      <div className=\"flex flex-wrap gap-2\">\n        <button\n          type=\"button\"\n          onClick={() => setOpen(true)}\n          className={buttonClassName}\n        >\n          Ship a deploy\n        </button>\n\n        <button\n          type=\"button\"\n          onClick={celebrateMilestone}\n          className={buttonClassName}\n        >\n          Close the milestone\n        </button>\n      </div>\n\n      <AchievementToast\n        open={open}\n        onOpenChange={setOpen}\n        title=\"Deploy successful\"\n        description=\"matos-ui.com is live on production.\"\n        icon={<Rocket />}\n        position=\"bottom-right\"\n      />\n\n      <AchievementToastGroup\n        achievements={achievements}\n        onDismiss={dismissAchievement}\n        position=\"bottom-left\"\n      />\n    </div>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/achievement-toast-demo.tsx"
+    }
+  ],
+  "type": "registry:example"
+}

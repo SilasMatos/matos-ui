@@ -188,6 +188,28 @@ export const examples: Registry["items"] = [
     ],
   },
   {
+    name: "achievement-toast-demo",
+    type: "registry:example",
+    registryDependencies: ["achievement-toast"],
+    files: [
+      {
+        path: "examples/achievement-toast-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "context-menu-demo",
+    type: "registry:example",
+    registryDependencies: ["context-menu", "elevated"],
+    files: [
+      {
+        path: "examples/context-menu-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
     name: "notification-stack-demo",
     type: "registry:example",
     registryDependencies: ["notification-stack"],

@@ -11,8 +11,9 @@ export function registerGetMotionGuidance(server: McpServer) {
 		{
 			title: "Get motion guidance",
 			description:
-				"Get Matos UI's Motion Tokens — the spring timing tiers (fast/moderate/slow), motionForOffset, " +
-				"staggerContainer, and the JSDoc explaining why each tier exists. Returns the actual source file " +
+				"Get Matos UI's Motion Tokens — the spring tiers (fast/moderate/slow/playful), motionForOffset, " +
+				"staggerContainer, liftVariants, directionalVariants, the attention cues, and the JSDoc " +
+				"explaining why each one exists. Returns the actual source file " +
 				"(code + comments) fetched live from the docs source, rather than a hand-written summary that " +
 				"could drift from what's shipped.",
 			inputSchema: {},

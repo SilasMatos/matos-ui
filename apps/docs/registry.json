@@ -285,6 +285,30 @@
       ]
     },
     {
+      "name": "achievement-toast",
+      "type": "registry:ui",
+      "dependencies": ["framer-motion", "lucide-react"],
+      "registryDependencies": ["elevated", "motion-tokens"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/achievement-toast.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "context-menu",
+      "type": "registry:ui",
+      "dependencies": ["@base-ui/react", "framer-motion", "lucide-react"],
+      "registryDependencies": ["elevated", "motion-tokens"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/context-menu.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "notification-stack",
       "type": "registry:ui",
       "dependencies": [
@@ -1597,6 +1621,28 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/stacked-dialog-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "achievement-toast-demo",
+      "type": "registry:example",
+      "registryDependencies": ["achievement-toast"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/achievement-toast-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "context-menu-demo",
+      "type": "registry:example",
+      "registryDependencies": ["context-menu", "elevated"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/context-menu-demo.tsx",
           "type": "registry:example"
         }
       ]
