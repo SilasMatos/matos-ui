@@ -27,16 +27,13 @@
     "next": "Próximo"
   },
   "hero": {
-    "badge": "Biblioteca de componentes open source",
-    "titleLine1": "Interfaces que respiram",
-    "titleLine2": "precisao com",
-    "brand": "Matos UI",
-    "description": "Componentes poderosos, acessíveis e estilizados sobre o shadcn/ui. Com variantes expressivas e animações fluidas.",
-    "getStarted": "Começar",
-    "components": "Componentes",
-    "featurePowerful": "Poderoso",
-    "featureAccessible": "Acessível",
-    "featureStyled": "Estilizado"
+    "badge": "{count} componentes · Tailwind 4 + React 19",
+    "titleLine1": "Componentes com movimento",
+    "titleLine2": "para shadcn/ui",
+    "description": "Copie o código pro seu projeto. Estilizado, acessível e animado por padrão.",
+    "browseComponents": "Ver componentes",
+    "viewOnGitHub": "Ver no GitHub",
+    "trust": "Feito com Framer Motion e Base UI. Distribuído via shadcn."
   },
   "footer": {
     "openSource": "Open Source",

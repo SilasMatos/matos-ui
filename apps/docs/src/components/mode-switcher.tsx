@@ -36,7 +36,7 @@ export function ModeSwitcher({
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="size-4.5"
+        className="size-4"
       >
         <title>Toggle theme</title>
         <path stroke="none" d="M0 0h24v24H0z" fill="none" />

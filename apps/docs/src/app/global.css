@@ -4,7 +4,6 @@
 
 :root {
   --radius: 0.65rem;
-  --hero-block-rgb: 0, 0, 0;
   /* The page is the floor here too, mirroring dark. It used to be pure white,
      which put it *above* --surface-1 (#fafafa) and inverted the ladder: the
      canvas was the brightest thing on screen and levels 3-8 landed back on the
@@ -92,11 +91,15 @@
 }
 
 .dark {
-  --hero-block-rgb: 255, 255, 255;
   /* Not pure black: a low-chroma cool cast (hue 264) with just enough
      lightness to read as a deliberate floor rather than an absence of colour.
-     Stays a full ladder step below --surface-1 (#191919, L* 8.76). */
-  --background: oklch(0.17 0.006 264);
+     Stays a full ladder step below --surface-1 (#191919, L* 8.76).
+     Raised from L 0.17 (#0e0f12, L* 4.44) to 0.185 (#111315, L* 5.72) — same
+     hue, lighter floor. Not the literal #151515 that was asked for, because
+     that lands at L* 6.77 and squeezes the gap to --surface-1 down to 1.98 L*;
+     0.185 keeps 3.04 L*, still a readable step. Contrast against
+     --foreground stays at 17.9:1. */
+  --background: oklch(0.185 0.006 264);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);

@@ -63,20 +63,20 @@ export function SiteHeader({ pageTree }: { pageTree: DocsPageTree }) {
                 priority
               />
             </span>
-            <span className="hidden font-logo text-lg font-normal tracking-tight sm:block">
+            <span className="hidden font-logo text-base font-normal tracking-tight sm:block">
               <span className="font-bold">matos</span>
               <span className="text-muted-foreground/55">ui</span>
             </span>
-            <span className="hidden rounded-full border ml-2 border-border bg-muted px-1.5 py-0.5 font-medium text-[10px] text-muted-foreground leading-none tracking-normal sm:inline-flex">
+            <span className="hidden rounded-full border ml-1.5 border-border bg-muted px-1.5 py-0.5 font-medium text-[10px] text-muted-foreground leading-none tracking-normal sm:inline-flex">
               beta
             </span>
           </Link>
-          <div className="mx-3 hidden h-8 w-px bg-border lg:block" />
+          <div className="mx-2.5 hidden h-4 w-px bg-border lg:block" />
           <MainNav items={navItems} className="hidden lg:flex" />
         </div>
-        <div className="flex min-w-0 items-center gap-1.5 sm:gap-2 **:data-[slot=separator]:h-4!">
+        <div className="flex min-w-0 items-center gap-0.5 sm:gap-1 **:data-[slot=separator]:h-4!">
           <CommandMenu tree={pageTree} navItems={navItems} />
-          <Separator orientation="vertical" className="ml-2 hidden lg:block" />
+          <Separator orientation="vertical" className="mx-1 hidden lg:block" />
           <div className="hidden sm:block">
             <GitHubLink />
           </div>

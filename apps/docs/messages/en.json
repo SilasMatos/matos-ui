@@ -27,16 +27,13 @@
     "next": "Next"
   },
   "hero": {
-    "badge": "Open Source Component Library",
-    "titleLine1": "A Smarter Way to",
-    "titleLine2": "Build with",
-    "brand": "Matos UI",
-    "description": "Powerful, accessible and styled components built on top of shadcn/ui. Built with powerful variants and fluid animations.",
-    "getStarted": "Get Started",
-    "components": "Components",
-    "featurePowerful": "Powerful",
-    "featureAccessible": "Accessible",
-    "featureStyled": "Styled"
+    "badge": "{count} components · Tailwind 4 + React 19",
+    "titleLine1": "Motion-first components",
+    "titleLine2": "for shadcn/ui",
+    "description": "Copy the code into your project. Styled, accessible, and animated by default.",
+    "browseComponents": "Browse Components",
+    "viewOnGitHub": "View on GitHub",
+    "trust": "Built with Framer Motion and Base UI. Distributed via shadcn."
   },
   "footer": {
     "openSource": "Open Source",

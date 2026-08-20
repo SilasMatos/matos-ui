@@ -120,7 +120,7 @@ export function CommandMenu({
           <Button
             variant="outline"
             className={cn(
-              "group relative h-9 w-9 justify-center gap-2 rounded-lg border-border/70 bg-background/80 px-0 font-normal text-muted-foreground shadow-xs/5 backdrop-blur transition-all hover:border-ring/40 hover:bg-muted/60 hover:text-foreground focus-visible:border-ring/70 focus-visible:ring-ring/20 md:w-48 md:justify-start md:px-3 lg:w-40 xl:w-64 dark:bg-card/80 dark:hover:bg-muted/40",
+              "group relative size-8 justify-center gap-2 rounded-lg border-border/70 bg-background/80 px-0 font-normal text-muted-foreground shadow-xs/5 backdrop-blur transition-all hover:border-ring/40 hover:bg-muted/60 hover:text-foreground focus-visible:border-ring/70 focus-visible:ring-ring/20 md:w-44 md:justify-start md:px-3 lg:w-40 xl:w-56 dark:bg-card/80 dark:hover:bg-muted/40",
             )}
             onClick={() => setOpen(true)}
             {...props}

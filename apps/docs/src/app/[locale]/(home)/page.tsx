@@ -7,6 +7,8 @@ import { ScrollCardsSection } from "@/components/scroll-cards-section";
 import { SiteFooter } from "@/components/site-footer";
 import { siteConfig } from "@/lib/config";
 import { createOpenGraphMetadata, createTwitterMetadata } from "@/lib/seo";
+import { getRegistryBaseUrl } from "@/lib/site-url";
+import { getComponentPages } from "@/lib/source";
 
 // import { TestimonialsSection } from '@/components/testimonials-section'
 
@@ -33,9 +35,14 @@ export default async function HomePage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
 
+  const componentCount = getComponentPages(locale).length;
+
   return (
     <>
-      <HeroSection />
+      <HeroSection
+        componentCount={componentCount}
+        installCommand={`npx shadcn@latest add ${getRegistryBaseUrl()}/magnetic-card.json`}
+      />
 
       <ScrollCardsSection />
       <MatosAspectsSection />

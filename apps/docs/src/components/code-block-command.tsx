@@ -98,7 +98,10 @@ export function CodeBlockCommandWrapper({
           {Object.entries(tabs).map(([key, value]) => {
             return (
               <TabsContent key={key} value={key} className="mt-0 px-4 py-3.5">
-                <CodeBlock className="my-0 rounded-sm px-3">
+                {/* `allowCopy` desligado: o wrapper já desenha o próprio
+                    botão de cópia (que copia o comando da aba ativa), e o do
+                    fumadocs empilhava um segundo ícone no mesmo bloco. */}
+                <CodeBlock allowCopy={false} className="my-0 rounded-sm px-3">
                   <Pre className="text-sm max-h-96">
                     <code
                       className="relative font-mono leading-none"

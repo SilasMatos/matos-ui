@@ -1,22 +1,16 @@
 import { ChevronRight } from "lucide-react";
 import { getLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { getPagesFromFolder } from "@/lib/page-tree";
-import { source } from "@/lib/source";
+import { getComponentPages } from "@/lib/source";
 import { Elevated } from "@/registry/new-york-v4/ui/elevated";
 
 export async function ComponentsList() {
   const locale = await getLocale();
-  const tree = source.getPageTree(locale);
-  const componentsFolder = tree.children.find(
-    (page) => page.$id?.split(":").at(-1) === "components",
-  );
+  const list = getComponentPages(locale);
 
-  if (componentsFolder?.type !== "folder") {
+  if (list.length === 0) {
     return null;
   }
-
-  const list = getPagesFromFolder(componentsFolder);
 
   return (
     <section className="not-prose space-y-4">

@@ -1,16 +1,10 @@
 "use client";
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import { surfaceClasses } from "@/registry/new-york-v4/lib/surface-classes";
 import { SurfaceProvider } from "@/registry/new-york-v4/lib/surface-context";
-import { Button } from "@/registry/new-york-v4/ui/button";
 
-// Stroke opacities are capped at 0.04 on purpose: the canvas is surface-1, and
-// anything brighter pushes the texture into the luminance band occupied by
-// surface-2/3/4, so the substrate would read lighter than the surfaces stacked
-// on top of it. At these values the texture peaks at rgb(30) against a
-// surface-1 of rgb(25), staying ~3 L* below surface-2.
-const componentPreviewBackground =
-  "url('data:image/svg+xml,%3Csvg width=%2296%22 height=%2296%22 viewBox=%220 0 96 96%22 xmlns=%22http://www.w3.org/2000/svg%22 fill=%22none%22%3E%3Cg stroke=%22%23A1A1AA%22 stroke-width=%221%22%3E%3Cpath d=%22M-48 96L96 -48%22 stroke-opacity=%220.04%22/%3E%3Cpath d=%22M-24 104L104 -24%22 stroke-opacity=%220.026%22/%3E%3Cpath d=%22M0 112L112 0%22 stroke-opacity=%220.034%22/%3E%3Cpath d=%22M24 120L120 24%22 stroke-opacity=%220.02%22/%3E%3Cpath d=%22M48 128L128 48%22 stroke-opacity=%220.031%22/%3E%3C/g%3E%3C/svg%3E')";
+type PreviewView = "preview" | "code";
 
 export function ComponentPreviewTabs({
   className,
@@ -20,7 +14,6 @@ export function ComponentPreviewTabs({
   chromeless = false,
   component,
   source,
-  sourcePreview,
   ...props
 }: React.ComponentProps<"div"> & {
   previewClassName?: string;
@@ -30,61 +23,81 @@ export function ComponentPreviewTabs({
   chromeless?: boolean;
   component: React.ReactNode;
   source: React.ReactNode;
-  sourcePreview?: React.ReactNode;
 }) {
-  const [isMobileCodeVisible, setIsMobileCodeVisible] = React.useState(false);
+  const [view, setView] = React.useState<PreviewView>("preview");
+  const showCode = !hideCode && view === "code";
 
   return (
     <div
       data-slot="component-preview"
       data-chromeless-preview={chromeless ? "true" : undefined}
       className={cn(
-        "group relative mt-4 mb-12 flex min-w-0 flex-col gap-4 overflow-hidden rounded-xl border p-3 sm:p-4",
+        "group relative mt-4 mb-12 flex min-w-0 flex-col gap-3",
         className,
       )}
       {...props}
     >
+      {!hideCode && <ViewSwitcher value={view} onValueChange={setView} />}
+
+      {/* O preview segue montado enquanto o código aparece: desmontar reinicia
+          as animações de entrada dos demos a cada troca de aba. */}
       <PreviewWrapper
         align={align}
         previewClassName={previewClassName}
         chromeless={chromeless}
+        hidden={showCode}
       >
         {component}
       </PreviewWrapper>
-      {!hideCode && (
-        <div
-          data-slot="code"
-          data-mobile-code-visible={isMobileCodeVisible}
-          className="relative"
-        >
-          {isMobileCodeVisible ? (
-            source
-          ) : (
-            <div className="relative h-32 overflow-hidden">
-              {sourcePreview}
-              <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    background:
-                      "linear-gradient(to top, var(--color-background), color-mix(in oklab, var(--color-background) 60%, transparent), transparent)",
-                  }}
-                />
-                <Button
-                  type="button"
-                  size="sm"
-                  className="pointer-events-auto relative z-10"
-                  onClick={() => {
-                    setIsMobileCodeVisible(true);
-                  }}
-                >
-                  View Code
-                </Button>
-              </div>
-            </div>
-          )}
+
+      {showCode && (
+        <div data-slot="code" className="relative min-w-0">
+          {source}
         </div>
       )}
+    </div>
+  );
+}
+
+const VIEWS: { id: PreviewView; label: string }[] = [
+  { id: "preview", label: "Preview" },
+  { id: "code", label: "Code" },
+];
+
+function ViewSwitcher({
+  value,
+  onValueChange,
+}: {
+  value: PreviewView;
+  onValueChange: (value: PreviewView) => void;
+}) {
+  return (
+    // Sem trilho: as abas repousam no próprio fundo da página e só a ativa sobe
+    // um degrau da escada (surface-1), em vez de empilhar caixa dentro de caixa.
+    <div role="tablist" className="inline-flex w-fit items-center gap-1">
+      {VIEWS.map((item) => {
+        const isActive = value === item.id;
+
+        return (
+          <button
+            key={item.id}
+            type="button"
+            role="tab"
+            aria-selected={isActive}
+            data-active={isActive || undefined}
+            onClick={() => {
+              onValueChange(item.id);
+            }}
+            className={cn(
+              "rounded-full px-3 py-1 font-medium text-muted-foreground text-xs transition-colors",
+              "hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+              "data-active:bg-surface-1 data-active:text-foreground data-active:shadow-surface-1",
+            )}
+          >
+            {item.label}
+          </button>
+        );
+      })}
     </div>
   );
 }
@@ -93,31 +106,34 @@ function PreviewWrapper({
   align,
   previewClassName,
   chromeless,
+  hidden,
   children,
 }: {
   align: "center" | "start" | "end";
   previewClassName?: string;
   chromeless?: boolean;
+  hidden?: boolean;
   children: React.ReactNode;
 }) {
   return (
-    <div data-slot="preview" className="min-w-0">
+    <div data-slot="preview" className="min-w-0" hidden={hidden}>
       <div
         data-align={align}
         data-chromeless={chromeless ? "true" : undefined}
+        // O canvas é o chão do demo: pinamos o nível 1 em vez de usar `Elevated`
+        // (que soma sobre o substrato) para que ele não suba junto com a página.
+        // A borda saiu com a textura — o anel de 1px de `shadow-surface-1` já
+        // desenha o limite, e `border-border` sobre `bg-surface-N` faz o canvas
+        // ler como caixa contornada em vez de superfície.
         className={cn(
-          "preview relative flex w-full justify-center overflow-hidden rounded-lg border border-border/45 bg-surface-1 p-4 sm:p-10",
+          "preview relative flex w-full justify-center overflow-hidden rounded-xl p-4 sm:p-10",
+          surfaceClasses(1),
           "data-[align=center]:items-center data-[align=end]:items-end data-[align=start]:items-start",
           chromeless
-            ? "h-auto min-h-0 max-h-[min(85vh,920px)] overflow-x-auto overflow-y-auto py-6 sm:py-8"
+            ? "h-auto max-h-[min(85vh,920px)] min-h-0 overflow-x-auto overflow-y-auto py-6 sm:py-8"
             : "h-72 overflow-x-auto overflow-y-hidden",
           previewClassName,
         )}
-        style={{
-          backgroundImage: componentPreviewBackground,
-          backgroundRepeat: "repeat",
-          backgroundSize: "96px 96px",
-        }}
       >
         <SurfaceProvider value={1}>{children}</SurfaceProvider>
       </div>
