@@ -4,11 +4,10 @@ import { motion, type Variants } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-import { CodeBlockCommand } from "@/components/code-block-command";
+import { HeroElevationLadder } from "@/components/hero-elevation-ladder";
 import { Link } from "@/i18n/navigation";
 import { siteConfig } from "@/lib/config";
 import { Button } from "@/registry/new-york-v4/ui/button";
-import { Elevated } from "@/registry/new-york-v4/ui/elevated";
 
 const container: Variants = {
   hidden: { opacity: 0 },
@@ -27,13 +26,7 @@ const fadeUp: Variants = {
   },
 };
 
-export function HeroSection({
-  componentCount,
-  installCommand,
-}: {
-  componentCount: number;
-  installCommand: string;
-}) {
+export function HeroSection({ componentCount }: { componentCount: number }) {
   const t = useTranslations("hero");
 
   return (
@@ -46,23 +39,28 @@ export function HeroSection({
         animate="show"
         className="flex w-full max-w-3xl flex-col items-center gap-5 text-center"
       >
-        <motion.p
+        <motion.div
           variants={fadeUp}
-          className="inline-flex items-center gap-2 rounded-full border border-border/70 px-3 py-1 text-muted-foreground text-xs"
+          className="flex flex-wrap items-center justify-center gap-2"
         >
-          <span
-            aria-hidden="true"
-            className="size-1.5 rounded-full bg-foreground/50"
-          />
-          {t("badge", { count: componentCount })}
-        </motion.p>
+          <p className="inline-flex items-center gap-2 rounded-full border border-border/70 px-3 py-1 text-muted-foreground text-xs">
+            <span
+              aria-hidden="true"
+              className="size-1.5 rounded-full bg-foreground/50"
+            />
+            {t("badge")}
+          </p>
+          <span className="text-muted-foreground/50 text-xs">
+            {t("badgeCount", { count: componentCount })}
+          </span>
+        </motion.div>
 
         <motion.h1
           variants={fadeUp}
-          className="text-balance font-display text-4xl font-black tracking-tight sm:text-5xl md:text-6xl md:tracking-tighter"
+          className="text-balance font-display text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl md:tracking-tighter"
         >
-          {t("titleLine1")}{" "}
-          <span className="text-foreground/45">{t("titleLine2")}</span>
+          {t("titleBrand")}{" "}
+          <span className="text-foreground/60">{t("titleTagline")}</span>
         </motion.h1>
 
         <motion.p
@@ -84,7 +82,7 @@ export function HeroSection({
             render={
               <Link href="/docs/components">
                 <span>{t("browseComponents")}</span>
-                <ArrowRight className="size-4 transition-transform ease-out group-hover:translate-x-0.5" />
+                <ArrowRight className="size-4 transition-transform ease-spring group-hover:translate-x-0.5" />
               </Link>
             }
           />
@@ -112,18 +110,8 @@ export function HeroSection({
           {t("trust")}
         </motion.p>
 
-        <motion.div variants={fadeUp} className="mt-4 w-full max-w-xl">
-          {/* Nasce já na escada em vez de decoração solta: o anel de 1px do
-              shadow desenha o limite, sem borda concorrendo com o fill. */}
-          <Elevated
-            offset={1}
-            // O <figure> do fumadocs traz o próprio `bg-fd-card border
-            // shadow-sm`; achatado aqui pro Elevated ser a única superfície,
-            // em vez de caixa dentro de caixa.
-            className="overflow-hidden rounded-xl text-left [&_figure]:border-0 [&_figure]:bg-transparent [&_figure]:shadow-none"
-          >
-            <CodeBlockCommand command={installCommand} />
-          </Elevated>
+        <motion.div variants={fadeUp} className="mt-2">
+          <HeroElevationLadder />
         </motion.div>
       </motion.div>
     </section>

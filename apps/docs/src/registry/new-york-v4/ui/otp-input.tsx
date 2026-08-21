@@ -33,7 +33,7 @@ export const otpInputVariants = tv({
     group: "flex items-center",
     cell: [
       "relative flex shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border bg-background text-foreground shadow-xs select-none",
-      "transition-[border-color,box-shadow,background-color,transform,color] duration-200 ease-out",
+      "transition-[border-color,box-shadow,background-color,transform,color] duration-200 ease-spring",
       "data-[filled=true]:border-foreground/25 data-[filled=true]:bg-muted/40",
       "data-[active=true]:-translate-y-0.5 data-[active=true]:border-ring data-[active=true]:bg-background data-[active=true]:shadow-md data-[active=true]:ring-2 data-[active=true]:ring-ring/30",
       "data-[complete=true]:border-chart-2/55 data-[complete=true]:text-foreground",

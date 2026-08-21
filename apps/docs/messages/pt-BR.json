@@ -27,9 +27,10 @@
     "next": "Próximo"
   },
   "hero": {
-    "badge": "{count} componentes · Tailwind 4 + React 19",
-    "titleLine1": "Componentes com movimento",
-    "titleLine2": "para shadcn/ui",
+    "badge": "Surface Philosophy · Motion Tokens",
+    "badgeCount": "{count} componentes",
+    "titleBrand": "Matos UI",
+    "titleTagline": "— componentes com profundidade embutida",
     "description": "Copie o código pro seu projeto. Estilizado, acessível e animado por padrão.",
     "browseComponents": "Ver componentes",
     "viewOnGitHub": "Ver no GitHub",

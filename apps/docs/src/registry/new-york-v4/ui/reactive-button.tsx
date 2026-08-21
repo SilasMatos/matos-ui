@@ -14,7 +14,7 @@ import { tv, type VariantProps } from "tailwind-variants";
 export const reactiveButtonVariants = tv({
   base: [
     "relative inline-flex shrink-0 items-center justify-center overflow-hidden whitespace-nowrap rounded-lg border border-transparent bg-clip-padding text-sm font-medium outline-none select-none",
-    "transition-[background-color,border-color,border-radius,box-shadow,color,opacity,transform] duration-200 ease-out",
+    "transition-[background-color,border-color,border-radius,box-shadow,color,opacity,transform] duration-200 ease-spring",
     "hover:-translate-y-0.5 hover:shadow-sm active:translate-y-0 active:scale-[0.98] motion-reduce:transform-none",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
     "disabled:pointer-events-none disabled:opacity-50",

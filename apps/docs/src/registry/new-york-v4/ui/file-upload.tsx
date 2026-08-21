@@ -31,13 +31,13 @@ export const fileUploadVariants = tv({
     root: "not-prose w-full rounded-2xl p-2 text-foreground",
     dropzone: [
       "group/dropzone relative flex w-full cursor-pointer items-center gap-3 rounded-xl border border-border/60 p-3 text-left",
-      "transition-[background-color,border-color,box-shadow,transform] duration-200 ease-out",
+      "transition-[background-color,border-color,box-shadow,transform] duration-200 ease-spring",
       "hover:bg-muted/35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
       "data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50",
     ],
     iconWrap: [
       "flex size-9 shrink-0 items-center justify-center rounded-lg border border-border/70 bg-muted text-muted-foreground",
-      "transition-[background-color,color,transform] duration-200 ease-out",
+      "transition-[background-color,color,transform] duration-200 ease-spring",
       "group-hover/dropzone:text-foreground",
     ],
     copy: "min-w-0 flex-1",

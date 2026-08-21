@@ -46,16 +46,14 @@ export function CustomizeStudio() {
                 <Elevated
                   key={item.name}
                   offset={1}
-                  className={cn(
-                    "rounded-xl transition-shadow duration-200",
-                    selected && "ring-2 ring-ring",
-                  )}
+                  hoverLift
+                  className={cn("rounded-xl", selected && "ring-2 ring-ring")}
                 >
                   <button
                     type="button"
                     aria-pressed={selected}
                     onClick={() => setPalette(item.name)}
-                    className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm outline-none transition-colors hover:bg-foreground/8 focus-visible:ring-2 focus-visible:ring-ring"
+                    className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm outline-none transition-colors duration-moderate ease-spring hover:bg-foreground/8 focus-visible:ring-2 focus-visible:ring-ring"
                   >
                     <span
                       aria-hidden="true"
@@ -91,16 +89,14 @@ export function CustomizeStudio() {
                 <Elevated
                   key={item.id}
                   offset={1}
-                  className={cn(
-                    "rounded-xl transition-shadow duration-200",
-                    selected && "ring-2 ring-ring",
-                  )}
+                  hoverLift
+                  className={cn("rounded-xl", selected && "ring-2 ring-ring")}
                 >
                   <button
                     type="button"
                     aria-pressed={selected}
                     onClick={() => setRadius(item.id)}
-                    className="flex w-full flex-col items-center gap-2 rounded-xl px-2 py-2.5 outline-none transition-colors hover:bg-foreground/8 focus-visible:ring-2 focus-visible:ring-ring"
+                    className="flex w-full flex-col items-center gap-2 rounded-xl px-2 py-2.5 outline-none transition-colors duration-moderate ease-spring hover:bg-foreground/8 focus-visible:ring-2 focus-visible:ring-ring"
                   >
                     <span
                       aria-hidden="true"

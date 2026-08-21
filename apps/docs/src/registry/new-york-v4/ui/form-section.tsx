@@ -12,7 +12,7 @@ export const formSectionVariants = tv({
   slots: {
     root: [
       "not-prose overflow-hidden rounded-2xl border border-border bg-muted text-foreground",
-      "transition-[border-color,box-shadow] duration-300 ease-in-out",
+      "transition-[border-color,box-shadow] duration-300 ease-spring",
     ],
     inner: "mx-0.5 overflow-hidden rounded-xl  bg-background p-4 sm:p-5",
     header: "flex items-start justify-between gap-3 px-4 pt-4 pb-2 sm:px-5",

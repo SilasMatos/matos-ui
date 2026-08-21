@@ -16,7 +16,7 @@ export const fieldVariants = tv({
     root: "not-prose group/field grid w-full gap-1.5 text-foreground",
     label: [
       "flex w-fit items-center gap-1 text-xs font-medium text-foreground",
-      "transition-[color,transform] duration-300 ease-in-out",
+      "transition-[color,transform] duration-300 ease-spring",
       "group-focus-within/field:-translate-y-px group-focus-within/field:text-foreground",
       "group-data-[invalid=true]/field:text-destructive group-data-[disabled=true]/field:opacity-60",
     ],
@@ -297,7 +297,7 @@ export function InputGroup({
       data-disabled={disabled || undefined}
       className={twMerge(
         "not-prose flex h-9 w-full items-center overflow-hidden rounded-xl border border-border bg-background shadow-xs",
-        "transition-[border-color,box-shadow,transform,background-color] duration-300 ease-in-out focus-within:-translate-y-px focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/25",
+        "transition-[border-color,box-shadow,transform,background-color] duration-300 ease-spring focus-within:-translate-y-px focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/25",
         "data-[invalid=true]:border-destructive data-[invalid=true]:focus-within:border-destructive data-[invalid=true]:focus-within:ring-destructive/20",
         "data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50",
         "[&_[data-slot=input]]:h-full [&_[data-slot=input]]:rounded-none [&_[data-slot=input]]:border-0 [&_[data-slot=input]]:shadow-none [&_[data-slot=input]]:focus-visible:translate-y-0 [&_[data-slot=input]]:focus-visible:ring-0",
@@ -335,7 +335,7 @@ export function InputGroupButton({
       type={type}
       data-slot="input-group-button"
       className={twMerge(
-        "not-prose inline-flex size-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors duration-200 ease-in-out hover:bg-muted/60 hover:text-foreground",
+        "not-prose inline-flex size-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors duration-200 ease-spring hover:bg-muted/60 hover:text-foreground",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
         className,
       )}

@@ -7,7 +7,10 @@ import {
 } from "react";
 
 import { cn } from "@/lib/utils";
-import { surfaceClasses } from "@/registry/new-york-v4/lib/surface-classes";
+import {
+  SURFACE_HOVER_SHADOW,
+  surfaceClasses,
+} from "@/registry/new-york-v4/lib/surface-classes";
 import {
   SurfaceProvider,
   useSurface,
@@ -35,20 +38,48 @@ interface ElevatedProps extends ComponentPropsWithoutRef<"div"> {
    * dialog, even though its background tracks the substrate.
    */
   shadowLevel?: number;
+  /**
+   * Lifts one shadow step and 2px on hover — for a surface that is itself
+   * the clickable target (a card, a swatch tile), not a wrapper around a
+   * separately-styled button. Off by default: most `Elevated` uses are
+   * passive containers, and lifting those on hover would read as false
+   * affordance.
+   *
+   * Timing comes from the shared spring tokens (registry/.../motion-tokens),
+   * the same ones Button's own hover lift uses, so every elevated surface
+   * settles at the same rate rather than each picking its own.
+   */
+  hoverLift?: boolean;
   children?: ReactNode;
 }
 
 const Elevated = forwardRef<HTMLDivElement, ElevatedProps>(
-  ({ offset, shadowLevel, className, children, ...props }, ref) => {
+  (
+    { offset, shadowLevel, hoverLift = false, className, children, ...props },
+    ref,
+  ) => {
     const substrate = useSurface();
     const level = Math.min(substrate + offset, 8);
+    const restShadowLevel = shadowLevel ?? level;
+    const hoverShadowLevel = Math.round(
+      Math.max(1, Math.min(8, restShadowLevel + 1)),
+    );
     return (
       <SurfaceProvider value={level}>
         <div
           ref={ref}
           data-slot="elevated"
           data-surface={level}
-          className={cn(surfaceClasses(level, shadowLevel ?? level), className)}
+          className={cn(
+            surfaceClasses(level, restShadowLevel),
+            hoverLift && [
+              "transition-[transform,box-shadow] duration-moderate ease-spring",
+              "hover:-translate-y-0.5",
+              SURFACE_HOVER_SHADOW[hoverShadowLevel],
+              "motion-reduce:transition-none motion-reduce:hover:translate-y-0",
+            ],
+            className,
+          )}
           {...props}
         >
           {children}

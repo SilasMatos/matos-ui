@@ -95,7 +95,7 @@ function MobileGroup({
           aria-controls={panelId}
           aria-expanded={isOpen}
           onClick={onToggle}
-          className="flex h-8 w-full items-center gap-2 rounded-md px-2 text-left outline-none transition-colors duration-150 hover:bg-muted/20 focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none"
+          className="flex h-8 w-full items-center gap-2 rounded-md px-2 text-left outline-none transition-colors duration-180 hover:bg-muted/20 focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none"
         >
           <span className="font-semibold text-[0.64rem] text-muted-foreground/75 uppercase tracking-[0.16em]">
             {group.title}
@@ -276,7 +276,7 @@ function MobileLink({
       aria-current={isActive ? "page" : undefined}
       onClick={() => onNavigate?.()}
       className={cn(
-        "relative flex h-9 min-w-0 items-center rounded-md px-3 text-sm font-medium outline-none transition-[background-color,color,transform] duration-150 ease-out",
+        "relative flex h-9 min-w-0 items-center rounded-md px-3 text-sm font-medium outline-none transition-[background-color,color,transform] duration-180 ease-spring",
         "hover:translate-x-px hover:bg-muted/40 hover:text-foreground motion-reduce:transform-none motion-reduce:transition-none",
         "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background",
         isActive ? "bg-muted/45 pl-5 text-foreground" : "text-muted-foreground",

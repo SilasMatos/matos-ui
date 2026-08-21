@@ -16,11 +16,18 @@
   --popover-foreground: oklch(0.145 0 0);
   --primary: oklch(0.205 0 0);
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
+  /* Stock shadcn pairs these with a pure-white --background (1 0 0), a 0.03
+     step down. Lowering --background to 0.968 above without matching this
+     tint collapsed that step to ~0.002 — every hover/fill built on these
+     tokens (ghost buttons, nav links, menu items) went visually silent in
+     light mode. Shifted down by the same 0.032 --background moved, so the
+     original 0.03 gap — and the affordance it gives hover states — comes
+     back. */
+  --secondary: oklch(0.938 0 0);
   --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
+  --muted: oklch(0.938 0 0);
   --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
+  --accent: oklch(0.938 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
@@ -253,6 +260,39 @@
     var(--font-satoshi), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
   --font-logo: "Trebuchet MS", ui-sans-serif, system-ui, sans-serif;
+
+  /* CSS-transition counterpart to the spring tiers in
+     registry/new-york-v4/lib/motion-tokens.ts. spring.fast and
+     spring.moderate are both critically damped (bounce: 0), so their CSS
+     equivalent is a fast-start/soft-land deceleration curve, not a
+     bounce/overshoot one — closer to a spring's settle than Tailwind's
+     stock `ease-out`, which decelerates too evenly to read as alive.
+     Durations run well past their spring counterpart because a plain
+     transition has no snap-then-settle shape of its own, so it needs the
+     extra time to *read* as equally smooth — pushed further still (was
+     120/180/260ms) after the first pass still read as too quick to
+     register as motion rather than a jump-cut. The curve itself softened
+     too: a wider late tail (0.36 vs 0.3 on the third control point) so the
+     settle glides rather than snapping shut. `--default-transition-*`
+     below is what every bare `transition-colors`/`transition-opacity`
+     utility resolves through, so hover states that never set their own
+     duration/easing inherit this automatically.
+
+     No `--duration-fast` entry: verified (renaming it, and separately
+     forcing it through an explicit `var()` reference) that this Tailwind
+     v4/Turbopack setup silently drops the utility class for a *named*
+     `--duration-*` theme entry whenever nothing in this file's own CSS
+     also references it via `var()` — moderate/slow survive only because
+     `--default-transition-duration` and the view-transition rule below
+     happen to reference them that way. A fast tier has no such natural
+     reference, so it never compiled; the 180ms fast tier below is spelled
+     out as the literal `duration-180` at its two call sites
+     (docs-sidebar.tsx, mobile-nav.tsx) instead. */
+  --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-moderate: 280ms;
+  --duration-slow: 420ms;
+  --default-transition-duration: var(--duration-moderate);
+  --default-transition-timing-function: var(--ease-spring);
 }
 
 @layer components {
@@ -285,6 +325,17 @@
       @apply !mt-2;
     }
   }
+}
+
+/* Page-transition timing for PageTransitions (components/page-transitions.tsx).
+   The browser's default cross-fade shape is left alone; this only retimes it
+   to the site's own motion tokens instead of the UA's ~0.25s ease. No
+   prefers-reduced-motion guard needed here — PageTransitions checks that in
+   JS and never starts a transition at all when it's set. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: var(--duration-slow);
+  animation-timing-function: var(--ease-spring);
 }
 
 .hero-grid {

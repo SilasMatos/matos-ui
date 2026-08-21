@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 
+import { PageTransitions } from "@/components/page-transitions";
 import { Provider } from "@/components/provider";
 import { SiteHeader } from "@/components/site-header";
 import { ThemeCustomizerScript } from "@/components/theme-customizer-script";
@@ -112,6 +113,7 @@ export default async function LocaleLayout({ children, params }: Props) {
         suppressHydrationWarning
       >
         <ThemeCustomizerScript />
+        <PageTransitions />
         <NextIntlClientProvider locale={locale} messages={messages}>
           <Provider>
             <SiteHeader pageTree={pageTree} />

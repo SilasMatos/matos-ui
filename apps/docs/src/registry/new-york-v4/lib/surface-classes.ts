@@ -20,6 +20,20 @@ export const SURFACE_SHADOW: Record<number, string> = {
   8: "shadow-surface-8",
 };
 
+// Literal, not `hover:${SURFACE_SHADOW[n]}` — Tailwind can't see a variant
+// spliced onto an interpolated class at runtime, only ones it can find as a
+// whole string in source.
+export const SURFACE_HOVER_SHADOW: Record<number, string> = {
+  1: "hover:shadow-surface-1",
+  2: "hover:shadow-surface-2",
+  3: "hover:shadow-surface-3",
+  4: "hover:shadow-surface-4",
+  5: "hover:shadow-surface-5",
+  6: "hover:shadow-surface-6",
+  7: "hover:shadow-surface-7",
+  8: "hover:shadow-surface-8",
+};
+
 export function surfaceClasses(
   bgLevel: number,
   shadowLevel: number = bgLevel,

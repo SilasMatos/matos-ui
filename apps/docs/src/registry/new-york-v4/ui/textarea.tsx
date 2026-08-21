@@ -13,7 +13,7 @@ import {
 export const textareaVariants = tv({
   base: [
     "not-prose min-h-24 w-full resize-y rounded-xl border border-border bg-background px-3 py-2.5 text-sm text-foreground shadow-xs",
-    "placeholder:text-muted-foreground transition-[background-color,border-color,box-shadow,transform] duration-300 ease-in-out",
+    "placeholder:text-muted-foreground transition-[background-color,border-color,box-shadow,transform] duration-300 ease-spring",
     "hover:border-border/80 focus-visible:-translate-y-px focus-visible:border-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25",
     "aria-invalid:border-destructive aria-invalid:bg-destructive/10 aria-invalid:focus-visible:border-destructive aria-invalid:focus-visible:ring-destructive/20",
     "data-[invalid=true]:border-destructive data-[invalid=true]:bg-destructive/10 data-[invalid=true]:focus-visible:border-destructive data-[invalid=true]:focus-visible:ring-destructive/20",

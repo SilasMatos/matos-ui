@@ -18,7 +18,7 @@ import { tv, type VariantProps } from "tailwind-variants";
 export const themeTogglerButtonVariants = tv({
   base: [
     "relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full border border-transparent text-foreground outline-none select-none",
-    "transition-[background-color,border-color,box-shadow,transform] duration-200 ease-out",
+    "transition-[background-color,border-color,box-shadow,transform] duration-moderate ease-spring",
     "hover:bg-muted/70 active:scale-90 motion-reduce:active:scale-100",
     "focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
     "disabled:pointer-events-none disabled:opacity-50",

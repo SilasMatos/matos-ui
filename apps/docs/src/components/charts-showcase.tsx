@@ -482,7 +482,7 @@ function ChartRegistryCard({
             >
               Open fullscreen
               <ArrowUpRight
-                className="size-3.5 transition-transform duration-300 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                className="size-3.5 transition-transform duration-300 ease-spring group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                 aria-hidden="true"
               />
             </span>

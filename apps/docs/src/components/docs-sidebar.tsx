@@ -82,7 +82,7 @@ const activeSpring = {
 
 const sidebarLinkClassName = [
   "group/sidebar-link relative flex h-8 w-full min-w-0 items-center rounded-md px-2.5 pl-3.5 text-[0.83rem] font-medium",
-  "outline-none transition-[background-color,color,transform] duration-150 ease-out",
+  "outline-none transition-[background-color,color,transform] duration-180 ease-spring",
   "hover:translate-x-px hover:bg-background hover:text-foreground hover:shadow-[0_0_0_1px_color-mix(in_oklab,var(--border)_65%,transparent)] dark:hover:bg-muted/40 dark:hover:shadow-none",
   "motion-reduce:transform-none motion-reduce:transition-none",
   "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background",
@@ -260,7 +260,7 @@ function SidebarGroup({
           aria-expanded={isOpen}
           disabled={isFiltering}
           onClick={onToggle}
-          className="group/header flex h-7 w-full items-center gap-2 rounded-md px-1.5 text-left outline-none transition-colors duration-150 hover:bg-background/75 disabled:pointer-events-none focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none dark:hover:bg-muted/20"
+          className="group/header flex h-7 w-full items-center gap-2 rounded-md px-1.5 text-left outline-none transition-colors duration-180 hover:bg-background/75 disabled:pointer-events-none focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none dark:hover:bg-muted/20"
         >
           <span className="shrink-0 font-semibold text-[0.64rem] text-foreground/60 uppercase tracking-[0.16em] dark:text-muted-foreground/75">
             {group.title}
@@ -389,7 +389,7 @@ export function DocsSidebar({
             <div className="group/search relative">
               <SearchIcon
                 aria-hidden="true"
-                className="-translate-y-1/2 pointer-events-none absolute left-2.5 top-1/2 size-3.5 text-muted-foreground transition-colors duration-200 group-focus-within/search:text-foreground"
+                className="-translate-y-1/2 pointer-events-none absolute left-2.5 top-1/2 size-3.5 text-muted-foreground transition-colors duration-moderate group-focus-within/search:text-foreground"
               />
               <input
                 id={searchId}
@@ -400,7 +400,7 @@ export function DocsSidebar({
                 autoComplete="off"
                 spellCheck={false}
                 aria-controls="docs-sidebar-groups"
-                className="h-8 w-full rounded-lg border border-border/80 bg-background pl-8 pr-3 text-xs text-foreground shadow-[0_1px_0_color-mix(in_oklab,var(--border)_35%,transparent)] outline-none transition-[background-color,border-color,box-shadow] duration-200 placeholder:text-muted-foreground/75 hover:bg-muted/30 focus:border-ring/70 focus:bg-background focus:ring-2 focus:ring-ring/15 dark:border-border/40 dark:bg-muted/20 dark:shadow-none dark:hover:bg-muted/30"
+                className="h-8 w-full rounded-lg border border-border/80 bg-background pl-8 pr-3 text-xs text-foreground shadow-[0_1px_0_color-mix(in_oklab,var(--border)_35%,transparent)] outline-none transition-[background-color,border-color,box-shadow] duration-moderate placeholder:text-muted-foreground/75 hover:bg-muted/30 focus:border-ring/70 focus:bg-background focus:ring-2 focus:ring-ring/15 dark:border-border/40 dark:bg-muted/20 dark:shadow-none dark:hover:bg-muted/30"
               />
             </div>
           </div>

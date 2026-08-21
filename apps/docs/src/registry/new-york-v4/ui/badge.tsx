@@ -10,7 +10,7 @@ import { useSurface } from "@/registry/new-york-v4/lib/surface-context";
 export const badgeVariants = tv({
   base: [
     "group/badge inline-flex min-w-0 shrink-0 items-center justify-center overflow-hidden border font-medium leading-none",
-    "transition-[background-color,border-color,color,box-shadow,transform,opacity] duration-200 ease-out",
+    "transition-[background-color,border-color,color,box-shadow,transform,opacity] duration-200 ease-spring",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
     "motion-reduce:transition-none",
   ],
@@ -148,7 +148,7 @@ function BadgeIcon({ children }: { children: ReactNode }) {
   return (
     <span
       data-slot="badge-icon"
-      className="inline-flex shrink-0 items-center justify-center transition-transform duration-200 ease-out group-hover/badge:scale-105 motion-reduce:transition-none [&_svg]:size-3 [&_svg]:shrink-0"
+      className="inline-flex shrink-0 items-center justify-center transition-transform duration-200 ease-spring group-hover/badge:scale-105 motion-reduce:transition-none [&_svg]:size-3 [&_svg]:shrink-0"
       aria-hidden="true"
     >
       {children}
@@ -175,7 +175,7 @@ function BadgeDismiss({
         event.stopPropagation();
         onDismiss?.(event);
       }}
-      className="group/dismiss -mr-1 inline-flex size-4 shrink-0 items-center justify-center rounded-sm text-muted-foreground transition-[background-color,color,transform,opacity] duration-200 ease-out hover:bg-muted hover:text-foreground hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 motion-reduce:transition-none motion-reduce:hover:scale-100"
+      className="group/dismiss -mr-1 inline-flex size-4 shrink-0 items-center justify-center rounded-sm text-muted-foreground transition-[background-color,color,transform,opacity] duration-200 ease-spring hover:bg-muted hover:text-foreground hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 motion-reduce:transition-none motion-reduce:hover:scale-100"
     >
       <span className="relative size-3" aria-hidden="true">
         <span className="absolute top-1/2 left-1/2 h-px w-2 -translate-x-1/2 -translate-y-1/2 rotate-45 rounded-full bg-current transition-transform duration-200 group-hover/dismiss:rotate-[50deg]" />

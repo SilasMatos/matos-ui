@@ -87,6 +87,7 @@ export function CustomizeMenu() {
                   <Elevated
                     key={item.name}
                     offset={1}
+                    hoverLift
                     className={cn("rounded-lg", selected && "ring-2 ring-ring")}
                   >
                     <button
@@ -94,7 +95,7 @@ export function CustomizeMenu() {
                       aria-pressed={selected}
                       title={paletteLabel(item.name)}
                       onClick={() => setPalette(item.name)}
-                      className="grid w-full place-items-center rounded-lg py-2 outline-none transition-colors hover:bg-foreground/8 focus-visible:ring-2 focus-visible:ring-ring"
+                      className="grid w-full place-items-center rounded-lg py-2 outline-none transition-colors duration-moderate ease-spring hover:bg-foreground/8 focus-visible:ring-2 focus-visible:ring-ring"
                     >
                       <span
                         aria-hidden="true"
@@ -127,6 +128,7 @@ export function CustomizeMenu() {
                     <Elevated
                       key={item.id}
                       offset={1}
+                      hoverLift
                       className={cn(
                         "rounded-lg",
                         selected && "ring-2 ring-ring",
@@ -136,7 +138,7 @@ export function CustomizeMenu() {
                         type="button"
                         aria-pressed={selected}
                         onClick={() => setRadius(item.id)}
-                        className="flex w-full flex-col items-center gap-1 rounded-lg py-1.5 outline-none transition-colors hover:bg-foreground/8 focus-visible:ring-2 focus-visible:ring-ring"
+                        className="flex w-full flex-col items-center gap-1 rounded-lg py-1.5 outline-none transition-colors duration-moderate ease-spring hover:bg-foreground/8 focus-visible:ring-2 focus-visible:ring-ring"
                       >
                         <span
                           aria-hidden="true"

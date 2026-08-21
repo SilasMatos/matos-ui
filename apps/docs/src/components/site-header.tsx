@@ -30,10 +30,14 @@ export function SiteHeader({ pageTree }: { pageTree: DocsPageTree }) {
 
   return (
     <header
-      className={`sticky top-0 z-50 h-(--header-height) w-full transition-colors ${isHome ? "bg-transparent backdrop-blur-md" : "border-border/60 border-b bg-background/90 backdrop-blur-md"}`}
+      className={`sticky top-0 z-50 w-full transition-colors ${isHome ? "h-11 bg-transparent backdrop-blur-md" : "h-(--header-height) border-border/60 border-b bg-background/90 backdrop-blur-md"}`}
     >
-      <div className="mx-auto flex h-full items-center justify-between gap-3 px-4 sm:px-6">
-        <div className="flex min-w-0 items-center gap-2">
+      <div
+        className={`mx-auto flex h-full max-w-[1600px] items-center justify-between gap-3 ${isHome ? "px-3 sm:px-4" : "px-4 sm:px-6"}`}
+      >
+        <div
+          className={`flex min-w-0 items-center ${isHome ? "gap-1.5" : "gap-2"}`}
+        >
           <MobileNav
             tree={pageTree}
             items={navItems}
@@ -43,7 +47,7 @@ export function SiteHeader({ pageTree }: { pageTree: DocsPageTree }) {
           <Link
             href="/"
             aria-label={siteConfig.name}
-            className="group/brand flex min-w-0 items-center  rounded-lg outline-none transition-opacity hover:opacity-85 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            className="group/brand flex min-w-0 items-center rounded-lg outline-none transition-[opacity,transform] duration-moderate ease-spring hover:scale-[1.03] hover:opacity-85 active:scale-95 motion-reduce:transition-none motion-reduce:hover:scale-100 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             <span className="relative flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-lg">
               <Image
@@ -71,12 +75,19 @@ export function SiteHeader({ pageTree }: { pageTree: DocsPageTree }) {
               beta
             </span>
           </Link>
-          <div className="mx-2.5 hidden h-4 w-px bg-border lg:block" />
+          <div
+            className={`${isHome ? "mx-2" : "mx-2.5"} hidden h-4 w-px bg-border lg:block`}
+          />
           <MainNav items={navItems} className="hidden lg:flex" />
         </div>
-        <div className="flex min-w-0 items-center gap-0.5 sm:gap-1 **:data-[slot=separator]:h-4!">
+        <div
+          className={`flex min-w-0 items-center ${isHome ? "gap-0 sm:gap-0.5" : "gap-0.5 sm:gap-1"} **:data-[slot=separator]:h-4!`}
+        >
           <CommandMenu tree={pageTree} navItems={navItems} />
-          <Separator orientation="vertical" className="mx-1 hidden lg:block" />
+          <Separator
+            orientation="vertical"
+            className={`${isHome ? "mx-0.5" : "mx-1"} hidden lg:block`}
+          />
           <div className="hidden sm:block">
             <GitHubLink />
           </div>
