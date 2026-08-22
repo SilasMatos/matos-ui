@@ -293,6 +293,17 @@
   --duration-slow: 420ms;
   --default-transition-duration: var(--duration-moderate);
   --default-transition-timing-function: var(--ease-spring);
+
+  /* The hover-lift tier — see the `hover-lift` utility below.
+     Deliberately NOT `--ease-spring`: that curve covers ~90% of its travel in
+     the first 15% of the time, which reads as arrival for a panel crossing
+     real distance but as a flinch for a 2px hover. This one eases in before it
+     eases out, so a control that lifts under the cursor drifts instead of
+     snapping. Both entries survive the `--duration-*` drop described above
+     because the utility references them through `var()` in this same file. */
+  --ease-lift: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-lift: 320ms;
+  --duration-lift-press: 120ms;
 }
 
 @layer components {
@@ -351,6 +362,56 @@
 
 .dark .hero-highlight {
   background: linear-gradient(transparent 60%, oklch(0.985 0 0 / 10%) 60%);
+}
+
+/* The hover lift, as one token.
+
+   It exists because the hand-rolled version was silently broken everywhere:
+   Tailwind v4 compiles `-translate-y-0.5` to the `translate` property and
+   `scale-[0.98]` to `scale`, but every call site listed `transform` in its
+   `transition-[…]` — a property none of them actually animate. The lift and
+   the press were therefore instant jumps, and no amount of retuning
+   `duration-moderate ease-spring` could have shown up, because that timing was
+   attached to properties that never changed.
+
+   So this utility owns the whole declaration rather than only the timing: the
+   property list is part of the token, which is the only way a call site cannot
+   get it wrong again. The list is deliberately generous — a control that never
+   changes its border-radius pays nothing for having it listed.
+
+   Distance is a local custom property: `[--lift:1px]` for a badge, `[--lift:0px]`
+   to opt a link-style variant out entirely, without touching the timing. */
+@utility hover-lift {
+  --lift: 2px;
+  transition-property: translate, scale, box-shadow, background-color,
+    border-color, border-radius, color, opacity;
+  transition-duration: var(--duration-lift);
+  transition-timing-function: var(--ease-lift);
+
+  /* Hover-capable pointers only: on touch, :hover latches after a tap and the
+     control would stay lifted until something else is pressed. */
+  @media (hover: hover) {
+    &:hover {
+      translate: 0 calc(var(--lift) * -1);
+    }
+  }
+
+  /* Ordered after :hover so it wins at equal specificity. A press should feel
+     immediate even though the lift itself is slow. */
+  &:active {
+    translate: 0 0;
+    transition-duration: var(--duration-lift-press);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition-property: background-color, border-color, color, opacity;
+
+    &:hover,
+    &:active {
+      translate: none;
+      scale: none;
+    }
+  }
 }
 
 @utility step {

@@ -45,9 +45,10 @@ interface ElevatedProps extends ComponentPropsWithoutRef<"div"> {
    * passive containers, and lifting those on hover would read as false
    * affordance.
    *
-   * Timing comes from the shared spring tokens (registry/.../motion-tokens),
-   * the same ones Button's own hover lift uses, so every elevated surface
-   * settles at the same rate rather than each picking its own.
+   * Distance, timing and — critically — the transition property list all come
+   * from the shared `hover-lift` utility in globals.css, the same one Button
+   * uses, so every lifting surface in the system settles at one rate. The
+   * shadow step is layered on top because only Elevated knows its own level.
    */
   hoverLift?: boolean;
   children?: ReactNode;
@@ -72,12 +73,7 @@ const Elevated = forwardRef<HTMLDivElement, ElevatedProps>(
           data-surface={level}
           className={cn(
             surfaceClasses(level, restShadowLevel),
-            hoverLift && [
-              "transition-[transform,box-shadow] duration-moderate ease-spring",
-              "hover:-translate-y-0.5",
-              SURFACE_HOVER_SHADOW[hoverShadowLevel],
-              "motion-reduce:transition-none motion-reduce:hover:translate-y-0",
-            ],
+            hoverLift && ["hover-lift", SURFACE_HOVER_SHADOW[hoverShadowLevel]],
             className,
           )}
           {...props}

@@ -2600,4 +2600,73 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
   },
+  "motion-tokens-demo": {
+    name: "motion-tokens-demo",
+    type: "registry:example",
+    registryDependencies: ["motion-tokens", "elevated", "button"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/motion-tokens-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/motion-tokens-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "motion-stagger-demo": {
+    name: "motion-stagger-demo",
+    type: "registry:example",
+    registryDependencies: ["motion-tokens", "elevated", "button"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/motion-stagger-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/motion-stagger-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "motion-attention-demo": {
+    name: "motion-attention-demo",
+    type: "registry:example",
+    registryDependencies: ["motion-tokens", "elevated", "button"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/motion-attention-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/motion-attention-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
 };

@@ -14,8 +14,7 @@ import { tv, type VariantProps } from "tailwind-variants";
 export const reactiveButtonVariants = tv({
   base: [
     "relative inline-flex shrink-0 items-center justify-center overflow-hidden whitespace-nowrap rounded-lg border border-transparent bg-clip-padding text-sm font-medium outline-none select-none",
-    "transition-[background-color,border-color,border-radius,box-shadow,color,opacity,transform] duration-200 ease-spring",
-    "hover:-translate-y-0.5 hover:shadow-sm active:translate-y-0 active:scale-[0.98] motion-reduce:transform-none",
+    "hover-lift hover:shadow-sm active:scale-[0.98]",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
     "disabled:pointer-events-none disabled:opacity-50",
   ],
@@ -31,7 +30,7 @@ export const reactiveButtonVariants = tv({
         "text-foreground hover:bg-muted/70 hover:text-foreground hover:shadow-none",
       destructive:
         "border-destructive/20 bg-destructive/10 text-destructive shadow-xs hover:border-destructive/30 hover:bg-destructive/15",
-      link: "text-primary underline-offset-4 hover:translate-y-0 hover:bg-transparent hover:shadow-none hover:underline active:scale-100",
+      link: "text-primary underline-offset-4 [--lift:0px] hover:bg-transparent hover:shadow-none hover:underline active:scale-100",
     },
     size: {
       sm: "h-7 gap-1 px-2.5 text-[0.8rem] [&_svg]:size-3.5",

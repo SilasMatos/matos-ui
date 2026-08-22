@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "motion-attention-demo",
+  "registryDependencies": [
+    "motion-tokens",
+    "elevated",
+    "button"
+  ],
+  "files": [
+    {
+      "path": "components/matos-ui/examples/motion-attention-demo.tsx",
+      "content": "\"use client\";\n\nimport { motion, useReducedMotion } from \"framer-motion\";\nimport { useId, useState } from \"react\";\n\nimport { cn } from \"@/lib/utils\";\nimport {\n  attentionPulse,\n  attentionShake,\n} from \"@/lib/motion-tokens\";\nimport { Button } from \"@/components/matos-ui/button\";\nimport { Elevated } from \"@/components/matos-ui/elevated\";\n\nconst BALANCE = 1250;\n\nexport default function MotionAttentionDemo() {\n  const reduced = useReducedMotion() ?? false;\n  const amountId = useId();\n  const [amount, setAmount] = useState(\"2000\");\n  const [shake, setShake] = useState(false);\n  const [pulse, setPulse] = useState(false);\n  const [sent, setSent] = useState(0);\n\n  const parsed = Number(amount);\n  const invalid = !Number.isFinite(parsed) || parsed <= 0 || parsed > BALANCE;\n\n  const confirm = () => {\n    if (invalid) {\n      // Attention cues are one-shot: flip the variant on, then back, so the\n      // same failure can be signalled twice in a row.\n      setShake(true);\n      return;\n    }\n    setSent((count) => count + 1);\n    setPulse(true);\n  };\n\n  return (\n    <Elevated offset={1} className=\"w-full max-w-sm space-y-4 rounded-2xl p-4\">\n      <div className=\"flex items-baseline justify-between gap-3\">\n        <span className=\"text-muted-foreground text-xs\">Available</span>\n        <motion.span\n          variants={reduced ? undefined : attentionPulse}\n          animate={pulse ? \"pulse\" : undefined}\n          onAnimationComplete={() => setPulse(false)}\n          className=\"font-semibold text-foreground text-lg tabular-nums\"\n        >\n          ${(BALANCE - sent * 10).toLocaleString(\"en-US\")}\n        </motion.span>\n      </div>\n\n      <motion.div\n        className=\"space-y-1.5\"\n        variants={reduced ? undefined : attentionShake}\n        animate={shake ? \"shake\" : undefined}\n        onAnimationComplete={() => setShake(false)}\n      >\n        <label\n          htmlFor={amountId}\n          className=\"block text-[11px] font-medium text-muted-foreground\"\n        >\n          Amount to send\n        </label>\n        <input\n          id={amountId}\n          inputMode=\"decimal\"\n          value={amount}\n          onChange={(event) => setAmount(event.target.value)}\n          aria-invalid={invalid || undefined}\n          className={cn(\n            \"h-9 w-full rounded-xl bg-muted/40 px-3 text-sm text-foreground tabular-nums\",\n            \"outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring\",\n            \"aria-invalid:ring-2 aria-invalid:ring-destructive/35\",\n          )}\n        />\n        <p className=\"text-[11px] text-muted-foreground\">\n          {invalid\n            ? \"Over the available balance — Confirm to see the shake.\"\n            : \"Confirm to see the balance pulse.\"}\n        </p>\n      </motion.div>\n\n      <Button className=\"w-full\" onClick={confirm}>\n        Confirm transfer\n      </Button>\n    </Elevated>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/motion-attention-demo.tsx"
+    }
+  ],
+  "type": "registry:example"
+}

@@ -98,6 +98,46 @@ const surfaceCss = {
   },
 };
 
+// The hover-lift motion token, shipped with every component that lifts so that
+// `npx shadcn add button.json` installs the utility and not just the class name
+// that references it. The utility owns the transition *property list* as well
+// as the timing: Tailwind v4 animates `translate`/`scale`, not `transform`, and
+// a call site that lists the wrong one gets an untransitioned jump with no
+// error to show for it.
+const liftCssVars = {
+  theme: {
+    "ease-lift": "cubic-bezier(0.4, 0, 0.2, 1)",
+    "duration-lift": "320ms",
+    "duration-lift-press": "120ms",
+  },
+};
+
+const liftCss = {
+  "@utility hover-lift": {
+    "--lift": "2px",
+    "transition-property":
+      "translate, scale, box-shadow, background-color, border-color, border-radius, color, opacity",
+    "transition-duration": "var(--duration-lift)",
+    "transition-timing-function": "var(--ease-lift)",
+    "@media (hover: hover)": {
+      "&:hover": {
+        translate: "0 calc(var(--lift) * -1)",
+      },
+    },
+    "&:active": {
+      translate: "0 0",
+      "transition-duration": "var(--duration-lift-press)",
+    },
+    "@media (prefers-reduced-motion: reduce)": {
+      "transition-property": "background-color, border-color, color, opacity",
+      "&:hover, &:active": {
+        translate: "none",
+        scale: "none",
+      },
+    },
+  },
+};
+
 const physicsDeps = ["framer-motion", "tailwind-merge", "tailwind-variants"];
 
 export const ui: Registry["items"] = [
@@ -135,6 +175,8 @@ export const ui: Registry["items"] = [
   {
     name: "button",
     type: "registry:ui",
+    cssVars: liftCssVars,
+    css: liftCss,
     dependencies: ["@base-ui/react"],
     files: [
       {
@@ -146,6 +188,8 @@ export const ui: Registry["items"] = [
   {
     name: "reactive-button",
     type: "registry:ui",
+    cssVars: liftCssVars,
+    css: liftCss,
     dependencies: [
       "framer-motion",
       "lucide-react",
@@ -179,6 +223,8 @@ export const ui: Registry["items"] = [
   {
     name: "badge",
     type: "registry:ui",
+    cssVars: liftCssVars,
+    css: liftCss,
     dependencies: ["tailwind-merge", "tailwind-variants"],
     registryDependencies: ["surface-context", "surface-classes"],
     files: [
@@ -728,6 +774,8 @@ export const ui: Registry["items"] = [
   {
     name: "popover-card",
     type: "registry:ui",
+    cssVars: liftCssVars,
+    css: liftCss,
     dependencies: [
       "@base-ui/react",
       "class-variance-authority",
@@ -813,8 +861,8 @@ export const ui: Registry["items"] = [
       "https://matos-ui.com/r/surface-context.json",
       "https://matos-ui.com/r/surface-classes.json",
     ],
-    cssVars: surfaceCssVars,
-    css: surfaceCss,
+    cssVars: { ...surfaceCssVars, theme: liftCssVars.theme },
+    css: { ...surfaceCss, ...liftCss },
     files: [
       {
         path: "ui/elevated.tsx",

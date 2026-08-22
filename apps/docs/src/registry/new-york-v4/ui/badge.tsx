@@ -10,9 +10,10 @@ import { useSurface } from "@/registry/new-york-v4/lib/surface-context";
 export const badgeVariants = tv({
   base: [
     "group/badge inline-flex min-w-0 shrink-0 items-center justify-center overflow-hidden border font-medium leading-none",
-    "transition-[background-color,border-color,color,box-shadow,transform,opacity] duration-200 ease-spring",
+    // `hover-lift` owns the transition list as well as the timing; a badge
+    // that is not interactive simply never sets --lift above 0.
+    "hover-lift [--lift:0px]",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-    "motion-reduce:transition-none",
   ],
 
   variants: {
@@ -88,9 +89,10 @@ export const badgeVariants = tv({
     },
     interactive: {
       true: [
-        "cursor-pointer select-none hover:-translate-y-px active:translate-y-0 active:scale-[0.98]",
+        // 1px, not the 2px a button gets: a badge is small enough that the
+        // full lift reads as the row reflowing.
+        "cursor-pointer select-none [--lift:1px] active:scale-[0.98]",
         "disabled:pointer-events-none disabled:opacity-50",
-        "motion-reduce:hover:translate-y-0 motion-reduce:active:scale-100",
       ],
     },
     selected: {

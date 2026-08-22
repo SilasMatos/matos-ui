@@ -1,0 +1,297 @@
+---
+title: Motion
+description: A motion philosophy — four spring tiers, tied to elevation instead of chosen by hand. Components read their tier from how far they lift, so every overlay in the system settles at the same rate in both light and dark mode.
+---
+
+<ComponentPreview name="motion-tokens-demo" chromeless />
+
+## The problem
+
+Every component that animates has to answer the same question: how fast, and
+with how much character. Answered locally, each one picks its own
+`stiffness: 260, damping: 20` — and the system ends up with forty timings that
+are all nearly the same and none of them equal.
+
+The visible symptom is not that any single animation is wrong. It is that a
+dropdown, a dialog and a toast each settle at a slightly different rate, so
+nothing feels like it belongs to the same surface.
+
+## The solution
+
+Three pieces: **tiers**, an **elevation mapping**, and **entrance helpers**.
+
+- **Tiers** — four springs, named by character rather than by number.
+  `fast`/`moderate` are critically damped, `slow` carries a little overshoot,
+  `playful` is loud on purpose.
+- **`motionForOffset`** — the same `offset` an `Elevated` surface already
+  declares picks the tier. How far a panel travels away from its substrate
+  decides how it moves, so a component never chooses twice.
+- **`liftVariants` / `directionalVariants`** — the entrance half. Elevation is
+  the fill, the shadow, *and* the arrival: one decision, not three.
+
+Motion and elevation are the same story told twice — see
+[Elevated](/docs/foundations/elevated) for the fill and shadow half.
+
+## The tiers
+
+| Tier       | Duration | Bounce | For                                                                 |
+| ---------- | -------- | ------ | ------------------------------------------------------------------- |
+| `fast`     | `0.08s`  | `0`    | Micro-feedback: toggles, checkboxes, a single-step surface lift.     |
+| `moderate` | `0.16s`  | `0`    | Panels that must land exactly: dropdowns, tabs, drawers, selects.    |
+| `slow`     | `0.24s`  | `0.12` | Dialogs and sheets — far enough that a touch of overshoot reads alive. |
+| `playful`  | `0.32s`  | `0.4`  | A tone, not a fourth speed. Opt in by hand, never reached by offset. |
+
+`moderate` is not simply "faster than slow". Both land at roughly the same
+perceived speed; the difference is that `moderate` has `bounce: 0`, so a select
+menu settles precisely under the cursor instead of overshooting the item the
+user is already reaching for.
+
+Each tier carries its own `exit.duration`, shorter than its entrance — an
+overlay leaving should get out of the way faster than it arrived.
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/motion-tokens.json" />
+
+The CLI copies the tokens and adds `framer-motion` to your dependencies.
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the peer dependency.</Step>
+
+<CodeBlockCommand command="npm install framer-motion" />
+
+<Step>Copy the tokens.</Step>
+
+<ComponentSource name="motion-tokens" title="lib/motion-tokens.ts" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+### CSS counterpart
+
+Framer covers what JavaScript drives. For plain CSS transitions — hover fills,
+focus rings, colour changes — the same character lives in two theme variables:
+
+```css
+@theme inline {
+  --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-moderate: 280ms;
+  --duration-slow: 420ms;
+  --default-transition-duration: var(--duration-moderate);
+  --default-transition-timing-function: var(--ease-spring);
+}
+```
+
+The CSS durations run longer than their spring counterparts on purpose: a plain
+transition has no snap-then-settle shape of its own, so it needs the extra time
+to *read* as equally smooth. Because `--default-transition-*` is set, any bare
+`transition-colors` or `transition-opacity` utility already inherits this — you
+only reach for `duration-moderate ease-spring` explicitly when a rule sets its
+own timing.
+
+### The hover lift
+
+Buttons, badges and clickable `Elevated` tiles all rise slightly under the
+cursor. That is one token, `hover-lift`, not a per-component recipe:
+
+```css
+--ease-lift: cubic-bezier(0.4, 0, 0.2, 1);
+--duration-lift: 320ms;
+--duration-lift-press: 120ms;
+```
+
+The curve is deliberately **not** `--ease-spring`. That one covers roughly 90%
+of its travel in the first 15% of the time — right for a panel crossing real
+distance, wrong for a 2px hover, where it reads as a flinch rather than a lift.
+`--ease-lift` eases in before it eases out, so the control drifts up instead of
+snapping.
+
+Unusually for a token, the utility owns the **transition property list** too:
+
+```css
+@utility hover-lift {
+  --lift: 2px;
+  transition-property: translate, scale, box-shadow, background-color, …;
+  transition-duration: var(--duration-lift);
+  transition-timing-function: var(--ease-lift);
+}
+```
+
+That is not tidiness. Tailwind v4 compiles `-translate-y-0.5` to the `translate`
+property and `scale-[0.98]` to `scale` — neither of which is covered by
+`transition-[…,transform]`. A call site that lists `transform`, as every one of
+ours once did, gets an untransitioned jump and no error to explain it. Folding
+the list into the token is the only way that mistake cannot come back.
+
+Distance is a local custom property, so a call site can retune the travel
+without touching the timing:
+
+```tsx
+<span className="hover-lift [--lift:1px]" />   // badge: smaller control, smaller lift
+<a className="hover-lift [--lift:0px]" />      // link variant: opts out entirely
+```
+
+The utility carries its own `@media (hover: hover)` guard — otherwise `:hover`
+latches after a tap on touch — and its own `prefers-reduced-motion` guard, so
+neither has to be repeated at the call site.
+
+## Usage
+
+```tsx
+import {
+  spring,
+  motionForOffset,
+  liftVariants,
+} from '@/lib/motion-tokens'
+```
+
+### Tie the tier to the elevation
+
+The `offset` a surface already declares is enough to pick its timing. Nothing
+else in the component has to know how fast it should be.
+
+```tsx
+// One node, not a wrapper: a <motion.div> around <Elevated> adds a layout box
+// and breaks flex chains.
+const MotionElevated = motion.create(Elevated)
+
+const POPOVER_OFFSET = 2
+
+<MotionElevated
+  offset={POPOVER_OFFSET}
+  variants={liftVariants(POPOVER_OFFSET)}
+  initial="hidden"
+  animate="visible"
+/>
+```
+
+`motionForOffset` maps onto `fast`/`moderate`/`slow` only — `playful` is a tone
+and cannot be reached by distance, so no ordinary overlay turns festive by
+accident.
+
+### Stagger a group
+
+<ComponentPreview name="motion-stagger-demo" />
+
+Spread `staggerContainer(tier)` onto the container and give each child a
+matching `visible` variant. `liftVariants` is the natural child, so the rows
+arrive with the same character as the panel around them.
+
+```tsx
+<motion.ul variants={staggerContainer('moderate')} initial="hidden" animate="visible">
+  {items.map((item) => (
+    <motion.li key={item.id} variants={liftVariants(1)}>
+      {item.label}
+    </motion.li>
+  ))}
+</motion.ul>
+```
+
+### Interrupt something already on screen
+
+<ComponentPreview name="motion-attention-demo" />
+
+`attentionShake` and `attentionPulse` are cues, not tiers: no offset, no
+elevation, nothing to compose with. They interrupt a component the user is
+already looking at — a field that just failed validation, a total that changed
+underneath them. Drive them by flipping `animate` to the variant name and back.
+
+```tsx
+<motion.div variants={attentionShake} animate={invalid ? 'shake' : undefined}>
+  <Input aria-invalid={invalid} />
+</motion.div>
+```
+
+### Guard an exit animation
+
+A portal has to stay mounted through its exit tween, but a throttled or
+background tab can stall the animation and `onAnimationComplete` may never fire.
+`useExitAnimation` keeps both: the callback when it works, a timer sized to the
+tier's own `exit.duration` when it doesn't.
+
+```tsx
+const { mounted, onAnimationComplete } = useExitAnimation(open, spring.moderate)
+
+if (!mounted) return null
+
+return (
+  <motion.div
+    animate={open ? 'visible' : 'hidden'}
+    onAnimationComplete={onAnimationComplete}
+  />
+)
+```
+
+## Reference
+
+### `spring`
+
+Four tiers, each a framer-motion `Transition` plus an `exit` duration.
+`spring.fast`, `spring.moderate`, `spring.slow`, `spring.playful`.
+
+### `motionForOffset`
+
+`motionForOffset(offset: number): SpringTier` — mirrors the conventional
+`Elevated` offsets.
+
+| Offset | Tier       |
+| ------ | ---------- |
+| `≤ 1`  | `fast`     |
+| `2`    | `moderate` |
+| `> 2`  | `slow`     |
+
+### `liftVariants`
+
+`liftVariants(offset, options?): Variants` — hidden/visible pair whose
+transition comes from `motionForOffset(offset)`.
+
+| Option  | Type     | Default | Description                                                          |
+| ------- | -------- | ------- | -------------------------------------------------------------------- |
+| `y`     | `number` | `4`     | Travel distance. Raise it when the surface is large enough that 4px reads as a twitch. |
+| `scale` | `number` | `0.98`  | Starting scale.                                                      |
+
+### `directionalVariants`
+
+`directionalVariants(direction, tier?): Variants` — an element that grows out of
+the edge it is anchored to. `direction` is the side it travels *from*, which for
+an anchored popup is the opposite of its resolved placement: a menu that flipped
+above the cursor (side `top`) enters from `bottom`. Travels 6px, not 4 — this
+reads as origin, not as lift.
+
+### `stagger` / `staggerContainer`
+
+`stagger` holds the four delays (`0.02`–`0.08s`) under the same tier names.
+`staggerContainer(tier?, delayChildren?)` returns the container `Variants`.
+
+### `attentionShake` / `attentionPulse`
+
+Standalone `Variants` with a single `shake` / `pulse` key. Meant to live inside
+existing form and feedback components rather than be wrapped in one of their own.
+
+### `useExitAnimation`
+
+`useExitAnimation(open, tier?)` → `{ mounted, onAnimationComplete }`. Keeps a
+portal mounted through its exit, with `exitFallbackMs(tier)` as the backstop.
+
+### `exitFallbackMs`
+
+`exitFallbackMs(tier): number` — the tier's exit duration in milliseconds plus a
+100ms safety buffer.

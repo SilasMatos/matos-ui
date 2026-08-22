@@ -27,8 +27,9 @@ import { Elevated } from "@/registry/new-york-v4/ui/elevated";
 export const popoverCardTriggerVariants = cva(
   [
     "not-prose inline-flex cursor-pointer items-center rounded-md outline-none",
-    "transition-[transform,opacity,color] duration-[var(--motion-duration)]",
-    "hover:-translate-y-px data-popup-open:-translate-y-px motion-reduce:transform-none",
+    // The open state pins the trigger at its lifted position, so it keeps an
+    // explicit translate alongside the token-driven hover.
+    "hover-lift [--lift:1px] data-popup-open:-translate-y-px",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
   ],
   {

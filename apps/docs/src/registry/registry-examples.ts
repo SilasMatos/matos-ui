@@ -569,4 +569,37 @@ export const examples: Registry["items"] = [
       },
     ],
   },
+  {
+    name: "motion-tokens-demo",
+    type: "registry:example",
+    registryDependencies: ["motion-tokens", "elevated", "button"],
+    files: [
+      {
+        path: "examples/motion-tokens-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "motion-stagger-demo",
+    type: "registry:example",
+    registryDependencies: ["motion-tokens", "elevated", "button"],
+    files: [
+      {
+        path: "examples/motion-stagger-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "motion-attention-demo",
+    type: "registry:example",
+    registryDependencies: ["motion-tokens", "elevated", "button"],
+    files: [
+      {
+        path: "examples/motion-attention-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
 ];
