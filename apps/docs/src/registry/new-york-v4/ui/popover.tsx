@@ -33,7 +33,7 @@ function usePopoverMotionContext() {
 
 function getMotionStyle(style?: CSSProperties): CSSProperties {
   return {
-    "--motion-duration": `${popoverMotion.duration}s`,
+    "--motion-duration": `${popoverMotion.visualDuration}s`,
     "--motion-exit-duration": `${popoverMotion.exit.duration}s`,
     ...style,
   } as CSSProperties;

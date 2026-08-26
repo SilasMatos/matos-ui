@@ -10,6 +10,7 @@ import { ArrowRight, ArrowUp, SearchIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 
+import { usePageVisible } from "@/hooks/use-ambient-loop";
 import { cn } from "@/lib/utils";
 import { spring } from "@/registry/new-york-v4/lib/motion-tokens";
 import {
@@ -64,14 +65,23 @@ const METRIC_VALUE = "98%";
 const METRIC_TREND = "+12%";
 
 /** How long each identity holds before the next morph. Long enough that the
- *  surface reads as *being* a thing rather than cycling through things. */
-const DWELL_MS = 2800;
+ *  surface reads as *being* a thing rather than cycling through things.
+ *
+ *  Raised from 2800 when `spring.morph` was recalibrated from 0.52s to a 0.75s
+ *  visual duration. The dwell is not the transition: it is what is left of the
+ *  cycle once the morph, the content fade-in that waits for it, and the fade-out
+ *  that precedes the next one have all taken their share. Leaving it at 2800
+ *  would have spent 230ms of that remainder on the longer morph and left the
+ *  surface visibly hurrying from one identity to the next — the failure mode
+ *  this constant exists to prevent, arrived at by changing a different one. */
+const DWELL_MS = 3200;
 
 /** The simulated press in the button state: nobody's cursor is on a
  *  decorative hero element, so the tactile half of the affordance has to be
  *  performed. Placed past the midpoint of the dwell so it lands well after
- *  the label has settled and well before the next morph starts. */
-const PRESS_AT_MS = 1300;
+ *  the label has settled and well before the next morph starts — which is why
+ *  it moved with DWELL_MS rather than staying where it was. */
+const PRESS_AT_MS = 1700;
 /** The hold is deliberately longer than the travel: at equal values the
  *  surface would still be on its way down when the release began and never
  *  actually reach PRESS_SCALE, which reads as a twitch rather than a press. */
@@ -90,9 +100,10 @@ const PRESS_SCALE = 0.97;
  * state would then appear to be pressed twice per cycle.
  *
  * The two gestures must not overlap, and at these values they cannot: the press
- * occupies 1300–1450ms of the dwell and the wind-up 2450–2800ms, a clear second
- * apart. Shortening DWELL_MS is the change that would collide them — the guard
- * is in the scale selection below, which lets the press win.
+ * occupies 1700–1850ms of the dwell and the wind-up 2850–3200ms, a clear second
+ * apart. Shortening DWELL_MS without moving PRESS_AT_MS with it is the change
+ * that would collide them — the guard is in the scale selection below, which
+ * lets the press win.
  */
 const ANTICIPATION_LEAD_MS = 350;
 const ANTICIPATION_AT_MS = DWELL_MS - ANTICIPATION_LEAD_MS;
@@ -104,7 +115,7 @@ const ANTICIPATION_SCALE = 0.985;
  *  reads as the release of something that was being loaded. */
 const ANTICIPATION_TRAVEL_S = ANTICIPATION_LEAD_MS / 1000;
 
-const MORPH_MS = Math.round(spring.morph.duration * 1000);
+const MORPH_MS = Math.round(spring.morph.visualDuration * 1000);
 
 /**
  * The shadow lifts a level while the shape is changing and lands again as it
@@ -131,7 +142,7 @@ const SHADOW_LIFT_S = SHADOW_LIFT_MS / 1000;
  * `spring.morph` and leaving a hardcoded delay behind is precisely how the
  * content ends up arriving mid-transformation again.
  */
-const CONTENT_IN_DELAY_S = spring.morph.duration + 0.03;
+const CONTENT_IN_DELAY_S = spring.morph.visualDuration + 0.03;
 const CONTENT_IN_S = 0.2;
 
 /**
@@ -207,26 +218,6 @@ const INPUT_GHOST = "text-foreground/70";
  * one and forcing the innermost square to be re-levelled with them.
  */
 const ROOT_LEVEL = 1;
-
-/**
- * Pauses the cycle while the tab is in the background.
- *
- * A hidden tab still runs timers, only throttled, so without this the machine
- * would bank up transitions and burn through several of them in one frame the
- * moment the tab came forward.
- */
-function usePageVisible() {
-  const [visible, setVisible] = useState(true);
-
-  useEffect(() => {
-    const sync = () => setVisible(document.visibilityState === "visible");
-    sync();
-    document.addEventListener("visibilitychange", sync);
-    return () => document.removeEventListener("visibilitychange", sync);
-  }, []);
-
-  return visible;
-}
 
 /**
  * Compact, ambient cousin of examples/elevated-demo.tsx's `Ladder` — the

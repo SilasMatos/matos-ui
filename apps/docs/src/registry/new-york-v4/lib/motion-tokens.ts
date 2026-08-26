@@ -4,58 +4,93 @@ import type { Variants } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 /**
- * Three timing/character tiers, not just three speeds.
+ * Five timing/character tiers, not five speeds.
  *
  * - fast: micro-feedback: toggles, checkboxes, single-step surface lifts.
- * - moderate: critically damped (bounce: 0). Same perceived speed as a
- *   bouncier tier, but lands exactly with no overshoot; useful for panels that
- *   must settle precisely: dropdowns, tabs, drawers, select menus, and
- *   merged-selection backgrounds.
- * - slow: dialogs, sheets, and anything travelling far enough that a touch of
- *   overshoot (bounce: 0.12) reads as alive rather than sluggish.
+ * - moderate: dropdowns, tabs, drawers, select menus, and merged-selection
+ *   backgrounds — panels that have to settle precisely where they were aimed.
+ * - slow: dialogs, sheets, and anything travelling far enough that a little
+ *   overshoot reads as alive rather than sluggish.
  * - morph: shape, not distance. For a `layout` animation where width, height
  *   and border-radius change together — the element becoming a different
  *   thing, rather than the same thing arriving. The other tiers are calibrated
  *   for a panel translating a few pixels while it fades; a box crossing 200px
- *   of width at those durations reads as a snap. Bounce is low for the same
+ *   of width at those timings reads as a snap. Bounce stays low for the same
  *   reason: overshoot on a large dimension change reads as unstable rather
  *   than alive. Like playful, it is never reached through motionForOffset.
- * - playful: a character tier, not a fourth speed. The bounce (0.4) is loud on
+ * - playful: a character tier, not a sixth speed. The bounce (0.45) is loud on
  *   purpose, for the one-off moment worth celebrating: a deploy that finished,
  *   a goal that was hit. It is never reached through motionForOffset — a
  *   component opts into it by hand, so no ordinary overlay turns festive by
  *   accident.
+ *
+ * ## Why `visualDuration` and not `duration`
+ *
+ * A spring's `duration` covers the whole animation *including* the settling
+ * tail, and the tail is the part nobody perceives as travel. Calibrating on it
+ * means every tier lands visually earlier than its own number claims — so a
+ * scale that reads as reasonable in the source is systematically faster than
+ * that on screen, and the discrepancy grows with bounce.
+ *
+ * `visualDuration` is the time to visual arrival, with the tail falling after
+ * it. It is the number a reader's eye actually experiences, which makes it the
+ * only one of the two worth tuning by feel. It also composes with time-based
+ * animations: the CSS custom properties a dozen components derive from these
+ * tiers (`--motion-duration` and friends, driving Base UI's CSS enter/exit)
+ * are plain durations, and pairing a CSS transition with a spring's *total*
+ * duration is how the two end up visibly out of step.
+ *
+ * `visualDuration` overrides `duration` when both are set, so these tiers
+ * deliberately carry only the one field — the other would be dead weight that
+ * looks authoritative.
+ *
+ * ## Why nothing is critically damped any more
+ *
+ * `fast` and `moderate` used to sit at `bounce: 0`, on the reasoning that a
+ * panel which must land exactly should not overshoot. The reasoning was right
+ * and the value was too literal: zero bounce plus a very short duration is the
+ * recipe for movement that reads as a state swap rather than a transition —
+ * mechanical, and with no deceleration for the eye to follow.
+ *
+ * A small bounce (0.10–0.15) still has no perceptible overshoot at these
+ * distances; what it buys is the organic slow-down at the end. If a specific
+ * panel ever reads as unstable, take *that* tier back to 0 rather than the
+ * pair of them.
+ *
+ * The `exit` durations are plain tweens (not springs — nothing needs character
+ * on the way out) held at roughly 70% of their tier's entrance, which is the
+ * ratio the previous scale already used.
  */
 export const spring = {
   fast: {
     type: "spring" as const,
-    duration: 0.08,
-    bounce: 0,
-    exit: { duration: 0.06 },
+    visualDuration: 0.15,
+    bounce: 0.1,
+    exit: { duration: 0.1 },
   },
   moderate: {
     type: "spring" as const,
-    duration: 0.16,
-    bounce: 0,
-    exit: { duration: 0.12 },
+    visualDuration: 0.28,
+    bounce: 0.15,
+    exit: { duration: 0.2 },
   },
   slow: {
     type: "spring" as const,
-    duration: 0.24,
-    bounce: 0.12,
-    exit: { duration: 0.16 },
+    visualDuration: 0.42,
+    bounce: 0.2,
+    exit: { duration: 0.3 },
   },
   morph: {
     type: "spring" as const,
-    duration: 0.52,
-    bounce: 0.06,
-    exit: { duration: 0.3 },
+    visualDuration: 0.75,
+    bounce: 0.12,
+    exit: { duration: 0.52 },
   },
   playful: {
     type: "spring" as const,
-    duration: 0.32,
-    bounce: 0.4,
-    exit: { duration: 0.2 },
+    visualDuration: 0.5,
+    bounce: 0.45,
+    exit: { duration: 0.35 },
   },
 } as const;
 

@@ -74,6 +74,23 @@
       }
     ]
   },
+  "foundations": {
+    "badge": "Fundações",
+    "title": "Profundidade e ritmo, como tokens",
+    "subtitle": "Os dois sistemas por trás de todo componente do registry. Os dois estão rodando nesta página agora.",
+    "surface": {
+      "eyebrow": "Surface philosophy",
+      "title": "Elevação que aninha",
+      "body": "Cada componente lê o substrato onde está e sobe a partir dele — popovers, diálogos e menus continuam legíveis em qualquer profundidade.",
+      "link": "Ler a filosofia"
+    },
+    "motion": {
+      "eyebrow": "Motion tokens",
+      "title": "Cinco caracteres, uma distância",
+      "body": "Timing não é escolha por componente — é um token, ligado à profundidade.",
+      "link": "Ler os motion tokens"
+    }
+  },
   "scrollCards": {
     "badge": "Estilizado por design",
     "title": "Como os componentes do Matos UI ganham forma",

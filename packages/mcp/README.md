@@ -16,12 +16,19 @@ This server is **read-only and side-effect-free**:
 - The only configurable input is `MATOS_UI_REGISTRY_URL`, which points the server at a registry base; it is never used to read secrets.
 
 > **Status:** not published yet. `matos-ui.com` is currently behind the `dev`
-> branch (missing blocks, palettes, several components), so the registry-backed
-> tools (`list_components`, `list_blocks`, `list_palettes`, `get_item`,
-> `get_install_command`) require `MATOS_UI_REGISTRY_URL` to be set explicitly —
-> there is no default, so they fail clearly instead of silently serving stale
-> data. A `https://matos-ui.com` default will come back once production is
-> back in sync with `dev`, ahead of the npm publish.
+> branch — 94 registry items against `dev`'s 127, missing `elevated` itself
+> along with four blocks, eleven components and twelve themes. So the
+> registry-backed tools (`list_components`, `list_blocks`, `list_palettes`,
+> `get_item`, `get_install_command`, `find_component_for`) require
+> `MATOS_UI_REGISTRY_URL` to be set explicitly — there is no default, so they
+> fail clearly instead of silently serving stale data. `get_theme_options`
+> degrades rather than fails: its radius presets come from the docs source and
+> still answer, its palettes half reports the same error.
+>
+> That leaves `get_surface_philosophy` and `get_motion_guidance` as the only
+> two tools that work unconfigured, since they read from GitHub rather than
+> from a deployment. A `https://matos-ui.com` default will come back once
+> production is back in sync with `dev`, ahead of the npm publish.
 
 ## Install
 

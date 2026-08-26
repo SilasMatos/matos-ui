@@ -100,9 +100,9 @@ function useSheetPanelMotionContext() {
 
 function getMotionStyle(style?: CSSProperties): CSSProperties {
   return {
-    "--motion-duration": `${sheetPanelMotion.duration}s`,
+    "--motion-duration": `${sheetPanelMotion.visualDuration}s`,
     "--motion-exit-duration": `${sheetPanelMotion.exit.duration}s`,
-    "--motion-fast-duration": `${spring.fast.duration}s`,
+    "--motion-fast-duration": `${spring.fast.visualDuration}s`,
     ...style,
   } as CSSProperties;
 }

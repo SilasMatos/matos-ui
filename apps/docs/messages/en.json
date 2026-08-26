@@ -74,6 +74,23 @@
       }
     ]
   },
+  "foundations": {
+    "badge": "Foundations",
+    "title": "Depth and timing, as tokens",
+    "subtitle": "The two systems every component in the registry is built on. Both are running on this page right now.",
+    "surface": {
+      "eyebrow": "Surface philosophy",
+      "title": "Elevation that nests",
+      "body": "Each component reads the substrate it sits on and lifts from there — popovers, dialogs and menus stay legible at any depth.",
+      "link": "Read the philosophy"
+    },
+    "motion": {
+      "eyebrow": "Motion tokens",
+      "title": "Five characters, one distance",
+      "body": "Timing isn't a per-component choice — it's a token, tied to depth.",
+      "link": "Read the motion tokens"
+    }
+  },
   "scrollCards": {
     "badge": "Pillars",
     "title": "Secrets Behind Success",

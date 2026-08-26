@@ -32,7 +32,7 @@ function useDropdownMenuMotionContext() {
 
 function getMotionStyle(style?: CSSProperties): CSSProperties {
   return {
-    "--motion-duration": `${dropdownMotion.duration}s`,
+    "--motion-duration": `${dropdownMotion.visualDuration}s`,
     "--motion-exit-duration": `${dropdownMotion.exit.duration}s`,
     ...style,
   } as CSSProperties;

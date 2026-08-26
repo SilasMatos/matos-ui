@@ -81,7 +81,7 @@ function useCommandDialogMotionContext() {
 
 function getMotionStyle(style?: CSSProperties): CSSProperties {
   return {
-    "--motion-duration": `${commandDialogMotion.duration}s`,
+    "--motion-duration": `${commandDialogMotion.visualDuration}s`,
     "--motion-exit-duration": `${commandDialogMotion.exit.duration}s`,
     ...style,
   } as CSSProperties;

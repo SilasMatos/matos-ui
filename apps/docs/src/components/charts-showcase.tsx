@@ -147,7 +147,7 @@ const categorySelectItems = chartCategories.map((category) => ({
 
 function getCategorySelectMotionStyle(): CSSProperties {
   return {
-    "--motion-duration": `${categorySelectMotion.duration}s`,
+    "--motion-duration": `${categorySelectMotion.visualDuration}s`,
     "--motion-exit-duration": `${categorySelectMotion.exit.duration}s`,
   } as CSSProperties;
 }

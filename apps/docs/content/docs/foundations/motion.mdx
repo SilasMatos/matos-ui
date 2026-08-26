@@ -20,9 +20,9 @@ nothing feels like it belongs to the same surface.
 
 Three pieces: **tiers**, an **elevation mapping**, and **entrance helpers**.
 
-- **Tiers** — five springs, named by character rather than by number.
-  `fast`/`moderate` are critically damped, `slow` carries a little overshoot,
-  `morph` is for shape rather than distance, and `playful` is loud on purpose.
+- **Tiers** — five springs, named by character rather than by number. Each
+  carries a little overshoot, `slow` a bit more, `morph` is for shape rather
+  than distance, and `playful` is loud on purpose.
 - **`motionForOffset`** — the same `offset` an `Elevated` surface already
   declares picks the tier. How far a panel travels away from its substrate
   decides how it moves, so a component never chooses twice.
@@ -34,31 +34,44 @@ Motion and elevation are the same story told twice — see
 
 ## The tiers
 
-| Tier       | Duration | Bounce | For                                                                 |
-| ---------- | -------- | ------ | ------------------------------------------------------------------- |
-| `fast`     | `0.08s`  | `0`    | Micro-feedback: toggles, checkboxes, a single-step surface lift.     |
-| `moderate` | `0.16s`  | `0`    | Panels that must land exactly: dropdowns, tabs, drawers, selects.    |
-| `slow`     | `0.24s`  | `0.12` | Dialogs and sheets — far enough that a touch of overshoot reads alive. |
-| `morph`    | `0.52s`  | `0.06` | Shape, not distance: a `layout` animation changing width, height and radius together. |
-| `playful`  | `0.32s`  | `0.4`  | A tone, not a speed. Opt in by hand, never reached by offset.        |
+| Tier       | Visual duration | Bounce | For                                                                 |
+| ---------- | --------------- | ------ | ------------------------------------------------------------------- |
+| `fast`     | `0.15s`         | `0.1`  | Micro-feedback: toggles, checkboxes, a single-step surface lift.     |
+| `moderate` | `0.28s`         | `0.15` | Panels that must land exactly: dropdowns, tabs, drawers, selects.    |
+| `slow`     | `0.42s`         | `0.2`  | Dialogs and sheets — far enough that a touch of overshoot reads alive. |
+| `morph`    | `0.75s`         | `0.12` | Shape, not distance: a `layout` animation changing width, height and radius together. |
+| `playful`  | `0.5s`          | `0.45` | A tone, not a speed. Opt in by hand, never reached by offset.        |
+
+The column says **visual** duration, and the distinction is the whole reason
+these numbers are trustworthy. A spring's `duration` covers the settling tail as
+well as the travel, and nobody perceives the tail — so a tier tuned on
+`duration` always lands earlier than its own number claims. `visualDuration` is
+the time to visual arrival; the tail falls after it. Framer takes either, and
+`visualDuration` wins when both are set.
 
 `moderate` is not simply "faster than slow". Both land at roughly the same
-perceived speed; the difference is that `moderate` has `bounce: 0`, so a select
-menu settles precisely under the cursor instead of overshooting the item the
-user is already reaching for.
+perceived speed; the difference is where they end. `moderate`'s bounce is small
+enough to have no visible overshoot at the distances a panel travels, so a
+select menu still settles under the cursor rather than past the item the user is
+already reaching for — it just decelerates into place instead of stopping dead.
+Nothing in the scale is critically damped any more: `bounce: 0` on a short
+transition is what makes movement read as a state swap rather than as movement.
+If one specific panel ever reads as unstable, take that tier to `0`, not the
+pair of them.
 
 `morph` is the odd one out: it is the only tier that is longer than the ones
 above it, because it is the only one measuring a different thing. The others
 move an element that stays itself — a panel sliding four pixels while it fades.
 `morph` is for an element *becoming* something else, where the box crosses
-hundreds of pixels of width and height at once. At `slow`'s 0.24s that reads as
+hundreds of pixels of width and height at once. At `slow`'s 0.42s that reads as
 a snap, and at `slow`'s bounce the far edge of a wide box wobbles visibly after
 it lands. It is opt-in by hand: `motionForOffset` never returns it, because how
 far a surface sits above its substrate says nothing about whether it is
 changing shape.
 
-Each tier carries its own `exit.duration`, shorter than its entrance — an
-overlay leaving should get out of the way faster than it arrived.
+Each tier carries its own `exit.duration` — a plain tween, held at roughly 70%
+of its entrance. Nothing needs character on the way out, and an overlay leaving
+should get out of the way faster than it arrived.
 
 ## Installation
 
@@ -111,9 +124,15 @@ focus rings, colour changes — the same character lives in two theme variables:
 }
 ```
 
-The CSS durations run longer than their spring counterparts on purpose: a plain
-transition has no snap-then-settle shape of its own, so it needs the extra time
-to *read* as equally smooth. Because `--default-transition-*` is set, any bare
+These two match `spring.moderate` and `spring.slow` exactly, and that is a
+result rather than a coincidence: both sides were tuned by feel, independently,
+and both landed on 280ms and 420ms. The CSS pair got there first — which is the
+clearest evidence available that the spring scale, back when it read 0.16s and
+0.24s, was calibrated on the wrong number. Keep them in step: a tier and its CSS
+counterpart drifting apart is a hover fill and the panel it sits in visibly
+disagreeing about how fast this interface moves.
+
+Because `--default-transition-*` is set, any bare
 `transition-colors` or `transition-opacity` utility already inherits this — you
 only reach for `duration-moderate ease-spring` explicitly when a rule sets its
 own timing.

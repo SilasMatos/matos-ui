@@ -33,7 +33,7 @@ function useTooltipMotionContext() {
 
 function getMotionStyle(style?: CSSProperties): CSSProperties {
   return {
-    "--motion-duration": `${tooltipMotion.duration}s`,
+    "--motion-duration": `${tooltipMotion.visualDuration}s`,
     "--motion-exit-duration": `${tooltipMotion.exit.duration}s`,
     ...style,
   } as CSSProperties;

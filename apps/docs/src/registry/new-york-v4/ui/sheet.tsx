@@ -32,7 +32,7 @@ function useSheetMotionContext() {
 
 function getMotionStyle(style?: CSSProperties): CSSProperties {
   return {
-    "--motion-duration": `${sheetMotion.duration}s`,
+    "--motion-duration": `${sheetMotion.visualDuration}s`,
     "--motion-exit-duration": `${sheetMotion.exit.duration}s`,
     ...style,
   } as CSSProperties;

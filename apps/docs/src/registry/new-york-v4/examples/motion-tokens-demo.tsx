@@ -28,7 +28,7 @@ const TIERS: {
   {
     name: "moderate",
     tier: spring.moderate,
-    use: "Dropdowns, tabs, drawers — critically damped, lands exactly.",
+    use: "Dropdowns, tabs, drawers — decelerates into place, no visible overshoot.",
   },
   {
     name: "slow",
@@ -91,7 +91,7 @@ function TierRow({
       <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
         <span className="font-mono text-foreground text-xs">spring.{name}</span>
         <span className="font-mono text-[10px] text-muted-foreground tabular-nums">
-          {tier.duration}s · bounce {tier.bounce}
+          {tier.visualDuration}s · bounce {tier.bounce}
         </span>
       </div>
 
@@ -103,7 +103,14 @@ function TierRow({
         <motion.div
           className="absolute top-1/2 left-0 grid size-7 -translate-y-1/2 place-items-center rounded-full bg-primary text-[10px] font-medium text-primary-foreground"
           animate={{ x: played ? travel : 0 }}
-          transition={reduced ? { duration: 0 } : tier}
+          // The return leg is a cut, not an animation. `animate` alone would
+          // send the knob back to 0 on the *tier's own spring*, and the two
+          // frames the reset holds for are a fraction of that — so the knob
+          // would retreat a tenth of the rail and spring back from there,
+          // demonstrating a twelfth of the distance it claims to cross. The
+          // double requestAnimationFrame is what buys two committed renders;
+          // this is what makes the first of them land at zero.
+          transition={reduced || !played ? { duration: 0 } : tier}
         >
           {name.charAt(0).toUpperCase()}
         </motion.div>
@@ -166,8 +173,9 @@ export default function MotionTokensDemo() {
 
   const replay = () => {
     setPlayed(false);
-    // One frame at rest before travelling again, otherwise the spring is
-    // retargeted mid-flight and never shows its full character.
+    // One frame at rest before travelling again, otherwise React batches the
+    // two updates into no change at all. Landing that frame *at* zero is the
+    // transition override on the knob, not this.
     requestAnimationFrame(() => requestAnimationFrame(() => setPlayed(true)));
   };
 

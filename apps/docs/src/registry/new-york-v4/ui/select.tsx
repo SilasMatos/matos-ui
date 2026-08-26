@@ -78,7 +78,7 @@ const selectMotion = motionForOffset(2);
 
 function getMotionStyle(style?: CSSProperties): CSSProperties {
   return {
-    "--motion-duration": `${selectMotion.duration}s`,
+    "--motion-duration": `${selectMotion.visualDuration}s`,
     "--motion-exit-duration": `${selectMotion.exit.duration}s`,
     ...style,
   } as CSSProperties;

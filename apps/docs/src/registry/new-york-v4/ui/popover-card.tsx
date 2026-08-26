@@ -84,7 +84,7 @@ function usePopoverCardMotionContext() {
 
 function getMotionStyle(style?: CSSProperties): CSSProperties {
   return {
-    "--motion-duration": `${popoverCardMotion.duration}s`,
+    "--motion-duration": `${popoverCardMotion.visualDuration}s`,
     "--motion-exit-duration": `${popoverCardMotion.exit.duration}s`,
     ...style,
   } as CSSProperties;

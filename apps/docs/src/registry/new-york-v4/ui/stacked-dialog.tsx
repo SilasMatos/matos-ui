@@ -175,9 +175,9 @@ function getMotionStyle(
   style?: CSSProperties,
 ): CSSProperties {
   return {
-    "--stacked-dialog-duration": `${tier.duration}s`,
+    "--stacked-dialog-duration": `${tier.visualDuration}s`,
     "--stacked-dialog-exit-duration": `${tier.exit.duration}s`,
-    "--stacked-dialog-dim-duration": `${spring.fast.duration}s`,
+    "--stacked-dialog-dim-duration": `${spring.fast.visualDuration}s`,
     ...style,
   } as CSSProperties;
 }

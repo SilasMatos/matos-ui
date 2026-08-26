@@ -52,7 +52,7 @@ const panelVariants: Variants = {
 };
 
 const motionTabsStyle = {
-  "--motion-duration": `${spring.fast.duration}s`,
+  "--motion-duration": `${spring.fast.visualDuration}s`,
 } as CSSProperties;
 
 // The panel animates *and* participates in the elevation ladder, so it needs to

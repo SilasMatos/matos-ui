@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 
+import { FoundationsSection } from "@/components/foundations-section";
 import { HeroSection } from "@/components/hero-section";
 import { MatosAspectsSection } from "@/components/matos-aspects-section";
 import { ScrollCardsSection } from "@/components/scroll-cards-section";
@@ -39,6 +40,8 @@ export default async function HomePage({ params }: Props) {
   return (
     <>
       <HeroSection componentCount={componentCount} />
+
+      <FoundationsSection />
 
       <ScrollCardsSection />
       <MatosAspectsSection />
