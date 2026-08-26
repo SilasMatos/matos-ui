@@ -20,9 +20,9 @@ nothing feels like it belongs to the same surface.
 
 Three pieces: **tiers**, an **elevation mapping**, and **entrance helpers**.
 
-- **Tiers** — four springs, named by character rather than by number.
+- **Tiers** — five springs, named by character rather than by number.
   `fast`/`moderate` are critically damped, `slow` carries a little overshoot,
-  `playful` is loud on purpose.
+  `morph` is for shape rather than distance, and `playful` is loud on purpose.
 - **`motionForOffset`** — the same `offset` an `Elevated` surface already
   declares picks the tier. How far a panel travels away from its substrate
   decides how it moves, so a component never chooses twice.
@@ -39,12 +39,23 @@ Motion and elevation are the same story told twice — see
 | `fast`     | `0.08s`  | `0`    | Micro-feedback: toggles, checkboxes, a single-step surface lift.     |
 | `moderate` | `0.16s`  | `0`    | Panels that must land exactly: dropdowns, tabs, drawers, selects.    |
 | `slow`     | `0.24s`  | `0.12` | Dialogs and sheets — far enough that a touch of overshoot reads alive. |
-| `playful`  | `0.32s`  | `0.4`  | A tone, not a fourth speed. Opt in by hand, never reached by offset. |
+| `morph`    | `0.52s`  | `0.06` | Shape, not distance: a `layout` animation changing width, height and radius together. |
+| `playful`  | `0.32s`  | `0.4`  | A tone, not a speed. Opt in by hand, never reached by offset.        |
 
 `moderate` is not simply "faster than slow". Both land at roughly the same
 perceived speed; the difference is that `moderate` has `bounce: 0`, so a select
 menu settles precisely under the cursor instead of overshooting the item the
 user is already reaching for.
+
+`morph` is the odd one out: it is the only tier that is longer than the ones
+above it, because it is the only one measuring a different thing. The others
+move an element that stays itself — a panel sliding four pixels while it fades.
+`morph` is for an element *becoming* something else, where the box crosses
+hundreds of pixels of width and height at once. At `slow`'s 0.24s that reads as
+a snap, and at `slow`'s bounce the far edge of a wide box wobbles visibly after
+it lands. It is opt-in by hand: `motionForOffset` never returns it, because how
+far a surface sits above its substrate says nothing about whether it is
+changing shape.
 
 Each tier carries its own `exit.duration`, shorter than its entrance — an
 overlay leaving should get out of the way faster than it arrived.
@@ -244,8 +255,9 @@ return (
 
 ### `spring`
 
-Four tiers, each a framer-motion `Transition` plus an `exit` duration.
-`spring.fast`, `spring.moderate`, `spring.slow`, `spring.playful`.
+Five tiers, each a framer-motion `Transition` plus an `exit` duration.
+`spring.fast`, `spring.moderate`, `spring.slow`, `spring.morph`,
+`spring.playful`.
 
 ### `motionForOffset`
 

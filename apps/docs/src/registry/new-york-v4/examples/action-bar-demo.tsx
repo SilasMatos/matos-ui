@@ -31,9 +31,9 @@ const toneMeta: Record<
     icon: <Info className="size-4 text-primary" aria-hidden />,
   },
   destructive: {
-    subject: "Meu Workspace",
-    confirmLabel: "Excluir",
-    confirmLabelLoading: "Excluindo...",
+    subject: "My Workspace",
+    confirmLabel: "Delete",
+    confirmLabelLoading: "Deleting...",
     icon: <Trash2 className="size-4 text-destructive" aria-hidden />,
   },
   success: {
@@ -59,7 +59,7 @@ const toneMeta: Record<
 };
 
 export default function ActionBarDemo() {
-  const [isEnabled, setIsEnabled] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [tone, setTone] = useState<Tone>("destructive");
   const current = toneMeta[tone];
@@ -69,20 +69,20 @@ export default function ActionBarDemo() {
 
     window.setTimeout(() => {
       setIsLoading(false);
-      setIsEnabled(false);
+      setIsOpen(false);
     }, 1200);
   }
 
   return (
-    <div className="relative  space-y-4">
+    <div className="relative space-y-4">
       <div className="flex flex-wrap gap-2">
         <Button
           type="button"
           variant="outline"
           size="sm"
-          onClick={() => setIsEnabled((v) => !v)}
+          onClick={() => setIsOpen((v) => !v)}
         >
-          {isEnabled ? "Desativar" : "Ativar"} Action Bar
+          {isOpen ? "Hide" : "Show"} Action Bar
         </Button>
         {toneOptions.map((option) => (
           <Button
@@ -92,7 +92,7 @@ export default function ActionBarDemo() {
             size="sm"
             onClick={() => {
               setTone(option.tone);
-              setIsEnabled(true);
+              setIsOpen(true);
             }}
           >
             {option.label}
@@ -100,21 +100,24 @@ export default function ActionBarDemo() {
         ))}
       </div>
 
-      {isEnabled && (
-        <ActionBar
-          placement="bottomCenter"
-          tone={tone}
-          subject={current.subject}
-          icon={current.icon}
-          confirmLabel={current.confirmLabel}
-          confirmLabelLoading={current.confirmLabelLoading}
-          actions={{
-            onCancel: () => setIsEnabled(false),
-            onConfirm: handleConfirm,
-            isLoading,
-          }}
-        />
-      )}
+      {/* Rendered unconditionally and driven by `open`: an exit animation needs
+          the bar to outlive the state change that dismisses it, which a
+          `{isOpen && ...}` guard does not allow. It unmounts itself once the
+          bar has finished sliding back down. */}
+      <ActionBar
+        open={isOpen}
+        placement="bottomCenter"
+        tone={tone}
+        subject={current.subject}
+        icon={current.icon}
+        confirmLabel={current.confirmLabel}
+        confirmLabelLoading={current.confirmLabelLoading}
+        actions={{
+          onCancel: () => setIsOpen(false),
+          onConfirm: handleConfirm,
+          isLoading,
+        }}
+      />
     </div>
   );
 }

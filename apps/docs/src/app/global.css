@@ -383,8 +383,9 @@
    to opt a link-style variant out entirely, without touching the timing. */
 @utility hover-lift {
   --lift: 2px;
-  transition-property: translate, scale, box-shadow, background-color,
-    border-color, border-radius, color, opacity;
+  transition-property:
+    translate, scale, box-shadow, background-color, border-color, border-radius,
+    color, opacity;
   transition-duration: var(--duration-lift);
   transition-timing-function: var(--ease-lift);
 

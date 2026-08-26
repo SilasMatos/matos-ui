@@ -36,6 +36,11 @@ const TIERS: {
     use: "Dialogs and sheets, travelling far enough to earn a little overshoot.",
   },
   {
+    name: "morph",
+    tier: spring.morph,
+    use: "Shape, not distance — a layout animation changing width and height at once. Shown here at the same travel as the rest only so its character is comparable.",
+  },
+  {
     name: "playful",
     tier: spring.playful,
     use: "A tone, not a speed. Opt in by hand for the one moment worth celebrating.",
@@ -170,9 +175,9 @@ export default function MotionTokensDemo() {
     <div className="w-full max-w-2xl space-y-4">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <p className="font-medium text-foreground text-sm">Four tiers</p>
+          <p className="font-medium text-foreground text-sm">Five tiers</p>
           <p className="text-muted-foreground text-xs">
-            Same distance, four characters. Watch them land.
+            Same distance, five characters. Watch them land.
           </p>
         </div>
         <Button variant="outline" size="sm" onClick={replay}>

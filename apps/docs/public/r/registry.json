@@ -358,13 +358,15 @@
       "name": "action-bar",
       "type": "registry:ui",
       "dependencies": [
+        "framer-motion",
         "lucide-react",
         "tailwind-merge",
         "tailwind-variants"
       ],
       "registryDependencies": [
         "button",
-        "elevated"
+        "elevated",
+        "motion-tokens"
       ],
       "files": [
         {

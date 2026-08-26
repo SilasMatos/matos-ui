@@ -34,7 +34,10 @@
     "description": "Copie o código pro seu projeto. Estilizado, acessível e animado por padrão.",
     "browseComponents": "Ver componentes",
     "viewOnGitHub": "Ver no GitHub",
-    "trust": "Feito com Framer Motion e Base UI. Distribuído via shadcn."
+    "trust": "Feito com Framer Motion e Base UI. Distribuído via shadcn.",
+    "showcaseSearch": "Buscar componentes…",
+    "showcaseAction": "Começar",
+    "showcaseMetricLabel": "Adoção"
   },
   "footer": {
     "openSource": "Open Source",

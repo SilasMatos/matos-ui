@@ -34,7 +34,10 @@
     "description": "Copy the code into your project. Styled, accessible, and animated by default.",
     "browseComponents": "Browse Components",
     "viewOnGitHub": "View on GitHub",
-    "trust": "Built with Framer Motion and Base UI. Distributed via shadcn."
+    "trust": "Built with Framer Motion and Base UI. Distributed via shadcn.",
+    "showcaseSearch": "Search components…",
+    "showcaseAction": "Get started",
+    "showcaseMetricLabel": "Adoption"
   },
   "footer": {
     "openSource": "Open Source",

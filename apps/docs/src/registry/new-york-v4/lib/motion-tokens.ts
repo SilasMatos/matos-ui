@@ -13,6 +13,13 @@ import { useCallback, useEffect, useRef, useState } from "react";
  *   merged-selection backgrounds.
  * - slow: dialogs, sheets, and anything travelling far enough that a touch of
  *   overshoot (bounce: 0.12) reads as alive rather than sluggish.
+ * - morph: shape, not distance. For a `layout` animation where width, height
+ *   and border-radius change together — the element becoming a different
+ *   thing, rather than the same thing arriving. The other tiers are calibrated
+ *   for a panel translating a few pixels while it fades; a box crossing 200px
+ *   of width at those durations reads as a snap. Bounce is low for the same
+ *   reason: overshoot on a large dimension change reads as unstable rather
+ *   than alive. Like playful, it is never reached through motionForOffset.
  * - playful: a character tier, not a fourth speed. The bounce (0.4) is loud on
  *   purpose, for the one-off moment worth celebrating: a deploy that finished,
  *   a goal that was hit. It is never reached through motionForOffset — a
@@ -37,6 +44,12 @@ export const spring = {
     duration: 0.24,
     bounce: 0.12,
     exit: { duration: 0.16 },
+  },
+  morph: {
+    type: "spring" as const,
+    duration: 0.52,
+    bounce: 0.06,
+    exit: { duration: 0.3 },
   },
   playful: {
     type: "spring" as const,
@@ -66,8 +79,9 @@ export const exitFallbackMs = (tier: SpringTier) =>
  * Mirrors the conventional Elevated offsets so a component that already knows
  * its offset gets the right tier without a second manual choice.
  *
- * Deliberately maps onto fast/moderate/slow only. `spring.playful` is a tone,
- * not a distance, so nothing here can produce it.
+ * Deliberately maps onto fast/moderate/slow only. `spring.playful` is a tone
+ * and `spring.morph` is a kind of change, not a distance, so nothing here can
+ * produce either.
  */
 export function motionForOffset(offset: number): SpringTier {
   if (offset <= 1) return spring.fast;

@@ -4,7 +4,7 @@ import { motion, type Variants } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-import { HeroElevationLadder } from "@/components/hero-elevation-ladder";
+import { HeroSurfaceShowcase } from "@/components/hero-surface-showcase";
 import { Link } from "@/i18n/navigation";
 import { siteConfig } from "@/lib/config";
 import { Button } from "@/registry/new-york-v4/ui/button";
@@ -110,8 +110,8 @@ export function HeroSection({ componentCount }: { componentCount: number }) {
           {t("trust")}
         </motion.p>
 
-        <motion.div variants={fadeUp} className="mt-2">
-          <HeroElevationLadder />
+        <motion.div variants={fadeUp} className="mt-2 w-full">
+          <HeroSurfaceShowcase />
         </motion.div>
       </motion.div>
     </section>

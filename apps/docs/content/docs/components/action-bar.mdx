@@ -25,11 +25,11 @@ description: Fixed action bar for confirmation flows, destructive actions, loadi
 
 <Step>Install the following dependencies:</Step>
 
-<CodeBlockCommand command="npm install lucide-react tailwind-merge tailwind-variants" />
+<CodeBlockCommand command="npm install framer-motion lucide-react tailwind-merge tailwind-variants" />
 
-<Step>Install the registry dependency:</Step>
+<Step>Install the registry dependencies:</Step>
 
-<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/button.json" />
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/button.json https://matos-ui.com/r/elevated.json https://matos-ui.com/r/motion-tokens.json" />
 
 <Step>Copy and paste the following code into your project.</Step>
 
@@ -51,6 +51,7 @@ import { ActionBar } from '@/components/matos-ui/action-bar'
 
 ```tsx
 <ActionBar
+  open={isOpen}
   subject="My Workspace"
   tone="destructive"
   placement="bottomCenter"
@@ -62,16 +63,24 @@ import { ActionBar } from '@/components/matos-ui/action-bar'
 />
 ```
 
+The bar rises into place from the bottom edge and leaves the same way. Keep it
+mounted and drive it with `open` to get both halves — it removes itself from the
+DOM once the exit has run. Mounting it behind `{isOpen && <ActionBar />}` still
+works and still animates in, but the bar is torn out of the tree the moment the
+condition flips, so there is nothing left to animate out.
+
 ## Reference
 
 ### Props
 
-| Prop        | Type                                                                    | Default          |
-| ----------- | ----------------------------------------------------------------------- | ---------------- |
-| `subject`   | `string`                                                                | —                |
-| `placement` | `"bottomCenter" \| "bottomRight" \| "bottomLeft"`                       | `"bottomCenter"` |
-| `tone`      | `"default" \| "destructive"`                                            | `"default"`      |
-| `size`      | `"sm" \| "md"`                                                          | `"md"`           |
-| `actions`   | `{ onConfirm: () => void; onCancel: () => void; isDeleting?: boolean }` | —                |
+| Prop        | Type                                                                  | Default          |
+| ----------- | --------------------------------------------------------------------- | ---------------- |
+| `open`      | `boolean`                                                             | `true`           |
+| `subject`   | `string`                                                              | —                |
+| `placement` | `"bottomCenter" \| "bottomRight" \| "bottomLeft"`                     | `"bottomCenter"` |
+| `tone`      | `"default" \| "destructive" \| "success" \| "warning" \| "info"`      | `"default"`      |
+| `size`      | `"sm" \| "md"`                                                        | `"md"`           |
+| `actions`   | `{ onConfirm: () => void; onCancel: () => void; isLoading?: boolean }` | —                |
 
-`ActionBar` also accepts all props from `<div>`.
+`ActionBar` also accepts all props from `<div>`, minus the native animation and
+drag handlers that framer-motion redefines on an animated element.

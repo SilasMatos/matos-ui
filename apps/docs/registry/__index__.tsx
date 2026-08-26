@@ -302,7 +302,7 @@ export const Index: Record<string, any> = {
   "action-bar": {
     name: "action-bar",
     type: "registry:ui",
-    registryDependencies: ["button", "elevated"],
+    registryDependencies: ["button", "elevated", "motion-tokens"],
     files: [
       {
         path: "src/registry/new-york-v4/ui/action-bar.tsx",
