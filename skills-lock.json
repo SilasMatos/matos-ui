@@ -7,10 +7,22 @@
 			"skillPath": "skills/12-principles-of-animation/SKILL.md",
 			"computedHash": "028c3bad9e7417460e0d2094fc0c1b9d601e56317d38c4f5d124666b06a9405b"
 		},
+		"grill-with-docs": {
+			"source": "mattpocock/skills",
+			"sourceType": "github",
+			"skillPath": "skills/engineering/grill-with-docs/SKILL.md",
+			"computedHash": "96718e0a89e48c7d76cc9759c7094a82ff34eb89ddc46a30388063fa9812356f"
+		},
 		"motion-design": {
 			"source": "lottiefiles/motion-design-skill",
 			"sourceType": "github",
 			"computedHash": "4f16f46c81f25a2a25b7a4720b7ea001e65f384b31b5b7f4b455fef87fbc9016"
+		},
+		"responsive-design": {
+			"source": "wshobson/agents",
+			"sourceType": "github",
+			"skillPath": "plugins/ui-design/skills/responsive-design/SKILL.md",
+			"computedHash": "155eff4b1bc8d867ae6bea9900c485ab1081de0b4873c1900adb66bf62466aed"
 		}
 	}
 }

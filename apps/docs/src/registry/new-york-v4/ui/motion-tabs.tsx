@@ -8,6 +8,7 @@ import {
 } from "framer-motion";
 import {
   type ComponentProps,
+  type CSSProperties,
   type KeyboardEvent,
   type ReactNode,
   useId,
@@ -17,11 +18,11 @@ import {
 import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
 
+import { spring } from "@/registry/new-york-v4/lib/motion-tokens";
+import { Elevated } from "@/registry/new-york-v4/ui/elevated";
+
 export const motionTabsVariants = tv({
-  base: [
-    "w-full overflow-hidden rounded-[1.25rem] border border-border",
-    "bg-secondary p-2 text-foreground",
-  ],
+  base: ["w-full overflow-hidden rounded-2xl p-2 text-foreground"],
   variants: {
     size: {
       sm: "max-w-[420px]",
@@ -40,15 +41,24 @@ const panelVariants: Variants = {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { duration: 0.32, ease: [0.16, 1, 0.3, 1] },
+    transition: spring.moderate,
   },
   exit: {
     opacity: 0,
     y: -4,
     scale: 0.99,
-    transition: { duration: 0.16, ease: [0.3, 0, 1, 1] },
+    transition: spring.fast,
   },
 };
+
+const motionTabsStyle = {
+  "--motion-duration": `${spring.fast.visualDuration}s`,
+} as CSSProperties;
+
+// The panel animates *and* participates in the elevation ladder, so it needs to
+// be both a motion element and an <Elevated>. Wrapping one in the other would
+// add a layout box; motion.create keeps it a single node.
+const MotionElevated = motion.create(Elevated);
 
 export type MotionTabItem = {
   value: string;
@@ -83,6 +93,7 @@ function MotionTabs({
   onValueChange,
   listClassName,
   panelClassName,
+  style,
   ...props
 }: MotionTabsProps) {
   const shouldReduceMotion = useReducedMotion();
@@ -178,9 +189,11 @@ function MotionTabs({
   }
 
   return (
-    <div
+    <Elevated
       data-slot="motion-tabs"
+      offset={1}
       className={twMerge(motionTabsVariants({ size }), className)}
+      style={{ ...motionTabsStyle, ...style }}
       {...props}
     >
       <div
@@ -188,7 +201,7 @@ function MotionTabs({
         role="tablist"
         aria-orientation="horizontal"
         className={twMerge(
-          "relative flex gap-1 overflow-x-auto rounded-xl border border-border bg-background p-1",
+          "relative flex gap-1 overflow-x-auto rounded-xl border border-border/70 bg-muted/30 p-1",
           "supports-[scrollbar-width:none]:[scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
           listClassName,
         )}
@@ -224,7 +237,7 @@ function MotionTabs({
               }
               className={twMerge(
                 "group relative flex h-10 min-w-[7.5rem] flex-1 items-center justify-center gap-2 rounded-lg px-3",
-                "text-sm font-medium outline-none transition-colors duration-200",
+                "text-sm font-medium outline-none transition-colors duration-[var(--motion-duration)]",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                 "disabled:pointer-events-none disabled:opacity-45",
                 isSelected
@@ -236,13 +249,8 @@ function MotionTabs({
                 <motion.span
                   layoutId={`${generatedId}-motion-tabs-indicator`}
                   data-slot="motion-tabs-indicator"
-                  className="absolute inset-0 rounded-lg border border-border bg-card"
-                  transition={{
-                    type: "spring",
-                    stiffness: 420,
-                    damping: 34,
-                    mass: 0.8,
-                  }}
+                  className="absolute inset-0 rounded-lg border border-border bg-background shadow-xs"
+                  transition={spring.fast}
                 />
               ) : null}
 
@@ -258,9 +266,9 @@ function MotionTabs({
                           rotate: isSelected ? 0 : -2,
                         }
                   }
-                  transition={{ duration: 0.2, ease: "easeOut" }}
+                  transition={spring.fast}
                   className={twMerge(
-                    "relative z-10 flex items-center text-muted-foreground transition-colors duration-200",
+                    "relative z-10 flex items-center text-muted-foreground transition-colors duration-[var(--motion-duration)]",
                     "group-data-[active]:text-primary [&_svg]:size-4",
                   )}
                 >
@@ -281,7 +289,7 @@ function MotionTabs({
                           opacity: isSelected ? 1 : 0.72,
                         }
                   }
-                  transition={{ duration: 0.18, ease: "easeOut" }}
+                  transition={spring.fast}
                   className="relative z-10 rounded-full border border-border bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground"
                 >
                   {item.badge}
@@ -294,8 +302,9 @@ function MotionTabs({
 
       {selectedItem?.content ? (
         <AnimatePresence mode="wait" initial={false}>
-          <motion.div
+          <MotionElevated
             key={selectedItem.value}
+            offset={1}
             data-slot="motion-tabs-panel"
             role="tabpanel"
             id={`${generatedId}-${toDomId(selectedItem.value)}-panel`}
@@ -306,10 +315,7 @@ function MotionTabs({
             initial={shouldReduceMotion ? false : "hidden"}
             animate="visible"
             exit={shouldReduceMotion ? undefined : "exit"}
-            className={twMerge(
-              "mt-2 rounded-xl border border-border bg-background p-4",
-              panelClassName,
-            )}
+            className={twMerge("mt-2 rounded-xl p-4", panelClassName)}
           >
             {selectedItem.description ? (
               <p
@@ -320,10 +326,10 @@ function MotionTabs({
               </p>
             ) : null}
             {selectedItem.content}
-          </motion.div>
+          </MotionElevated>
         </AnimatePresence>
       ) : null}
-    </div>
+    </Elevated>
   );
 }
 

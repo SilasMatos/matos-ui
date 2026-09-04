@@ -5,7 +5,12 @@
  * Example: "/docs/components/otp-input"
  */
 export const NEW_COMPONENTS = new Set<string>([
+  "/docs/components/bouncy-toggle",
+  "/docs/components/floating-action-menu",
+  "/docs/components/magnetic-card",
   "/docs/components/otp-input",
+  "/docs/components/physics-counter",
   "/docs/components/popover-card",
   "/docs/components/sheet-painel",
+  "/docs/components/spring-slider",
 ]);

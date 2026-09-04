@@ -1,0 +1,37 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "palette-fuchsia",
+  "cssVars": {
+    "light": {
+      "primary": "oklch(0.56 0.24 330)",
+      "primary-foreground": "oklch(0.985 0 0)",
+      "accent": "oklch(0.97 0.025 330)",
+      "accent-foreground": "oklch(0.35 0.15 330)",
+      "ring": "oklch(0.56 0.24 330 / 0.5)",
+      "chart-1": "oklch(0.56 0.24 330)",
+      "chart-2": "oklch(0.63 0.2 345)",
+      "chart-3": "oklch(0.68 0.17 315)",
+      "chart-4": "oklch(0.74 0.13 300)",
+      "chart-5": "oklch(0.6 0.21 360)",
+      "sidebar-primary": "oklch(0.56 0.24 330)",
+      "sidebar-primary-foreground": "oklch(0.985 0 0)",
+      "sidebar-ring": "oklch(0.56 0.24 330 / 0.5)"
+    },
+    "dark": {
+      "primary": "oklch(0.7 0.21 330)",
+      "primary-foreground": "oklch(0.145 0 0)",
+      "accent": "oklch(0.269 0.05 330)",
+      "accent-foreground": "oklch(0.985 0 0)",
+      "ring": "oklch(0.7 0.21 330 / 0.5)",
+      "chart-1": "oklch(0.7 0.21 330)",
+      "chart-2": "oklch(0.75 0.18 345)",
+      "chart-3": "oklch(0.78 0.15 315)",
+      "chart-4": "oklch(0.72 0.15 300)",
+      "chart-5": "oklch(0.73 0.19 360)",
+      "sidebar-primary": "oklch(0.7 0.21 330)",
+      "sidebar-primary-foreground": "oklch(0.145 0 0)",
+      "sidebar-ring": "oklch(0.7 0.21 330 / 0.5)"
+    }
+  },
+  "type": "registry:theme"
+}

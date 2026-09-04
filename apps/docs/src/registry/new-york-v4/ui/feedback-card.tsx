@@ -5,11 +5,11 @@ import { type ComponentProps, useCallback, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
 
+import { spring } from "@/registry/new-york-v4/lib/motion-tokens";
+import { Elevated } from "@/registry/new-york-v4/ui/elevated";
+
 export const feedbackCardVariants = tv({
-  base: [
-    "not-prose w-full overflow-hidden rounded-[20px] border border-border",
-    "bg-secondary text-foreground",
-  ],
+  base: ["not-prose w-full rounded-2xl text-foreground"],
   variants: {
     size: {
       sm: "max-w-[320px]",
@@ -107,8 +107,7 @@ function EmojiButton({
       animate={{ opacity: 1, y: 0 }}
       transition={{
         delay: index * 0.06 + 0.1,
-        duration: 0.3,
-        ease: [0.25, 0.46, 0.45, 0.94],
+        ...spring.fast,
       }}
       whileHover={{ scale: 1.25, y: -4 }}
       whileTap={{ scale: 0.9 }}
@@ -176,203 +175,213 @@ export function FeedbackCard({
       data-slot="feedback-card"
       layout
       transition={{
-        layout: { type: "spring", stiffness: 400, damping: 30 },
+        layout: spring.moderate,
       }}
       className={twMerge(feedbackCardVariants({ size }), className)}
       {...(props as object)}
     >
-      <AnimatePresence mode="wait" initial={false}>
-        {step === "rating" && (
-          <motion.div
-            key="rating"
-            className=""
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.96 }}
-            transition={{ duration: 0.25 }}
-          >
-            <div className=" px-4 py-2  ">
-              <motion.h3
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.05 }}
-                className="text-base font-semibold"
-              >
-                {title}
-              </motion.h3>
-              <motion.p
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-                className="text-sm text-muted-foreground"
-              >
-                {subtitle}
-              </motion.p>
-            </div>
-
-            <div className="mx-2 mb-2 overflow-hidden rounded-xl bg-card p-3 sm:p-4">
-              <div className="flex items-center gap-1 overflow-x-auto sm:justify-between sm:gap-0">
-                {options.map((option, i) => (
-                  <EmojiButton
-                    key={option.value}
-                    option={option}
-                    index={i}
-                    isSelected={selected?.value === option.value}
-                    onSelect={handleSelect}
-                  />
-                ))}
-              </div>
-            </div>
-          </motion.div>
-        )}
-
-        {step === "message" && selected && (
-          <motion.div
-            key="message"
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.96 }}
-            transition={{ duration: 0.25 }}
-          >
-            <div className="flex items-center justify-between px-5 py-2  ">
-              <div className="">
+      <Elevated offset={1} className="overflow-hidden rounded-2xl">
+        <AnimatePresence mode="wait" initial={false}>
+          {step === "rating" && (
+            <motion.div
+              key="rating"
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.96 }}
+              transition={spring.moderate}
+            >
+              <div className=" px-4 py-2  ">
                 <motion.h3
-                  initial={{ opacity: 0, x: -6 }}
-                  animate={{ opacity: 1, x: 0 }}
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.05 }}
                   className="text-base font-semibold"
                 >
-                  Tell us more
+                  {title}
                 </motion.h3>
                 <motion.p
-                  initial={{ opacity: 0, x: -6 }}
-                  animate={{ opacity: 1, x: 0 }}
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 }}
                   className="text-sm text-muted-foreground"
                 >
-                  What can we improve?
+                  {subtitle}
                 </motion.p>
               </div>
 
-              {/* Floating emoji badge */}
-              <motion.div
-                layoutId={`emoji-${selected.value}`}
-                className="flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-1"
+              <Elevated
+                offset={1}
+                className="mx-2 mb-2 overflow-hidden rounded-xl p-3 sm:p-4"
               >
-                <span className="text-lg leading-none select-none">
-                  {selected.emoji}
-                </span>
-                <span className="text-[11px] font-medium text-muted-foreground">
-                  {selected.label}
-                </span>
-              </motion.div>
-            </div>
+                <div className="scrollbar-none flex items-center gap-1 overflow-x-auto overflow-y-hidden sm:justify-between sm:gap-0">
+                  {options.map((option, i) => (
+                    <EmojiButton
+                      key={option.value}
+                      option={option}
+                      index={i}
+                      isSelected={selected?.value === option.value}
+                      onSelect={handleSelect}
+                    />
+                  ))}
+                </div>
+              </Elevated>
+            </motion.div>
+          )}
 
-            {/* Inner Panel with textarea */}
-            <div className="mx-2 mb-2 space-y-3 overflow-hidden rounded-xl bg-card p-4">
-              <motion.textarea
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.12 }}
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder="Write your feedback here... (optional)"
-                rows={3}
-                className={twMerge(
-                  "w-full resize-none rounded-lg border border-border bg-secondary/50 px-3 py-2.5",
-                  "text-sm text-foreground placeholder:text-muted-foreground/50",
-                  "focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/20",
-                  "transition-all duration-200",
-                )}
-              />
+          {step === "message" && selected && (
+            <motion.div
+              key="message"
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.96 }}
+              transition={spring.moderate}
+            >
+              <div className="flex items-center justify-between px-5 py-2  ">
+                <div className="">
+                  <motion.h3
+                    initial={{ opacity: 0, x: -6 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.05 }}
+                    className="text-base font-semibold"
+                  >
+                    Tell us more
+                  </motion.h3>
+                  <motion.p
+                    initial={{ opacity: 0, x: -6 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.1 }}
+                    className="text-sm text-muted-foreground"
+                  >
+                    What can we improve?
+                  </motion.p>
+                </div>
 
-              <div className="flex items-center justify-between">
+                {/* Floating emoji badge */}
+                <motion.div
+                  layoutId={`emoji-${selected.value}`}
+                  className="flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-1"
+                >
+                  <span className="text-lg leading-none select-none">
+                    {selected.emoji}
+                  </span>
+                  <span className="text-[11px] font-medium text-muted-foreground">
+                    {selected.label}
+                  </span>
+                </motion.div>
+              </div>
+
+              {/* Inner Panel with textarea */}
+              <Elevated
+                offset={1}
+                className="mx-2 mb-2 space-y-3 overflow-hidden rounded-xl p-4"
+              >
+                <motion.textarea
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.12 }}
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Write your feedback here... (optional)"
+                  rows={3}
+                  className={twMerge(
+                    "w-full resize-none rounded-lg border border-border bg-secondary/50 px-3 py-2.5",
+                    "text-sm text-foreground placeholder:text-muted-foreground/50",
+                    "focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/20",
+                    "transition-all duration-200",
+                  )}
+                />
+
+                <div className="flex items-center justify-between">
+                  <motion.button
+                    type="button"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.18 }}
+                    onClick={() => {
+                      setStep("rating");
+                      setSelected(null);
+                    }}
+                    className="text-xs text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    ← Back
+                  </motion.button>
+
+                  <motion.button
+                    type="button"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{
+                      delay: 0.2,
+                      type: "spring",
+                      stiffness: 400,
+                      damping: 22,
+                    }}
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
+                    onClick={handleSubmit}
+                    className={twMerge(
+                      "rounded-lg bg-primary px-4 py-2 text-xs font-medium text-primary-foreground",
+                      "transition-colors hover:bg-primary/90",
+                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                    )}
+                  >
+                    Send feedback
+                  </motion.button>
+                </div>
+              </Elevated>
+            </motion.div>
+          )}
+
+          {/* Step 3: Success */}
+          {step === "success" && (
+            <motion.div
+              key="success"
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.96 }}
+              transition={spring.moderate}
+            >
+              <Elevated
+                offset={1}
+                className="mx-2 my-2 flex flex-col items-center gap-3 overflow-hidden rounded-xl px-6 py-8 text-center"
+              >
+                <AnimatedCheck />
+
+                <motion.h3
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                  className="text-sm font-semibold"
+                >
+                  {successTitle}
+                </motion.h3>
+
+                <motion.p
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 }}
+                  className="text-[12px] leading-relaxed text-muted-foreground"
+                >
+                  {successDescription}
+                </motion.p>
+
                 <motion.button
                   type="button"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  transition={{ delay: 0.18 }}
-                  onClick={() => {
-                    setStep("rating");
-                    setSelected(null);
-                  }}
-                  className="text-xs text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  ← Back
-                </motion.button>
-
-                <motion.button
-                  type="button"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{
-                    delay: 0.2,
-                    type: "spring",
-                    stiffness: 400,
-                    damping: 22,
-                  }}
+                  transition={{ delay: 0.65 }}
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
-                  onClick={handleSubmit}
-                  className={twMerge(
-                    "rounded-lg bg-primary px-4 py-2 text-xs font-medium text-primary-foreground",
-                    "transition-colors hover:bg-primary/90",
-                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-                  )}
+                  onClick={handleReset}
+                  className="mt-1 text-xs text-muted-foreground/70 transition-colors hover:text-foreground border border-muted rounded-lg px-3 py-1 hover:border-foreground/30"
                 >
-                  Send feedback
+                  Send another feedback
                 </motion.button>
-              </div>
-            </div>
-          </motion.div>
-        )}
-
-        {/* Step 3: Success */}
-        {step === "success" && (
-          <motion.div
-            key="success"
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.96 }}
-            transition={{ duration: 0.25 }}
-          >
-            <div className="mx-2 my-2 flex flex-col items-center gap-3 overflow-hidden rounded-xl bg-card px-6 py-8 text-center">
-              <AnimatedCheck />
-
-              <motion.h3
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-                className="text-sm font-semibold"
-              >
-                {successTitle}
-              </motion.h3>
-
-              <motion.p
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-                className="text-[12px] leading-relaxed text-muted-foreground"
-              >
-                {successDescription}
-              </motion.p>
-
-              <motion.button
-                type="button"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.65 }}
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-                onClick={handleReset}
-                className="mt-1 text-xs text-muted-foreground/70 transition-colors hover:text-foreground border border-muted rounded-lg px-3 py-1 hover:border-foreground/30"
-              >
-                Send another feedback
-              </motion.button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              </Elevated>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </Elevated>
     </motion.div>
   );
 }

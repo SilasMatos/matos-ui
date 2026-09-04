@@ -118,9 +118,21 @@ export function CommandMenu({
       <CommandDialogTrigger
         render={
           <Button
-            variant="outline"
+            // `ghost`, not `outline`: outline's own border + bg-background
+            // would fight the surface classes below. The literal
+            // `hover:bg-surface-3` is not interpolation-shy pedantry — a
+            // variant spliced onto a runtime string is invisible to Tailwind's
+            // scanner (see lib/surface-classes.ts).
+            variant="ghost"
             className={cn(
-              "group relative h-9 w-9 justify-center gap-2 rounded-lg border-border/70 bg-background/80 px-0 font-normal text-muted-foreground shadow-xs/5 backdrop-blur transition-all hover:border-ring/40 hover:bg-muted/60 hover:text-foreground focus-visible:border-ring/70 focus-visible:ring-ring/20 md:w-48 md:justify-start md:px-3 lg:w-40 xl:w-64 dark:bg-card/80 dark:hover:bg-muted/40",
+              "group relative size-8 justify-center gap-2 rounded-lg px-0 font-normal text-muted-foreground md:w-44 md:justify-start md:px-3 lg:w-40 xl:w-56",
+              // `dark:hover:bg-surface-3` is not redundant with the line's
+              // `hover:` twin: tailwind-merge treats a different modifier
+              // chain as a different group, so ghost's own
+              // `dark:hover:bg-muted/50` survives the merge and then outranks
+              // us in dark mode on the extra `.dark` ancestor.
+              "bg-surface-2 shadow-surface-2 hover:bg-surface-3 dark:hover:bg-surface-3 hover:shadow-surface-3 hover:text-foreground",
+              "focus-visible:ring-ring/20",
             )}
             onClick={() => setOpen(true)}
             {...props}
@@ -132,18 +144,33 @@ export function CommandMenu({
             <span className="hidden min-w-0 flex-1 truncate text-left text-sm md:inline-flex xl:hidden">
               {t("searchShort")}
             </span>
-            <kbd className="pointer-events-none hidden h-5 items-center gap-0.5 rounded-md border bg-muted/60 px-1.5 font-medium text-[10px] text-muted-foreground/80 leading-none shadow-xs/5 xl:inline-flex">
+            {/* One rung above the button it sits in, so the key reads as a
+                key. The bare `border` it used to carry resolved to
+                currentColor — this project has no base border-color rule. */}
+            <kbd className="pointer-events-none hidden h-5 items-center gap-0.5 rounded-md bg-surface-3 px-1.5 font-medium text-[10px] text-muted-foreground/80 leading-none xl:inline-flex">
               Ctrl K
             </kbd>
           </Button>
         }
       ></CommandDialogTrigger>
-      <CommandDialogPopup className="overflow-hidden border-border/70 shadow-2xl shadow-black/10 dark:shadow-black/30">
+      {/* No border and no hand-picked shadow: the popup is an <Elevated> now,
+          so its edge and its drop both come off the ladder. */}
+      <CommandDialogPopup className="overflow-hidden">
         <Command items={groupedItems}>
-          <div className="relative px-3 pt-3 pb-2">
-            <SearchIcon className="-translate-y-1/2 pointer-events-none absolute top-1/2 left-6 size-4 text-muted-foreground/70" />
+          <div className="px-3 pt-3 pb-2">
             <CommandInput
-              className="h-11 rounded-xl border-border/70 bg-background/85 pl-9 pr-3 text-sm shadow-xs/5 transition-colors placeholder:text-muted-foreground/60 focus-visible:border-ring/70 focus-visible:ring-3 focus-visible:ring-ring/15 dark:bg-input/25"
+              // The icon goes through `startAddon`, which positions it inside
+              // the input's own box and pads the text for it. The old absolute
+              // `left-6` was measured against this padding wrapper, so it sat
+              // off-centre vertically (pt-3/pb-2 are not symmetric) and only
+              // lined up horizontally by coincidence.
+              startAddon={
+                <SearchIcon className="size-4 text-muted-foreground/70" />
+              }
+              // Only sizing and typography left here. The fill used to be
+              // `bg-background/85`, which dropped a panel nested four rungs up
+              // the ladder back onto the page colour.
+              className="h-11 rounded-xl pr-3 text-sm placeholder:text-muted-foreground/60 focus-visible:ring-3 focus-visible:ring-ring/15"
               placeholder={t("placeholder")}
             />
           </div>

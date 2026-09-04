@@ -59,7 +59,7 @@ function Card({ card, index }: { card: CardData; index: number }) {
 
       <div className="flex flex-col h-full">
         <motion.span
-          className="mb-2 text-6xl font-bold text-foreground/10"
+          className="mb-2 font-display text-6xl font-bold text-foreground/10"
           initial={{ opacity: 0, x: -30, filter: "blur(8px)" }}
           whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
           viewport={{ once: true }}
@@ -179,7 +179,7 @@ export function ScrollCardsSection() {
                   transition: { duration: 0.5 },
                 },
               }}
-              className="mt-4 text-3xl font-semibold tracking-tight text-card-foreground md:text-4xl"
+              className="mt-4 font-display text-3xl font-semibold tracking-tight text-card-foreground md:text-4xl"
             >
               {t("title")}
             </motion.h2>

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "physics-counter",
+  "dependencies": [
+    "framer-motion",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "files": [
+    {
+      "path": "components/matos-ui/physics-counter.tsx",
+      "content": "\"use client\";\n\nimport { motion, useSpring, useTransform } from \"framer-motion\";\nimport type { ComponentProps } from \"react\";\nimport { useEffect } from \"react\";\nimport { twMerge } from \"tailwind-merge\";\nimport { tv, type VariantProps } from \"tailwind-variants\";\n\nexport const physicsCounterVariants = tv({\n  base: [\n    \"inline-flex items-baseline font-semibold tabular-nums tracking-tight\",\n  ],\n  variants: {\n    size: {\n      sm: \"text-2xl\",\n      md: \"text-4xl\",\n      lg: \"text-6xl\",\n    },\n  },\n  defaultVariants: {\n    size: \"md\",\n  },\n});\n\nexport type PhysicsCounterProps = ComponentProps<\"span\"> &\n  VariantProps<typeof physicsCounterVariants> & {\n    value: number;\n    decimals?: number;\n    prefix?: string;\n    suffix?: string;\n    stiffness?: number;\n    damping?: number;\n  };\n\nexport function PhysicsCounter({\n  className,\n  size,\n  value,\n  decimals = 0,\n  prefix,\n  suffix,\n  stiffness = 90,\n  damping = 18,\n  ...props\n}: PhysicsCounterProps) {\n  const spring = useSpring(value, { stiffness, damping, mass: 1 });\n  const display = useTransform(spring, (latest) =>\n    latest.toLocaleString(undefined, {\n      minimumFractionDigits: decimals,\n      maximumFractionDigits: decimals,\n    }),\n  );\n\n  useEffect(() => {\n    spring.set(value);\n  }, [spring, value]);\n\n  return (\n    <span\n      data-slot=\"physics-counter\"\n      className={twMerge(physicsCounterVariants({ size }), className)}\n      {...props}\n    >\n      {prefix ? <span className=\"text-muted-foreground\">{prefix}</span> : null}\n      <motion.span>{display}</motion.span>\n      {suffix ? (\n        <span className=\"ml-1 text-[0.5em] font-medium text-muted-foreground\">\n          {suffix}\n        </span>\n      ) : null}\n    </span>\n  );\n}\n",
+      "type": "registry:ui",
+      "target": "components/matos-ui/physics-counter.tsx"
+    }
+  ],
+  "type": "registry:ui"
+}

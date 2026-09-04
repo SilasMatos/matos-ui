@@ -1,0 +1,16 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "floating-action-menu-demo",
+  "registryDependencies": [
+    "floating-action-menu"
+  ],
+  "files": [
+    {
+      "path": "components/matos-ui/examples/floating-action-menu-demo.tsx",
+      "content": "\"use client\";\n\nimport { ImagePlus, Link2, Pencil, Share2 } from \"lucide-react\";\nimport {\n  type FloatingActionItem,\n  FloatingActionMenu,\n} from \"@/components/matos-ui/floating-action-menu\";\n\nconst items: FloatingActionItem[] = [\n  {\n    id: \"edit\",\n    label: \"Edit\",\n    icon: <Pencil className=\"size-5\" aria-hidden=\"true\" />,\n  },\n  {\n    id: \"image\",\n    label: \"Image\",\n    icon: <ImagePlus className=\"size-5\" aria-hidden=\"true\" />,\n  },\n  {\n    id: \"link\",\n    label: \"Link\",\n    icon: <Link2 className=\"size-5\" aria-hidden=\"true\" />,\n  },\n  {\n    id: \"share\",\n    label: \"Share\",\n    icon: <Share2 className=\"size-5\" aria-hidden=\"true\" />,\n  },\n];\n\nexport default function FloatingActionMenuDemo() {\n  return (\n    <div className=\"flex min-h-[320px] w-full items-end justify-center pb-6\">\n      <FloatingActionMenu items={items} />\n    </div>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/floating-action-menu-demo.tsx"
+    }
+  ],
+  "type": "registry:example"
+}

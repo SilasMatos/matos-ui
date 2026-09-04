@@ -14,8 +14,7 @@ import { tv, type VariantProps } from "tailwind-variants";
 export const reactiveButtonVariants = tv({
   base: [
     "relative inline-flex shrink-0 items-center justify-center overflow-hidden whitespace-nowrap rounded-lg border border-transparent bg-clip-padding text-sm font-medium outline-none select-none",
-    "transition-[background-color,border-color,border-radius,box-shadow,color,opacity,transform] duration-200 ease-out",
-    "hover:-translate-y-0.5 hover:shadow-sm active:translate-y-0 active:scale-[0.98] motion-reduce:transform-none",
+    "hover-lift hover:shadow-sm active:scale-[0.98]",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
     "disabled:pointer-events-none disabled:opacity-50",
   ],
@@ -31,7 +30,7 @@ export const reactiveButtonVariants = tv({
         "text-foreground hover:bg-muted/70 hover:text-foreground hover:shadow-none",
       destructive:
         "border-destructive/20 bg-destructive/10 text-destructive shadow-xs hover:border-destructive/30 hover:bg-destructive/15",
-      link: "text-primary underline-offset-4 hover:translate-y-0 hover:bg-transparent hover:shadow-none hover:underline active:scale-100",
+      link: "text-primary underline-offset-4 [--lift:0px] hover:bg-transparent hover:shadow-none hover:underline active:scale-100",
     },
     size: {
       sm: "h-7 gap-1 px-2.5 text-[0.8rem] [&_svg]:size-3.5",
@@ -67,10 +66,20 @@ export type ReactiveButtonProps = ComponentProps<"button"> &
 const statusStyles: Record<ReactiveButtonStatus, string> = {
   idle: "",
   loading: "cursor-wait",
-  success: "border-chart-2/40 text-primary-foreground hover:border-chart-2/50",
-  error:
-    "border-destructive bg-destructive text-primary-foreground hover:bg-destructive/90",
+  success:
+    "border-primary bg-primary text-primary-foreground hover:bg-primary/90",
+  error: "border-destructive bg-destructive text-white hover:bg-destructive/90",
 };
+
+const reactiveTiming = {
+  quick: 0.18,
+  draw: 0.24,
+  settle: 0.32,
+  loop: 0.95,
+} as const;
+
+const reactiveEase = [0.22, 1, 0.36, 1] as const;
+const countdownEase = [0.2, 0.8, 0.2, 1] as const;
 
 type AnimatedStatusIconProps = {
   shouldReduceMotion: boolean;
@@ -97,7 +106,7 @@ function LoadingIndicator({ shouldReduceMotion }: AnimatedStatusIconProps) {
         style={{ transformOrigin: "12px 12px" }}
         animate={shouldReduceMotion ? undefined : { rotate: 360 }}
         transition={{
-          duration: 0.9,
+          duration: reactiveTiming.loop,
           ease: "linear",
           repeat: Number.POSITIVE_INFINITY,
         }}
@@ -120,7 +129,7 @@ function LoadingIndicator({ shouldReduceMotion }: AnimatedStatusIconProps) {
             shouldReduceMotion ? undefined : { opacity: [0.45, 1, 0.45] }
           }
           transition={{
-            duration: 0.9,
+            duration: reactiveTiming.loop,
             ease: "easeInOut",
             repeat: Number.POSITIVE_INFINITY,
           }}
@@ -133,7 +142,7 @@ function LoadingIndicator({ shouldReduceMotion }: AnimatedStatusIconProps) {
 function AnimatedSuccessIcon({ shouldReduceMotion }: AnimatedStatusIconProps) {
   const drawTransition = shouldReduceMotion
     ? { duration: 0 }
-    : { duration: 0.28, ease: [0.22, 1, 0.36, 1] as const };
+    : { duration: reactiveTiming.draw, ease: reactiveEase };
 
   return (
     <svg
@@ -166,9 +175,9 @@ function AnimatedSuccessIcon({ shouldReduceMotion }: AnimatedStatusIconProps) {
           shouldReduceMotion
             ? { duration: 0 }
             : {
-                duration: 0.24,
+                duration: reactiveTiming.draw,
                 delay: 0.1,
-                ease: [0.22, 1, 0.36, 1],
+                ease: reactiveEase,
               }
         }
       />
@@ -190,7 +199,7 @@ function AnimatedErrorIcon({ shouldReduceMotion }: AnimatedStatusIconProps) {
       transition={
         shouldReduceMotion
           ? { duration: 0 }
-          : { duration: 0.22, ease: [0.22, 1, 0.36, 1] }
+          : { duration: reactiveTiming.draw, ease: reactiveEase }
       }
     >
       <motion.circle
@@ -205,7 +214,7 @@ function AnimatedErrorIcon({ shouldReduceMotion }: AnimatedStatusIconProps) {
         transition={
           shouldReduceMotion
             ? { duration: 0 }
-            : { duration: 0.26, ease: [0.22, 1, 0.36, 1] }
+            : { duration: reactiveTiming.draw, ease: reactiveEase }
         }
       />
       <motion.path
@@ -219,9 +228,9 @@ function AnimatedErrorIcon({ shouldReduceMotion }: AnimatedStatusIconProps) {
           shouldReduceMotion
             ? { duration: 0 }
             : {
-                duration: 0.18,
+                duration: reactiveTiming.quick,
                 delay: 0.1,
-                ease: [0.22, 1, 0.36, 1],
+                ease: reactiveEase,
               }
         }
       />
@@ -265,7 +274,9 @@ function ReactiveButtonSurface({
           initial={shouldReduceMotion ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={shouldReduceMotion ? undefined : { opacity: 0 }}
-          transition={{ duration: shouldReduceMotion ? 0 : 0.18 }}
+          transition={{
+            duration: shouldReduceMotion ? 0 : reactiveTiming.quick,
+          }}
           aria-hidden="true"
         >
           {status === "loading" ? (
@@ -276,7 +287,7 @@ function ReactiveButtonSurface({
                 shouldReduceMotion ? { x: "0%" } : { x: ["-120%", "360%"] }
               }
               transition={{
-                duration: shouldReduceMotion ? 0 : 1.15,
+                duration: shouldReduceMotion ? 0 : 1.1,
                 ease: "easeInOut",
                 repeat: shouldReduceMotion ? 0 : Number.POSITIVE_INFINITY,
                 repeatDelay: 0.12,
@@ -287,13 +298,13 @@ function ReactiveButtonSurface({
           {status === "success" ? (
             <>
               <motion.span
-                className="absolute inset-0 bg-chart-2"
+                className="absolute inset-0 bg-primary"
                 style={{ transformOrigin: "left center" }}
                 initial={shouldReduceMotion ? false : { scaleX: 0 }}
                 animate={{ scaleX: 1 }}
                 transition={{
-                  duration: shouldReduceMotion ? 0 : 0.34,
-                  ease: [0.22, 1, 0.36, 1],
+                  duration: shouldReduceMotion ? 0 : reactiveTiming.settle,
+                  ease: reactiveEase,
                 }}
               />
               <motion.span
@@ -313,9 +324,9 @@ function ReactiveButtonSurface({
                       }
                 }
                 transition={{
-                  duration: shouldReduceMotion ? 0 : 0.46,
+                  duration: shouldReduceMotion ? 0 : 0.42,
                   delay: 0.08,
-                  ease: [0.22, 1, 0.36, 1],
+                  ease: reactiveEase,
                 }}
               />
             </>
@@ -331,8 +342,8 @@ function ReactiveButtonSurface({
                 }
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{
-                  duration: shouldReduceMotion ? 0 : 0.22,
-                  ease: [0.22, 1, 0.36, 1],
+                  duration: shouldReduceMotion ? 0 : reactiveTiming.draw,
+                  ease: reactiveEase,
                 }}
               />
               <motion.span
@@ -341,7 +352,7 @@ function ReactiveButtonSurface({
                   shouldReduceMotion ? { opacity: 0 } : { opacity: [0, 0.4, 0] }
                 }
                 transition={{
-                  duration: shouldReduceMotion ? 0 : 0.34,
+                  duration: shouldReduceMotion ? 0 : reactiveTiming.settle,
                   ease: "easeOut",
                 }}
               />
@@ -381,7 +392,7 @@ function ReactiveButtonCountdownSurface({
       }
       transition={{
         duration: shouldReduceMotion ? 0.12 : 0.42,
-        ease: [0.2, 0.8, 0.2, 1],
+        ease: countdownEase,
       }}
     />
   );
@@ -481,7 +492,7 @@ function ReactiveButton({
   const contentKey = `${visibleStatus}-${hasCountdown ? "countdown" : "default"}`;
   const transition = shouldReduceMotion
     ? { duration: 0 }
-    : { duration: 0.18, ease: [0.22, 1, 0.36, 1] as const };
+    : { duration: reactiveTiming.quick, ease: reactiveEase };
 
   return (
     <button
@@ -579,8 +590,8 @@ function ReactiveButton({
                 : { marginLeft: 0, opacity: 0, scale: 0.45, width: 0 }
             }
             transition={{
-              duration: shouldReduceMotion ? 0.12 : 0.32,
-              ease: [0.2, 0.8, 0.2, 1],
+              duration: shouldReduceMotion ? 0.12 : reactiveTiming.settle,
+              ease: countdownEase,
             }}
           >
             <AnimatePresence initial={false}>
@@ -606,7 +617,9 @@ function ReactiveButton({
                 exit={
                   shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 8 }
                 }
-                transition={{ duration: shouldReduceMotion ? 0.1 : 0.2 }}
+                transition={{
+                  duration: shouldReduceMotion ? 0.1 : reactiveTiming.draw,
+                }}
               >
                 {displayCountdown}
               </motion.span>

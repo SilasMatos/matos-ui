@@ -4,12 +4,13 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   type ComponentProps,
   type ReactNode,
+  useEffect,
   useId,
   useMemo,
-  useState,
 } from "react";
 import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
+import { useChartInteraction } from "./chart-interaction";
 
 export const candlestickChartVariants = tv({
   base: "not-prose w-full text-foreground",
@@ -169,8 +170,15 @@ export function CandlestickChart({
     [data],
   );
 
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const { activeIndex, getItemProps, hasEnteredView, interactionProps } =
+    useChartInteraction(id, normalized.length);
   const activeItem = activeIndex === null ? null : normalized[activeIndex];
+
+  useEffect(() => {
+    if (activeItem && activeIndex !== null) {
+      onActiveChange?.(activeItem, activeIndex);
+    }
+  }, [activeIndex, activeItem, onActiveChange]);
 
   function format(value: number) {
     const formatted = valueFormatter?.(value);
@@ -254,15 +262,11 @@ export function CandlestickChart({
     ? clamp(active.yHigh - tooltipHeight - 12, 6, 9999)
     : 0;
 
-  function activate(index: number) {
-    setActiveIndex(index);
-    onActiveChange?.(normalized[index], index);
-  }
-
   return (
     <div
       data-slot="candlestick-chart"
       className={twMerge(candlestickChartVariants({ size }), className)}
+      {...interactionProps}
       {...props}
     >
       <div data-slot="candlestick-chart-header" className="mb-3">
@@ -281,177 +285,176 @@ export function CandlestickChart({
         className="overflow-hidden"
         style={{ height }}
       >
-        <svg
-          viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
-          className="size-full"
-          role="img"
-          aria-labelledby={`${id}-title ${id}-desc`}
-        >
-          <title id={`${id}-title`}>{String(title)}</title>
-          <desc id={`${id}-desc`}>
-            Candlestick chart with {candles.length} periods. Latest close:{" "}
-            {format(normalized[normalized.length - 1].close)}.
-          </desc>
+        {!motionEnabled || hasEnteredView ? (
+          <svg
+            viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
+            className="size-full"
+            role="img"
+            aria-labelledby={`${id}-title ${id}-desc`}
+          >
+            <title id={`${id}-title`}>{String(title)}</title>
+            <desc id={`${id}-desc`}>
+              Candlestick chart with {candles.length} periods. Latest close:{" "}
+              {format(normalized[normalized.length - 1].close)}.
+            </desc>
 
-          {showGrid
-            ? [0.25, 0.5, 0.75].map((step) => {
-                const y = plotTop + plotHeight * step;
-                return (
-                  <line
-                    key={step}
-                    x1={plotLeft}
-                    x2={plotRight}
-                    y1={y}
-                    y2={y}
-                    stroke="var(--border)"
-                    strokeDasharray="3 9"
-                    opacity="0.5"
-                  />
-                );
-              })
-            : null}
-
-          {candles.map((candle) => {
-            const isActive = activeIndex === candle.index;
-            const dim = activeIndex !== null && !isActive;
-            return (
-              <motion.g
-                key={candle.label}
-                data-slot="candlestick-chart-candle"
-                tabIndex={0}
-                role="button"
-                aria-label={`${candle.label}: open ${format(candle.open)}, high ${format(candle.high)}, low ${format(candle.low)}, close ${format(candle.close)}`}
-                onPointerEnter={() => activate(candle.index)}
-                onPointerLeave={() => setActiveIndex(null)}
-                onFocus={() => activate(candle.index)}
-                onBlur={() => setActiveIndex(null)}
-                animate={{ opacity: dim ? 0.4 : 1 }}
-                transition={{ duration: 0.25, ease: "easeOut" }}
-                style={{ color: candle.color, cursor: "pointer" }}
-                className="outline-none"
-              >
-                <motion.line
-                  x1={candle.cx}
-                  x2={candle.cx}
-                  y1={candle.yHigh}
-                  y2={candle.yLow}
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  initial={motionEnabled ? { scaleY: 0, opacity: 0 } : false}
-                  animate={{ scaleY: 1, opacity: 1 }}
-                  transition={{
-                    duration: motionDuration,
-                    delay: motionDelay + candle.index * 0.035,
-                    ease: [0.16, 1, 0.3, 1],
-                  }}
-                  style={{
-                    transformOrigin: `${candle.cx}px ${
-                      (candle.yHigh + candle.yLow) / 2
-                    }px`,
-                  }}
-                />
-                <motion.rect
-                  x={candle.cx - bodyWidth / 2}
-                  y={candle.bodyTop}
-                  width={bodyWidth}
-                  height={candle.bodyHeight}
-                  rx="2.5"
-                  fill="currentColor"
-                  initial={motionEnabled ? { scaleY: 0, opacity: 0 } : false}
-                  animate={{ scaleY: 1, opacity: 1 }}
-                  transition={{
-                    duration: motionDuration,
-                    delay: motionDelay + 0.06 + candle.index * 0.035,
-                    ease: [0.16, 1, 0.3, 1],
-                  }}
-                  style={{
-                    transformOrigin: `${candle.cx}px ${
-                      candle.bodyTop + candle.bodyHeight / 2
-                    }px`,
-                  }}
-                />
-              </motion.g>
-            );
-          })}
-
-          {normalized.map((item, index) =>
-            index % 2 === 0 ? (
-              <text
-                key={item.label}
-                x={plotLeft + slot * (index + 0.5)}
-                y={labelY}
-                textAnchor="middle"
-                className="fill-muted-foreground text-[10px] font-medium"
-              >
-                {item.label}
-              </text>
-            ) : null,
-          )}
-
-          <AnimatePresence>
-            {showTooltip && active ? (
-              <motion.g
-                data-slot="candlestick-chart-tooltip"
-                pointerEvents="none"
-                initial={
-                  motionEnabled
-                    ? { opacity: 0, y: tooltipY + 6, scale: 0.97 }
-                    : false
-                }
-                animate={{ opacity: 1, y: tooltipY, scale: 1 }}
-                exit={{ opacity: 0, y: tooltipY + 4, scale: 0.97 }}
-                transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
-                style={{ transformOrigin: `${tooltipX}px ${tooltipY}px` }}
-              >
-                <rect
-                  x={tooltipX}
-                  width={tooltipWidth}
-                  height={tooltipHeight}
-                  rx="12"
-                  fill="var(--popover)"
-                  stroke="var(--border)"
-                />
-                <text
-                  x={tooltipX + 14}
-                  y={22}
-                  className="fill-popover-foreground text-[12px] font-semibold"
-                >
-                  {active.label}
-                </text>
-                <circle
-                  cx={tooltipX + tooltipWidth - 16}
-                  cy={18}
-                  r="4.5"
-                  fill={active.color}
-                />
-                {(
-                  [
-                    ["O", active.open],
-                    ["H", active.high],
-                    ["L", active.low],
-                    ["C", active.close],
-                  ] as const
-                ).map(([key, value], row) => {
-                  const col = row % 2;
-                  const line = Math.floor(row / 2);
-                  const tx = tooltipX + 14 + col * 70;
-                  const ty = 42 + line * 20;
+            {showGrid
+              ? [0.25, 0.5, 0.75].map((step) => {
+                  const y = plotTop + plotHeight * step;
                   return (
-                    <text key={key} x={tx} y={ty} className="text-[11px]">
-                      <tspan className="fill-muted-foreground font-medium">
-                        {key}{" "}
-                      </tspan>
-                      <tspan className="fill-popover-foreground font-semibold">
-                        {format(value)}
-                      </tspan>
-                    </text>
+                    <line
+                      key={step}
+                      x1={plotLeft}
+                      x2={plotRight}
+                      y1={y}
+                      y2={y}
+                      stroke="var(--border)"
+                      strokeDasharray="3 9"
+                      opacity="0.5"
+                    />
                   );
-                })}
-              </motion.g>
-            ) : null}
-          </AnimatePresence>
-        </svg>
+                })
+              : null}
+
+            {candles.map((candle) => {
+              const isActive = activeIndex === candle.index;
+              const dim = activeIndex !== null && !isActive;
+              return (
+                <motion.g
+                  key={candle.label}
+                  data-slot="candlestick-chart-candle"
+                  tabIndex={0}
+                  role="button"
+                  aria-label={`${candle.label}: open ${format(candle.open)}, high ${format(candle.high)}, low ${format(candle.low)}, close ${format(candle.close)}`}
+                  {...getItemProps(candle.index)}
+                  animate={{ opacity: dim ? 0.4 : 1 }}
+                  transition={{ duration: 0.25, ease: "easeOut" }}
+                  style={{ color: candle.color, cursor: "pointer" }}
+                  className="outline-none"
+                >
+                  <motion.line
+                    x1={candle.cx}
+                    x2={candle.cx}
+                    y1={candle.yHigh}
+                    y2={candle.yLow}
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    initial={motionEnabled ? { scaleY: 0, opacity: 0 } : false}
+                    animate={{ scaleY: 1, opacity: 1 }}
+                    transition={{
+                      duration: motionDuration,
+                      delay: motionDelay + candle.index * 0.035,
+                      ease: [0.16, 1, 0.3, 1],
+                    }}
+                    style={{
+                      transformOrigin: `${candle.cx}px ${
+                        (candle.yHigh + candle.yLow) / 2
+                      }px`,
+                    }}
+                  />
+                  <motion.rect
+                    x={candle.cx - bodyWidth / 2}
+                    y={candle.bodyTop}
+                    width={bodyWidth}
+                    height={candle.bodyHeight}
+                    rx="2.5"
+                    fill="currentColor"
+                    initial={motionEnabled ? { scaleY: 0, opacity: 0 } : false}
+                    animate={{ scaleY: 1, opacity: 1 }}
+                    transition={{
+                      duration: motionDuration,
+                      delay: motionDelay + 0.06 + candle.index * 0.035,
+                      ease: [0.16, 1, 0.3, 1],
+                    }}
+                    style={{
+                      transformOrigin: `${candle.cx}px ${
+                        candle.bodyTop + candle.bodyHeight / 2
+                      }px`,
+                    }}
+                  />
+                </motion.g>
+              );
+            })}
+
+            {normalized.map((item, index) =>
+              index % 2 === 0 ? (
+                <text
+                  key={item.label}
+                  x={plotLeft + slot * (index + 0.5)}
+                  y={labelY}
+                  textAnchor="middle"
+                  className="fill-muted-foreground text-[10px] font-medium"
+                >
+                  {item.label}
+                </text>
+              ) : null,
+            )}
+
+            <AnimatePresence>
+              {showTooltip && active ? (
+                <motion.g
+                  data-slot="candlestick-chart-tooltip"
+                  pointerEvents="none"
+                  initial={
+                    motionEnabled
+                      ? { opacity: 0, y: tooltipY + 6, scale: 0.97 }
+                      : false
+                  }
+                  animate={{ opacity: 1, y: tooltipY, scale: 1 }}
+                  exit={{ opacity: 0, y: tooltipY + 4, scale: 0.97 }}
+                  transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+                  style={{ transformOrigin: `${tooltipX}px ${tooltipY}px` }}
+                >
+                  <rect
+                    x={tooltipX}
+                    width={tooltipWidth}
+                    height={tooltipHeight}
+                    rx="12"
+                    fill="var(--popover)"
+                    stroke="var(--border)"
+                  />
+                  <text
+                    x={tooltipX + 14}
+                    y={22}
+                    className="fill-popover-foreground text-[12px] font-semibold"
+                  >
+                    {active.label}
+                  </text>
+                  <circle
+                    cx={tooltipX + tooltipWidth - 16}
+                    cy={18}
+                    r="4.5"
+                    fill={active.color}
+                  />
+                  {(
+                    [
+                      ["O", active.open],
+                      ["H", active.high],
+                      ["L", active.low],
+                      ["C", active.close],
+                    ] as const
+                  ).map(([key, value], row) => {
+                    const col = row % 2;
+                    const line = Math.floor(row / 2);
+                    const tx = tooltipX + 14 + col * 70;
+                    const ty = 42 + line * 20;
+                    return (
+                      <text key={key} x={tx} y={ty} className="text-[11px]">
+                        <tspan className="fill-muted-foreground font-medium">
+                          {key}{" "}
+                        </tspan>
+                        <tspan className="fill-popover-foreground font-semibold">
+                          {format(value)}
+                        </tspan>
+                      </text>
+                    );
+                  })}
+                </motion.g>
+              ) : null}
+            </AnimatePresence>
+          </svg>
+        ) : null}
       </div>
 
       {showLegend ? (

@@ -479,7 +479,7 @@ const sidebarMenuButtonVariants = cva(
   relative
   flex w-full items-center gap-2 rounded-md p-2 text-sm
 
-  transition-all duration-200 ease-out
+  transition-all duration-200 ease-spring
 
   hover:bg-sidebar-accent/80
   data-[active=true]:bg-sidebar-accent

@@ -15,6 +15,16 @@
       "registryDependencies": [
         "utils"
       ],
+      "css": {
+        "@theme inline": {
+          "--radius-sm": "calc(var(--radius) - 4px)",
+          "--radius-md": "calc(var(--radius) - 2px)",
+          "--radius-lg": "var(--radius)",
+          "--radius-xl": "calc(var(--radius) + 4px)",
+          "--radius-2xl": "calc(var(--radius) + 10px)",
+          "--radius-3xl": "calc(var(--radius) + 18px)"
+        }
+      },
       "files": []
     },
     {
@@ -30,11 +40,132 @@
       "registryDependencies": [
         "utils"
       ],
+      "css": {
+        "@theme inline": {
+          "--radius-sm": "calc(var(--radius) - 4px)",
+          "--radius-md": "calc(var(--radius) - 2px)",
+          "--radius-lg": "var(--radius)",
+          "--radius-xl": "calc(var(--radius) + 4px)",
+          "--radius-2xl": "calc(var(--radius) + 10px)",
+          "--radius-3xl": "calc(var(--radius) + 18px)"
+        }
+      },
       "files": []
+    },
+    {
+      "name": "magnetic-card",
+      "type": "registry:ui",
+      "dependencies": [
+        "framer-motion",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/magnetic-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "spring-slider",
+      "type": "registry:ui",
+      "dependencies": [
+        "framer-motion",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/spring-slider.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "bouncy-toggle",
+      "type": "registry:ui",
+      "dependencies": [
+        "framer-motion",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/bouncy-toggle.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "physics-counter",
+      "type": "registry:ui",
+      "dependencies": [
+        "framer-motion",
+        "tailwind-merge",
+        "tailwind-variants"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/physics-counter.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "floating-action-menu",
+      "type": "registry:ui",
+      "dependencies": [
+        "framer-motion",
+        "tailwind-merge",
+        "tailwind-variants",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "elevated",
+        "motion-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/floating-action-menu.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "button",
       "type": "registry:ui",
+      "cssVars": {
+        "theme": {
+          "ease-lift": "cubic-bezier(0.4, 0, 0.2, 1)",
+          "duration-lift": "320ms",
+          "duration-lift-press": "120ms"
+        }
+      },
+      "css": {
+        "@utility hover-lift": {
+          "--lift": "2px",
+          "transition-property": "translate, scale, box-shadow, background-color, border-color, border-radius, color, opacity",
+          "transition-duration": "var(--duration-lift)",
+          "transition-timing-function": "var(--ease-lift)",
+          "@media (hover: hover)": {
+            "&:hover": {
+              "translate": "0 calc(var(--lift) * -1)"
+            }
+          },
+          "&:active": {
+            "translate": "0 0",
+            "transition-duration": "var(--duration-lift-press)"
+          },
+          "@media (prefers-reduced-motion: reduce)": {
+            "transition-property": "background-color, border-color, color, opacity",
+            "&:hover, &:active": {
+              "translate": "none",
+              "scale": "none"
+            }
+          }
+        }
+      },
       "dependencies": [
         "@base-ui/react"
       ],
@@ -48,6 +179,37 @@
     {
       "name": "reactive-button",
       "type": "registry:ui",
+      "cssVars": {
+        "theme": {
+          "ease-lift": "cubic-bezier(0.4, 0, 0.2, 1)",
+          "duration-lift": "320ms",
+          "duration-lift-press": "120ms"
+        }
+      },
+      "css": {
+        "@utility hover-lift": {
+          "--lift": "2px",
+          "transition-property": "translate, scale, box-shadow, background-color, border-color, border-radius, color, opacity",
+          "transition-duration": "var(--duration-lift)",
+          "transition-timing-function": "var(--ease-lift)",
+          "@media (hover: hover)": {
+            "&:hover": {
+              "translate": "0 calc(var(--lift) * -1)"
+            }
+          },
+          "&:active": {
+            "translate": "0 0",
+            "transition-duration": "var(--duration-lift-press)"
+          },
+          "@media (prefers-reduced-motion: reduce)": {
+            "transition-property": "background-color, border-color, color, opacity",
+            "&:hover, &:active": {
+              "translate": "none",
+              "scale": "none"
+            }
+          }
+        }
+      },
       "dependencies": [
         "framer-motion",
         "lucide-react",
@@ -81,9 +243,44 @@
     {
       "name": "badge",
       "type": "registry:ui",
+      "cssVars": {
+        "theme": {
+          "ease-lift": "cubic-bezier(0.4, 0, 0.2, 1)",
+          "duration-lift": "320ms",
+          "duration-lift-press": "120ms"
+        }
+      },
+      "css": {
+        "@utility hover-lift": {
+          "--lift": "2px",
+          "transition-property": "translate, scale, box-shadow, background-color, border-color, border-radius, color, opacity",
+          "transition-duration": "var(--duration-lift)",
+          "transition-timing-function": "var(--ease-lift)",
+          "@media (hover: hover)": {
+            "&:hover": {
+              "translate": "0 calc(var(--lift) * -1)"
+            }
+          },
+          "&:active": {
+            "translate": "0 0",
+            "transition-duration": "var(--duration-lift-press)"
+          },
+          "@media (prefers-reduced-motion: reduce)": {
+            "transition-property": "background-color, border-color, color, opacity",
+            "&:hover, &:active": {
+              "translate": "none",
+              "scale": "none"
+            }
+          }
+        }
+      },
       "dependencies": [
         "tailwind-merge",
         "tailwind-variants"
+      ],
+      "registryDependencies": [
+        "surface-context",
+        "surface-classes"
       ],
       "files": [
         {
@@ -99,41 +296,12 @@
         "@tanstack/react-table",
         "lucide-react"
       ],
+      "registryDependencies": [
+        "elevated"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/data-table.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "activity-feed",
-      "type": "registry:ui",
-      "dependencies": [
-        "framer-motion",
-        "lucide-react",
-        "tailwind-merge",
-        "tailwind-variants"
-      ],
-      "files": [
-        {
-          "path": "src/registry/new-york-v4/ui/activity-feed.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "status-pulse-card",
-      "type": "registry:ui",
-      "dependencies": [
-        "framer-motion",
-        "lucide-react",
-        "tailwind-merge",
-        "tailwind-variants"
-      ],
-      "files": [
-        {
-          "path": "src/registry/new-york-v4/ui/status-pulse-card.tsx",
           "type": "registry:ui"
         }
       ]
@@ -190,32 +358,19 @@
       "name": "action-bar",
       "type": "registry:ui",
       "dependencies": [
-        "lucide-react",
-        "tailwind-merge",
-        "tailwind-variants"
-      ],
-      "registryDependencies": [
-        "button"
-      ],
-      "files": [
-        {
-          "path": "src/registry/new-york-v4/ui/action-bar.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "detail-panel",
-      "type": "registry:ui",
-      "dependencies": [
         "framer-motion",
         "lucide-react",
         "tailwind-merge",
         "tailwind-variants"
       ],
+      "registryDependencies": [
+        "button",
+        "elevated",
+        "motion-tokens"
+      ],
       "files": [
         {
-          "path": "src/registry/new-york-v4/ui/detail-panel.tsx",
+          "path": "src/registry/new-york-v4/ui/action-bar.tsx",
           "type": "registry:ui"
         }
       ]
@@ -245,9 +400,86 @@
         "tailwind-merge",
         "tailwind-variants"
       ],
+      "registryDependencies": [
+        "elevated",
+        "motion-tokens"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/file-upload.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "expandable-list",
+      "type": "registry:ui",
+      "dependencies": [
+        "framer-motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "elevated",
+        "motion-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/expandable-list.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "live-queue",
+      "type": "registry:ui",
+      "dependencies": [
+        "framer-motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "elevated",
+        "motion-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/live-queue.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "achievement-toast",
+      "type": "registry:ui",
+      "dependencies": [
+        "framer-motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "elevated",
+        "motion-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/achievement-toast.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "context-menu",
+      "type": "registry:ui",
+      "dependencies": [
+        "@base-ui/react",
+        "framer-motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "elevated",
+        "motion-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/context-menu.tsx",
           "type": "registry:ui"
         }
       ]
@@ -260,6 +492,10 @@
         "lucide-react",
         "tailwind-merge",
         "tailwind-variants"
+      ],
+      "registryDependencies": [
+        "elevated",
+        "motion-tokens"
       ],
       "files": [
         {
@@ -297,6 +533,10 @@
         {
           "path": "src/registry/new-york-v4/ui/animated-area-chart.tsx",
           "type": "registry:ui"
+        },
+        {
+          "path": "src/registry/new-york-v4/ui/chart-interaction.ts",
+          "type": "registry:ui"
         }
       ]
     },
@@ -312,6 +552,10 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/allocation-performance-chart.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/registry/new-york-v4/ui/chart-interaction.ts",
           "type": "registry:ui"
         }
       ]
@@ -330,6 +574,10 @@
         {
           "path": "src/registry/new-york-v4/ui/sparkline-card.tsx",
           "type": "registry:ui"
+        },
+        {
+          "path": "src/registry/new-york-v4/ui/chart-interaction.ts",
+          "type": "registry:ui"
         }
       ]
     },
@@ -344,6 +592,10 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/signal-flow-chart.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/registry/new-york-v4/ui/chart-interaction.ts",
           "type": "registry:ui"
         }
       ]
@@ -360,6 +612,10 @@
         {
           "path": "src/registry/new-york-v4/ui/activity-heatmap-chart.tsx",
           "type": "registry:ui"
+        },
+        {
+          "path": "src/registry/new-york-v4/ui/chart-interaction.ts",
+          "type": "registry:ui"
         }
       ]
     },
@@ -374,6 +630,10 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/candlestick-chart.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/registry/new-york-v4/ui/chart-interaction.ts",
           "type": "registry:ui"
         }
       ]
@@ -390,6 +650,10 @@
         {
           "path": "src/registry/new-york-v4/ui/bubble-chart.tsx",
           "type": "registry:ui"
+        },
+        {
+          "path": "src/registry/new-york-v4/ui/chart-interaction.ts",
+          "type": "registry:ui"
         }
       ]
     },
@@ -404,6 +668,10 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/activity-waveform-chart.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/registry/new-york-v4/ui/chart-interaction.ts",
           "type": "registry:ui"
         }
       ]
@@ -420,6 +688,10 @@
         {
           "path": "src/registry/new-york-v4/ui/performance-waterfall-chart.tsx",
           "type": "registry:ui"
+        },
+        {
+          "path": "src/registry/new-york-v4/ui/chart-interaction.ts",
+          "type": "registry:ui"
         }
       ]
     },
@@ -434,6 +706,10 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/threshold-band-chart.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/registry/new-york-v4/ui/chart-interaction.ts",
           "type": "registry:ui"
         }
       ]
@@ -450,6 +726,10 @@
         {
           "path": "src/registry/new-york-v4/ui/impact-priority-matrix.tsx",
           "type": "registry:ui"
+        },
+        {
+          "path": "src/registry/new-york-v4/ui/chart-interaction.ts",
+          "type": "registry:ui"
         }
       ]
     },
@@ -464,6 +744,10 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/resource-treemap-chart.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/registry/new-york-v4/ui/chart-interaction.ts",
           "type": "registry:ui"
         }
       ]
@@ -480,6 +764,10 @@
         {
           "path": "src/registry/new-york-v4/ui/score-radar-chart.tsx",
           "type": "registry:ui"
+        },
+        {
+          "path": "src/registry/new-york-v4/ui/chart-interaction.ts",
+          "type": "registry:ui"
         }
       ]
     },
@@ -490,6 +778,10 @@
         "framer-motion",
         "tailwind-merge",
         "tailwind-variants"
+      ],
+      "registryDependencies": [
+        "elevated",
+        "motion-tokens"
       ],
       "files": [
         {
@@ -506,6 +798,10 @@
         "lucide-react",
         "tailwind-merge",
         "tailwind-variants"
+      ],
+      "registryDependencies": [
+        "elevated",
+        "motion-tokens"
       ],
       "files": [
         {
@@ -525,37 +821,6 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/spotlight-card.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "kinetic-card",
-      "type": "registry:ui",
-      "dependencies": [
-        "framer-motion",
-        "tailwind-merge",
-        "tailwind-variants"
-      ],
-      "files": [
-        {
-          "path": "src/registry/new-york-v4/ui/kinetic-card.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "progress-orbit",
-      "type": "registry:ui",
-      "dependencies": [
-        "framer-motion",
-        "lucide-react",
-        "tailwind-merge",
-        "tailwind-variants"
-      ],
-      "files": [
-        {
-          "path": "src/registry/new-york-v4/ui/progress-orbit.tsx",
           "type": "registry:ui"
         }
       ]
@@ -734,10 +999,45 @@
     {
       "name": "popover-card",
       "type": "registry:ui",
+      "cssVars": {
+        "theme": {
+          "ease-lift": "cubic-bezier(0.4, 0, 0.2, 1)",
+          "duration-lift": "320ms",
+          "duration-lift-press": "120ms"
+        }
+      },
+      "css": {
+        "@utility hover-lift": {
+          "--lift": "2px",
+          "transition-property": "translate, scale, box-shadow, background-color, border-color, border-radius, color, opacity",
+          "transition-duration": "var(--duration-lift)",
+          "transition-timing-function": "var(--ease-lift)",
+          "@media (hover: hover)": {
+            "&:hover": {
+              "translate": "0 calc(var(--lift) * -1)"
+            }
+          },
+          "&:active": {
+            "translate": "0 0",
+            "transition-duration": "var(--duration-lift-press)"
+          },
+          "@media (prefers-reduced-motion: reduce)": {
+            "transition-property": "background-color, border-color, color, opacity",
+            "&:hover, &:active": {
+              "translate": "none",
+              "scale": "none"
+            }
+          }
+        }
+      },
       "dependencies": [
         "@base-ui/react",
         "class-variance-authority",
         "framer-motion"
+      ],
+      "registryDependencies": [
+        "elevated",
+        "motion-tokens"
       ],
       "files": [
         {
@@ -755,6 +1055,10 @@
         "framer-motion",
         "lucide-react"
       ],
+      "registryDependencies": [
+        "elevated",
+        "motion-tokens"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/sheet-panel.tsx",
@@ -763,14 +1067,768 @@
       ]
     },
     {
-      "name": "button-demo",
-      "type": "registry:example",
+      "name": "stacked-dialog",
+      "type": "registry:ui",
+      "dependencies": [
+        "@base-ui/react",
+        "class-variance-authority",
+        "framer-motion",
+        "lucide-react"
+      ],
       "registryDependencies": [
-        "button"
+        "elevated",
+        "motion-tokens"
       ],
       "files": [
         {
-          "path": "src/registry/new-york-v4/examples/button-demo.tsx",
+          "path": "src/registry/new-york-v4/ui/stacked-dialog.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "surface-context",
+      "type": "registry:lib",
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/lib/surface-context.tsx",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "surface-classes",
+      "type": "registry:lib",
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/lib/surface-classes.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "motion-tokens",
+      "type": "registry:lib",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/lib/motion-tokens.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "elevated",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "https://matos-ui.com/r/surface-context.json",
+        "https://matos-ui.com/r/surface-classes.json"
+      ],
+      "cssVars": {
+        "light": {
+          "surface-1": "#fafafa",
+          "surface-2": "#fcfcfc",
+          "surface-3": "#ffffff",
+          "surface-4": "#ffffff",
+          "surface-5": "#ffffff",
+          "surface-6": "#ffffff",
+          "surface-7": "#ffffff",
+          "surface-8": "#ffffff",
+          "shadow-color": "rgb(0 0 0 / 0.06)",
+          "lm-ring-2": "rgb(0 0 0 / 0.07)",
+          "lm-ring-3": "rgb(0 0 0 / 0.08)",
+          "lm-ring-4": "rgb(0 0 0 / 0.09)",
+          "lm-ring-5": "rgb(0 0 0 / 0.1)",
+          "lm-ring-6": "rgb(0 0 0 / 0.11)",
+          "lm-ring-7": "rgb(0 0 0 / 0.12)",
+          "lm-ring-8": "rgb(0 0 0 / 0.13)",
+          "lm-drop": "rgb(0 0 0 / 0.07)",
+          "shadow-1": "0 0 0 1px var(--shadow-color)",
+          "shadow-2": "0 0 0 1px var(--lm-ring-2), 0 1px 1px -0.5px var(--lm-drop)",
+          "shadow-3": "0 0 0 1px var(--lm-ring-3), 0 1px 1px -0.5px var(--lm-drop), 0 3px 3px -1.5px var(--lm-drop)",
+          "shadow-4": "0 0 0 1px var(--lm-ring-4), 0 1px 1px -0.5px var(--lm-drop), 0 3px 3px -1.5px var(--lm-drop), 0 6px 6px -3px var(--lm-drop)",
+          "shadow-5": "0 0 0 1px var(--lm-ring-5), 0 1px 1px -0.5px var(--lm-drop), 0 3px 3px -1.5px var(--lm-drop), 0 6px 6px -3px var(--lm-drop), 0 12px 12px -6px var(--lm-drop)",
+          "shadow-6": "0 0 0 1px var(--lm-ring-6), 0 1px 1px -0.5px var(--lm-drop), 0 3px 3px -1.5px var(--lm-drop), 0 6px 6px -3px var(--lm-drop), 0 12px 12px -6px var(--lm-drop), 0 24px 24px -12px var(--lm-drop)",
+          "shadow-7": "0 0 0 1px var(--lm-ring-7), 0 1px 1px -0.5px var(--lm-drop), 0 3px 3px -1.5px var(--lm-drop), 0 6px 6px -3px var(--lm-drop), 0 12px 12px -6px var(--lm-drop), 0 24px 24px -12px var(--lm-drop), 0 48px 48px -24px var(--lm-drop)",
+          "shadow-8": "0 0 0 1px var(--lm-ring-8), 0 1px 1px -0.5px var(--lm-drop), 0 3px 3px -1.5px var(--lm-drop), 0 6px 6px -3px var(--lm-drop), 0 12px 12px -6px var(--lm-drop), 0 24px 24px -12px var(--lm-drop), 0 48px 48px -24px var(--lm-drop), 0 96px 96px -48px var(--lm-drop)"
+        },
+        "dark": {
+          "surface-1": "#191919",
+          "surface-2": "#242424",
+          "surface-3": "#2e2e2e",
+          "surface-4": "#393939",
+          "surface-5": "#444444",
+          "surface-6": "#4e4e4e",
+          "surface-7": "#575757",
+          "surface-8": "#616161",
+          "dm-hi-base": "rgba(255,255,255,0.01)",
+          "dm-hi-mid": "rgba(255,255,255,0.02)",
+          "dm-hi-high": "rgba(255,255,255,0.04)",
+          "dm-hi-peak": "rgba(255,255,255,0.06)",
+          "dm-ring-base": "rgba(255,255,255,0.02)",
+          "dm-ring-mid": "rgba(255,255,255,0.04)",
+          "dm-ring-high": "rgba(255,255,255,0.06)",
+          "dm-drop": "rgba(0,0,0,0.18)",
+          "shadow-1": "inset 0 0 0 1px var(--dm-ring-base)",
+          "shadow-2": "inset 0 1px 0 0 var(--dm-hi-base), inset 0 0 0 1px var(--dm-ring-base), 0 1px 1px -0.5px var(--dm-drop)",
+          "shadow-3": "inset 0 1px 0 0 var(--dm-hi-mid), inset 0 0 0 1px var(--dm-ring-base), 0 0 0 1px rgba(0,0,0,0.12), 0 1px 1px -0.5px var(--dm-drop), 0 3px 3px -1.5px var(--dm-drop)",
+          "shadow-4": "inset 0 1px 0 0 var(--dm-hi-mid), inset 0 0 0 1px var(--dm-ring-mid), 0 0 0 1px rgba(0,0,0,0.14), 0 1px 1px -0.5px var(--dm-drop), 0 3px 3px -1.5px var(--dm-drop), 0 6px 6px -3px var(--dm-drop)",
+          "shadow-5": "inset 0 1px 0 0 var(--dm-hi-high), inset 0 0 0 1px var(--dm-ring-mid), 0 0 0 1px rgba(0,0,0,0.16), 0 1px 1px -0.5px var(--dm-drop), 0 3px 3px -1.5px var(--dm-drop), 0 6px 6px -3px var(--dm-drop), 0 12px 12px -6px var(--dm-drop)",
+          "shadow-6": "inset 0 1px 0 0 var(--dm-hi-high), inset 0 0 0 1px var(--dm-ring-high), 0 0 0 1px rgba(0,0,0,0.18), 0 1px 1px -0.5px var(--dm-drop), 0 3px 3px -1.5px var(--dm-drop), 0 6px 6px -3px var(--dm-drop), 0 12px 12px -6px var(--dm-drop), 0 24px 24px -12px var(--dm-drop)",
+          "shadow-7": "inset 0 1px 0 0 var(--dm-hi-peak), inset 0 0 0 1px var(--dm-ring-high), 0 0 0 1px rgba(0,0,0,0.2), 0 1px 1px -0.5px var(--dm-drop), 0 3px 3px -1.5px var(--dm-drop), 0 6px 6px -3px var(--dm-drop), 0 12px 12px -6px var(--dm-drop), 0 24px 24px -12px var(--dm-drop), 0 48px 48px -24px var(--dm-drop)",
+          "shadow-8": "inset 0 1px 0 0 var(--dm-hi-peak), inset 0 0 0 1px var(--dm-ring-high), 0 0 0 1px rgba(0,0,0,0.22), 0 1px 1px -0.5px var(--dm-drop), 0 3px 3px -1.5px var(--dm-drop), 0 6px 6px -3px var(--dm-drop), 0 12px 12px -6px var(--dm-drop), 0 24px 24px -12px var(--dm-drop), 0 48px 48px -24px var(--dm-drop), 0 96px 96px -48px var(--dm-drop)"
+        },
+        "theme": {
+          "ease-lift": "cubic-bezier(0.4, 0, 0.2, 1)",
+          "duration-lift": "320ms",
+          "duration-lift-press": "120ms"
+        }
+      },
+      "css": {
+        "@theme inline": {
+          "--color-surface-1": "var(--surface-1)",
+          "--color-surface-2": "var(--surface-2)",
+          "--color-surface-3": "var(--surface-3)",
+          "--color-surface-4": "var(--surface-4)",
+          "--color-surface-5": "var(--surface-5)",
+          "--color-surface-6": "var(--surface-6)",
+          "--color-surface-7": "var(--surface-7)",
+          "--color-surface-8": "var(--surface-8)",
+          "--shadow-surface-1": "var(--shadow-1)",
+          "--shadow-surface-2": "var(--shadow-2)",
+          "--shadow-surface-3": "var(--shadow-3)",
+          "--shadow-surface-4": "var(--shadow-4)",
+          "--shadow-surface-5": "var(--shadow-5)",
+          "--shadow-surface-6": "var(--shadow-6)",
+          "--shadow-surface-7": "var(--shadow-7)",
+          "--shadow-surface-8": "var(--shadow-8)"
+        },
+        "@utility hover-lift": {
+          "--lift": "2px",
+          "transition-property": "translate, scale, box-shadow, background-color, border-color, border-radius, color, opacity",
+          "transition-duration": "var(--duration-lift)",
+          "transition-timing-function": "var(--ease-lift)",
+          "@media (hover: hover)": {
+            "&:hover": {
+              "translate": "0 calc(var(--lift) * -1)"
+            }
+          },
+          "&:active": {
+            "translate": "0 0",
+            "transition-duration": "var(--duration-lift-press)"
+          },
+          "@media (prefers-reduced-motion: reduce)": {
+            "transition-property": "background-color, border-color, color, opacity",
+            "&:hover, &:active": {
+              "translate": "none",
+              "scale": "none"
+            }
+          }
+        }
+      },
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/elevated.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "dashboard-overview-01",
+      "type": "registry:block",
+      "description": "Responsive analytics dashboard with selectable date ranges, animated metrics, export actions, and a recent activity feed.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "https://matos-ui.com/r/badge.json",
+        "https://matos-ui.com/r/button.json",
+        "https://matos-ui.com/r/elevated.json",
+        "https://matos-ui.com/r/metric-card.json"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/blocks/dashboard-overview-01/dashboard-overview-01.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "profile-settings-01",
+      "type": "registry:block",
+      "description": "Responsive account settings screen with profile navigation, editable identity fields, validation, and saving feedback.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "https://matos-ui.com/r/badge.json",
+        "https://matos-ui.com/r/button.json",
+        "https://matos-ui.com/r/input.json",
+        "https://matos-ui.com/r/textarea.json"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/blocks/profile-settings-01/profile-settings-01.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "sidebar-surface-01",
+      "type": "registry:block",
+      "description": "Application sidebar built on the Surfaces system — the panel lifts off the app background, the active item and the user menu popover elevate one and two steps, and collapsible nav groups keep everything readable in light and dark.",
+      "dependencies": [
+        "framer-motion",
+        "lucide-react",
+        "tailwind-merge"
+      ],
+      "registryDependencies": [
+        "https://matos-ui.com/r/elevated.json",
+        "https://matos-ui.com/r/surface-context.json",
+        "https://matos-ui.com/r/surface-classes.json",
+        "https://matos-ui.com/r/badge.json"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/blocks/sidebar-surface-01/sidebar-surface-01.tsx",
+          "type": "registry:block"
+        },
+        {
+          "path": "src/registry/new-york-v4/blocks/sidebar-surface-01/components/nav-section.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/registry/new-york-v4/blocks/sidebar-surface-01/components/user-menu.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/registry/new-york-v4/blocks/sidebar-surface-01/data.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "sign-in-01",
+      "type": "registry:block",
+      "description": "Split sign-in screen with social auth, email and password validation, loading, error and success states, and a responsive marketing aside.",
+      "dependencies": [
+        "framer-motion",
+        "lucide-react",
+        "tailwind-merge"
+      ],
+      "registryDependencies": [
+        "https://matos-ui.com/r/button.json",
+        "https://matos-ui.com/r/badge.json",
+        "https://matos-ui.com/r/input.json",
+        "https://matos-ui.com/r/password-input.json",
+        "https://matos-ui.com/r/checkbox.json"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/blocks/sign-in-01/sign-in-01.tsx",
+          "type": "registry:block"
+        },
+        {
+          "path": "src/registry/new-york-v4/blocks/sign-in-01/components/auth-aside.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "palette-ink",
+      "type": "registry:theme",
+      "cssVars": {
+        "light": {
+          "primary": "oklch(0.205 0 0)",
+          "primary-foreground": "oklch(0.985 0 0)",
+          "accent": "oklch(0.97 0 0)",
+          "accent-foreground": "oklch(0.205 0 0)",
+          "ring": "oklch(0.708 0 0)",
+          "chart-1": "oklch(0.646 0.222 41.116)",
+          "chart-2": "oklch(0.6 0.118 184.704)",
+          "chart-3": "oklch(0.398 0.07 227.392)",
+          "chart-4": "oklch(0.828 0.189 84.429)",
+          "chart-5": "oklch(0.769 0.188 70.08)",
+          "sidebar-primary": "oklch(0.205 0 0)",
+          "sidebar-primary-foreground": "oklch(0.985 0 0)",
+          "sidebar-ring": "oklch(0.708 0 0)"
+        },
+        "dark": {
+          "primary": "oklch(0.922 0 0)",
+          "primary-foreground": "oklch(0.205 0 0)",
+          "accent": "oklch(0.269 0 0)",
+          "accent-foreground": "oklch(0.985 0 0)",
+          "ring": "oklch(0.556 0 0)",
+          "chart-1": "oklch(0.488 0.243 264.376)",
+          "chart-2": "oklch(0.696 0.17 162.48)",
+          "chart-3": "oklch(0.769 0.188 70.08)",
+          "chart-4": "oklch(0.627 0.265 303.9)",
+          "chart-5": "oklch(0.645 0.246 16.439)",
+          "sidebar-primary": "oklch(0.488 0.243 264.376)",
+          "sidebar-primary-foreground": "oklch(0.985 0 0)",
+          "sidebar-ring": "oklch(0.556 0 0)"
+        }
+      }
+    },
+    {
+      "name": "palette-slate",
+      "type": "registry:theme",
+      "cssVars": {
+        "light": {
+          "primary": "oklch(0.45 0.045 264)",
+          "primary-foreground": "oklch(0.985 0 0)",
+          "accent": "oklch(0.968 0.008 264)",
+          "accent-foreground": "oklch(0.32 0.03 264)",
+          "ring": "oklch(0.45 0.045 264 / 0.5)",
+          "chart-1": "oklch(0.55 0.13 264)",
+          "chart-2": "oklch(0.62 0.11 230)",
+          "chart-3": "oklch(0.68 0.09 200)",
+          "chart-4": "oklch(0.6 0.12 292)",
+          "chart-5": "oklch(0.72 0.08 250)",
+          "sidebar-primary": "oklch(0.45 0.045 264)",
+          "sidebar-primary-foreground": "oklch(0.985 0 0)",
+          "sidebar-ring": "oklch(0.45 0.045 264 / 0.5)"
+        },
+        "dark": {
+          "primary": "oklch(0.75 0.035 264)",
+          "primary-foreground": "oklch(0.145 0 0)",
+          "accent": "oklch(0.269 0.02 264)",
+          "accent-foreground": "oklch(0.985 0 0)",
+          "ring": "oklch(0.75 0.035 264 / 0.5)",
+          "chart-1": "oklch(0.7 0.12 264)",
+          "chart-2": "oklch(0.74 0.1 230)",
+          "chart-3": "oklch(0.78 0.09 200)",
+          "chart-4": "oklch(0.72 0.12 292)",
+          "chart-5": "oklch(0.8 0.07 250)",
+          "sidebar-primary": "oklch(0.75 0.035 264)",
+          "sidebar-primary-foreground": "oklch(0.145 0 0)",
+          "sidebar-ring": "oklch(0.75 0.035 264 / 0.5)"
+        }
+      }
+    },
+    {
+      "name": "palette-rose",
+      "type": "registry:theme",
+      "cssVars": {
+        "light": {
+          "primary": "oklch(0.55 0.21 15)",
+          "primary-foreground": "oklch(0.985 0 0)",
+          "accent": "oklch(0.97 0.022 15)",
+          "accent-foreground": "oklch(0.35 0.14 15)",
+          "ring": "oklch(0.55 0.21 15 / 0.5)",
+          "chart-1": "oklch(0.55 0.21 15)",
+          "chart-2": "oklch(0.62 0.18 350)",
+          "chart-3": "oklch(0.7 0.14 30)",
+          "chart-4": "oklch(0.68 0.16 335)",
+          "chart-5": "oklch(0.6 0.19 45)",
+          "sidebar-primary": "oklch(0.55 0.21 15)",
+          "sidebar-primary-foreground": "oklch(0.985 0 0)",
+          "sidebar-ring": "oklch(0.55 0.21 15 / 0.5)"
+        },
+        "dark": {
+          "primary": "oklch(0.7 0.19 15)",
+          "primary-foreground": "oklch(0.145 0 0)",
+          "accent": "oklch(0.269 0.045 15)",
+          "accent-foreground": "oklch(0.985 0 0)",
+          "ring": "oklch(0.7 0.19 15 / 0.5)",
+          "chart-1": "oklch(0.7 0.19 15)",
+          "chart-2": "oklch(0.74 0.16 350)",
+          "chart-3": "oklch(0.78 0.13 30)",
+          "chart-4": "oklch(0.72 0.15 335)",
+          "chart-5": "oklch(0.76 0.15 45)",
+          "sidebar-primary": "oklch(0.7 0.19 15)",
+          "sidebar-primary-foreground": "oklch(0.145 0 0)",
+          "sidebar-ring": "oklch(0.7 0.19 15 / 0.5)"
+        }
+      }
+    },
+    {
+      "name": "palette-copper",
+      "type": "registry:theme",
+      "cssVars": {
+        "light": {
+          "primary": "oklch(0.666 0.179 58)",
+          "primary-foreground": "oklch(0.145 0 0)",
+          "accent": "oklch(0.97 0.025 58)",
+          "accent-foreground": "oklch(0.35 0.1 58)",
+          "ring": "oklch(0.666 0.179 58 / 0.5)",
+          "chart-1": "oklch(0.666 0.179 58)",
+          "chart-2": "oklch(0.6 0.16 38)",
+          "chart-3": "oklch(0.74 0.14 78)",
+          "chart-4": "oklch(0.8 0.12 92)",
+          "chart-5": "oklch(0.58 0.17 24)",
+          "sidebar-primary": "oklch(0.666 0.179 58)",
+          "sidebar-primary-foreground": "oklch(0.145 0 0)",
+          "sidebar-ring": "oklch(0.666 0.179 58 / 0.5)"
+        },
+        "dark": {
+          "primary": "oklch(0.72 0.17 58)",
+          "primary-foreground": "oklch(0.145 0 0)",
+          "accent": "oklch(0.269 0.035 58)",
+          "accent-foreground": "oklch(0.985 0 0)",
+          "ring": "oklch(0.72 0.17 58 / 0.5)",
+          "chart-1": "oklch(0.72 0.17 58)",
+          "chart-2": "oklch(0.68 0.15 38)",
+          "chart-3": "oklch(0.78 0.13 78)",
+          "chart-4": "oklch(0.82 0.12 92)",
+          "chart-5": "oklch(0.66 0.16 24)",
+          "sidebar-primary": "oklch(0.72 0.17 58)",
+          "sidebar-primary-foreground": "oklch(0.145 0 0)",
+          "sidebar-ring": "oklch(0.72 0.17 58 / 0.5)"
+        }
+      }
+    },
+    {
+      "name": "palette-amber",
+      "type": "registry:theme",
+      "cssVars": {
+        "light": {
+          "primary": "oklch(0.78 0.16 85)",
+          "primary-foreground": "oklch(0.145 0 0)",
+          "accent": "oklch(0.97 0.03 85)",
+          "accent-foreground": "oklch(0.38 0.09 85)",
+          "ring": "oklch(0.78 0.16 85 / 0.5)",
+          "chart-1": "oklch(0.78 0.16 85)",
+          "chart-2": "oklch(0.7 0.16 65)",
+          "chart-3": "oklch(0.83 0.14 100)",
+          "chart-4": "oklch(0.64 0.15 50)",
+          "chart-5": "oklch(0.75 0.13 120)",
+          "sidebar-primary": "oklch(0.78 0.16 85)",
+          "sidebar-primary-foreground": "oklch(0.145 0 0)",
+          "sidebar-ring": "oklch(0.78 0.16 85 / 0.5)"
+        },
+        "dark": {
+          "primary": "oklch(0.83 0.15 85)",
+          "primary-foreground": "oklch(0.145 0 0)",
+          "accent": "oklch(0.269 0.04 85)",
+          "accent-foreground": "oklch(0.985 0 0)",
+          "ring": "oklch(0.83 0.15 85 / 0.5)",
+          "chart-1": "oklch(0.83 0.15 85)",
+          "chart-2": "oklch(0.76 0.15 65)",
+          "chart-3": "oklch(0.87 0.13 100)",
+          "chart-4": "oklch(0.72 0.15 50)",
+          "chart-5": "oklch(0.8 0.13 120)",
+          "sidebar-primary": "oklch(0.83 0.15 85)",
+          "sidebar-primary-foreground": "oklch(0.145 0 0)",
+          "sidebar-ring": "oklch(0.83 0.15 85 / 0.5)"
+        }
+      }
+    },
+    {
+      "name": "palette-lime",
+      "type": "registry:theme",
+      "cssVars": {
+        "light": {
+          "primary": "oklch(0.68 0.17 135)",
+          "primary-foreground": "oklch(0.145 0 0)",
+          "accent": "oklch(0.97 0.03 135)",
+          "accent-foreground": "oklch(0.33 0.1 135)",
+          "ring": "oklch(0.68 0.17 135 / 0.5)",
+          "chart-1": "oklch(0.68 0.17 135)",
+          "chart-2": "oklch(0.74 0.15 120)",
+          "chart-3": "oklch(0.62 0.15 152)",
+          "chart-4": "oklch(0.8 0.14 105)",
+          "chart-5": "oklch(0.57 0.13 168)",
+          "sidebar-primary": "oklch(0.68 0.17 135)",
+          "sidebar-primary-foreground": "oklch(0.145 0 0)",
+          "sidebar-ring": "oklch(0.68 0.17 135 / 0.5)"
+        },
+        "dark": {
+          "primary": "oklch(0.77 0.17 135)",
+          "primary-foreground": "oklch(0.145 0 0)",
+          "accent": "oklch(0.269 0.04 135)",
+          "accent-foreground": "oklch(0.985 0 0)",
+          "ring": "oklch(0.77 0.17 135 / 0.5)",
+          "chart-1": "oklch(0.77 0.17 135)",
+          "chart-2": "oklch(0.81 0.15 120)",
+          "chart-3": "oklch(0.72 0.15 152)",
+          "chart-4": "oklch(0.85 0.14 105)",
+          "chart-5": "oklch(0.68 0.13 168)",
+          "sidebar-primary": "oklch(0.77 0.17 135)",
+          "sidebar-primary-foreground": "oklch(0.145 0 0)",
+          "sidebar-ring": "oklch(0.77 0.17 135 / 0.5)"
+        }
+      }
+    },
+    {
+      "name": "palette-emerald",
+      "type": "registry:theme",
+      "cssVars": {
+        "light": {
+          "primary": "oklch(0.596 0.145 163)",
+          "primary-foreground": "oklch(0.145 0 0)",
+          "accent": "oklch(0.97 0.02 163)",
+          "accent-foreground": "oklch(0.31 0.09 163)",
+          "ring": "oklch(0.596 0.145 163 / 0.5)",
+          "chart-1": "oklch(0.596 0.145 163)",
+          "chart-2": "oklch(0.64 0.13 148)",
+          "chart-3": "oklch(0.71 0.11 176)",
+          "chart-4": "oklch(0.76 0.1 132)",
+          "chart-5": "oklch(0.55 0.14 190)",
+          "sidebar-primary": "oklch(0.596 0.145 163)",
+          "sidebar-primary-foreground": "oklch(0.145 0 0)",
+          "sidebar-ring": "oklch(0.596 0.145 163 / 0.5)"
+        },
+        "dark": {
+          "primary": "oklch(0.7 0.16 163)",
+          "primary-foreground": "oklch(0.145 0 0)",
+          "accent": "oklch(0.269 0.035 163)",
+          "accent-foreground": "oklch(0.985 0 0)",
+          "ring": "oklch(0.7 0.16 163 / 0.5)",
+          "chart-1": "oklch(0.7 0.16 163)",
+          "chart-2": "oklch(0.74 0.13 148)",
+          "chart-3": "oklch(0.78 0.11 176)",
+          "chart-4": "oklch(0.72 0.13 132)",
+          "chart-5": "oklch(0.67 0.14 190)",
+          "sidebar-primary": "oklch(0.7 0.16 163)",
+          "sidebar-primary-foreground": "oklch(0.145 0 0)",
+          "sidebar-ring": "oklch(0.7 0.16 163 / 0.5)"
+        }
+      }
+    },
+    {
+      "name": "palette-teal",
+      "type": "registry:theme",
+      "cssVars": {
+        "light": {
+          "primary": "oklch(0.6 0.115 195)",
+          "primary-foreground": "oklch(0.145 0 0)",
+          "accent": "oklch(0.97 0.02 195)",
+          "accent-foreground": "oklch(0.32 0.07 195)",
+          "ring": "oklch(0.6 0.115 195 / 0.5)",
+          "chart-1": "oklch(0.6 0.115 195)",
+          "chart-2": "oklch(0.66 0.1 210)",
+          "chart-3": "oklch(0.55 0.12 180)",
+          "chart-4": "oklch(0.72 0.09 225)",
+          "chart-5": "oklch(0.5 0.1 165)",
+          "sidebar-primary": "oklch(0.6 0.115 195)",
+          "sidebar-primary-foreground": "oklch(0.145 0 0)",
+          "sidebar-ring": "oklch(0.6 0.115 195 / 0.5)"
+        },
+        "dark": {
+          "primary": "oklch(0.72 0.12 195)",
+          "primary-foreground": "oklch(0.145 0 0)",
+          "accent": "oklch(0.269 0.03 195)",
+          "accent-foreground": "oklch(0.985 0 0)",
+          "ring": "oklch(0.72 0.12 195 / 0.5)",
+          "chart-1": "oklch(0.72 0.12 195)",
+          "chart-2": "oklch(0.77 0.1 210)",
+          "chart-3": "oklch(0.68 0.12 180)",
+          "chart-4": "oklch(0.81 0.09 225)",
+          "chart-5": "oklch(0.64 0.11 165)",
+          "sidebar-primary": "oklch(0.72 0.12 195)",
+          "sidebar-primary-foreground": "oklch(0.145 0 0)",
+          "sidebar-ring": "oklch(0.72 0.12 195 / 0.5)"
+        }
+      }
+    },
+    {
+      "name": "palette-sky",
+      "type": "registry:theme",
+      "cssVars": {
+        "light": {
+          "primary": "oklch(0.55 0.15 232)",
+          "primary-foreground": "oklch(0.985 0 0)",
+          "accent": "oklch(0.97 0.022 232)",
+          "accent-foreground": "oklch(0.33 0.09 232)",
+          "ring": "oklch(0.55 0.15 232 / 0.5)",
+          "chart-1": "oklch(0.55 0.15 232)",
+          "chart-2": "oklch(0.63 0.13 245)",
+          "chart-3": "oklch(0.68 0.11 215)",
+          "chart-4": "oklch(0.74 0.09 255)",
+          "chart-5": "oklch(0.6 0.12 200)",
+          "sidebar-primary": "oklch(0.55 0.15 232)",
+          "sidebar-primary-foreground": "oklch(0.985 0 0)",
+          "sidebar-ring": "oklch(0.55 0.15 232 / 0.5)"
+        },
+        "dark": {
+          "primary": "oklch(0.7 0.14 232)",
+          "primary-foreground": "oklch(0.145 0 0)",
+          "accent": "oklch(0.269 0.035 232)",
+          "accent-foreground": "oklch(0.985 0 0)",
+          "ring": "oklch(0.7 0.14 232 / 0.5)",
+          "chart-1": "oklch(0.7 0.14 232)",
+          "chart-2": "oklch(0.76 0.12 245)",
+          "chart-3": "oklch(0.8 0.1 215)",
+          "chart-4": "oklch(0.72 0.12 255)",
+          "chart-5": "oklch(0.74 0.12 200)",
+          "sidebar-primary": "oklch(0.7 0.14 232)",
+          "sidebar-primary-foreground": "oklch(0.145 0 0)",
+          "sidebar-ring": "oklch(0.7 0.14 232 / 0.5)"
+        }
+      }
+    },
+    {
+      "name": "palette-azure",
+      "type": "registry:theme",
+      "cssVars": {
+        "light": {
+          "primary": "oklch(0.52 0.21 258)",
+          "primary-foreground": "oklch(0.985 0 0)",
+          "accent": "oklch(0.97 0.02 258)",
+          "accent-foreground": "oklch(0.33 0.13 258)",
+          "ring": "oklch(0.52 0.21 258 / 0.5)",
+          "chart-1": "oklch(0.52 0.21 258)",
+          "chart-2": "oklch(0.6 0.17 245)",
+          "chart-3": "oklch(0.68 0.14 272)",
+          "chart-4": "oklch(0.74 0.11 232)",
+          "chart-5": "oklch(0.58 0.18 285)",
+          "sidebar-primary": "oklch(0.52 0.21 258)",
+          "sidebar-primary-foreground": "oklch(0.985 0 0)",
+          "sidebar-ring": "oklch(0.52 0.21 258 / 0.5)"
+        },
+        "dark": {
+          "primary": "oklch(0.66 0.19 258)",
+          "primary-foreground": "oklch(0.145 0 0)",
+          "accent": "oklch(0.269 0.045 258)",
+          "accent-foreground": "oklch(0.985 0 0)",
+          "ring": "oklch(0.66 0.19 258 / 0.5)",
+          "chart-1": "oklch(0.66 0.19 258)",
+          "chart-2": "oklch(0.72 0.16 245)",
+          "chart-3": "oklch(0.78 0.13 272)",
+          "chart-4": "oklch(0.8 0.11 232)",
+          "chart-5": "oklch(0.7 0.17 285)",
+          "sidebar-primary": "oklch(0.66 0.19 258)",
+          "sidebar-primary-foreground": "oklch(0.145 0 0)",
+          "sidebar-ring": "oklch(0.66 0.19 258 / 0.5)"
+        }
+      }
+    },
+    {
+      "name": "palette-violet",
+      "type": "registry:theme",
+      "cssVars": {
+        "light": {
+          "primary": "oklch(0.541 0.221 293)",
+          "primary-foreground": "oklch(0.985 0 0)",
+          "accent": "oklch(0.97 0.018 293)",
+          "accent-foreground": "oklch(0.34 0.16 293)",
+          "ring": "oklch(0.541 0.221 293 / 0.5)",
+          "chart-1": "oklch(0.541 0.221 293)",
+          "chart-2": "oklch(0.6 0.15 280)",
+          "chart-3": "oklch(0.7 0.12 305)",
+          "chart-4": "oklch(0.75 0.1 260)",
+          "chart-5": "oklch(0.6 0.18 320)",
+          "sidebar-primary": "oklch(0.541 0.221 293)",
+          "sidebar-primary-foreground": "oklch(0.985 0 0)",
+          "sidebar-ring": "oklch(0.541 0.221 293 / 0.5)"
+        },
+        "dark": {
+          "primary": "oklch(0.68 0.19 293)",
+          "primary-foreground": "oklch(0.145 0 0)",
+          "accent": "oklch(0.269 0.04 293)",
+          "accent-foreground": "oklch(0.985 0 0)",
+          "ring": "oklch(0.68 0.19 293 / 0.5)",
+          "chart-1": "oklch(0.68 0.19 293)",
+          "chart-2": "oklch(0.74 0.14 280)",
+          "chart-3": "oklch(0.78 0.12 305)",
+          "chart-4": "oklch(0.7 0.13 260)",
+          "chart-5": "oklch(0.72 0.16 320)",
+          "sidebar-primary": "oklch(0.68 0.19 293)",
+          "sidebar-primary-foreground": "oklch(0.145 0 0)",
+          "sidebar-ring": "oklch(0.68 0.19 293 / 0.5)"
+        }
+      }
+    },
+    {
+      "name": "palette-fuchsia",
+      "type": "registry:theme",
+      "cssVars": {
+        "light": {
+          "primary": "oklch(0.56 0.24 330)",
+          "primary-foreground": "oklch(0.985 0 0)",
+          "accent": "oklch(0.97 0.025 330)",
+          "accent-foreground": "oklch(0.35 0.15 330)",
+          "ring": "oklch(0.56 0.24 330 / 0.5)",
+          "chart-1": "oklch(0.56 0.24 330)",
+          "chart-2": "oklch(0.63 0.2 345)",
+          "chart-3": "oklch(0.68 0.17 315)",
+          "chart-4": "oklch(0.74 0.13 300)",
+          "chart-5": "oklch(0.6 0.21 360)",
+          "sidebar-primary": "oklch(0.56 0.24 330)",
+          "sidebar-primary-foreground": "oklch(0.985 0 0)",
+          "sidebar-ring": "oklch(0.56 0.24 330 / 0.5)"
+        },
+        "dark": {
+          "primary": "oklch(0.7 0.21 330)",
+          "primary-foreground": "oklch(0.145 0 0)",
+          "accent": "oklch(0.269 0.05 330)",
+          "accent-foreground": "oklch(0.985 0 0)",
+          "ring": "oklch(0.7 0.21 330 / 0.5)",
+          "chart-1": "oklch(0.7 0.21 330)",
+          "chart-2": "oklch(0.75 0.18 345)",
+          "chart-3": "oklch(0.78 0.15 315)",
+          "chart-4": "oklch(0.72 0.15 300)",
+          "chart-5": "oklch(0.73 0.19 360)",
+          "sidebar-primary": "oklch(0.7 0.21 330)",
+          "sidebar-primary-foreground": "oklch(0.145 0 0)",
+          "sidebar-ring": "oklch(0.7 0.21 330 / 0.5)"
+        }
+      }
+    },
+    {
+      "name": "magnetic-card-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "magnetic-card"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/magnetic-card-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "spring-slider-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "spring-slider"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/spring-slider-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "bouncy-toggle-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "bouncy-toggle"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/bouncy-toggle-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "physics-counter-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "physics-counter"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/physics-counter-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "floating-action-menu-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "floating-action-menu"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/floating-action-menu-demo.tsx",
           "type": "registry:example"
         }
       ]
@@ -792,7 +1850,8 @@
       "name": "theme-toggler-button-demo",
       "type": "registry:example",
       "registryDependencies": [
-        "theme-toggler-button"
+        "theme-toggler-button",
+        "elevated"
       ],
       "files": [
         {
@@ -823,32 +1882,6 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/data-table-demo.tsx",
-          "type": "registry:example"
-        }
-      ]
-    },
-    {
-      "name": "activity-feed-demo",
-      "type": "registry:example",
-      "registryDependencies": [
-        "activity-feed"
-      ],
-      "files": [
-        {
-          "path": "src/registry/new-york-v4/examples/activity-feed-demo.tsx",
-          "type": "registry:example"
-        }
-      ]
-    },
-    {
-      "name": "status-pulse-card-demo",
-      "type": "registry:example",
-      "registryDependencies": [
-        "status-pulse-card"
-      ],
-      "files": [
-        {
-          "path": "src/registry/new-york-v4/examples/status-pulse-card-demo.tsx",
           "type": "registry:example"
         }
       ]
@@ -906,20 +1939,6 @@
       ]
     },
     {
-      "name": "detail-panel-demo",
-      "type": "registry:example",
-      "registryDependencies": [
-        "detail-panel",
-        "button"
-      ],
-      "files": [
-        {
-          "path": "src/registry/new-york-v4/examples/detail-panel-demo.tsx",
-          "type": "registry:example"
-        }
-      ]
-    },
-    {
       "name": "command-dock-demo",
       "type": "registry:example",
       "registryDependencies": [
@@ -941,6 +1960,72 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/file-upload-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "expandable-list-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "expandable-list"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/expandable-list-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "live-queue-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "live-queue"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/live-queue-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "stacked-dialog-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "stacked-dialog"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/stacked-dialog-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "achievement-toast-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "achievement-toast"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/achievement-toast-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "context-menu-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "context-menu",
+        "elevated"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/context-menu-demo.tsx",
           "type": "registry:example"
         }
       ]
@@ -1167,19 +2252,6 @@
       ]
     },
     {
-      "name": "progress-orbit-demo",
-      "type": "registry:example",
-      "registryDependencies": [
-        "progress-orbit"
-      ],
-      "files": [
-        {
-          "path": "src/registry/new-york-v4/examples/progress-orbit-demo.tsx",
-          "type": "registry:example"
-        }
-      ]
-    },
-    {
       "name": "spotlight-card-demo",
       "type": "registry:example",
       "registryDependencies": [
@@ -1188,19 +2260,6 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/spotlight-card-demo.tsx",
-          "type": "registry:example"
-        }
-      ]
-    },
-    {
-      "name": "kinetic-card-demo",
-      "type": "registry:example",
-      "registryDependencies": [
-        "kinetic-card"
-      ],
-      "files": [
-        {
-          "path": "src/registry/new-york-v4/examples/kinetic-card-demo.tsx",
           "type": "registry:example"
         }
       ]
@@ -1387,6 +2446,64 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/signup-form-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "elevated-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "elevated"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/elevated-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "motion-tokens-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "motion-tokens",
+        "elevated",
+        "button"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/motion-tokens-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "motion-stagger-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "motion-tokens",
+        "elevated",
+        "button"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/motion-stagger-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "motion-attention-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "motion-tokens",
+        "elevated",
+        "button"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/motion-attention-demo.tsx",
           "type": "registry:example"
         }
       ]

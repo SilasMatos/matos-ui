@@ -25,7 +25,7 @@ export function MainNav({
             key={item.href}
             variant="ghost"
             size="sm"
-            className="px-2.5"
+            className="px-2"
             nativeButton={false}
             render={
               <Link

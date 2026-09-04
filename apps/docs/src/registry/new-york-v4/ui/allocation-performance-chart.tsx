@@ -12,6 +12,7 @@ import {
 } from "react";
 import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
+import { useChartInteraction } from "./chart-interaction";
 
 export const allocationPerformanceChartVariants = tv({
   base: "not-prose w-full text-foreground",
@@ -192,7 +193,6 @@ export function AllocationPerformanceChart({
   const shouldReduceMotion = useReducedMotion();
   const rawId = useId();
   const id = rawId.replace(/:/g, "");
-  const [activeIndex, setActiveIndex] = useState(1);
   const [selectorOpen, setSelectorOpen] = useState(false);
   const safeMax = Math.max(1, max);
 
@@ -208,18 +208,19 @@ export function AllocationPerformanceChart({
     [data, safeMax],
   );
 
+  const {
+    activeIndex,
+    getItemProps,
+    hasEnteredView,
+    interactionProps,
+    selectIndex,
+  } = useChartInteraction(id, normalizedData.length);
+  const activeItem =
+    activeIndex === null ? null : (normalizedData[activeIndex] ?? null);
+  const displayItem = activeItem ?? normalizedData[0];
+
   useEffect(() => {
-    if (!normalizedData.length) {
-      return;
-    }
-
-    setActiveIndex((current) => clamp(current, 0, normalizedData.length - 1));
-  }, [normalizedData.length]);
-
-  const activeItem = normalizedData[activeIndex] ?? normalizedData[0];
-
-  useEffect(() => {
-    if (activeItem) {
+    if (activeItem && activeIndex !== null) {
       onActiveChange?.(activeItem, activeIndex);
     }
   }, [activeIndex, activeItem, onActiveChange]);
@@ -239,7 +240,7 @@ export function AllocationPerformanceChart({
     );
   }
 
-  if (!normalizedData.length || !activeItem) {
+  if (!normalizedData.length || !displayItem) {
     return (
       <div
         data-slot="allocation-performance-chart"
@@ -288,22 +289,23 @@ export function AllocationPerformanceChart({
     };
   });
 
-  const activeBar = bars[activeIndex] ?? bars[0];
+  const activeBar = activeIndex === null ? null : (bars[activeIndex] ?? null);
   const tooltipWidth = 172;
   const tooltipHeight = 66;
-  const tooltipX = clamp(
-    activeBar.centerX - tooltipWidth / 2,
-    plotX + 8,
-    plotX + plotWidth - tooltipWidth - 8,
-  );
-  const tooltipY = clamp(activeBar.y - tooltipHeight - 14, 12, baselineY - 112);
-  const anchorX = clamp(activeBar.centerX - tooltipX, 18, tooltipWidth - 18);
-  const markerY = activeBar.markerY;
+  const tooltipX = activeBar
+    ? clamp(
+        activeBar.centerX - tooltipWidth / 2,
+        plotX + 8,
+        plotX + plotWidth - tooltipWidth - 8,
+      )
+    : 0;
+  const tooltipY = activeBar
+    ? clamp(activeBar.y - tooltipHeight - 14, 12, baselineY - 112)
+    : 0;
+  const anchorX = activeBar
+    ? clamp(activeBar.centerX - tooltipX, 18, tooltipWidth - 18)
+    : tooltipWidth / 2;
   const motionEnabled = animated && !shouldReduceMotion;
-
-  function activate(index: number) {
-    setActiveIndex(index);
-  }
 
   return (
     <div
@@ -312,6 +314,7 @@ export function AllocationPerformanceChart({
         allocationPerformanceChartVariants({ size }),
         className,
       )}
+      {...interactionProps}
       {...props}
     >
       <div
@@ -342,7 +345,7 @@ export function AllocationPerformanceChart({
             >
               <span>{assetLabel}</span>
               <span className="hidden text-muted-foreground sm:inline">
-                {activeItem.label}
+                {displayItem.label}
               </span>
               <motion.span
                 aria-hidden="true"
@@ -381,7 +384,7 @@ export function AllocationPerformanceChart({
                       key={item.label}
                       type="button"
                       onClick={() => {
-                        activate(index);
+                        selectIndex(index);
                         setSelectorOpen(false);
                       }}
                       className={twMerge(
@@ -413,347 +416,347 @@ export function AllocationPerformanceChart({
         className="overflow-hidden"
         style={{ height }}
       >
-        <svg
-          viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
-          className="size-full"
-          role="img"
-          aria-labelledby={`${id}-title ${id}-desc`}
-        >
-          <title id={`${id}-title`}>{String(title)}</title>
-          <desc id={`${id}-desc`}>
-            Allocation performance chart with {normalizedData.length} asset
-            classes. Active item: {activeItem.label},{" "}
-            {getTextValue(activeItem.value, valueFormatter)}.
-          </desc>
-          <defs>
-            <pattern
-              id={`${id}-diagonal-pattern`}
-              width="8"
-              height="8"
-              patternUnits="userSpaceOnUse"
-              patternTransform="rotate(45)"
-            >
-              <line
+        {!motionEnabled || hasEnteredView ? (
+          <svg
+            viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
+            className="size-full"
+            role="img"
+            aria-labelledby={`${id}-title ${id}-desc`}
+          >
+            <title id={`${id}-title`}>{String(title)}</title>
+            <desc id={`${id}-desc`}>
+              Allocation performance chart with {normalizedData.length} asset
+              classes. Use pointer, touch, or arrow keys to inspect each value.
+            </desc>
+            <defs>
+              <pattern
+                id={`${id}-diagonal-pattern`}
+                width="8"
+                height="8"
+                patternUnits="userSpaceOnUse"
+                patternTransform="rotate(45)"
+              >
+                <line
+                  x1="0"
+                  x2="0"
+                  y1="0"
+                  y2="8"
+                  stroke="var(--muted-foreground)"
+                  strokeWidth="1.5"
+                  opacity="0.13"
+                />
+              </pattern>
+              <clipPath id={`${id}-plot-clip`}>
+                <rect
+                  x={plotX}
+                  y={plotY}
+                  width={plotWidth}
+                  height={plotHeight}
+                  rx="18"
+                />
+              </clipPath>
+              <linearGradient
+                id={`${id}-panel-shade`}
                 x1="0"
-                x2="0"
+                x2="1"
                 y1="0"
-                y2="8"
-                stroke="var(--muted-foreground)"
-                strokeWidth="1.5"
-                opacity="0.13"
-              />
-            </pattern>
-            <clipPath id={`${id}-plot-clip`}>
-              <rect
-                x={plotX}
-                y={plotY}
-                width={plotWidth}
-                height={plotHeight}
-                rx="18"
-              />
-            </clipPath>
-            <linearGradient
-              id={`${id}-panel-shade`}
-              x1="0"
-              x2="1"
-              y1="0"
-              y2="1"
-            >
-              <stop offset="0%" stopColor="var(--card)" />
-              <stop offset="100%" stopColor="var(--muted)" stopOpacity="0.28" />
-            </linearGradient>
-            <filter id={`${id}-tooltip-shadow`}>
-              <feDropShadow
-                dx="0"
-                dy="7"
-                floodColor="var(--foreground)"
-                floodOpacity="0.08"
-                stdDeviation="7"
-              />
-            </filter>
-          </defs>
+                y2="1"
+              >
+                <stop offset="0%" stopColor="var(--card)" />
+                <stop
+                  offset="100%"
+                  stopColor="var(--muted)"
+                  stopOpacity="0.28"
+                />
+              </linearGradient>
+              <filter id={`${id}-tooltip-shadow`}>
+                <feDropShadow
+                  dx="0"
+                  dy="2"
+                  floodColor="var(--foreground)"
+                  floodOpacity="0.12"
+                  stdDeviation="3"
+                />
+              </filter>
+            </defs>
 
-          <rect
-            x="10"
-            y="10"
-            width="740"
-            height="274"
-            rx="24"
-            fill={`url(#${id}-panel-shade)`}
-            stroke="var(--border)"
-          />
-          <rect
-            x={plotX}
-            y={plotY}
-            width={plotWidth}
-            height={plotHeight}
-            rx="18"
-            fill={`url(#${id}-diagonal-pattern)`}
-            clipPath={`url(#${id}-plot-clip)`}
-          />
+            <rect
+              x="10"
+              y="10"
+              width="740"
+              height="274"
+              rx="24"
+              fill={`url(#${id}-panel-shade)`}
+              stroke="var(--border)"
+            />
+            <rect
+              x={plotX}
+              y={plotY}
+              width={plotWidth}
+              height={plotHeight}
+              rx="18"
+              fill={`url(#${id}-diagonal-pattern)`}
+              clipPath={`url(#${id}-plot-clip)`}
+            />
 
-          {[0.25, 0.5, 0.75].map((step) => {
-            const y = baselineY - plotHeight * step;
+            {[0.25, 0.5, 0.75].map((step) => {
+              const y = baselineY - plotHeight * step;
 
-            return (
-              <line
-                key={step}
+              return (
+                <line
+                  key={step}
+                  x1={plotX}
+                  x2={plotX + plotWidth}
+                  y1={y}
+                  y2={y}
+                  stroke="var(--border)"
+                  strokeDasharray="4 8"
+                  opacity="0.34"
+                />
+              );
+            })}
+
+            {showMarker && activeBar ? (
+              <motion.line
+                data-slot="allocation-performance-chart-marker"
                 x1={plotX}
                 x2={plotX + plotWidth}
-                y1={y}
-                y2={y}
-                stroke="var(--border)"
-                strokeDasharray="4 8"
-                opacity="0.34"
+                y1={activeBar.markerY}
+                y2={activeBar.markerY}
+                stroke="var(--foreground)"
+                strokeDasharray="6 8"
+                strokeLinecap="round"
+                opacity="0.28"
+                initial={motionEnabled ? { pathLength: 0, opacity: 0 } : false}
+                animate={{
+                  pathLength: 1,
+                  opacity: 0.28,
+                  y1: activeBar.markerY,
+                  y2: activeBar.markerY,
+                }}
+                transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
               />
-            );
-          })}
+            ) : null}
 
-          {showMarker ? (
-            <motion.line
-              data-slot="allocation-performance-chart-marker"
+            <line
               x1={plotX}
               x2={plotX + plotWidth}
-              y1={markerY}
-              y2={markerY}
-              stroke="var(--foreground)"
-              strokeDasharray="6 8"
-              strokeLinecap="round"
-              opacity="0.28"
-              initial={motionEnabled ? { pathLength: 0, opacity: 0 } : false}
-              animate={{
-                pathLength: 1,
-                opacity: 0.28,
-                y1: markerY,
-                y2: markerY,
-              }}
-              transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+              y1={baselineY}
+              y2={baselineY}
+              stroke="var(--border)"
+              strokeWidth="1.5"
+              opacity="0.72"
             />
-          ) : null}
 
-          <line
-            x1={plotX}
-            x2={plotX + plotWidth}
-            y1={baselineY}
-            y2={baselineY}
-            stroke="var(--border)"
-            strokeWidth="1.5"
-            opacity="0.72"
-          />
+            {bars.map((bar, index) => {
+              const active = activeIndex === index;
+              const dimmed = activeIndex !== null && !active;
+              const clipId = `${id}-bar-${index}`;
+              const valueY = clamp(bar.y - 12, plotY + 18, baselineY - 24);
 
-          {bars.map((bar, index) => {
-            const active = activeIndex === index;
-            const clipId = `${id}-bar-${index}`;
-            const valueY = clamp(bar.y - 12, plotY + 18, baselineY - 24);
-
-            return (
-              <motion.g
-                key={bar.label}
-                data-slot="allocation-performance-chart-bar"
-                tabIndex={0}
-                role="button"
-                aria-label={`${bar.label}: ${bar.formattedValue}`}
-                onPointerEnter={() => activate(index)}
-                onFocus={() => activate(index)}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter" || event.key === " ") {
-                    event.preventDefault();
-                    activate(index);
+              return (
+                <motion.g
+                  key={bar.label}
+                  data-slot="allocation-performance-chart-bar"
+                  tabIndex={0}
+                  role="button"
+                  aria-label={`${bar.label}: ${bar.formattedValue}`}
+                  {...getItemProps(index)}
+                  animate={{
+                    opacity: dimmed ? 0.58 : 1,
+                    y: active ? -1 : 0,
+                    scale: active ? 1.002 : 1,
+                  }}
+                  whileHover={
+                    motionEnabled ? { y: -1.2, scale: 1.003 } : undefined
                   }
-                }}
-                animate={{
-                  opacity: active ? 1 : 0.66,
-                  y: active ? -1 : 0,
-                  scale: active ? 1.002 : 1,
-                }}
-                whileHover={
-                  motionEnabled ? { y: -1.2, scale: 1.003 } : undefined
-                }
-                transition={{
-                  type: "spring",
-                  stiffness: 150,
-                  damping: 24,
-                  mass: 0.8,
-                }}
-                style={{
-                  color: bar.color,
-                  transformOrigin: `${bar.centerX}px ${baselineY}px`,
-                }}
-                className="outline-none focus-visible:[filter:drop-shadow(0_0_0.22rem_currentColor)]"
-              >
-                <defs>
-                  <clipPath id={clipId}>
-                    <rect
-                      x={bar.x}
-                      y={plotY}
-                      width={bar.width}
-                      height={plotHeight}
-                      rx="16"
-                    />
-                  </clipPath>
-                </defs>
-                <rect
-                  x={bar.x}
-                  y={plotY}
-                  width={bar.width}
-                  height={plotHeight}
-                  rx="16"
-                  fill="var(--muted)"
-                  opacity="0.12"
-                />
-                <motion.rect
-                  x={bar.x}
-                  y={bar.y}
-                  width={bar.width}
-                  height={bar.height}
-                  rx="15"
-                  fill="currentColor"
-                  clipPath={`url(#${clipId})`}
-                  initial={motionEnabled ? { scaleY: 0, opacity: 0 } : false}
-                  animate={{ scaleY: 1, opacity: 1 }}
                   transition={{
                     type: "spring",
-                    stiffness: 118,
+                    stiffness: 150,
                     damping: 24,
-                    mass: 0.9,
-                    delay: motionDelay + index * 0.07,
-                    duration: motionDuration,
+                    mass: 0.8,
                   }}
                   style={{
+                    color: bar.color,
                     transformOrigin: `${bar.centerX}px ${baselineY}px`,
                   }}
-                />
-                {showValues ? (
-                  <motion.text
+                  className="outline-none focus-visible:[&_[data-fill]]:stroke-ring focus-visible:[&_[data-fill]]:stroke-2"
+                >
+                  <defs>
+                    <clipPath id={clipId}>
+                      <rect
+                        x={bar.x}
+                        y={plotY}
+                        width={bar.width}
+                        height={plotHeight}
+                        rx="16"
+                      />
+                    </clipPath>
+                  </defs>
+                  <rect
+                    x={bar.x}
+                    y={plotY}
+                    width={bar.width}
+                    height={plotHeight}
+                    rx="16"
+                    fill="var(--muted)"
+                    opacity="0.12"
+                  />
+                  <motion.rect
+                    data-fill=""
+                    x={bar.x}
+                    y={bar.y}
+                    width={bar.width}
+                    height={bar.height}
+                    rx="15"
+                    fill="currentColor"
+                    clipPath={`url(#${clipId})`}
+                    initial={motionEnabled ? { scaleY: 0, opacity: 0 } : false}
+                    animate={{ scaleY: 1, opacity: 1 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 118,
+                      damping: 24,
+                      mass: 0.9,
+                      delay: motionDelay + index * 0.07,
+                      duration: motionDuration,
+                    }}
+                    style={{
+                      transformOrigin: `${bar.centerX}px ${baselineY}px`,
+                    }}
+                  />
+                  {showValues ? (
+                    <motion.text
+                      x={bar.centerX}
+                      y={valueY}
+                      textAnchor="middle"
+                      fill={
+                        active ? "var(--foreground)" : "var(--muted-foreground)"
+                      }
+                      className="text-[13px] font-semibold"
+                      initial={
+                        motionEnabled ? { opacity: 0, y: bar.y + 4 } : false
+                      }
+                      animate={{
+                        opacity: active ? 1 : 0.72,
+                        y: valueY,
+                      }}
+                      transition={{
+                        delay: motionDelay + 0.12 + index * 0.05,
+                        duration: 0.26,
+                      }}
+                    >
+                      {bar.formattedValue}
+                    </motion.text>
+                  ) : null}
+                  <text
                     x={bar.centerX}
-                    y={valueY}
+                    y={labelY}
                     textAnchor="middle"
                     fill={
                       active ? "var(--foreground)" : "var(--muted-foreground)"
                     }
-                    className="text-[13px] font-semibold"
-                    initial={
-                      motionEnabled ? { opacity: 0, y: bar.y + 4 } : false
-                    }
-                    animate={{
-                      opacity: active ? 1 : 0.72,
-                      y: valueY,
-                    }}
-                    transition={{
-                      delay: motionDelay + 0.12 + index * 0.05,
-                      duration: 0.26,
-                    }}
+                    className="text-[13px] font-medium"
                   >
-                    {bar.formattedValue}
-                  </motion.text>
-                ) : null}
-                <text
-                  x={bar.centerX}
-                  y={labelY}
-                  textAnchor="middle"
-                  fill={
-                    active ? "var(--foreground)" : "var(--muted-foreground)"
-                  }
-                  className="text-[13px] font-medium"
-                >
-                  {bar.label}
-                </text>
-                <motion.rect
-                  x={bar.centerX - 17}
-                  y={labelY + 10}
-                  width="34"
-                  height="2"
-                  rx="1"
-                  fill="currentColor"
-                  initial={false}
-                  animate={{
-                    opacity: active ? 0.8 : 0,
-                    scaleX: active ? 1 : 0.35,
-                  }}
-                  transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
-                  style={{
-                    transformOrigin: `${bar.centerX}px ${labelY + 11}px`,
-                  }}
-                />
-              </motion.g>
-            );
-          })}
+                    {bar.label}
+                  </text>
+                  <motion.rect
+                    x={bar.centerX - 17}
+                    y={labelY + 10}
+                    width="34"
+                    height="2"
+                    rx="1"
+                    fill="currentColor"
+                    initial={false}
+                    animate={{
+                      opacity: active ? 0.8 : 0,
+                      scaleX: active ? 1 : 0.35,
+                    }}
+                    transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+                    style={{
+                      transformOrigin: `${bar.centerX}px ${labelY + 11}px`,
+                    }}
+                  />
+                </motion.g>
+              );
+            })}
 
-          <AnimatePresence>
-            {showTooltip ? (
-              <motion.g
-                data-slot="allocation-performance-chart-tooltip"
-                pointerEvents="none"
-                initial={
-                  motionEnabled
-                    ? {
-                        opacity: 0,
-                        x: tooltipX,
-                        y: tooltipY + 8,
-                        scale: 0.98,
-                      }
-                    : false
-                }
-                animate={{
-                  opacity: 1,
-                  x: tooltipX,
-                  y: tooltipY,
-                  scale: 1,
-                }}
-                exit={{
-                  opacity: 0,
-                  x: tooltipX,
-                  y: tooltipY + 6,
-                  scale: 0.98,
-                }}
-                transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <rect
-                  width={tooltipWidth}
-                  height={tooltipHeight}
-                  rx="14"
-                  fill="var(--popover)"
-                  stroke="var(--border)"
-                  filter={`url(#${id}-tooltip-shadow)`}
-                />
-                <path
-                  d={`M ${anchorX - 7} ${tooltipHeight - 1} L ${anchorX} ${
-                    tooltipHeight + 8
-                  } L ${anchorX + 7} ${tooltipHeight - 1} Z`}
-                  fill="var(--popover)"
-                  stroke="var(--border)"
-                  strokeLinejoin="round"
-                />
-                <text
-                  x="16"
-                  y="25"
-                  fill="var(--popover-foreground)"
-                  className="text-[13px] font-semibold"
+            <AnimatePresence>
+              {showTooltip && activeBar && activeItem ? (
+                <motion.g
+                  data-slot="allocation-performance-chart-tooltip"
+                  pointerEvents="none"
+                  initial={
+                    motionEnabled
+                      ? {
+                          opacity: 0,
+                          x: tooltipX,
+                          y: tooltipY + 8,
+                          scale: 0.98,
+                        }
+                      : false
+                  }
+                  animate={{
+                    opacity: 1,
+                    x: tooltipX,
+                    y: tooltipY,
+                    scale: 1,
+                  }}
+                  exit={{
+                    opacity: 0,
+                    x: tooltipX,
+                    y: tooltipY + 6,
+                    scale: 0.98,
+                  }}
+                  transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  {activeItem.label}
-                </text>
-                <circle cx="20" cy="47" r="5" fill={activeBar.color} />
-                <text
-                  x="34"
-                  y="52"
-                  fill="var(--muted-foreground)"
-                  className="text-[13px] font-medium"
-                >
-                  Allocation
-                </text>
-                <text
-                  x={tooltipWidth - 16}
-                  y="52"
-                  textAnchor="end"
-                  fill="var(--popover-foreground)"
-                  className="text-[13px] font-semibold"
-                >
-                  {activeBar.formattedValue}
-                </text>
-              </motion.g>
-            ) : null}
-          </AnimatePresence>
-        </svg>
+                  <rect
+                    width={tooltipWidth}
+                    height={tooltipHeight}
+                    rx="14"
+                    fill="var(--popover)"
+                    stroke="var(--border)"
+                    filter={`url(#${id}-tooltip-shadow)`}
+                  />
+                  <path
+                    d={`M ${anchorX - 7} ${tooltipHeight - 1} L ${anchorX} ${
+                      tooltipHeight + 8
+                    } L ${anchorX + 7} ${tooltipHeight - 1} Z`}
+                    fill="var(--popover)"
+                    stroke="var(--border)"
+                    strokeLinejoin="round"
+                  />
+                  <text
+                    x="16"
+                    y="25"
+                    fill="var(--popover-foreground)"
+                    className="text-[13px] font-semibold"
+                  >
+                    {activeItem.label}
+                  </text>
+                  <circle cx="20" cy="47" r="5" fill={activeBar.color} />
+                  <text
+                    x="34"
+                    y="52"
+                    fill="var(--muted-foreground)"
+                    className="text-[13px] font-medium"
+                  >
+                    Allocation
+                  </text>
+                  <text
+                    x={tooltipWidth - 16}
+                    y="52"
+                    textAnchor="end"
+                    fill="var(--popover-foreground)"
+                    className="text-[13px] font-semibold"
+                  >
+                    {activeBar.formattedValue}
+                  </text>
+                </motion.g>
+              ) : null}
+            </AnimatePresence>
+          </svg>
+        ) : null}
       </div>
     </div>
   );

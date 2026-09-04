@@ -7,10 +7,10 @@ import {
   useEffect,
   useId,
   useMemo,
-  useState,
 } from "react";
 import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
+import { useChartInteraction } from "./chart-interaction";
 
 export const activityHeatmapChartVariants = tv({
   base: "not-prose w-full text-foreground",
@@ -162,12 +162,13 @@ export function ActivityHeatmapChart({
   const shouldReduceMotion = useReducedMotion();
   const rawId = useId();
   const id = rawId.replace(/:/g, "");
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   const resolvedData = useMemo(
     () => data ?? buildDefaultData(weeks),
     [data, weeks],
   );
+  const { activeIndex, getItemProps, hasEnteredView, interactionProps } =
+    useChartInteraction(id, resolvedData.length);
 
   const columns = Math.max(1, Math.ceil(resolvedData.length / DAYS));
   const safeMax = useMemo(() => {
@@ -243,8 +244,7 @@ export function ActivityHeatmapChart({
     const x = leftGutter + column * pitch;
     const y = topGutter + row * pitch;
     const level = levelFor(item.value);
-    const recent = column >= columns - 1;
-    return { ...item, index, column, row, x, y, level, recent };
+    return { ...item, index, column, row, x, y, level };
   });
 
   const active =
@@ -265,6 +265,7 @@ export function ActivityHeatmapChart({
     <div
       data-slot="activity-heatmap-chart"
       className={twMerge(activityHeatmapChartVariants({ size }), className)}
+      {...interactionProps}
       {...props}
     >
       <div data-slot="activity-heatmap-chart-header" className="mb-3">
@@ -283,189 +284,155 @@ export function ActivityHeatmapChart({
         className="overflow-hidden"
         style={{ color: accent }}
       >
-        <svg
-          viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
-          className="w-full"
-          role="img"
-          aria-labelledby={`${id}-title ${id}-desc`}
-        >
-          <title id={`${id}-title`}>{String(title)}</title>
-          <desc id={`${id}-desc`}>
-            Activity heatmap with {cells.length} days across {columns} weeks.
-            Total activity: {total}.
-          </desc>
+        {!motionEnabled || hasEnteredView ? (
+          <svg
+            viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
+            className="w-full"
+            role="img"
+            aria-labelledby={`${id}-title ${id}-desc`}
+          >
+            <title id={`${id}-title`}>{String(title)}</title>
+            <desc id={`${id}-desc`}>
+              Activity heatmap with {cells.length} days across {columns} weeks.
+              Total activity: {total}.
+            </desc>
 
-          {monthLabels.map((label, monthIndex) => {
-            const column = Math.round(
-              (monthIndex * columns) / monthLabels.length,
-            );
-            return (
-              <text
-                key={`${label}-${column}`}
-                x={leftGutter + column * pitch}
-                y={topGutter - 6}
-                className="fill-muted-foreground text-[9px] font-medium"
-              >
-                {label}
-              </text>
-            );
-          })}
+            {monthLabels.map((label, monthIndex) => {
+              const column = Math.round(
+                (monthIndex * columns) / monthLabels.length,
+              );
+              return (
+                <text
+                  key={`${label}-${column}`}
+                  x={leftGutter + column * pitch}
+                  y={topGutter - 6}
+                  className="fill-muted-foreground text-[9px] font-medium"
+                >
+                  {label}
+                </text>
+              );
+            })}
 
-          {dayLabels.map((label, row) =>
-            label ? (
-              <text
-                key={label}
-                x={leftGutter - 8}
-                y={topGutter + row * pitch + cell - 3}
-                textAnchor="end"
-                className="fill-muted-foreground text-[9px] font-medium"
-              >
-                {label}
-              </text>
-            ) : null,
-          )}
+            {dayLabels.map((label, row) =>
+              label ? (
+                <text
+                  key={label}
+                  x={leftGutter - 8}
+                  y={topGutter + row * pitch + cell - 3}
+                  textAnchor="end"
+                  className="fill-muted-foreground text-[9px] font-medium"
+                >
+                  {label}
+                </text>
+              ) : null,
+            )}
 
-          {cells.map((c) => {
-            const isActive = activeIndex === c.index;
-            const isEmpty = c.level === 0;
+            {cells.map((c) => {
+              const isActive = activeIndex === c.index;
+              const isEmpty = c.level === 0;
 
-            return (
-              <motion.rect
-                key={c.index}
-                x={c.x}
-                y={c.y}
-                width={cell}
-                height={cell}
-                rx="3.5"
-                fill={isEmpty ? "var(--muted)" : "currentColor"}
-                fillOpacity={isEmpty ? 0.5 : levelOpacity[c.level]}
-                stroke={isActive ? "currentColor" : "var(--border)"}
-                strokeOpacity={isActive ? 0.9 : 0.4}
-                strokeWidth={isActive ? 1.5 : 0.75}
-                tabIndex={0}
-                role="button"
-                aria-label={`${c.label ?? `Day ${c.index + 1}`}: ${c.value}`}
-                onPointerEnter={() => setActiveIndex(c.index)}
-                onPointerLeave={() => setActiveIndex(null)}
-                onFocus={() => setActiveIndex(c.index)}
-                onBlur={() => setActiveIndex(null)}
-                initial={motionEnabled ? { opacity: 0, scale: 0.3 } : false}
-                animate={{
-                  opacity: 1,
-                  scale: isActive ? 1.16 : 1,
-                }}
-                transition={{
-                  opacity: {
-                    delay: motionEnabled
-                      ? motionDelay + (c.column + c.row) * 0.018
-                      : 0,
-                    duration: 0.32,
-                    ease: [0.16, 1, 0.3, 1],
-                  },
-                  scale: isActive
-                    ? { type: "spring", stiffness: 320, damping: 18 }
-                    : {
-                        delay: motionEnabled
-                          ? motionDelay + (c.column + c.row) * 0.018
-                          : 0,
-                        duration: 0.32,
-                        ease: [0.16, 1, 0.3, 1],
-                      },
-                }}
-                style={{
-                  transformOrigin: `${c.x + cell / 2}px ${c.y + cell / 2}px`,
-                  cursor: "pointer",
-                }}
-                className="outline-none"
-              />
-            );
-          })}
+              return (
+                <motion.rect
+                  key={c.index}
+                  x={c.x}
+                  y={c.y}
+                  width={cell}
+                  height={cell}
+                  rx="3.5"
+                  fill={isEmpty ? "var(--muted)" : "currentColor"}
+                  fillOpacity={isEmpty ? 0.5 : levelOpacity[c.level]}
+                  stroke={isActive ? "currentColor" : "var(--border)"}
+                  strokeOpacity={isActive ? 0.9 : 0.4}
+                  strokeWidth={isActive ? 1.5 : 0.75}
+                  tabIndex={0}
+                  role="button"
+                  aria-label={`${c.label ?? `Day ${c.index + 1}`}: ${c.value}`}
+                  {...getItemProps(c.index)}
+                  initial={motionEnabled ? { opacity: 0, scale: 0.3 } : false}
+                  animate={{
+                    opacity: 1,
+                    scale: isActive ? 1.16 : 1,
+                  }}
+                  transition={{
+                    opacity: {
+                      delay: motionEnabled
+                        ? motionDelay + (c.column + c.row) * 0.018
+                        : 0,
+                      duration: 0.32,
+                      ease: [0.16, 1, 0.3, 1],
+                    },
+                    scale: isActive
+                      ? { type: "spring", stiffness: 320, damping: 18 }
+                      : {
+                          delay: motionEnabled
+                            ? motionDelay + (c.column + c.row) * 0.018
+                            : 0,
+                          duration: 0.32,
+                          ease: [0.16, 1, 0.3, 1],
+                        },
+                  }}
+                  style={{
+                    transformOrigin: `${c.x + cell / 2}px ${c.y + cell / 2}px`,
+                    cursor: "pointer",
+                  }}
+                  className="outline-none"
+                />
+              );
+            })}
 
-          {/* Recent column gently breathes to feel live */}
-          {motionEnabled
-            ? cells
-                .filter((c) => c.recent && c.level > 0)
-                .map((c) => (
-                  <motion.rect
-                    key={`pulse-${c.index}`}
-                    x={c.x}
-                    y={c.y}
-                    width={cell}
-                    height={cell}
-                    rx="3.5"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    pointerEvents="none"
-                    initial={{ opacity: 0, scale: 1 }}
-                    animate={{ opacity: [0, 0.5, 0], scale: [1, 1.35, 1.45] }}
-                    transition={{
-                      duration: 2.4,
-                      repeat: Number.POSITIVE_INFINITY,
-                      ease: "easeOut",
-                      delay: 1 + c.row * 0.12,
-                    }}
-                    style={{
-                      transformOrigin: `${c.x + cell / 2}px ${
-                        c.y + cell / 2
-                      }px`,
-                    }}
+            <AnimatePresence>
+              {showTooltip && active ? (
+                <motion.g
+                  data-slot="activity-heatmap-chart-tooltip"
+                  pointerEvents="none"
+                  initial={
+                    motionEnabled
+                      ? { opacity: 0, y: tooltipY + 6, scale: 0.96 }
+                      : false
+                  }
+                  animate={{ opacity: 1, y: tooltipY, scale: 1 }}
+                  exit={{ opacity: 0, y: tooltipY + 4, scale: 0.96 }}
+                  transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+                  style={{ transformOrigin: `${tooltipX}px ${tooltipY}px` }}
+                >
+                  <rect
+                    x={tooltipX}
+                    width={tooltipWidth}
+                    height={tooltipHeight}
+                    rx="10"
+                    fill="var(--popover)"
+                    stroke="var(--border)"
                   />
-                ))
-            : null}
-
-          <AnimatePresence>
-            {showTooltip && active ? (
-              <motion.g
-                data-slot="activity-heatmap-chart-tooltip"
-                pointerEvents="none"
-                initial={
-                  motionEnabled
-                    ? { opacity: 0, y: tooltipY + 6, scale: 0.96 }
-                    : false
-                }
-                animate={{ opacity: 1, y: tooltipY, scale: 1 }}
-                exit={{ opacity: 0, y: tooltipY + 4, scale: 0.96 }}
-                transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
-                style={{ transformOrigin: `${tooltipX}px ${tooltipY}px` }}
-              >
-                <rect
-                  x={tooltipX}
-                  width={tooltipWidth}
-                  height={tooltipHeight}
-                  rx="10"
-                  fill="var(--popover)"
-                  stroke="var(--border)"
-                />
-                <text
-                  x={tooltipX + 12}
-                  y={18}
-                  fill="var(--popover-foreground)"
-                  className="text-[11px] font-semibold tabular-nums"
-                >
-                  {getTextValue(active.value, valueFormatter)}
-                </text>
-                <text
-                  x={tooltipX + 12}
-                  y={34}
-                  fill="var(--muted-foreground)"
-                  className="text-[10px] font-medium"
-                >
-                  {active.label ?? `Week ${active.column + 1}`}
-                </text>
-                <rect
-                  x={tooltipX + tooltipWidth - 26}
-                  y={tooltipHeight / 2 - 7}
-                  width="14"
-                  height="14"
-                  rx="3"
-                  fill="currentColor"
-                  fillOpacity={levelOpacity[active.level]}
-                />
-              </motion.g>
-            ) : null}
-          </AnimatePresence>
-        </svg>
+                  <text
+                    x={tooltipX + 12}
+                    y={18}
+                    fill="var(--popover-foreground)"
+                    className="text-[11px] font-semibold tabular-nums"
+                  >
+                    {getTextValue(active.value, valueFormatter)}
+                  </text>
+                  <text
+                    x={tooltipX + 12}
+                    y={34}
+                    fill="var(--muted-foreground)"
+                    className="text-[10px] font-medium"
+                  >
+                    {active.label ?? `Week ${active.column + 1}`}
+                  </text>
+                  <rect
+                    x={tooltipX + tooltipWidth - 26}
+                    y={tooltipHeight / 2 - 7}
+                    width="14"
+                    height="14"
+                    rx="3"
+                    fill="currentColor"
+                    fillOpacity={levelOpacity[active.level]}
+                  />
+                </motion.g>
+              ) : null}
+            </AnimatePresence>
+          </svg>
+        ) : null}
       </div>
 
       {showLegend ? (

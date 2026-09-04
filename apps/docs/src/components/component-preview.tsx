@@ -82,7 +82,6 @@ export function ComponentPreview({
       chromeless={chromeless}
       component={React.createElement(Component)}
       source={<ComponentSource name={name} collapsible={false} />}
-      sourcePreview={<ComponentSource name={name} collapsible={false} />}
       {...props}
     />
   );

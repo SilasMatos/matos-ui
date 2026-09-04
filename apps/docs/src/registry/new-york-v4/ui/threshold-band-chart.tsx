@@ -1,15 +1,10 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import {
-  type ComponentProps,
-  type ReactNode,
-  useId,
-  useMemo,
-  useState,
-} from "react";
+import { type ComponentProps, type ReactNode, useId, useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
+import { useChartInteraction } from "./chart-interaction";
 
 export const thresholdBandChartVariants = tv({
   base: "not-prose w-full text-foreground",
@@ -46,7 +41,7 @@ export type ThresholdBandChartProps = ComponentProps<"div"> &
 
 const defaultBands: ThresholdBand[] = [
   { label: "Good", max: 2500, tone: "chart-2" },
-  { label: "Needs improvement", max: 4000, tone: "oklch(0.75 0.16 70)" },
+  { label: "Needs improvement", max: 4000, tone: "chart-4" },
   { label: "Poor", tone: "destructive" },
 ];
 
@@ -90,7 +85,6 @@ export function ThresholdBandChart({
   const shouldReduceMotion = useReducedMotion();
   const rawId = useId();
   const id = rawId.replace(/:/g, "");
-  const [activeBandIndex, setActiveBandIndex] = useState<number | null>(null);
 
   const motionEnabled = animated && !shouldReduceMotion;
   const fmt = (v: number) =>
@@ -114,6 +108,12 @@ export function ThresholdBandChart({
   }, [bands, totalMax]);
 
   const safeTotal = resolvedBands[resolvedBands.length - 1]?.safeTotal ?? 100;
+  const {
+    activeIndex: activeBandIndex,
+    getItemProps,
+    hasEnteredView,
+    interactionProps,
+  } = useChartInteraction(id, resolvedBands.length);
   const safeValue = clamp(value, 0, safeTotal);
 
   // Current band index
@@ -128,7 +128,7 @@ export function ThresholdBandChart({
 
   // SVG layout
   const viewBoxWidth = 560;
-  const viewBoxHeight = 148;
+  const viewBoxHeight = 178;
   const bandAreaX = 12;
   const bandAreaW = viewBoxWidth - 24;
   const bandY = 56;
@@ -137,22 +137,38 @@ export function ThresholdBandChart({
 
   const markerX = bandAreaX + (safeValue / safeTotal) * bandAreaW;
 
+  const activeBand =
+    activeBandIndex !== null ? resolvedBands[activeBandIndex] : null;
   const tooltipWidth = 168;
   const tooltipHeight = 58;
+  const activeBandCenterX = activeBand
+    ? bandAreaX +
+      ((activeBand.start + activeBand.end) / 2 / safeTotal) * bandAreaW
+    : markerX;
   const tooltipX = clamp(
-    markerX - tooltipWidth / 2,
+    activeBandCenterX - tooltipWidth / 2,
     4,
     viewBoxWidth - tooltipWidth - 4,
   );
-  const tooltipY = bandY + bandH + 24;
-
-  const activeBand =
-    activeBandIndex !== null ? resolvedBands[activeBandIndex] : null;
+  const tooltipY = bandY + bandH + 28;
+  const tooltipArrowX = clamp(
+    activeBandCenterX - tooltipX,
+    14,
+    tooltipWidth - 14,
+  );
+  const activeBandRange = activeBand
+    ? activeBandIndex === 0
+      ? `≤ ${fmt(activeBand.end)}`
+      : activeBandIndex === resolvedBands.length - 1
+        ? `> ${fmt(activeBand.start)}`
+        : `${fmt(activeBand.start)} – ${fmt(activeBand.end)}`
+    : "";
 
   return (
     <div
       data-slot="threshold-band-chart"
       className={twMerge(thresholdBandChartVariants({ size }), className)}
+      {...interactionProps}
       {...props}
     >
       <div data-slot="threshold-band-chart-header" className="mb-3">
@@ -167,256 +183,285 @@ export function ThresholdBandChart({
       </div>
 
       <div data-slot="threshold-band-chart-plot" className="overflow-hidden">
-        <svg
-          viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
-          className="w-full"
-          role="img"
-          aria-labelledby={`${id}-title`}
-        >
-          <title id={`${id}-title`}>{String(title)}</title>
-          <defs>
-            {resolvedBands.map((band, bi) => (
-              <clipPath
-                key={`clip-${band.label}-${band.start}-${band.end}`}
-                id={`${id}-band-clip-${bi}`}
+        {!motionEnabled || hasEnteredView ? (
+          <svg
+            viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
+            className="w-full"
+            role="img"
+            aria-labelledby={`${id}-title`}
+          >
+            <title id={`${id}-title`}>{String(title)}</title>
+            <defs>
+              {resolvedBands.map((band, bi) => (
+                <clipPath
+                  key={`clip-${band.label}-${band.start}-${band.end}`}
+                  id={`${id}-band-clip-${bi}`}
+                >
+                  <motion.rect
+                    x={bandAreaX + (band.start / safeTotal) * bandAreaW}
+                    y={bandY - 2}
+                    height={bandH + 4}
+                    rx={bandRx}
+                    initial={
+                      motionEnabled
+                        ? { width: 0 }
+                        : {
+                            width:
+                              ((band.end - band.start) / safeTotal) * bandAreaW,
+                          }
+                    }
+                    animate={{
+                      width: ((band.end - band.start) / safeTotal) * bandAreaW,
+                    }}
+                    transition={{
+                      delay: motionDelay + bi * 0.1,
+                      duration: 0.64,
+                      ease: [0.16, 1, 0.3, 1],
+                    }}
+                  />
+                </clipPath>
+              ))}
+            </defs>
+
+            {/* Band segments */}
+            {resolvedBands.map((band, bi) => {
+              const bx = bandAreaX + (band.start / safeTotal) * bandAreaW;
+              const bw = ((band.end - band.start) / safeTotal) * bandAreaW;
+              const tone = resolveTone(band.tone, "var(--muted-foreground)");
+              const isActive = activeBandIndex === bi;
+              const isCurrent = currentBandIndex === bi;
+              const accessibleRange =
+                bi === 0
+                  ? `up to ${fmt(band.end)}`
+                  : bi === resolvedBands.length - 1
+                    ? `above ${fmt(band.start)}`
+                    : `${fmt(band.start)} to ${fmt(band.end)}`;
+
+              return (
+                <motion.g
+                  key={`band-${band.label}-${band.start}-${band.end}`}
+                  tabIndex={0}
+                  role="button"
+                  aria-label={`${band.label}: ${accessibleRange}`}
+                  aria-describedby={
+                    showTooltip && isActive ? `${id}-tooltip` : undefined
+                  }
+                  {...getItemProps(bi)}
+                  style={{ cursor: "pointer" }}
+                >
+                  <rect
+                    x={bx}
+                    y={bandY}
+                    width={bw}
+                    height={bandH}
+                    rx={bandRx}
+                    fill={tone}
+                    fillOpacity={
+                      isCurrent
+                        ? isActive
+                          ? 0.28
+                          : 0.2
+                        : isActive
+                          ? 0.16
+                          : 0.1
+                    }
+                    clipPath={`url(#${id}-band-clip-${bi})`}
+                  />
+                  <motion.rect
+                    x={bx}
+                    y={bandY}
+                    width={bw}
+                    height={bandH}
+                    rx={bandRx}
+                    fill={tone}
+                    fillOpacity={isCurrent ? 1 : 0.5}
+                    stroke={isCurrent ? tone : "none"}
+                    strokeWidth={isCurrent ? "0.5" : "0"}
+                    clipPath={`url(#${id}-band-clip-${bi})`}
+                    animate={{
+                      fillOpacity: isCurrent
+                        ? isActive
+                          ? 0.82
+                          : 0.62
+                        : isActive
+                          ? 0.45
+                          : 0.3,
+                    }}
+                    transition={{ duration: 0.22 }}
+                  />
+                  {/* Band label above */}
+                  <motion.text
+                    x={bx + bw / 2}
+                    y={bandY - 10}
+                    textAnchor="middle"
+                    fill={tone}
+                    fillOpacity={isCurrent ? 1 : 0.6}
+                    className="text-[11px] font-semibold"
+                    initial={
+                      motionEnabled ? { opacity: 0, y: bandY - 4 } : false
+                    }
+                    animate={{ opacity: isCurrent ? 1 : 0.6, y: bandY - 10 }}
+                    transition={{
+                      delay: motionDelay + bi * 0.1 + 0.3,
+                      duration: 0.28,
+                    }}
+                  >
+                    {band.label}
+                  </motion.text>
+                  {/* Band max label */}
+                  {bi < resolvedBands.length - 1 ? (
+                    <text
+                      x={bx + bw}
+                      y={bandY + bandH + 14}
+                      textAnchor="middle"
+                      fill="var(--muted-foreground)"
+                      className="text-[10px] font-medium tabular-nums"
+                    >
+                      {fmt(band.end)}
+                    </text>
+                  ) : null}
+                </motion.g>
+              );
+            })}
+
+            {/* Value marker */}
+            <motion.g
+              data-slot="threshold-band-chart-marker"
+              initial={
+                motionEnabled
+                  ? { x: bandAreaX, opacity: 0 }
+                  : { x: markerX - 1, opacity: 1 }
+              }
+              animate={{ x: markerX - 1, opacity: 1 }}
+              transition={{
+                x: {
+                  delay: motionDelay + 0.5,
+                  duration: 0.9,
+                  ease: [0.16, 1, 0.3, 1],
+                },
+                opacity: { delay: motionDelay + 0.5, duration: 0.32 },
+              }}
+            >
+              {/* Vertical line */}
+              <line
+                x1="1"
+                x2="1"
+                y1={bandY - 3}
+                y2={bandY + bandH + 3}
+                stroke="var(--foreground)"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+              {/* Top diamond */}
+              <polygon
+                points="1,-4 5,0 1,4 -3,0"
+                transform={`translate(0 ${bandY - 7})`}
+                fill="var(--foreground)"
+              />
+              {/* Bottom label */}
+              <motion.text
+                x="1"
+                y={bandY + bandH + 26}
+                textAnchor="middle"
+                fill="var(--foreground)"
+                className="text-[12.5px] font-semibold tabular-nums"
+                animate={{ opacity: activeBand ? 0 : 1 }}
+                transition={{ duration: 0.14 }}
               >
-                <motion.rect
-                  x={bandAreaX + (band.start / safeTotal) * bandAreaW}
-                  y={bandY - 2}
-                  height={bandH + 4}
-                  rx={bandRx}
+                {fmt(safeValue)}
+              </motion.text>
+            </motion.g>
+
+            {/* Active band tooltip */}
+            <AnimatePresence>
+              {showTooltip && activeBand ? (
+                <motion.g
+                  id={`${id}-tooltip`}
+                  data-slot="threshold-band-chart-tooltip"
+                  role="tooltip"
+                  pointerEvents="none"
                   initial={
                     motionEnabled
-                      ? { width: 0 }
-                      : {
-                          width:
-                            ((band.end - band.start) / safeTotal) * bandAreaW,
+                      ? {
+                          opacity: 0,
+                          x: tooltipX,
+                          y: tooltipY + 5,
+                          scale: 0.97,
                         }
+                      : false
                   }
-                  animate={{
-                    width: ((band.end - band.start) / safeTotal) * bandAreaW,
+                  animate={{ opacity: 1, x: tooltipX, y: tooltipY, scale: 1 }}
+                  exit={{
+                    opacity: 0,
+                    x: tooltipX,
+                    y: tooltipY + 3,
+                    scale: 0.97,
                   }}
-                  transition={{
-                    delay: motionDelay + bi * 0.1,
-                    duration: 0.64,
-                    ease: [0.16, 1, 0.3, 1],
-                  }}
-                />
-              </clipPath>
-            ))}
-            <filter id={`${id}-glow`}>
-              <feGaussianBlur stdDeviation="5" result="blur" />
-              <feMerge>
-                <feMergeNode in="blur" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-          </defs>
-
-          {/* Band segments */}
-          {resolvedBands.map((band, bi) => {
-            const bx = bandAreaX + (band.start / safeTotal) * bandAreaW;
-            const bw = ((band.end - band.start) / safeTotal) * bandAreaW;
-            const tone = resolveTone(band.tone, "var(--muted-foreground)");
-            const isActive = activeBandIndex === bi;
-            const isCurrent = currentBandIndex === bi;
-
-            return (
-              <g
-                key={`band-${band.label}-${band.start}-${band.end}`}
-                onPointerEnter={() => setActiveBandIndex(bi)}
-                onPointerLeave={() => setActiveBandIndex(null)}
-                style={{ cursor: "default" }}
-              >
-                <rect
-                  x={bx}
-                  y={bandY}
-                  width={bw}
-                  height={bandH}
-                  rx={bandRx}
-                  fill={tone}
-                  fillOpacity={
-                    isCurrent ? (isActive ? 0.28 : 0.2) : isActive ? 0.16 : 0.1
-                  }
-                  clipPath={`url(#${id}-band-clip-${bi})`}
-                />
-                <motion.rect
-                  x={bx}
-                  y={bandY}
-                  width={bw}
-                  height={bandH}
-                  rx={bandRx}
-                  fill={tone}
-                  fillOpacity={isCurrent ? 1 : 0.5}
-                  stroke={isCurrent ? tone : "none"}
-                  strokeWidth={isCurrent ? "0.5" : "0"}
-                  clipPath={`url(#${id}-band-clip-${bi})`}
-                  animate={{
-                    fillOpacity: isCurrent
-                      ? isActive
-                        ? 0.82
-                        : 0.62
-                      : isActive
-                        ? 0.45
-                        : 0.3,
-                  }}
-                  transition={{ duration: 0.22 }}
-                />
-                {/* Band label above */}
-                <motion.text
-                  x={bx + bw / 2}
-                  y={bandY - 10}
-                  textAnchor="middle"
-                  fill={tone}
-                  fillOpacity={isCurrent ? 1 : 0.6}
-                  className="text-[11px] font-semibold"
-                  initial={motionEnabled ? { opacity: 0, y: bandY - 4 } : false}
-                  animate={{ opacity: isCurrent ? 1 : 0.6, y: bandY - 10 }}
-                  transition={{
-                    delay: motionDelay + bi * 0.1 + 0.3,
-                    duration: 0.28,
-                  }}
+                  transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  {band.label}
-                </motion.text>
-                {/* Band max label */}
-                {bi < resolvedBands.length - 1 ? (
+                  <path
+                    d={`M ${tooltipArrowX - 6} 0 L ${tooltipArrowX} -7 L ${tooltipArrowX + 6} 0 Z`}
+                    fill="var(--popover)"
+                    stroke="var(--border)"
+                    strokeLinejoin="round"
+                  />
+                  <rect
+                    width={tooltipWidth}
+                    height={tooltipHeight}
+                    rx="10"
+                    fill="var(--popover)"
+                    stroke="var(--border)"
+                  />
                   <text
-                    x={bx + bw}
-                    y={bandY + bandH + 14}
-                    textAnchor="middle"
-                    fill="var(--muted-foreground)"
-                    className="text-[10px] font-medium tabular-nums"
+                    x="12"
+                    y="22"
+                    fill="var(--popover-foreground)"
+                    className="text-[11px] font-semibold"
                   >
-                    {fmt(band.end)}
+                    {activeBand.label}
                   </text>
-                ) : null}
-              </g>
-            );
-          })}
-
-          {/* Value marker */}
-          <motion.g
-            data-slot="threshold-band-chart-marker"
-            filter={`url(#${id}-glow)`}
-            initial={
-              motionEnabled
-                ? { x: bandAreaX, opacity: 0 }
-                : { x: markerX - 1, opacity: 1 }
-            }
-            animate={{ x: markerX - 1, opacity: 1 }}
-            transition={{
-              x: {
-                delay: motionDelay + 0.5,
-                duration: 0.9,
-                ease: [0.16, 1, 0.3, 1],
-              },
-              opacity: { delay: motionDelay + 0.5, duration: 0.32 },
-            }}
-          >
-            {/* Vertical line */}
-            <line
-              x1="1"
-              x2="1"
-              y1={bandY - 3}
-              y2={bandY + bandH + 3}
-              stroke="var(--foreground)"
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
-            {/* Top diamond */}
-            <polygon
-              points="1,-4 5,0 1,4 -3,0"
-              transform={`translate(0 ${bandY - 7})`}
-              fill="var(--foreground)"
-            />
-            {/* Bottom label */}
-            <text
-              x="1"
-              y={bandY + bandH + 26}
-              textAnchor="middle"
-              fill="var(--foreground)"
-              className="text-[12.5px] font-semibold tabular-nums"
-            >
-              {fmt(safeValue)}
-            </text>
-          </motion.g>
-
-          {/* Active band tooltip */}
-          <AnimatePresence>
-            {showTooltip && activeBand ? (
-              <motion.g
-                data-slot="threshold-band-chart-tooltip"
-                pointerEvents="none"
-                initial={
-                  motionEnabled
-                    ? { opacity: 0, x: tooltipX, y: tooltipY + 5, scale: 0.97 }
-                    : false
-                }
-                animate={{ opacity: 1, x: tooltipX, y: tooltipY, scale: 1 }}
-                exit={{ opacity: 0, x: tooltipX, y: tooltipY + 3, scale: 0.97 }}
-                transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <rect
-                  width={tooltipWidth}
-                  height={tooltipHeight}
-                  rx="10"
-                  fill="var(--popover)"
-                  stroke="var(--border)"
-                />
-                <text
-                  x="12"
-                  y="22"
-                  fill="var(--popover-foreground)"
-                  className="text-[11px] font-semibold"
-                >
-                  {activeBand.label}
-                </text>
-                <text
-                  x="12"
-                  y="40"
-                  fill="var(--muted-foreground)"
-                  className="text-[10px] font-medium"
-                >
-                  Range
-                </text>
-                <text
-                  x={tooltipWidth - 12}
-                  y="40"
-                  textAnchor="end"
-                  fill="var(--popover-foreground)"
-                  className="text-[10px] font-semibold tabular-nums"
-                >
-                  {activeBand.start === 0 ? "0" : fmt(activeBand.start)}
-                  {" – "}
-                  {activeBandIndex === resolvedBands.length - 1
-                    ? "∞"
-                    : fmt(activeBand.end)}
-                </text>
-                <text
-                  x="12"
-                  y="52"
-                  fill="var(--muted-foreground)"
-                  className="text-[10px] font-medium"
-                >
-                  Current value
-                </text>
-                <text
-                  x={tooltipWidth - 12}
-                  y="52"
-                  textAnchor="end"
-                  fill={resolveTone(
-                    currentBand?.tone,
-                    "var(--muted-foreground)",
-                  )}
-                  className="text-[10px] font-semibold tabular-nums"
-                >
-                  {fmt(safeValue)}
-                </text>
-              </motion.g>
-            ) : null}
-          </AnimatePresence>
-        </svg>
+                  <text
+                    x="12"
+                    y="40"
+                    fill="var(--muted-foreground)"
+                    className="text-[10px] font-medium"
+                  >
+                    Range
+                  </text>
+                  <text
+                    x={tooltipWidth - 12}
+                    y="40"
+                    textAnchor="end"
+                    fill="var(--popover-foreground)"
+                    className="text-[10px] font-semibold tabular-nums"
+                  >
+                    {activeBandRange}
+                  </text>
+                  <text
+                    x="12"
+                    y="52"
+                    fill="var(--muted-foreground)"
+                    className="text-[10px] font-medium"
+                  >
+                    Current value
+                  </text>
+                  <text
+                    x={tooltipWidth - 12}
+                    y="52"
+                    textAnchor="end"
+                    fill={resolveTone(
+                      currentBand?.tone,
+                      "var(--muted-foreground)",
+                    )}
+                    className="text-[10px] font-semibold tabular-nums"
+                  >
+                    {fmt(safeValue)}
+                  </text>
+                </motion.g>
+              ) : null}
+            </AnimatePresence>
+          </svg>
+        ) : null}
       </div>
     </div>
   );

@@ -1,0 +1,147 @@
+---
+title: Elevated
+description: A surface philosophy — eight elevation levels that nest. Components read their substrate from context and lift relative to it, so popovers, dropdowns and dialogs stay visible at any depth, in both light and dark mode.
+---
+
+<ComponentPreview name="elevated-demo" chromeless />
+
+## The problem
+
+In light mode, we use shadow behind white surfaces to signify elevation. In dark
+mode, we use progressively lighter backgrounds instead.
+
+But traditional components have a fixed background — a dropdown often ends up the
+same color as the dialog it sits in, and disappears into it.
+
+## The solution
+
+Three pieces: **tokens**, **substrate context** and the **primitive**.
+
+- **Tokens** — eight `bg`/`shadow` pairs. Light mode flattens to white after
+  step 2 (shadow alone carries elevation). Dark mode keeps adding white-opacity
+  plus a layered shadow recipe.
+- **Substrate** — each container knows its own level and tells whatever opens
+  inside. A popover on the page and the same popover inside a dialog both end up
+  at the right depth, without anything passed between them.
+- **Elevated** — wrap a panel and its background settles at the level it belongs
+  to. Each layer lifts a single step off the one it sits in — whether you span
+  two levels or all eight.
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/elevated.json" />
+
+The CLI copies the primitive, the substrate context and the class helpers, and
+adds the surface tokens to your `globals.css`.
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Add the surface tokens to your `globals.css`.</Step>
+
+```css
+:root {
+  --surface-1: #fafafa;
+  --surface-2: #fcfcfc;
+  --surface-3: #ffffff; /* 3–8 stay white; shadow carries elevation */
+  --shadow-color: rgb(0 0 0 / 0.06);
+  --shadow-1: 0 0 0 1px var(--shadow-color);
+  /* …up to --shadow-8, each adding one softer layer */
+}
+
+.dark {
+  --surface-1: #171717;
+  --surface-2: #1e1e1e;
+  --surface-3: #252525; /* +7 lightness per step, up to #484848 */
+  /* --dm-* highlight/ring/drop helpers + layered --shadow-1…8 */
+}
+
+@theme inline {
+  --color-surface-1: var(--surface-1); /* …through 8 → bg-surface-* */
+  --shadow-surface-1: var(--shadow-1); /* …through 8 → shadow-surface-* */
+}
+```
+
+<Step>Copy the substrate context.</Step>
+
+<ComponentSource name="surface-context" title="lib/surface-context.tsx" />
+
+<Step>Copy the class helpers.</Step>
+
+<ComponentSource name="surface-classes" title="lib/surface-classes.ts" />
+
+<Step>Copy the primitive.</Step>
+
+<ComponentSource name="elevated" title="components/matos-ui/elevated.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { Elevated } from '@/components/matos-ui/elevated'
+import { SurfaceProvider } from '@/lib/surface-context'
+```
+
+Set a base substrate, then let each panel lift itself relative to it. The
+`offset` is what a component adds to whatever it is nested inside — so the same
+`Elevated` reads correctly on the page or several layers deep.
+
+```tsx
+<SurfaceProvider value={1}>
+  <div className="rounded-2xl bg-surface-1 shadow-surface-1 p-4">
+    {/* Dialog: 1 + 4 = surface-5 */}
+    <Elevated offset={4} className="rounded-2xl p-4">
+      {/* Popover inside the dialog: 5 + 2 = surface-7,
+          but a constant popover shadow regardless of depth */}
+      <Elevated offset={2} shadowLevel={3} className="rounded-xl p-2">
+        Menu
+      </Elevated>
+    </Elevated>
+  </div>
+</SurfaceProvider>
+```
+
+Conventional offsets: `2` for a dropdown / popover / select menu, `4` for a
+dialog / modal.
+
+## Reference
+
+### `Elevated`
+
+Renders a `div` whose background tracks the substrate and re-provides the new
+level to its descendants. Accepts all native `div` props.
+
+| Prop          | Type     | Default          | Description                                                                 |
+| ------------- | -------- | ---------------- | --------------------------------------------------------------------------- |
+| `offset`      | `number` | —                | Steps above the current substrate. Final level is `min(substrate + offset, 8)`. |
+| `shadowLevel` | `number` | computed `level` | Pins the shadow weight, e.g. a popover that keeps one shadow at any depth.   |
+
+### `SurfaceProvider`
+
+Sets the substrate level for everything inside. Clamped to `1–8`.
+
+| Prop    | Type        | Description                          |
+| ------- | ----------- | ------------------------------------ |
+| `value` | `number`    | The substrate level (`1–8`).         |
+
+### `useSurface`
+
+`useSurface(): number` — reads the current substrate level from context.

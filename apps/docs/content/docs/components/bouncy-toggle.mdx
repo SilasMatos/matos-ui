@@ -1,0 +1,66 @@
+---
+title: Bouncy Toggle
+description: A switch with a spring-driven knob that squashes on press and bounces into place.
+---
+
+<ComponentPreview name="bouncy-toggle-demo" chromeless align="start" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/bouncy-toggle.json" />
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the following dependencies:</Step>
+
+<CodeBlockCommand command="npm install framer-motion tailwind-merge tailwind-variants" />
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="bouncy-toggle" title="components/matos-ui/bouncy-toggle.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { BouncyToggle } from '@/components/matos-ui/bouncy-toggle'
+```
+
+```tsx
+const [checked, setChecked] = useState(true)
+
+<BouncyToggle checked={checked} onCheckedChange={setChecked} />
+```
+
+## Reference
+
+### BouncyToggle Props
+
+| Prop              | Type                       | Default | Description                              |
+| ----------------- | -------------------------- | ------- | ---------------------------------------- |
+| `checked`         | `boolean`                  | -       | Controlled state.                        |
+| `defaultChecked`  | `boolean`                  | `false` | Initial state when uncontrolled.         |
+| `onCheckedChange` | `(checked: boolean) => void` | -     | Fires when the state changes.            |
+| `size`            | `"sm" \| "md" \| "lg"`     | `"md"`  | Track and knob size preset.              |
+| `disabled`        | `boolean`                  | `false` | Disables interaction.                    |
+| `stiffness`       | `number`                   | `500`   | Spring stiffness for the knob motion.    |
+| `damping`         | `number`                   | `15`    | Spring damping for the knob motion.      |

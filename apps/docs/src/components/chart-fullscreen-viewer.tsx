@@ -300,7 +300,7 @@ const chartDocumentation: Record<ChartId, ChartDocumentation> = {
     details:
       "The chart uses Recharts for scales and tooltip lifecycle, then layers custom SVG masks, gradients, active dots and stroke drawing to make the path feel crafted instead of generic.",
     interaction:
-      "Hover or focus the path area to reveal the custom cursor, tooltip and highlighted point.",
+      "Hover or focus to explore, then click or tap a point to pin its tooltip until Escape or an outside press.",
   },
   "allocation-performance-chart": {
     summary:
@@ -308,7 +308,7 @@ const chartDocumentation: Record<ChartId, ChartDocumentation> = {
     details:
       "The chart is built as custom SVG: striped track patterns, animated column fills, rounded mask-like bars and per-asset labels inspired by premium finance interfaces.",
     interaction:
-      "Replay the fill animation to scan allocation changes across Bonds, Stocks, ETFs and Crypto.",
+      "Hover or focus a bar to compare values; click or tap to pin the selection and its tooltip.",
   },
   "sparkline-card": {
     summary:
@@ -316,23 +316,23 @@ const chartDocumentation: Record<ChartId, ChartDocumentation> = {
     details:
       "The card is designed for dashboard grids where every pixel matters: compact value, trend context, subtle tooltip and a responsive SVG path.",
     interaction:
-      "Hover the sparkline to reveal a tooltip cursor and active dot without expanding the card.",
+      "Hover to explore the sparkline, then click or tap a point to pin its compact tooltip.",
   },
   "signal-flow-chart": {
     summary:
       "A live throughput board where curved channel cables carry flowing particles from a source bus to value-scaled sinks.",
     details:
-      "The chart is built entirely from handcrafted SVG: bezier cables, a gradient fill that draws to each channel's throughput, SMIL particle streams whose speed and count track the value, pulsing source and sink nodes and a focus-aware tooltip.",
+      "The chart is built from handcrafted SVG: bezier cables, a gradient fill that draws to each channel's throughput, one-pass particles and a focus-aware tooltip.",
     interaction:
-      "Hover or focus a channel to spotlight its cable, glow the flowing particles and reveal the throughput tooltip.",
+      "Hover, focus, tap or select a channel to spotlight its cable and reveal the throughput tooltip.",
   },
   "activity-heatmap-chart": {
     summary:
-      "A calendar-style activity grid that reveals in a diagonal wave, with intensity levels, a hover tooltip and live recent cells.",
+      "A calendar-style activity grid that reveals in a diagonal wave, with clear intensity levels and an intent-driven tooltip.",
     details:
-      "Every cell is an SVG square whose fill intensity maps to its value. The grid cascades in along the diagonal with spring scaling, the most recent column gently breathes and each cell is keyboard focusable with an accessible label.",
+      "Every cell is an SVG square whose fill intensity maps to its value. The grid cascades in once along the diagonal, and every cell is keyboard focusable with an accessible label.",
     interaction:
-      "Hover or focus any day to scale it up and reveal its value, week and intensity swatch in the tooltip.",
+      "Hover, focus, tap or select any day to reveal its value and intensity in the tooltip.",
   },
   "candlestick-chart": {
     summary:
@@ -340,31 +340,31 @@ const chartDocumentation: Record<ChartId, ChartDocumentation> = {
     details:
       "Each candle is handcrafted SVG: a wick line and a body rect that grow from their center, colored by direction. Hovering or focusing a candle dims the rest and reveals open, high, low and close.",
     interaction:
-      "Hover or focus a candle to spotlight it and read its full OHLC values.",
+      "Hover or focus a candle to inspect it; click or tap to pin its full OHLC values.",
   },
   "bubble-chart": {
     summary:
-      "A weighted bubble chart with radial gradient fills, spring scale-in, a gentle float loop and hover values.",
+      "A weighted bubble chart with radial gradient fills, spring scale-in and interactive values.",
     details:
-      "Bubbles are sized by value and placed from explicit coordinates or a deterministic spiral. Each uses its own radial gradient, scales in with a spring, floats continuously and exposes an accessible label.",
+      "Bubbles are sized by value and placed from explicit coordinates or a deterministic spiral. Each uses its own radial gradient, scales in once and exposes an accessible label.",
     interaction:
-      "Hover or focus a bubble to enlarge it, ring it and reveal its label and value.",
+      "Hover or focus a bubble to inspect it; click or tap to pin its label and value.",
   },
   "activity-waveform-chart": {
     summary:
       "A dense spending waveform with a metric header, hover tooltip and a split ratio bar with legend.",
     details:
-      "Dozens of thin SVG bars grow from the baseline in a left-to-right wave, the peak is highlighted by default and a segmented ratio bar animates its width to break down the total.",
+      "Dozens of thin SVG bars grow from the baseline in a left-to-right wave, while a segmented ratio bar breaks down the total without leaving a value floating by default.",
     interaction:
-      "Hover or focus any bar to read its value; the ratio bar and legend summarize the split.",
+      "Hover or focus any bar to read its value; click or tap to pin it while comparing the split.",
   },
   "performance-waterfall-chart": {
     summary:
       "A Gantt-style network timeline that reveals each resource step as a bar growing from its start offset.",
     details:
-      "Bars animate through per-step clip-paths so the reveal tracks the true start time. The slowest step pulses with a glow ring, a vertical marker indicates a performance milestone (e.g. LCP) and a time axis with ticks anchors the timeline.",
+      "Bars animate through per-step clip-paths so the reveal tracks the true start time. A subtle vertical marker indicates a performance milestone (e.g. LCP), while time-axis ticks anchor the timeline.",
     interaction:
-      "Hover or focus any bar to dim the rest and reveal a tooltip with start offset, duration and step name.",
+      "Hover or focus any bar to compare timing; click or tap to pin start, duration, end and step details.",
   },
   "threshold-band-chart": {
     summary:
@@ -372,13 +372,13 @@ const chartDocumentation: Record<ChartId, ChartDocumentation> = {
     details:
       "Bands reveal with staggered clip-path animation, a diamond marker slides to the current value with a spring ease and the active band lifts its opacity to draw the eye. Hover any band to see its full range.",
     interaction:
-      "Hover a band to reveal its range and compare against the current value in the tooltip.",
+      "Hover or focus a band to inspect its range; click or tap to keep the comparison selected.",
   },
   "impact-priority-matrix": {
     summary:
       "A 2×2 effort–impact matrix for prioritising tasks, with spring-animated dots and quadrant context labels.",
     details:
-      "Points spring into position with staggered delays, quadrant backgrounds subtly reinforce the meaning (Quick Wins in green, Expensive in red), and the active point rings and floats to draw focus.",
+      "Points spring into position with staggered delays, quadrant backgrounds reinforce meaning and the active point gains a restrained focus ring.",
     interaction:
       "Hover or focus any dot to see its label, description and effort–impact values.",
   },
@@ -388,15 +388,15 @@ const chartDocumentation: Record<ChartId, ChartDocumentation> = {
     details:
       "Tiles are computed with a recursive binary split, each gets a unique radial gradient fill, they scale in with spring animations from their tile center and a percentage badge marks the dominant category.",
     interaction:
-      "Hover or focus any tile to expand it and reveal its label, size and share percentage.",
+      "Hover or focus any tile to inspect it; click or tap to pin its size and share percentage.",
   },
   "score-radar-chart": {
     summary:
       "A multi-axis radar polygon that draws axis by axis and fills in from the center, ideal for audit score dashboards.",
     details:
-      "The polygon stroke uses framer-motion pathLength to draw around the axes; the fill fades in from the center. Each vertex node springs in sequentially and pulses on focus, a comparison polygon can be added for before/after views.",
+      "The polygon stroke uses framer-motion pathLength to draw around the axes; the fill fades in from the center. Each vertex enters sequentially, and a comparison polygon can be added for before/after views.",
     interaction:
-      "Hover or focus a vertex to pulse its ring and reveal the axis label and score in a tooltip.",
+      "Hover, focus, tap or select a vertex to reveal the axis label and score in a tooltip.",
   },
   "risk-score-gauge": {
     summary:
@@ -696,7 +696,7 @@ function renderChartPreview(chartId: ChartId) {
             {
               label: "Needs improvement",
               max: 4000,
-              tone: "oklch(0.75 0.16 70)",
+              tone: "chart-4",
             },
             { label: "Poor", tone: "destructive" },
           ]}
@@ -837,10 +837,10 @@ function AllocationPerformanceFullPreview() {
           <filter id="allocation-full-tooltip-shadow">
             <feDropShadow
               dx="0"
-              dy="14"
+              dy="2"
               floodColor="var(--foreground)"
-              floodOpacity="0.16"
-              stdDeviation="13"
+              floodOpacity="0.12"
+              stdDeviation="3"
             />
           </filter>
           <pattern
@@ -1022,7 +1022,7 @@ function AllocationPerformanceFullPreview() {
             initial={{ opacity: 0, y: 8, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 6, scale: 0.98 }}
-            transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
           >
             <rect
               x={tooltipX}
@@ -1073,12 +1073,14 @@ function AllocationPerformanceFullPreview() {
 }
 
 function RiskScoreGaugeFullPreview() {
-  const accent = "oklch(0.75 0.16 70)";
+  const accent = "var(--chart-4)";
   const remainderPath = "M112 256 A138 138 0 0 1 388 256";
   const progressPath = "M112 256 A138 138 0 0 1 338 150";
   const markerX = 338;
   const markerY = 150;
-  const [tooltipVisible, setTooltipVisible] = useState(true);
+  const [tooltipHovered, setTooltipHovered] = useState(false);
+  const [tooltipSelected, setTooltipSelected] = useState(false);
+  const tooltipVisible = tooltipHovered || tooltipSelected;
   const shouldReduceMotion = useReducedMotion();
 
   return (
@@ -1113,13 +1115,6 @@ function RiskScoreGaugeFullPreview() {
             <stop offset="42%" stopColor={accent} stopOpacity="0.85" />
             <stop offset="100%" stopColor={accent} />
           </linearGradient>
-          <filter id="risk-full-glow">
-            <feGaussianBlur stdDeviation="8" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
         </defs>
         <rect
           x="10"
@@ -1130,9 +1125,19 @@ function RiskScoreGaugeFullPreview() {
           className="fill-card stroke-border"
         />
 
-        <g
-          onPointerEnter={() => setTooltipVisible(true)}
-          onPointerLeave={() => setTooltipVisible(false)}
+        <motion.g
+          tabIndex={0}
+          role="button"
+          aria-label="Inspect risk score"
+          onPointerEnter={() => setTooltipHovered(true)}
+          onPointerLeave={() => setTooltipHovered(false)}
+          onClick={() => setTooltipSelected((selected) => !selected)}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              setTooltipSelected((selected) => !selected);
+            }
+          }}
         >
           <motion.path
             d={remainderPath}
@@ -1166,7 +1171,7 @@ function RiskScoreGaugeFullPreview() {
           />
 
           {shouldReduceMotion ? (
-            <g filter="url(#risk-full-glow)">
+            <g>
               <circle
                 cx={markerX}
                 cy={markerY}
@@ -1185,7 +1190,7 @@ function RiskScoreGaugeFullPreview() {
               <circle cx={markerX} cy={markerY} r="4" fill={accent} />
             </g>
           ) : (
-            <g filter="url(#risk-full-glow)">
+            <g>
               <animateMotion
                 dur="1.5s"
                 begin="0s"
@@ -1207,7 +1212,7 @@ function RiskScoreGaugeFullPreview() {
                   values="0.18;0.34;0.18"
                   begin="1.6s"
                   dur="2.4s"
-                  repeatCount="indefinite"
+                  repeatCount="1"
                 />
               </circle>
               <circle
@@ -1221,7 +1226,7 @@ function RiskScoreGaugeFullPreview() {
               <circle cx="0" cy="0" r="4" fill={accent} />
             </g>
           )}
-        </g>
+        </motion.g>
 
         {/* Centered value inside the gauge, clear of the arc band */}
         <text
@@ -1257,7 +1262,7 @@ function RiskScoreGaugeFullPreview() {
               initial={{ opacity: 0, y: 8, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 6, scale: 0.98 }}
-              transition={{ duration: 0.46, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
             >
               <rect
                 x="314"

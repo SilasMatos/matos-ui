@@ -1,0 +1,166 @@
+---
+title: Context Menu
+description: A right-click menu that opens at the pointer, flips away from viewport edges, and enters from the direction it was anchored to — the first menu in the catalogue built on the elevation ladder rather than on a flat popover fill.
+---
+
+<ComponentPreview name="context-menu-demo" chromeless align="start" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/context-menu.json" />
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the following dependencies:</Step>
+
+<CodeBlockCommand command="npm install @base-ui/react framer-motion lucide-react" />
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="context-menu" title="components/matos-ui/context-menu.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger
+} from '@/components/matos-ui/context-menu'
+```
+
+```tsx
+<ContextMenu>
+  <ContextMenuTrigger>{children}</ContextMenuTrigger>
+  <ContextMenuContent>
+    <ContextMenuItem onSelect={rename}>Rename</ContextMenuItem>
+    <ContextMenuItem onSelect={remove} variant="danger">
+      Delete
+    </ContextMenuItem>
+  </ContextMenuContent>
+</ContextMenu>
+```
+
+## Relationship to Dropdown Menu
+
+These are two surfaces over one foundation, not two implementations.
+Dropdown Menu opens from a button on normal click; Context Menu opens at the
+pointer on right-click or long-press. Base
+UI's `ContextMenu` re-exports the same `Menu.*` parts Dropdown Menu is built
+on — `Item`, `Group`, `SubmenuRoot` and the rest are literally the same
+components — so roving focus, typeahead, `Esc`, and submenu open/close timing
+are shared code rather than a second copy that can drift. Only the anchor (a
+virtual element at the cursor) and the surface differ.
+
+The surface is the real difference: Dropdown Menu paints `bg-popover` with a
+ring, while Context Menu is `Elevated offset={2}`. That's what lets it accept
+an offset at all — and what makes its entrance something the motion tokens can
+resolve rather than something hand-tuned.
+
+## How it's built
+
+- The popup is `Elevated offset={2}` with `shadowLevel={3}` pinned. Its fill
+  still tracks whatever substrate it opened over, but a menu opened inside a
+  dialog shouldn't cast a heavier drop than one opened on the page — that's
+  the case `shadowLevel` exists for.
+- **The entrance is two helpers composed.** `liftVariants(2)` supplies the
+  elevation half — the fade, the scale, and the tier resolved from the offset.
+  `directionalVariants(direction)` supplies the origin half — which axis the
+  menu travels on. The lift's own travel is zeroed (`y: 0`) so direction owns
+  that decision outright instead of adding a stray 4px on the wrong axis. Both
+  helpers land on the same tier here, since `liftVariants(2)` resolves
+  `motionForOffset(2)` internally, so the merge can't produce two competing
+  timings.
+- Direction comes from where the menu actually ended up. Base UI resolves
+  collisions against the viewport and reports the resolved `side`; the menu
+  enters *from* the opposite of it, so one that had to flip above the cursor
+  grows upward out of the pointer. This is the same mapping as Dropdown Menu's
+  `slide-in-from-*` classes, expressed as a value rather than a class so
+  framer can use it.
+- Timing is `motionForOffset(2)`, not a hand-picked tier. A right-click menu
+  is an ordinary overlay — the offset already knows how it should move. This
+  is the deliberate contrast with
+  [Achievement Toast](/docs/components/achievement-toast), which opts into
+  `spring.playful` by hand because no offset calculation should be able to
+  produce a celebration.
+- Exit runs on the tier's `exit.duration`, applied through the component-level
+  `transition` prop. The `hidden` variant carries no transition of its own, so
+  the prop only takes effect on the way out — and it has to be the exit
+  duration, because `useExitAnimation` arms its force-unmount fallback off
+  that same number.
+- Highlight tints the surface (`bg-foreground/8`) rather than swapping to an
+  unrelated fill, so a highlighted item stays on its rung of the ladder.
+  Separators use a slightly stronger tint of the same foreground instead of
+  `border-border`, which would out-contrast the shadow ring already drawing
+  the menu's edge.
+- `prefers-reduced-motion` drops the travel and the scale; the menu still
+  fades in and out.
+
+## Reference
+
+### ContextMenu Props
+
+Everything `ContextMenu.Root` from Base UI accepts, minus the props a context
+menu can't use (`modal`, `openOnHover`, `delay`, `closeDelay`).
+
+| Prop           | Type                                      | Default | Description                        |
+| -------------- | ----------------------------------------- | ------- | ---------------------------------- |
+| `open`         | `boolean?`                                | —       | Controlled open state.              |
+| `defaultOpen`  | `boolean`                                 | `false` | Uncontrolled initial state.         |
+| `onOpenChange` | `(open, details) => void`                 | —       | Fires on open and on close.         |
+
+### ContextMenuContent Props
+
+| Prop          | Type                                             | Default      | Description                                      |
+| ------------- | ------------------------------------------------ | ------------ | ------------------------------------------------ |
+| `side`        | `"top" \| "bottom" \| "left" \| "right" \| ...` | `"bottom"`   | Preferred side; collisions may flip it.           |
+| `sideOffset`  | `number`                                         | `2`          | Gap from the pointer, so it isn't under the tip.  |
+| `align`       | `"start" \| "center" \| "end"`                  | `"start"`    | Alignment along the chosen side.                  |
+| `alignOffset` | `number`                                         | `2`          | Offset along that axis.                           |
+| `className`   | `string?`                                        | —            | Merged onto the elevated popup.                   |
+
+### ContextMenuItem Props
+
+| Prop        | Type                        | Default     | Description                                             |
+| ----------- | --------------------------- | ----------- | ------------------------------------------------------- |
+| `onSelect`  | `(event) => void`           | —           | Alias for `onClick`, matching most menu APIs. Both fire. |
+| `variant`   | `"default" \| "danger"`    | `"default"` | `danger` recolors text, icon, and highlight.             |
+| `inset`     | `boolean?`                  | —           | Indents to line up with items that have icons.           |
+| `disabled`  | `boolean?`                  | `false`     | Skipped by keyboard navigation.                          |
+
+### Parts
+
+`ContextMenu`, `ContextMenuTrigger`, `ContextMenuContent`, `ContextMenuItem`,
+`ContextMenuCheckboxItem`, `ContextMenuRadioGroup`, `ContextMenuRadioItem`,
+`ContextMenuGroup`, `ContextMenuLabel`, `ContextMenuSeparator`,
+`ContextMenuShortcut`, `ContextMenuSub`, `ContextMenuSubTrigger`,
+`ContextMenuSubContent`.
+
+### Interactions
+
+- Right-click or long-press inside the trigger opens the menu at the pointer.
+- `Esc` closes it; arrow keys move between items; typing jumps to a matching
+  label.
+- `→` opens a submenu, `←` closes it.
+- Selecting an item closes the menu unless `closeOnClick={false}` is set.

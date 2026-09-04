@@ -3,10 +3,73 @@
 import { Menu as MenuPrimitive } from "@base-ui/react/menu";
 import { CheckIcon, ChevronRightIcon } from "lucide-react";
 import type * as React from "react";
+import {
+  type CSSProperties,
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
 import { cn } from "@/lib/utils";
+import {
+  motionForOffset,
+  useExitAnimation,
+} from "@/registry/new-york-v4/lib/motion-tokens";
 
-function DropdownMenu({ ...props }: MenuPrimitive.Root.Props) {
-  return <MenuPrimitive.Root data-slot="dropdown-menu" {...props} />;
+const dropdownMotion = motionForOffset(2);
+
+type DropdownMenuMotionContextValue = {
+  open: boolean;
+};
+
+const DropdownMenuMotionContext =
+  createContext<DropdownMenuMotionContextValue | null>(null);
+
+function useDropdownMenuMotionContext() {
+  return useContext(DropdownMenuMotionContext) ?? { open: true };
+}
+
+function getMotionStyle(style?: CSSProperties): CSSProperties {
+  return {
+    "--motion-duration": `${dropdownMotion.visualDuration}s`,
+    "--motion-exit-duration": `${dropdownMotion.exit.duration}s`,
+    ...style,
+  } as CSSProperties;
+}
+
+function DropdownMenu({
+  open: openProp,
+  defaultOpen = false,
+  onOpenChange,
+  ...props
+}: MenuPrimitive.Root.Props) {
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
+  const open = openProp ?? uncontrolledOpen;
+  const contextValue = useMemo(() => ({ open }), [open]);
+
+  const handleOpenChange = useCallback<
+    NonNullable<MenuPrimitive.Root.Props["onOpenChange"]>
+  >(
+    (nextOpen, eventDetails) => {
+      if (openProp === undefined) {
+        setUncontrolledOpen(nextOpen);
+      }
+      onOpenChange?.(nextOpen, eventDetails);
+    },
+    [onOpenChange, openProp],
+  );
+
+  return (
+    <DropdownMenuMotionContext.Provider value={contextValue}>
+      <MenuPrimitive.Root
+        data-slot="dropdown-menu"
+        open={open}
+        onOpenChange={handleOpenChange}
+        {...props}
+      />
+    </DropdownMenuMotionContext.Provider>
+  );
 }
 
 function DropdownMenuPortal({ ...props }: MenuPrimitive.Portal.Props) {
@@ -23,12 +86,40 @@ function DropdownMenuContent({
   side = "bottom",
   sideOffset = 4,
   className,
+  style,
+  onTransitionEnd,
   ...props
 }: MenuPrimitive.Popup.Props &
   Pick<
     MenuPrimitive.Positioner.Props,
     "align" | "alignOffset" | "side" | "sideOffset"
   >) {
+  const { open } = useDropdownMenuMotionContext();
+  const { mounted, onAnimationComplete } = useExitAnimation(
+    open,
+    dropdownMotion,
+  );
+  const motionStyle = useMemo(() => getMotionStyle(style), [style]);
+  const handleTransitionEnd = useCallback<
+    React.TransitionEventHandler<HTMLDivElement>
+  >(
+    (event) => {
+      onTransitionEnd?.(
+        event as Parameters<
+          NonNullable<MenuPrimitive.Popup.Props["onTransitionEnd"]>
+        >[0],
+      );
+      if (event.currentTarget === event.target) {
+        onAnimationComplete();
+      }
+    },
+    [onAnimationComplete, onTransitionEnd],
+  );
+
+  if (!mounted) {
+    return null;
+  }
+
   return (
     <MenuPrimitive.Portal>
       <MenuPrimitive.Positioner
@@ -41,9 +132,11 @@ function DropdownMenuContent({
         <MenuPrimitive.Popup
           data-slot="dropdown-menu-content"
           className={cn(
-            "data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 bg-popover text-popover-foreground min-w-32 rounded-lg p-1 shadow-md ring-1 duration-100 data-[side=inline-start]:slide-in-from-right-2 data-[side=inline-end]:slide-in-from-left-2 z-50 max-h-(--available-height) w-(--anchor-width) origin-(--transform-origin) overflow-x-hidden overflow-y-auto outline-none data-closed:overflow-hidden",
+            "data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 bg-popover text-popover-foreground min-w-32 rounded-lg p-1 shadow-md ring-1 duration-[var(--motion-duration)] data-ending-style:duration-[var(--motion-exit-duration)] motion-reduce:transition-none data-[side=inline-start]:slide-in-from-right-2 data-[side=inline-end]:slide-in-from-left-2 z-50 max-h-(--available-height) w-(--anchor-width) origin-(--transform-origin) overflow-x-hidden overflow-y-auto outline-none data-closed:overflow-hidden",
             className,
           )}
+          style={motionStyle}
+          onTransitionEnd={handleTransitionEnd}
           {...props}
         />
       </MenuPrimitive.Positioner>
@@ -98,8 +191,38 @@ function DropdownMenuItem({
   );
 }
 
-function DropdownMenuSub({ ...props }: MenuPrimitive.SubmenuRoot.Props) {
-  return <MenuPrimitive.SubmenuRoot data-slot="dropdown-menu-sub" {...props} />;
+function DropdownMenuSub({
+  open: openProp,
+  defaultOpen = false,
+  onOpenChange,
+  ...props
+}: MenuPrimitive.SubmenuRoot.Props) {
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
+  const open = openProp ?? uncontrolledOpen;
+  const contextValue = useMemo(() => ({ open }), [open]);
+
+  const handleOpenChange = useCallback<
+    NonNullable<MenuPrimitive.SubmenuRoot.Props["onOpenChange"]>
+  >(
+    (nextOpen, eventDetails) => {
+      if (openProp === undefined) {
+        setUncontrolledOpen(nextOpen);
+      }
+      onOpenChange?.(nextOpen, eventDetails);
+    },
+    [onOpenChange, openProp],
+  );
+
+  return (
+    <DropdownMenuMotionContext.Provider value={contextValue}>
+      <MenuPrimitive.SubmenuRoot
+        data-slot="dropdown-menu-sub"
+        open={open}
+        onOpenChange={handleOpenChange}
+        {...props}
+      />
+    </DropdownMenuMotionContext.Provider>
+  );
 }
 
 function DropdownMenuSubTrigger({
@@ -138,7 +261,7 @@ function DropdownMenuSubContent({
     <DropdownMenuContent
       data-slot="dropdown-menu-sub-content"
       className={cn(
-        "data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 bg-popover text-popover-foreground min-w-[96px] rounded-lg p-1 shadow-lg ring-1 duration-100 w-auto",
+        "data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 bg-popover text-popover-foreground min-w-[96px] rounded-lg p-1 shadow-lg ring-1 duration-[var(--motion-duration)] data-ending-style:duration-[var(--motion-exit-duration)] motion-reduce:transition-none w-auto",
         className,
       )}
       align={align}

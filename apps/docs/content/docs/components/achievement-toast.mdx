@@ -1,0 +1,164 @@
+---
+title: Achievement Toast
+description: A one-off celebration — deploy shipped, goal reached, payment cleared — that enters on the playful spring tier and clears itself, with a staggered group for when several land at once.
+---
+
+<ComponentPreview name="achievement-toast-demo" chromeless align="start" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/achievement-toast.json" />
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the following dependencies:</Step>
+
+<CodeBlockCommand command="npm install framer-motion lucide-react" />
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="achievement-toast" title="components/matos-ui/achievement-toast.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import {
+  AchievementToast,
+  AchievementToastGroup,
+  type AchievementData
+} from '@/components/matos-ui/achievement-toast'
+```
+
+```tsx
+const [open, setOpen] = useState(false)
+
+;<AchievementToast
+  open={open}
+  onOpenChange={setOpen}
+  title="Deploy successful"
+  description="matos-ui.com is live on production."
+  icon={<CheckCircle2 />}
+/>
+```
+
+When several wins land together, `AchievementToastGroup` takes the array and
+staggers them in:
+
+```tsx
+const [achievements, setAchievements] = useState<AchievementData[]>([])
+
+function dismiss(id: string) {
+  setAchievements(current => current.filter(item => item.id !== id))
+}
+
+;<AchievementToastGroup achievements={achievements} onDismiss={dismiss} />
+```
+
+## When to use this and not Notification Stack
+
+[Notification Stack](/docs/components/notification-stack) is informational and
+continuous: things keep arriving, and the tone stays neutral because the next
+one is always coming. Achievement Toast is the opposite shape — a single
+moment that happened once and is worth marking. That difference is what the
+motion is spending itself on. If you find yourself firing one of these on
+every save, it wants to be a notification instead.
+
+## How it's built
+
+- Entrance is `spring.playful` — chosen by hand, not resolved from the
+  offset. `motionForOffset` deliberately can't return this tier, so nothing
+  becomes celebratory by accident; a component has to ask for it. This is the
+  use case that justifies the tier existing.
+- The card is `Elevated offset={3}`, the same rung a dialog-adjacent overlay
+  sits on. Its shadow ring draws the edge, so there's no border on top of it.
+- The toast portals to `document.body` and **resets the surface substrate to
+  the page** before applying its offset. A toast pinned to the viewport corner
+  isn't visually sitting on whatever card rendered it, so `offset={3}` has to
+  mean the same rung from anywhere in the tree — the opposite of what
+  [Stacked Dialog](/docs/components/stacked-dialog) wants, where inheriting
+  the substrate is the whole point of nesting.
+- The card enters from off the nearest edge: a bottom-corner toast rises, a
+  top-corner one drops. The bounce then lands against the edge it came from.
+- `AchievementToastGroup` uses `staggerContainer("playful")` — the widest gap
+  in the scale (80ms), so each item reads as its own arrival rather than as a
+  list appearing. As in [Live Queue](/docs/components/live-queue), the stagger
+  orchestrates what's in the array on mount; items appended later enter
+  individually without a queued-up delay.
+- The icon pulses once with `attentionPulse`, cued by the entrance completing
+  rather than by mount — so it reads as the toast settling, not as a second
+  thing happening at the same time.
+- Exit runs on the tier's `exit.duration` (0.2s), not its full entrance
+  duration (0.32s). `useExitAnimation` arms its force-unmount fallback off
+  that same number, so an exit animating for the longer duration would get cut
+  short by its own guard.
+- Auto-dismiss pauses while the pointer or focus is inside the toast, and
+  restarts the full window on leaving — a celebration that vanishes out from
+  under the cursor reading it is worse than one that overstays.
+  `useExitAnimation` still force-unmounts on a timer, so a backgrounded tab
+  that stalls the animation can't leave the portal mounted forever.
+- `prefers-reduced-motion` drops the bounce, the travel, the stagger, and the
+  icon pulse; the toast still appears and clears on opacity alone.
+
+## Reference
+
+### AchievementToast Props
+
+| Prop           | Type                             | Default            | Description                                                  |
+| -------------- | -------------------------------- | ------------------ | ------------------------------------------------------------ |
+| `open`         | `boolean`                        | —                  | Whether the toast is showing.                                 |
+| `onOpenChange` | `(open: boolean) => void`        | —                  | Called on auto-dismiss and on the close button.               |
+| `title`        | `string`                         | —                  | The thing that was achieved.                                  |
+| `description`  | `string?`                        | —                  | Supporting line, clamped to two lines.                        |
+| `icon`         | `ReactNode?`                     | —                  | Rendered in its own elevated frame; pulses once on landing.   |
+| `duration`     | `number`                         | `4000`             | ms on screen. `0` keeps it until dismissed by hand.           |
+| `position`     | `AchievementToastPosition`       | `"bottom-right"`   | Which corner the viewport pins to.                            |
+| `className`    | `string?`                        | —                  | Applied to the card, not the viewport.                        |
+
+### AchievementToastGroup Props
+
+| Prop           | Type                        | Default          | Description                                    |
+| -------------- | --------------------------- | ---------------- | ----------------------------------------------- |
+| `achievements` | `AchievementData[]`         | —                | The current run, in order.                       |
+| `onDismiss`    | `(id: string) => void`      | —                | Called per item, on auto-dismiss or close.       |
+| `duration`     | `number`                    | `4000`           | ms on screen, applied to each item.              |
+| `position`     | `AchievementToastPosition`  | `"bottom-right"` | Which corner the viewport pins to.               |
+| `className`    | `string?`                   | —                | Applied to the viewport.                         |
+
+### AchievementData
+
+| Field         | Type         | Description                    |
+| ------------- | ------------ | ------------------------------ |
+| `id`          | `string`     | Unique identifier.              |
+| `title`       | `string`     | The thing that was achieved.    |
+| `description` | `string?`    | Supporting line.                |
+| `icon`        | `ReactNode?` | Icon for the elevated frame.    |
+
+### AchievementToastPosition
+
+`"top-left" | "top-right" | "bottom-left" | "bottom-right"`
+
+### Interactions
+
+- The toast enters with a visible bounce, then its icon pulses once.
+- Hovering or focusing inside it pauses the countdown; leaving restarts it.
+- The close button dismisses immediately, playing the same exit.

@@ -25,6 +25,8 @@ import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
 
+import { Elevated } from "@/registry/new-york-v4/ui/elevated";
+
 export const dataTableVariants = tv({
   base: "not-prose w-full text-foreground",
 });
@@ -83,13 +85,15 @@ export function DataTable<TData, TValue>({
       className={twMerge(dataTableVariants(), className)}
       {...props}
     >
-      <div
+      <Elevated
         data-slot="data-table-card"
-        className="overflow-hidden rounded-[1.35rem] bg-muted p-2 shadow-sm"
+        offset={1}
+        className="overflow-hidden rounded-2xl p-2"
       >
-        <div
+        <Elevated
           data-slot="data-table-panel"
-          className="overflow-hidden rounded-[1.05rem] border-border/60 bg-background shadow-xs"
+          offset={1}
+          className="overflow-hidden rounded-xl"
         >
           <Table>
             <TableHeader>
@@ -148,7 +152,7 @@ export function DataTable<TData, TValue>({
               )}
             </TableBody>
           </Table>
-        </div>
+        </Elevated>
 
         {footer ? (
           <DataTablePagination
@@ -161,7 +165,7 @@ export function DataTable<TData, TValue>({
             loading={loading}
           />
         ) : null}
-      </div>
+      </Elevated>
     </div>
   );
 }

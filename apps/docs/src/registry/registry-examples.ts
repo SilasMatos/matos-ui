@@ -2,12 +2,44 @@ import type { Registry } from "shadcn/schema";
 
 export const examples: Registry["items"] = [
   {
-    name: "button-demo",
+    name: "magnetic-card-demo",
     type: "registry:example",
-    registryDependencies: ["button"],
+    registryDependencies: ["magnetic-card"],
+    files: [
+      { path: "examples/magnetic-card-demo.tsx", type: "registry:example" },
+    ],
+  },
+  {
+    name: "spring-slider-demo",
+    type: "registry:example",
+    registryDependencies: ["spring-slider"],
+    files: [
+      { path: "examples/spring-slider-demo.tsx", type: "registry:example" },
+    ],
+  },
+  {
+    name: "bouncy-toggle-demo",
+    type: "registry:example",
+    registryDependencies: ["bouncy-toggle"],
+    files: [
+      { path: "examples/bouncy-toggle-demo.tsx", type: "registry:example" },
+    ],
+  },
+  {
+    name: "physics-counter-demo",
+    type: "registry:example",
+    registryDependencies: ["physics-counter"],
+    files: [
+      { path: "examples/physics-counter-demo.tsx", type: "registry:example" },
+    ],
+  },
+  {
+    name: "floating-action-menu-demo",
+    type: "registry:example",
+    registryDependencies: ["floating-action-menu"],
     files: [
       {
-        path: "examples/button-demo.tsx",
+        path: "examples/floating-action-menu-demo.tsx",
         type: "registry:example",
       },
     ],
@@ -26,7 +58,7 @@ export const examples: Registry["items"] = [
   {
     name: "theme-toggler-button-demo",
     type: "registry:example",
-    registryDependencies: ["theme-toggler-button"],
+    registryDependencies: ["theme-toggler-button", "elevated"],
     files: [
       {
         path: "examples/theme-toggler-button-demo.tsx",
@@ -52,28 +84,6 @@ export const examples: Registry["items"] = [
     files: [
       {
         path: "examples/data-table-demo.tsx",
-        type: "registry:example",
-      },
-    ],
-  },
-  {
-    name: "activity-feed-demo",
-    type: "registry:example",
-    registryDependencies: ["activity-feed"],
-    files: [
-      {
-        path: "examples/activity-feed-demo.tsx",
-        type: "registry:example",
-      },
-    ],
-  },
-  {
-    name: "status-pulse-card-demo",
-    type: "registry:example",
-    registryDependencies: ["status-pulse-card"],
-    files: [
-      {
-        path: "examples/status-pulse-card-demo.tsx",
         type: "registry:example",
       },
     ],
@@ -123,17 +133,6 @@ export const examples: Registry["items"] = [
     ],
   },
   {
-    name: "detail-panel-demo",
-    type: "registry:example",
-    registryDependencies: ["detail-panel", "button"],
-    files: [
-      {
-        path: "examples/detail-panel-demo.tsx",
-        type: "registry:example",
-      },
-    ],
-  },
-  {
     name: "command-dock-demo",
     type: "registry:example",
     registryDependencies: ["command-dock"],
@@ -151,6 +150,61 @@ export const examples: Registry["items"] = [
     files: [
       {
         path: "examples/file-upload-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "expandable-list-demo",
+    type: "registry:example",
+    registryDependencies: ["expandable-list"],
+    files: [
+      {
+        path: "examples/expandable-list-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "live-queue-demo",
+    type: "registry:example",
+    registryDependencies: ["live-queue"],
+    files: [
+      {
+        path: "examples/live-queue-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "stacked-dialog-demo",
+    type: "registry:example",
+    registryDependencies: ["stacked-dialog"],
+    files: [
+      {
+        path: "examples/stacked-dialog-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "achievement-toast-demo",
+    type: "registry:example",
+    registryDependencies: ["achievement-toast"],
+    files: [
+      {
+        path: "examples/achievement-toast-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "context-menu-demo",
+    type: "registry:example",
+    registryDependencies: ["context-menu", "elevated"],
+    files: [
+      {
+        path: "examples/context-menu-demo.tsx",
         type: "registry:example",
       },
     ],
@@ -343,34 +397,12 @@ export const examples: Registry["items"] = [
     ],
   },
   {
-    name: "progress-orbit-demo",
-    type: "registry:example",
-    registryDependencies: ["progress-orbit"],
-    files: [
-      {
-        path: "examples/progress-orbit-demo.tsx",
-        type: "registry:example",
-      },
-    ],
-  },
-  {
     name: "spotlight-card-demo",
     type: "registry:example",
     registryDependencies: ["spotlight-card"],
     files: [
       {
         path: "examples/spotlight-card-demo.tsx",
-        type: "registry:example",
-      },
-    ],
-  },
-  {
-    name: "kinetic-card-demo",
-    type: "registry:example",
-    registryDependencies: ["kinetic-card"],
-    files: [
-      {
-        path: "examples/kinetic-card-demo.tsx",
         type: "registry:example",
       },
     ],
@@ -522,6 +554,50 @@ export const examples: Registry["items"] = [
     files: [
       {
         path: "examples/signup-form-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "elevated-demo",
+    type: "registry:example",
+    registryDependencies: ["elevated"],
+    files: [
+      {
+        path: "examples/elevated-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "motion-tokens-demo",
+    type: "registry:example",
+    registryDependencies: ["motion-tokens", "elevated", "button"],
+    files: [
+      {
+        path: "examples/motion-tokens-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "motion-stagger-demo",
+    type: "registry:example",
+    registryDependencies: ["motion-tokens", "elevated", "button"],
+    files: [
+      {
+        path: "examples/motion-stagger-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "motion-attention-demo",
+    type: "registry:example",
+    registryDependencies: ["motion-tokens", "elevated", "button"],
+    files: [
+      {
+        path: "examples/motion-attention-demo.tsx",
         type: "registry:example",
       },
     ],

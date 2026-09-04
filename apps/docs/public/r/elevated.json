@@ -1,0 +1,119 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "elevated",
+  "registryDependencies": [
+    "https://matos-ui.com/r/surface-context.json",
+    "https://matos-ui.com/r/surface-classes.json"
+  ],
+  "files": [
+    {
+      "path": "components/matos-ui/elevated.tsx",
+      "content": "\"use client\";\n\nimport {\n  type ComponentPropsWithoutRef,\n  forwardRef,\n  type ReactNode,\n} from \"react\";\n\nimport { cn } from \"@/lib/utils\";\nimport {\n  SURFACE_HOVER_SHADOW,\n  surfaceClasses,\n} from \"@/lib/surface-classes\";\nimport {\n  SurfaceProvider,\n  useSurface,\n} from \"@/lib/surface-context\";\n\ninterface ElevatedProps extends ComponentPropsWithoutRef<\"div\"> {\n  /**\n   * Steps above the current substrate.\n   *\n   * The component's own surface level becomes `min(substrate + offset, 8)`\n   * and is re-provided to descendants via SurfaceProvider, so further\n   * nesting walks up the ladder automatically.\n   *\n   * Conventional offsets:\n   *   2 — dropdown / popover / select menu\n   *   4 — dialog / modal\n   */\n  offset: number;\n  /**\n   * Override for the shadow level. Defaults to the computed surface level.\n   *\n   * Pass a fixed value when the component should keep a constant shadow\n   * weight regardless of how deeply it's nested — e.g. a dropdown always\n   * reads `shadow-surface-3` whether it opens on the page or inside a\n   * dialog, even though its background tracks the substrate.\n   */\n  shadowLevel?: number;\n  /**\n   * Lifts one shadow step and 2px on hover — for a surface that is itself\n   * the clickable target (a card, a swatch tile), not a wrapper around a\n   * separately-styled button. Off by default: most `Elevated` uses are\n   * passive containers, and lifting those on hover would read as false\n   * affordance.\n   *\n   * Distance, timing and — critically — the transition property list all come\n   * from the shared `hover-lift` utility in globals.css, the same one Button\n   * uses, so every lifting surface in the system settles at one rate. The\n   * shadow step is layered on top because only Elevated knows its own level.\n   */\n  hoverLift?: boolean;\n  children?: ReactNode;\n}\n\nconst Elevated = forwardRef<HTMLDivElement, ElevatedProps>(\n  (\n    { offset, shadowLevel, hoverLift = false, className, children, ...props },\n    ref,\n  ) => {\n    const substrate = useSurface();\n    const level = Math.min(substrate + offset, 8);\n    const restShadowLevel = shadowLevel ?? level;\n    const hoverShadowLevel = Math.round(\n      Math.max(1, Math.min(8, restShadowLevel + 1)),\n    );\n    return (\n      <SurfaceProvider value={level}>\n        <div\n          ref={ref}\n          data-slot=\"elevated\"\n          data-surface={level}\n          className={cn(\n            surfaceClasses(level, restShadowLevel),\n            hoverLift && [\"hover-lift\", SURFACE_HOVER_SHADOW[hoverShadowLevel]],\n            className,\n          )}\n          {...props}\n        >\n          {children}\n        </div>\n      </SurfaceProvider>\n    );\n  },\n);\nElevated.displayName = \"Elevated\";\n\nexport { Elevated };\n",
+      "type": "registry:ui",
+      "target": "components/matos-ui/elevated.tsx"
+    }
+  ],
+  "cssVars": {
+    "theme": {
+      "ease-lift": "cubic-bezier(0.4, 0, 0.2, 1)",
+      "duration-lift": "320ms",
+      "duration-lift-press": "120ms"
+    },
+    "light": {
+      "surface-1": "#fafafa",
+      "surface-2": "#fcfcfc",
+      "surface-3": "#ffffff",
+      "surface-4": "#ffffff",
+      "surface-5": "#ffffff",
+      "surface-6": "#ffffff",
+      "surface-7": "#ffffff",
+      "surface-8": "#ffffff",
+      "shadow-color": "rgb(0 0 0 / 0.06)",
+      "lm-ring-2": "rgb(0 0 0 / 0.07)",
+      "lm-ring-3": "rgb(0 0 0 / 0.08)",
+      "lm-ring-4": "rgb(0 0 0 / 0.09)",
+      "lm-ring-5": "rgb(0 0 0 / 0.1)",
+      "lm-ring-6": "rgb(0 0 0 / 0.11)",
+      "lm-ring-7": "rgb(0 0 0 / 0.12)",
+      "lm-ring-8": "rgb(0 0 0 / 0.13)",
+      "lm-drop": "rgb(0 0 0 / 0.07)",
+      "shadow-1": "0 0 0 1px var(--shadow-color)",
+      "shadow-2": "0 0 0 1px var(--lm-ring-2), 0 1px 1px -0.5px var(--lm-drop)",
+      "shadow-3": "0 0 0 1px var(--lm-ring-3), 0 1px 1px -0.5px var(--lm-drop), 0 3px 3px -1.5px var(--lm-drop)",
+      "shadow-4": "0 0 0 1px var(--lm-ring-4), 0 1px 1px -0.5px var(--lm-drop), 0 3px 3px -1.5px var(--lm-drop), 0 6px 6px -3px var(--lm-drop)",
+      "shadow-5": "0 0 0 1px var(--lm-ring-5), 0 1px 1px -0.5px var(--lm-drop), 0 3px 3px -1.5px var(--lm-drop), 0 6px 6px -3px var(--lm-drop), 0 12px 12px -6px var(--lm-drop)",
+      "shadow-6": "0 0 0 1px var(--lm-ring-6), 0 1px 1px -0.5px var(--lm-drop), 0 3px 3px -1.5px var(--lm-drop), 0 6px 6px -3px var(--lm-drop), 0 12px 12px -6px var(--lm-drop), 0 24px 24px -12px var(--lm-drop)",
+      "shadow-7": "0 0 0 1px var(--lm-ring-7), 0 1px 1px -0.5px var(--lm-drop), 0 3px 3px -1.5px var(--lm-drop), 0 6px 6px -3px var(--lm-drop), 0 12px 12px -6px var(--lm-drop), 0 24px 24px -12px var(--lm-drop), 0 48px 48px -24px var(--lm-drop)",
+      "shadow-8": "0 0 0 1px var(--lm-ring-8), 0 1px 1px -0.5px var(--lm-drop), 0 3px 3px -1.5px var(--lm-drop), 0 6px 6px -3px var(--lm-drop), 0 12px 12px -6px var(--lm-drop), 0 24px 24px -12px var(--lm-drop), 0 48px 48px -24px var(--lm-drop), 0 96px 96px -48px var(--lm-drop)"
+    },
+    "dark": {
+      "surface-1": "#191919",
+      "surface-2": "#242424",
+      "surface-3": "#2e2e2e",
+      "surface-4": "#393939",
+      "surface-5": "#444444",
+      "surface-6": "#4e4e4e",
+      "surface-7": "#575757",
+      "surface-8": "#616161",
+      "dm-hi-base": "rgba(255,255,255,0.01)",
+      "dm-hi-mid": "rgba(255,255,255,0.02)",
+      "dm-hi-high": "rgba(255,255,255,0.04)",
+      "dm-hi-peak": "rgba(255,255,255,0.06)",
+      "dm-ring-base": "rgba(255,255,255,0.02)",
+      "dm-ring-mid": "rgba(255,255,255,0.04)",
+      "dm-ring-high": "rgba(255,255,255,0.06)",
+      "dm-drop": "rgba(0,0,0,0.18)",
+      "shadow-1": "inset 0 0 0 1px var(--dm-ring-base)",
+      "shadow-2": "inset 0 1px 0 0 var(--dm-hi-base), inset 0 0 0 1px var(--dm-ring-base), 0 1px 1px -0.5px var(--dm-drop)",
+      "shadow-3": "inset 0 1px 0 0 var(--dm-hi-mid), inset 0 0 0 1px var(--dm-ring-base), 0 0 0 1px rgba(0,0,0,0.12), 0 1px 1px -0.5px var(--dm-drop), 0 3px 3px -1.5px var(--dm-drop)",
+      "shadow-4": "inset 0 1px 0 0 var(--dm-hi-mid), inset 0 0 0 1px var(--dm-ring-mid), 0 0 0 1px rgba(0,0,0,0.14), 0 1px 1px -0.5px var(--dm-drop), 0 3px 3px -1.5px var(--dm-drop), 0 6px 6px -3px var(--dm-drop)",
+      "shadow-5": "inset 0 1px 0 0 var(--dm-hi-high), inset 0 0 0 1px var(--dm-ring-mid), 0 0 0 1px rgba(0,0,0,0.16), 0 1px 1px -0.5px var(--dm-drop), 0 3px 3px -1.5px var(--dm-drop), 0 6px 6px -3px var(--dm-drop), 0 12px 12px -6px var(--dm-drop)",
+      "shadow-6": "inset 0 1px 0 0 var(--dm-hi-high), inset 0 0 0 1px var(--dm-ring-high), 0 0 0 1px rgba(0,0,0,0.18), 0 1px 1px -0.5px var(--dm-drop), 0 3px 3px -1.5px var(--dm-drop), 0 6px 6px -3px var(--dm-drop), 0 12px 12px -6px var(--dm-drop), 0 24px 24px -12px var(--dm-drop)",
+      "shadow-7": "inset 0 1px 0 0 var(--dm-hi-peak), inset 0 0 0 1px var(--dm-ring-high), 0 0 0 1px rgba(0,0,0,0.2), 0 1px 1px -0.5px var(--dm-drop), 0 3px 3px -1.5px var(--dm-drop), 0 6px 6px -3px var(--dm-drop), 0 12px 12px -6px var(--dm-drop), 0 24px 24px -12px var(--dm-drop), 0 48px 48px -24px var(--dm-drop)",
+      "shadow-8": "inset 0 1px 0 0 var(--dm-hi-peak), inset 0 0 0 1px var(--dm-ring-high), 0 0 0 1px rgba(0,0,0,0.22), 0 1px 1px -0.5px var(--dm-drop), 0 3px 3px -1.5px var(--dm-drop), 0 6px 6px -3px var(--dm-drop), 0 12px 12px -6px var(--dm-drop), 0 24px 24px -12px var(--dm-drop), 0 48px 48px -24px var(--dm-drop), 0 96px 96px -48px var(--dm-drop)"
+    }
+  },
+  "css": {
+    "@theme inline": {
+      "--color-surface-1": "var(--surface-1)",
+      "--color-surface-2": "var(--surface-2)",
+      "--color-surface-3": "var(--surface-3)",
+      "--color-surface-4": "var(--surface-4)",
+      "--color-surface-5": "var(--surface-5)",
+      "--color-surface-6": "var(--surface-6)",
+      "--color-surface-7": "var(--surface-7)",
+      "--color-surface-8": "var(--surface-8)",
+      "--shadow-surface-1": "var(--shadow-1)",
+      "--shadow-surface-2": "var(--shadow-2)",
+      "--shadow-surface-3": "var(--shadow-3)",
+      "--shadow-surface-4": "var(--shadow-4)",
+      "--shadow-surface-5": "var(--shadow-5)",
+      "--shadow-surface-6": "var(--shadow-6)",
+      "--shadow-surface-7": "var(--shadow-7)",
+      "--shadow-surface-8": "var(--shadow-8)"
+    },
+    "@utility hover-lift": {
+      "--lift": "2px",
+      "transition-property": "translate, scale, box-shadow, background-color, border-color, border-radius, color, opacity",
+      "transition-duration": "var(--duration-lift)",
+      "transition-timing-function": "var(--ease-lift)",
+      "@media (hover: hover)": {
+        "&:hover": {
+          "translate": "0 calc(var(--lift) * -1)"
+        }
+      },
+      "&:active": {
+        "translate": "0 0",
+        "transition-duration": "var(--duration-lift-press)"
+      },
+      "@media (prefers-reduced-motion: reduce)": {
+        "transition-property": "background-color, border-color, color, opacity",
+        "&:hover, &:active": {
+          "translate": "none",
+          "scale": "none"
+        }
+      }
+    }
+  },
+  "type": "registry:ui"
+}

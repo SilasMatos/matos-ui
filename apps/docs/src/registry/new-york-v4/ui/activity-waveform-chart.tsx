@@ -4,12 +4,13 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   type ComponentProps,
   type ReactNode,
+  useEffect,
   useId,
   useMemo,
-  useState,
 } from "react";
 import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
+import { useChartInteraction } from "./chart-interaction";
 
 export const activityWaveformChartVariants = tv({
   base: "not-prose w-full text-foreground",
@@ -169,9 +170,14 @@ export function ActivityWaveformChart({
     }
     return best;
   }, [bars]);
+  const { activeIndex, getItemProps, hasEnteredView, interactionProps } =
+    useChartInteraction(id, bars.length);
 
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const resolvedActive = activeIndex ?? peakIndex;
+  useEffect(() => {
+    if (activeIndex !== null) {
+      onActiveChange?.(barValue(bars[activeIndex]), activeIndex);
+    }
+  }, [activeIndex, bars, onActiveChange]);
 
   const resolvedSegments = useMemo(
     () =>
@@ -248,7 +254,7 @@ export function ActivityWaveformChart({
     };
   });
 
-  const active = computed[resolvedActive];
+  const active = activeIndex === null ? null : computed[activeIndex];
   const tooltipWidth = 92;
   const tooltipHeight = 30;
   const tooltipX = active
@@ -260,15 +266,11 @@ export function ActivityWaveformChart({
     : 0;
   const tooltipY = active ? clamp(active.y - tooltipHeight - 10, 2, 9999) : 0;
 
-  function activate(index: number) {
-    setActiveIndex(index);
-    onActiveChange?.(computed[index].value, index);
-  }
-
   return (
     <div
       data-slot="activity-waveform-chart"
       className={twMerge(activityWaveformChartVariants({ size }), className)}
+      {...interactionProps}
       {...props}
     >
       <div data-slot="activity-waveform-chart-header" className="mb-3">
@@ -297,88 +299,87 @@ export function ActivityWaveformChart({
         className="overflow-hidden"
         style={{ height, color: accent }}
       >
-        <svg
-          viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
-          className="size-full"
-          role="img"
-          aria-labelledby={`${id}-title ${id}-desc`}
-        >
-          <title id={`${id}-title`}>{String(title)}</title>
-          <desc id={`${id}-desc`}>
-            Activity waveform with {bars.length} samples. Peak value{" "}
-            {format(computed[peakIndex].value)}.
-          </desc>
+        {!motionEnabled || hasEnteredView ? (
+          <svg
+            viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
+            className="size-full"
+            role="img"
+            aria-labelledby={`${id}-title ${id}-desc`}
+          >
+            <title id={`${id}-title`}>{String(title)}</title>
+            <desc id={`${id}-desc`}>
+              Activity waveform with {bars.length} samples. Peak value{" "}
+              {format(computed[peakIndex].value)}.
+            </desc>
 
-          {computed.map((bar) => {
-            const isActive = resolvedActive === bar.index;
-            return (
-              <motion.rect
-                key={bar.index}
-                x={bar.x}
-                y={bar.y}
-                width={barWidth}
-                height={bar.height}
-                rx={Math.min(barWidth / 2, 3)}
-                fill="currentColor"
-                fillOpacity={isActive ? 1 : 0.85}
-                tabIndex={0}
-                role="button"
-                aria-label={`${bar.label}: ${format(bar.value)}`}
-                onPointerEnter={() => activate(bar.index)}
-                onPointerLeave={() => setActiveIndex(null)}
-                onFocus={() => activate(bar.index)}
-                onBlur={() => setActiveIndex(null)}
-                initial={motionEnabled ? { scaleY: 0, opacity: 0 } : false}
-                animate={{ scaleY: 1, opacity: 1 }}
-                transition={{
-                  duration: motionDuration,
-                  delay: motionEnabled ? motionDelay + bar.index * 0.012 : 0,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
-                style={{
-                  transformOrigin: `${bar.centerX}px ${baseline}px`,
-                  cursor: "pointer",
-                }}
-                className="outline-none"
-              />
-            );
-          })}
-
-          <AnimatePresence>
-            {showTooltip && active ? (
-              <motion.g
-                data-slot="activity-waveform-chart-tooltip"
-                pointerEvents="none"
-                initial={
-                  motionEnabled
-                    ? { opacity: 0, y: tooltipY + 4, scale: 0.96 }
-                    : false
-                }
-                animate={{ opacity: 1, y: tooltipY, scale: 1 }}
-                exit={{ opacity: 0, y: tooltipY + 4, scale: 0.96 }}
-                transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
-                style={{ transformOrigin: `${tooltipX}px ${tooltipY}px` }}
-              >
-                <rect
-                  x={tooltipX}
-                  width={tooltipWidth}
-                  height={tooltipHeight}
-                  rx="9"
-                  fill="var(--popover)"
-                  stroke="var(--border)"
+            {computed.map((bar) => {
+              const isActive = activeIndex === bar.index;
+              return (
+                <motion.rect
+                  key={bar.index}
+                  x={bar.x}
+                  y={bar.y}
+                  width={barWidth}
+                  height={bar.height}
+                  rx={Math.min(barWidth / 2, 3)}
+                  fill="currentColor"
+                  fillOpacity={isActive ? 1 : 0.85}
+                  tabIndex={0}
+                  role="button"
+                  aria-label={`${bar.label}: ${format(bar.value)}`}
+                  {...getItemProps(bar.index)}
+                  initial={motionEnabled ? { scaleY: 0, opacity: 0 } : false}
+                  animate={{ scaleY: 1, opacity: 1 }}
+                  transition={{
+                    duration: motionDuration,
+                    delay: motionEnabled ? motionDelay + bar.index * 0.012 : 0,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
+                  style={{
+                    transformOrigin: `${bar.centerX}px ${baseline}px`,
+                    cursor: "pointer",
+                  }}
+                  className="outline-none"
                 />
-                <text
-                  x={tooltipX + tooltipWidth / 2}
-                  y={tooltipHeight / 2 + 4}
-                  textAnchor="middle"
-                  className="fill-popover-foreground text-[12px] font-semibold tabular-nums"
+              );
+            })}
+
+            <AnimatePresence>
+              {showTooltip && active ? (
+                <motion.g
+                  data-slot="activity-waveform-chart-tooltip"
+                  pointerEvents="none"
+                  initial={
+                    motionEnabled
+                      ? { opacity: 0, y: tooltipY + 4, scale: 0.96 }
+                      : false
+                  }
+                  animate={{ opacity: 1, y: tooltipY, scale: 1 }}
+                  exit={{ opacity: 0, y: tooltipY + 4, scale: 0.96 }}
+                  transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
+                  style={{ transformOrigin: `${tooltipX}px ${tooltipY}px` }}
                 >
-                  {format(active.value)}
-                </text>
-              </motion.g>
-            ) : null}
-          </AnimatePresence>
-        </svg>
+                  <rect
+                    x={tooltipX}
+                    width={tooltipWidth}
+                    height={tooltipHeight}
+                    rx="9"
+                    fill="var(--popover)"
+                    stroke="var(--border)"
+                  />
+                  <text
+                    x={tooltipX + tooltipWidth / 2}
+                    y={tooltipHeight / 2 + 4}
+                    textAnchor="middle"
+                    className="fill-popover-foreground text-[12px] font-semibold tabular-nums"
+                  >
+                    {format(active.value)}
+                  </text>
+                </motion.g>
+              ) : null}
+            </AnimatePresence>
+          </svg>
+        ) : null}
       </div>
 
       <div

@@ -52,7 +52,7 @@ export const chartCollection = [
     id: "activity-heatmap-chart",
     name: "Activity Heatmap Chart",
     description:
-      "Calendar-style activity grid with a diagonal reveal wave, hover tooltip and live recent cells.",
+      "Calendar-style activity grid with a diagonal reveal and an intent-driven tooltip.",
     category: "Grid",
     installable: true,
   },
@@ -68,7 +68,7 @@ export const chartCollection = [
     id: "bubble-chart",
     name: "Bubble Chart",
     description:
-      "Weighted gradient bubbles that scale in, float gently and reveal values on hover.",
+      "Weighted gradient bubbles that scale in and reveal values on interaction.",
     category: "Bubble",
     installable: true,
   },
@@ -92,7 +92,7 @@ export const chartCollection = [
     id: "threshold-band-chart",
     name: "Threshold Band Chart",
     description:
-      "Quality bands (Good / Needs improvement / Poor) with a sliding diamond marker and active-zone glow.",
+      "Quality bands with a sliding diamond marker and clear interactive ranges.",
     category: "Band",
     installable: true,
   },
@@ -116,7 +116,7 @@ export const chartCollection = [
     id: "score-radar-chart",
     name: "Score Radar Chart",
     description:
-      "Multi-axis radar polygon with pathLength reveal, ring grid and pulsing vertex nodes.",
+      "Multi-axis radar polygon with pathLength reveal and interactive vertex nodes.",
     category: "Radial",
     installable: true,
   },

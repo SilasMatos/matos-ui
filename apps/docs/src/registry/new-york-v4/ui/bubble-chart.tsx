@@ -4,12 +4,13 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   type ComponentProps,
   type ReactNode,
+  useEffect,
   useId,
   useMemo,
-  useState,
 } from "react";
 import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
+import { useChartInteraction } from "./chart-interaction";
 
 export const bubbleChartVariants = tv({
   base: "not-prose w-full text-foreground",
@@ -166,7 +167,14 @@ export function BubbleChart({
     [data],
   );
 
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const { activeIndex, getItemProps, hasEnteredView, interactionProps } =
+    useChartInteraction(id, normalized.length);
+
+  useEffect(() => {
+    if (activeIndex !== null) {
+      onActiveChange?.(normalized[activeIndex], activeIndex);
+    }
+  }, [activeIndex, normalized, onActiveChange]);
 
   function format(value: number) {
     const formatted = valueFormatter?.(value);
@@ -230,15 +238,11 @@ export function BubbleChart({
     ? clamp(active.cy - active.r - tooltipHeight - 8, 4, 9999)
     : 0;
 
-  function activate(index: number) {
-    setActiveIndex(index);
-    onActiveChange?.(normalized[index], index);
-  }
-
   return (
     <div
       data-slot="bubble-chart"
       className={twMerge(bubbleChartVariants({ size }), className)}
+      {...interactionProps}
       {...props}
     >
       <div data-slot="bubble-chart-header" className="mb-3">
@@ -257,150 +261,146 @@ export function BubbleChart({
         className="overflow-hidden"
         style={{ height }}
       >
-        <svg
-          viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
-          className="size-full"
-          role="img"
-          aria-labelledby={`${id}-title ${id}-desc`}
-        >
-          <title id={`${id}-title`}>{String(title)}</title>
-          <desc id={`${id}-desc`}>
-            Bubble chart with {bubbles.length} weighted segments.
-          </desc>
+        {!motionEnabled || hasEnteredView ? (
+          <svg
+            viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
+            className="size-full"
+            role="img"
+            aria-labelledby={`${id}-title ${id}-desc`}
+          >
+            <title id={`${id}-title`}>{String(title)}</title>
+            <desc id={`${id}-desc`}>
+              Bubble chart with {bubbles.length} weighted segments.
+            </desc>
 
-          {bubbles.map((bubble) => {
-            const isActive = activeIndex === bubble.index;
-            const dim = activeIndex !== null && !isActive;
-            const gradientId = `${id}-bubble-${bubble.index}`;
-            const showValue = showValues && bubble.r >= 26;
+            {bubbles.map((bubble) => {
+              const isActive = activeIndex === bubble.index;
+              const dim = activeIndex !== null && !isActive;
+              const gradientId = `${id}-bubble-${bubble.index}`;
+              const showValue = showValues && bubble.r >= 26;
 
-            return (
-              <motion.g
-                key={bubble.label}
-                data-slot="bubble-chart-bubble"
-                tabIndex={0}
-                role="button"
-                aria-label={`${bubble.label}: ${format(bubble.value)}`}
-                onPointerEnter={() => activate(bubble.index)}
-                onPointerLeave={() => setActiveIndex(null)}
-                onFocus={() => activate(bubble.index)}
-                onBlur={() => setActiveIndex(null)}
-                animate={{ opacity: dim ? 0.45 : 1 }}
-                transition={{ duration: 0.25, ease: "easeOut" }}
-                style={{ color: bubble.color, cursor: "pointer" }}
-                className="outline-none"
-              >
-                <defs>
-                  <radialGradient id={gradientId} cx="38%" cy="32%" r="75%">
-                    <stop
-                      offset="0%"
-                      stopColor="color-mix(in oklab, currentColor 55%, white)"
-                    />
-                    <stop offset="55%" stopColor="currentColor" />
-                    <stop
-                      offset="100%"
-                      stopColor="color-mix(in oklab, currentColor 78%, black)"
-                    />
-                  </radialGradient>
-                </defs>
-
+              return (
                 <motion.g
-                  initial={motionEnabled ? { scale: 0, opacity: 0 } : false}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 220,
-                    damping: 18,
-                    delay: motionDelay + bubble.index * 0.08,
-                  }}
-                  whileHover={motionEnabled ? { scale: 1.05 } : undefined}
-                  style={{ transformOrigin: `${bubble.cx}px ${bubble.cy}px` }}
+                  key={bubble.label}
+                  data-slot="bubble-chart-bubble"
+                  tabIndex={0}
+                  role="button"
+                  aria-label={`${bubble.label}: ${format(bubble.value)}`}
+                  {...getItemProps(bubble.index)}
+                  animate={{ opacity: dim ? 0.45 : 1 }}
+                  transition={{ duration: 0.25, ease: "easeOut" }}
+                  style={{ color: bubble.color, cursor: "pointer" }}
+                  className="outline-none"
                 >
+                  <defs>
+                    <radialGradient id={gradientId} cx="38%" cy="32%" r="75%">
+                      <stop
+                        offset="0%"
+                        stopColor="color-mix(in oklab, currentColor 55%, white)"
+                      />
+                      <stop offset="55%" stopColor="currentColor" />
+                      <stop
+                        offset="100%"
+                        stopColor="color-mix(in oklab, currentColor 78%, black)"
+                      />
+                    </radialGradient>
+                  </defs>
+
                   <motion.g
-                    animate={motionEnabled ? { y: [0, -6, 0] } : undefined}
+                    initial={motionEnabled ? { scale: 0, opacity: 0 } : false}
+                    animate={{ scale: 1, opacity: 1 }}
                     transition={{
-                      duration: 4 + bubble.index * 0.6,
-                      repeat: Number.POSITIVE_INFINITY,
-                      ease: "easeInOut",
-                      delay: bubble.index * 0.4,
+                      type: "spring",
+                      stiffness: 220,
+                      damping: 18,
+                      delay: motionDelay + bubble.index * 0.08,
                     }}
+                    whileHover={motionEnabled ? { scale: 1.015 } : undefined}
+                    style={{ transformOrigin: `${bubble.cx}px ${bubble.cy}px` }}
                   >
-                    {isActive ? (
+                    <g>
+                      {isActive ? (
+                        <circle
+                          cx={bubble.cx}
+                          cy={bubble.cy}
+                          r={bubble.r + 5}
+                          fill="none"
+                          stroke="currentColor"
+                          strokeOpacity="0.4"
+                          strokeWidth="1.5"
+                        />
+                      ) : null}
                       <circle
                         cx={bubble.cx}
                         cy={bubble.cy}
-                        r={bubble.r + 5}
-                        fill="none"
-                        stroke="currentColor"
-                        strokeOpacity="0.4"
-                        strokeWidth="1.5"
+                        r={bubble.r}
+                        fill={`url(#${gradientId})`}
                       />
-                    ) : null}
-                    <circle
-                      cx={bubble.cx}
-                      cy={bubble.cy}
-                      r={bubble.r}
-                      fill={`url(#${gradientId})`}
-                    />
-                    {showValue ? (
-                      <text
-                        x={bubble.cx}
-                        y={bubble.cy + 4}
-                        textAnchor="middle"
-                        className="text-[12px] font-semibold"
-                        fill="white"
-                      >
-                        {format(bubble.value)}
-                      </text>
-                    ) : null}
+                      {showValue ? (
+                        <text
+                          x={bubble.cx}
+                          y={bubble.cy + 4}
+                          textAnchor="middle"
+                          className="text-[12px] font-semibold"
+                          fill="white"
+                        >
+                          {format(bubble.value)}
+                        </text>
+                      ) : null}
+                    </g>
                   </motion.g>
                 </motion.g>
-              </motion.g>
-            );
-          })}
+              );
+            })}
 
-          <AnimatePresence>
-            {showTooltip && active ? (
-              <motion.g
-                data-slot="bubble-chart-tooltip"
-                pointerEvents="none"
-                initial={
-                  motionEnabled
-                    ? { opacity: 0, y: tooltipY + 6, scale: 0.97 }
-                    : false
-                }
-                animate={{ opacity: 1, y: tooltipY, scale: 1 }}
-                exit={{ opacity: 0, y: tooltipY + 4, scale: 0.97 }}
-                transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
-                style={{ transformOrigin: `${tooltipX}px ${tooltipY}px` }}
-              >
-                <rect
-                  x={tooltipX}
-                  width={tooltipWidth}
-                  height={tooltipHeight}
-                  rx="12"
-                  fill="var(--popover)"
-                  stroke="var(--border)"
-                />
-                <circle cx={tooltipX + 18} cy={20} r="5" fill={active.color} />
-                <text
-                  x={tooltipX + 32}
-                  y={24}
-                  className="fill-popover-foreground text-[12px] font-semibold"
+            <AnimatePresence>
+              {showTooltip && active ? (
+                <motion.g
+                  data-slot="bubble-chart-tooltip"
+                  pointerEvents="none"
+                  initial={
+                    motionEnabled
+                      ? { opacity: 0, y: tooltipY + 6, scale: 0.97 }
+                      : false
+                  }
+                  animate={{ opacity: 1, y: tooltipY, scale: 1 }}
+                  exit={{ opacity: 0, y: tooltipY + 4, scale: 0.97 }}
+                  transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+                  style={{ transformOrigin: `${tooltipX}px ${tooltipY}px` }}
                 >
-                  {active.label}
-                </text>
-                <text
-                  x={tooltipX + 14}
-                  y={40}
-                  className="fill-muted-foreground text-[11px] font-medium tabular-nums"
-                >
-                  {format(active.value)}
-                </text>
-              </motion.g>
-            ) : null}
-          </AnimatePresence>
-        </svg>
+                  <rect
+                    x={tooltipX}
+                    width={tooltipWidth}
+                    height={tooltipHeight}
+                    rx="12"
+                    fill="var(--popover)"
+                    stroke="var(--border)"
+                  />
+                  <circle
+                    cx={tooltipX + 18}
+                    cy={20}
+                    r="5"
+                    fill={active.color}
+                  />
+                  <text
+                    x={tooltipX + 32}
+                    y={24}
+                    className="fill-popover-foreground text-[12px] font-semibold"
+                  >
+                    {active.label}
+                  </text>
+                  <text
+                    x={tooltipX + 14}
+                    y={40}
+                    className="fill-muted-foreground text-[11px] font-medium tabular-nums"
+                  >
+                    {format(active.value)}
+                  </text>
+                </motion.g>
+              ) : null}
+            </AnimatePresence>
+          </svg>
+        ) : null}
       </div>
     </div>
   );

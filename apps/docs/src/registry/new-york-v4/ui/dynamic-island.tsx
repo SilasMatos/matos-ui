@@ -33,6 +33,8 @@ import {
 import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
 
+import { spring } from "@/registry/new-york-v4/lib/motion-tokens";
+
 export const dynamicIslandVariants = tv({
   slots: {
     root: "not-prose flex w-full justify-center px-2",
@@ -206,13 +208,13 @@ const contentVariants: Variants = {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { duration: 0.22, ease: [0.22, 1, 0.36, 1] },
+    transition: spring.moderate,
   },
   exit: {
     opacity: 0,
     y: -2,
     scale: 0.995,
-    transition: { duration: 0.16, ease: [0.32, 0, 0.67, 0] },
+    transition: spring.fast,
   },
 };
 
@@ -630,7 +632,7 @@ function ProgressNumber({ value }: { value: number }) {
         initial={shouldReduceMotion ? false : { opacity: 0, y: 4 }}
         animate={{ opacity: 1, y: 0 }}
         exit={shouldReduceMotion ? undefined : { opacity: 0, y: -4 }}
-        transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
+        transition={spring.fast}
       >
         {value}%
       </motion.span>

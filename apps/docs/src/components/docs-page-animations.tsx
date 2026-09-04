@@ -57,7 +57,7 @@ export function DocsPageHeader({
       <div className="flex items-start justify-between gap-4">
         <motion.h1
           variants={lineVariants}
-          className="scroll-m-24 text-2xl font-semibold tracking-tight"
+          className="scroll-m-24 font-display text-2xl font-semibold tracking-tight"
         >
           {title}
         </motion.h1>

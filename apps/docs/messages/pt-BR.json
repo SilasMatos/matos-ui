@@ -11,7 +11,9 @@
   "nav": {
     "docs": "Documentação",
     "components": "Componentes",
-    "charts": "Charts"
+    "charts": "Charts",
+    "blocks": "Blocks",
+    "customize": "Personalizar"
   },
   "command": {
     "searchLong": "Buscar na documentação...",
@@ -25,16 +27,17 @@
     "next": "Próximo"
   },
   "hero": {
-    "badge": "Biblioteca de componentes open source",
-    "titleLine1": "Interfaces que respiram",
-    "titleLine2": "precisao com",
-    "brand": "Matos UI",
-    "description": "Componentes poderosos, acessíveis e estilizados sobre o shadcn/ui. Com variantes expressivas e animações fluidas.",
-    "getStarted": "Começar",
-    "components": "Componentes",
-    "featurePowerful": "Poderoso",
-    "featureAccessible": "Acessível",
-    "featureStyled": "Estilizado"
+    "badge": "Surface Philosophy · Motion Tokens",
+    "badgeCount": "{count} componentes",
+    "titleBrand": "Matos UI",
+    "titleTagline": "— componentes com profundidade embutida",
+    "description": "Copie o código pro seu projeto. Estilizado, acessível e animado por padrão.",
+    "browseComponents": "Ver componentes",
+    "viewOnGitHub": "Ver no GitHub",
+    "trust": "Feito com Framer Motion e Base UI. Distribuído via shadcn.",
+    "showcaseSearch": "Buscar componentes…",
+    "showcaseAction": "Começar",
+    "showcaseMetricLabel": "Adoção"
   },
   "footer": {
     "openSource": "Open Source",
@@ -70,6 +73,23 @@
         "description": "Transições e micro-interações com Framer Motion que elevam a experiência do usuário."
       }
     ]
+  },
+  "foundations": {
+    "badge": "Fundações",
+    "title": "Profundidade e ritmo, como tokens",
+    "subtitle": "Os dois sistemas por trás de todo componente do registry. Os dois estão rodando nesta página agora.",
+    "surface": {
+      "eyebrow": "Surface philosophy",
+      "title": "Elevação que aninha",
+      "body": "Cada componente lê o substrato onde está e sobe a partir dele — popovers, diálogos e menus continuam legíveis em qualquer profundidade.",
+      "link": "Ler a filosofia"
+    },
+    "motion": {
+      "eyebrow": "Motion tokens",
+      "title": "Cinco caracteres, uma distância",
+      "body": "Timing não é escolha por componente — é um token, ligado à profundidade.",
+      "link": "Ler os motion tokens"
+    }
   },
   "scrollCards": {
     "badge": "Estilizado por design",

@@ -11,7 +11,9 @@
   "nav": {
     "docs": "Docs",
     "components": "Components",
-    "charts": "Charts"
+    "charts": "Charts",
+    "blocks": "Blocks",
+    "customize": "Customize"
   },
   "command": {
     "searchLong": "Search documentation...",
@@ -25,16 +27,17 @@
     "next": "Next"
   },
   "hero": {
-    "badge": "Open Source Component Library",
-    "titleLine1": "A Smarter Way to",
-    "titleLine2": "Build with",
-    "brand": "Matos UI",
-    "description": "Powerful, accessible and styled components built on top of shadcn/ui. Built with powerful variants and fluid animations.",
-    "getStarted": "Get Started",
-    "components": "Components",
-    "featurePowerful": "Powerful",
-    "featureAccessible": "Accessible",
-    "featureStyled": "Styled"
+    "badge": "Surface Philosophy · Motion Tokens",
+    "badgeCount": "{count} components",
+    "titleBrand": "Matos UI",
+    "titleTagline": "components with depth built in",
+    "description": "Copy the code into your project. Styled, accessible, and animated by default.",
+    "browseComponents": "Browse Components",
+    "viewOnGitHub": "View on GitHub",
+    "trust": "Built with Framer Motion and Base UI. Distributed via shadcn.",
+    "showcaseSearch": "Search components…",
+    "showcaseAction": "Get started",
+    "showcaseMetricLabel": "Adoption"
   },
   "footer": {
     "openSource": "Open Source",
@@ -70,6 +73,23 @@
         "description": "Transitions and micro-interactions with Framer Motion that elevate the user experience."
       }
     ]
+  },
+  "foundations": {
+    "badge": "Foundations",
+    "title": "Depth and timing, as tokens",
+    "subtitle": "The two systems every component in the registry is built on. Both are running on this page right now.",
+    "surface": {
+      "eyebrow": "Surface philosophy",
+      "title": "Elevation that nests",
+      "body": "Each component reads the substrate it sits on and lifts from there — popovers, dialogs and menus stay legible at any depth.",
+      "link": "Read the philosophy"
+    },
+    "motion": {
+      "eyebrow": "Motion tokens",
+      "title": "Five characters, one distance",
+      "body": "Timing isn't a per-component choice — it's a token, tied to depth.",
+      "link": "Read the motion tokens"
+    }
   },
   "scrollCards": {
     "badge": "Pillars",

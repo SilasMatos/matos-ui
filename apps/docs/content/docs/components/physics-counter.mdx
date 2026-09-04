@@ -1,0 +1,64 @@
+---
+title: Physics Counter
+description: An animated number that springs toward its target value with natural easing and overshoot.
+---
+
+<ComponentPreview name="physics-counter-demo" chromeless align="start" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/physics-counter.json" />
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the following dependencies:</Step>
+
+<CodeBlockCommand command="npm install framer-motion tailwind-merge tailwind-variants" />
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="physics-counter" title="components/matos-ui/physics-counter.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { PhysicsCounter } from '@/components/matos-ui/physics-counter'
+```
+
+```tsx
+<PhysicsCounter value={1240} prefix="$" />
+```
+
+## Reference
+
+### PhysicsCounter Props
+
+| Prop        | Type                   | Default | Description                                     |
+| ----------- | ---------------------- | ------- | ----------------------------------------------- |
+| `value`     | `number`               | -       | Target value the counter springs toward.        |
+| `decimals`  | `number`               | `0`     | Number of decimal places to display.            |
+| `prefix`    | `string`               | -       | Text rendered before the number (e.g. `"$"`).   |
+| `suffix`    | `string`               | -       | Text rendered after the number (e.g. `"%"`).    |
+| `size`      | `"sm" \| "md" \| "lg"` | `"md"`  | Font size preset.                               |
+| `stiffness` | `number`               | `90`    | Spring stiffness for the count animation.       |
+| `damping`   | `number`               | `18`    | Spring damping for the count animation.         |

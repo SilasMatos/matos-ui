@@ -1,15 +1,10 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import {
-  type ComponentProps,
-  type ReactNode,
-  useId,
-  useMemo,
-  useState,
-} from "react";
+import { type ComponentProps, type ReactNode, useId, useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
+import { useChartInteraction } from "./chart-interaction";
 
 export const scoreRadarChartVariants = tv({
   base: "not-prose w-full text-foreground",
@@ -131,11 +126,12 @@ export function ScoreRadarChart({
   const shouldReduceMotion = useReducedMotion();
   const rawId = useId();
   const id = rawId.replace(/:/g, "");
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   const motionEnabled = animated && !shouldReduceMotion;
   const accent = resolveTone(tone);
   const n = data.length;
+  const { activeIndex, getItemProps, hasEnteredView, interactionProps } =
+    useChartInteraction(id, n);
 
   // SVG layout
   const viewBoxWidth = 400;
@@ -199,6 +195,7 @@ export function ScoreRadarChart({
     <div
       data-slot="score-radar-chart"
       className={twMerge(scoreRadarChartVariants({ size }), className)}
+      {...interactionProps}
       {...props}
     >
       <div data-slot="score-radar-chart-header" className="mb-3">
@@ -217,267 +214,265 @@ export function ScoreRadarChart({
         className="overflow-hidden"
         style={{ color: accent }}
       >
-        <svg
-          viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
-          className="w-full"
-          role="img"
-          aria-labelledby={`${id}-title`}
-        >
-          <title id={`${id}-title`}>{String(title)}</title>
-          <defs>
-            <linearGradient id={`${id}-fill`} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="currentColor" stopOpacity="0.24" />
-              <stop offset="100%" stopColor="currentColor" stopOpacity="0.06" />
-            </linearGradient>
-            <filter id={`${id}-vertex-glow`}>
-              <feGaussianBlur stdDeviation="4" result="blur" />
-              <feMerge>
-                <feMergeNode in="blur" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-          </defs>
+        {!motionEnabled || hasEnteredView ? (
+          <svg
+            viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
+            className="w-full"
+            role="img"
+            aria-labelledby={`${id}-title`}
+          >
+            <title id={`${id}-title`}>{String(title)}</title>
+            <defs>
+              <linearGradient id={`${id}-fill`} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="currentColor" stopOpacity="0.24" />
+                <stop
+                  offset="100%"
+                  stopColor="currentColor"
+                  stopOpacity="0.06"
+                />
+              </linearGradient>
+            </defs>
 
-          {/* Grid rings */}
-          {ringRadii.map((r) => {
-            const gridPoly = buildGridPolygon(n, cx, cy, r);
-            const isOuter = r === maxR;
-            return (
-              <path
-                key={`ring-${r}`}
-                d={gridPoly}
-                fill={isOuter ? "var(--muted)" : "none"}
-                fillOpacity={isOuter ? 0.08 : 0}
+            {/* Grid rings */}
+            {ringRadii.map((r) => {
+              const gridPoly = buildGridPolygon(n, cx, cy, r);
+              const isOuter = r === maxR;
+              return (
+                <path
+                  key={`ring-${r}`}
+                  d={gridPoly}
+                  fill={isOuter ? "var(--muted)" : "none"}
+                  fillOpacity={isOuter ? 0.08 : 0}
+                  stroke="var(--border)"
+                  strokeWidth="1"
+                  opacity={isOuter ? 0.7 : 0.38}
+                />
+              );
+            })}
+
+            {/* Axis spokes */}
+            {vertices.map((v) => (
+              <line
+                key={`spoke-${v.i}`}
+                x1={cx}
+                y1={cy}
+                x2={v.ax}
+                y2={v.ay}
                 stroke="var(--border)"
                 strokeWidth="1"
-                opacity={isOuter ? 0.7 : 0.38}
+                opacity="0.45"
               />
-            );
-          })}
+            ))}
 
-          {/* Axis spokes */}
-          {vertices.map((v) => (
-            <line
-              key={`spoke-${v.i}`}
-              x1={cx}
-              y1={cy}
-              x2={v.ax}
-              y2={v.ay}
-              stroke="var(--border)"
-              strokeWidth="1"
-              opacity="0.45"
+            {/* Ring value labels */}
+            {showRingValues
+              ? ringRadii.map((r) => {
+                  const val = Math.round((r / maxR) * maxValue);
+                  return (
+                    <text
+                      key={`rv-${r}`}
+                      x={cx + 3}
+                      y={cy - r + 4}
+                      fill="var(--muted-foreground)"
+                      fillOpacity="0.55"
+                      className="text-[9px] font-medium"
+                    >
+                      {val}
+                    </text>
+                  );
+                })
+              : null}
+
+            {/* Comparison polygon */}
+            {comparisonPolygon ? (
+              <path
+                d={comparisonPolygon}
+                fill={resolveTone(comparisonTone)}
+                fillOpacity="0.07"
+                stroke={resolveTone(comparisonTone)}
+                strokeWidth="1.5"
+                strokeDasharray="5 5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            ) : null}
+
+            {/* Value polygon fill */}
+            <motion.path
+              d={polygon}
+              fill={`url(#${id}-fill)`}
+              initial={motionEnabled ? { scale: 0, opacity: 0 } : false}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{
+                delay: motionDelay,
+                duration: 0.7,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              style={{ transformOrigin: `${cx}px ${cy}px` }}
             />
-          ))}
 
-          {/* Ring value labels */}
-          {showRingValues
-            ? ringRadii.map((r) => {
-                const val = Math.round((r / maxR) * maxValue);
-                return (
-                  <text
-                    key={`rv-${r}`}
-                    x={cx + 3}
-                    y={cy - r + 4}
-                    fill="var(--muted-foreground)"
-                    fillOpacity="0.55"
-                    className="text-[9px] font-medium"
-                  >
-                    {val}
-                  </text>
-                );
-              })
-            : null}
-
-          {/* Comparison polygon */}
-          {comparisonPolygon ? (
-            <path
-              d={comparisonPolygon}
-              fill={resolveTone(comparisonTone)}
-              fillOpacity="0.07"
-              stroke={resolveTone(comparisonTone)}
-              strokeWidth="1.5"
-              strokeDasharray="5 5"
+            {/* Value polygon stroke */}
+            <motion.path
+              d={polygon}
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
               strokeLinecap="round"
               strokeLinejoin="round"
+              initial={motionEnabled ? { pathLength: 0 } : false}
+              animate={{ pathLength: 1 }}
+              transition={{
+                delay: motionDelay + 0.08,
+                duration: 1.0,
+                ease: [0.16, 1, 0.3, 1],
+              }}
             />
-          ) : null}
 
-          {/* Value polygon fill */}
-          <motion.path
-            d={polygon}
-            fill={`url(#${id}-fill)`}
-            initial={motionEnabled ? { scale: 0, opacity: 0 } : false}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{
-              delay: motionDelay,
-              duration: 0.7,
-              ease: [0.16, 1, 0.3, 1],
-            }}
-            style={{ transformOrigin: `${cx}px ${cy}px` }}
-          />
+            {/* Axis labels */}
+            {showLabels
+              ? vertices.map((v) => (
+                  <text
+                    key={`label-${v.i}`}
+                    x={v.lx}
+                    y={v.ly + v.dy}
+                    textAnchor={v.textAnchor}
+                    fill="var(--muted-foreground)"
+                    className="text-[11px] font-medium"
+                  >
+                    {v.label}
+                  </text>
+                ))
+              : null}
 
-          {/* Value polygon stroke */}
-          <motion.path
-            d={polygon}
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            initial={motionEnabled ? { pathLength: 0 } : false}
-            animate={{ pathLength: 1 }}
-            transition={{
-              delay: motionDelay + 0.08,
-              duration: 1.0,
-              ease: [0.16, 1, 0.3, 1],
-            }}
-          />
-
-          {/* Axis labels */}
-          {showLabels
-            ? vertices.map((v) => (
-                <text
-                  key={`label-${v.i}`}
-                  x={v.lx}
-                  y={v.ly + v.dy}
-                  textAnchor={v.textAnchor}
-                  fill="var(--muted-foreground)"
-                  className="text-[11px] font-medium"
+            {/* Vertex dots */}
+            {vertices.map((v) => {
+              const isActive = activeIndex === v.i;
+              return (
+                <motion.g
+                  key={`vertex-${v.i}`}
+                  data-slot="score-radar-chart-vertex"
+                  tabIndex={0}
+                  role="button"
+                  aria-label={`${v.label}: ${v.value}`}
+                  {...getItemProps(v.i)}
+                  className="outline-none"
                 >
-                  {v.label}
-                </text>
-              ))
-            : null}
+                  {/* Pulse ring on hover */}
+                  {isActive ? (
+                    <motion.circle
+                      cx={v.vx}
+                      cy={v.vy}
+                      r="13"
+                      fill="currentColor"
+                      fillOpacity="0.12"
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.18, ease: "easeOut" }}
+                      style={{ transformOrigin: `${v.vx}px ${v.vy}px` }}
+                    />
+                  ) : null}
 
-          {/* Vertex dots */}
-          {vertices.map((v) => {
-            const isActive = activeIndex === v.i;
-            return (
-              <motion.g
-                key={`vertex-${v.i}`}
-                data-slot="score-radar-chart-vertex"
-                tabIndex={0}
-                role="button"
-                aria-label={`${v.label}: ${v.value}`}
-                onPointerEnter={() => setActiveIndex(v.i)}
-                onPointerLeave={() => setActiveIndex(null)}
-                onFocus={() => setActiveIndex(v.i)}
-                onBlur={() => setActiveIndex(null)}
-                className="outline-none"
-              >
-                {/* Pulse ring on hover */}
-                {isActive ? (
+                  {/* Vertex dot */}
                   <motion.circle
                     cx={v.vx}
                     cy={v.vy}
-                    r="15"
+                    r={isActive ? 6.5 : 4.5}
                     fill="currentColor"
-                    fillOpacity="0.15"
-                    filter={`url(#${id}-vertex-glow)`}
-                    animate={{ r: [11, 17, 11], fillOpacity: [0.1, 0.2, 0.1] }}
+                    stroke="var(--background)"
+                    strokeWidth="2"
+                    initial={motionEnabled ? { scale: 0, opacity: 0 } : false}
+                    animate={{ scale: 1, opacity: 1 }}
                     transition={{
-                      duration: 1.6,
-                      repeat: Number.POSITIVE_INFINITY,
-                      ease: "easeInOut",
+                      delay: motionDelay + 0.55 + v.i * 0.07,
+                      type: "spring",
+                      stiffness: 280,
+                      damping: 18,
                     }}
+                    style={{ transformOrigin: `${v.vx}px ${v.vy}px` }}
                   />
-                ) : null}
 
-                {/* Vertex dot */}
-                <motion.circle
-                  cx={v.vx}
-                  cy={v.vy}
-                  r={isActive ? 6.5 : 4.5}
-                  fill="currentColor"
-                  stroke="var(--background)"
-                  strokeWidth="2"
-                  initial={motionEnabled ? { scale: 0, opacity: 0 } : false}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{
-                    delay: motionDelay + 0.55 + v.i * 0.07,
-                    type: "spring",
-                    stiffness: 280,
-                    damping: 18,
+                  {/* Value label near dot when active */}
+                  {isActive ? (
+                    <motion.text
+                      x={v.vx}
+                      y={v.vy - 12}
+                      textAnchor="middle"
+                      fill="currentColor"
+                      className="text-[11px] font-semibold tabular-nums"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.18 }}
+                    >
+                      {v.value}
+                    </motion.text>
+                  ) : null}
+                </motion.g>
+              );
+            })}
+
+            {/* Tooltip */}
+            <AnimatePresence>
+              {showTooltip && activeVertex ? (
+                <motion.g
+                  data-slot="score-radar-chart-tooltip"
+                  pointerEvents="none"
+                  initial={
+                    motionEnabled
+                      ? {
+                          opacity: 0,
+                          x: tooltipX,
+                          y: tooltipY + 6,
+                          scale: 0.97,
+                        }
+                      : false
+                  }
+                  animate={{ opacity: 1, x: tooltipX, y: tooltipY, scale: 1 }}
+                  exit={{
+                    opacity: 0,
+                    x: tooltipX,
+                    y: tooltipY + 4,
+                    scale: 0.97,
                   }}
-                  style={{ transformOrigin: `${v.vx}px ${v.vy}px` }}
-                />
-
-                {/* Value label near dot when active */}
-                {isActive ? (
-                  <motion.text
-                    x={v.vx}
-                    y={v.vy - 12}
-                    textAnchor="middle"
-                    fill="currentColor"
-                    className="text-[11px] font-semibold tabular-nums"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.18 }}
+                  transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <rect
+                    width={tooltipWidth}
+                    height={tooltipHeight}
+                    rx="10"
+                    fill="var(--popover)"
+                    stroke="var(--border)"
+                  />
+                  <text
+                    x="12"
+                    y="20"
+                    fill="var(--popover-foreground)"
+                    className="text-[11.5px] font-semibold"
                   >
-                    {v.value}
-                  </motion.text>
-                ) : null}
-              </motion.g>
-            );
-          })}
-
-          {/* Tooltip */}
-          <AnimatePresence>
-            {showTooltip && activeVertex ? (
-              <motion.g
-                data-slot="score-radar-chart-tooltip"
-                pointerEvents="none"
-                initial={
-                  motionEnabled
-                    ? {
-                        opacity: 0,
-                        x: tooltipX,
-                        y: tooltipY + 6,
-                        scale: 0.97,
-                      }
-                    : false
-                }
-                animate={{ opacity: 1, x: tooltipX, y: tooltipY, scale: 1 }}
-                exit={{ opacity: 0, x: tooltipX, y: tooltipY + 4, scale: 0.97 }}
-                transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <rect
-                  width={tooltipWidth}
-                  height={tooltipHeight}
-                  rx="10"
-                  fill="var(--popover)"
-                  stroke="var(--border)"
-                />
-                <text
-                  x="12"
-                  y="20"
-                  fill="var(--popover-foreground)"
-                  className="text-[11.5px] font-semibold"
-                >
-                  {activeVertex.label}
-                </text>
-                <circle cx="14" cy="38" r="4" fill="currentColor" />
-                <text
-                  x="25"
-                  y="42"
-                  fill="var(--muted-foreground)"
-                  className="text-[10.5px] font-medium"
-                >
-                  Score
-                </text>
-                <text
-                  x={tooltipWidth - 12}
-                  y="42"
-                  textAnchor="end"
-                  fill="var(--popover-foreground)"
-                  className="text-[11px] font-semibold tabular-nums"
-                >
-                  {activeVertex.value}
-                </text>
-              </motion.g>
-            ) : null}
-          </AnimatePresence>
-        </svg>
+                    {activeVertex.label}
+                  </text>
+                  <circle cx="14" cy="38" r="4" fill="currentColor" />
+                  <text
+                    x="25"
+                    y="42"
+                    fill="var(--muted-foreground)"
+                    className="text-[10.5px] font-medium"
+                  >
+                    Score
+                  </text>
+                  <text
+                    x={tooltipWidth - 12}
+                    y="42"
+                    textAnchor="end"
+                    fill="var(--popover-foreground)"
+                    className="text-[11px] font-semibold tabular-nums"
+                  >
+                    {activeVertex.value}
+                  </text>
+                </motion.g>
+              ) : null}
+            </AnimatePresence>
+          </svg>
+        ) : null}
       </div>
     </div>
   );

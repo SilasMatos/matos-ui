@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 
+import { FoundationsSection } from "@/components/foundations-section";
 import { HeroSection } from "@/components/hero-section";
 import { MatosAspectsSection } from "@/components/matos-aspects-section";
 import { ScrollCardsSection } from "@/components/scroll-cards-section";
 import { SiteFooter } from "@/components/site-footer";
 import { siteConfig } from "@/lib/config";
 import { createOpenGraphMetadata, createTwitterMetadata } from "@/lib/seo";
+import { getComponentPages } from "@/lib/source";
 
 // import { TestimonialsSection } from '@/components/testimonials-section'
 
@@ -33,9 +35,13 @@ export default async function HomePage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
 
+  const componentCount = getComponentPages(locale).length;
+
   return (
     <>
-      <HeroSection />
+      <HeroSection componentCount={componentCount} />
+
+      <FoundationsSection />
 
       <ScrollCardsSection />
       <MatosAspectsSection />

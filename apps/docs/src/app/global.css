@@ -4,8 +4,11 @@
 
 :root {
   --radius: 0.65rem;
-  --hero-block-rgb: 0, 0, 0;
-  --background: oklch(1 0 0);
+  /* The page is the floor here too, mirroring dark. It used to be pure white,
+     which put it *above* --surface-1 (#fafafa) and inverted the ladder: the
+     canvas was the brightest thing on screen and levels 3-8 landed back on the
+     page's exact colour. Same low-chroma cool cast (hue 264) as dark. */
+  --background: oklch(0.968 0.004 264);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
@@ -13,11 +16,18 @@
   --popover-foreground: oklch(0.145 0 0);
   --primary: oklch(0.205 0 0);
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
+  /* Stock shadcn pairs these with a pure-white --background (1 0 0), a 0.03
+     step down. Lowering --background to 0.968 above without matching this
+     tint collapsed that step to ~0.002 — every hover/fill built on these
+     tokens (ghost buttons, nav links, menu items) went visually silent in
+     light mode. Shifted down by the same 0.032 --background moved, so the
+     original 0.03 gap — and the affordance it gives hover states — comes
+     back. */
+  --secondary: oklch(0.938 0 0);
   --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
+  --muted: oklch(0.938 0 0);
   --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
+  --accent: oklch(0.938 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
@@ -36,11 +46,67 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* Surfaces — 8-level elevation ladder (light) */
+  --surface-1: #fafafa;
+  --surface-2: #fcfcfc;
+  --surface-3: #ffffff;
+  --surface-4: #ffffff;
+  --surface-5: #ffffff;
+  --surface-6: #ffffff;
+  --surface-7: #ffffff;
+  --surface-8: #ffffff;
+  /* Light-mode elevation is carried by shadow, because the fill flattens to
+     pure white from level 3 up. For that to work the ring has to *ramp* — a
+     fixed 6% at every level meant a dialog and a card drew the same 1px line.
+     The ring alpha now climbs with the level; the drops accumulate as before. */
+  --shadow-color: rgb(0 0 0 / 0.06);
+  --lm-ring-2: rgb(0 0 0 / 0.07);
+  --lm-ring-3: rgb(0 0 0 / 0.08);
+  --lm-ring-4: rgb(0 0 0 / 0.09);
+  --lm-ring-5: rgb(0 0 0 / 0.1);
+  --lm-ring-6: rgb(0 0 0 / 0.11);
+  --lm-ring-7: rgb(0 0 0 / 0.12);
+  --lm-ring-8: rgb(0 0 0 / 0.13);
+  --lm-drop: rgb(0 0 0 / 0.07);
+  --shadow-1: 0 0 0 1px var(--shadow-color);
+  --shadow-2: 0 0 0 1px var(--lm-ring-2), 0 1px 1px -0.5px var(--lm-drop);
+  --shadow-3:
+    0 0 0 1px var(--lm-ring-3), 0 1px 1px -0.5px var(--lm-drop),
+    0 3px 3px -1.5px var(--lm-drop);
+  --shadow-4:
+    0 0 0 1px var(--lm-ring-4), 0 1px 1px -0.5px var(--lm-drop),
+    0 3px 3px -1.5px var(--lm-drop), 0 6px 6px -3px var(--lm-drop);
+  --shadow-5:
+    0 0 0 1px var(--lm-ring-5), 0 1px 1px -0.5px var(--lm-drop),
+    0 3px 3px -1.5px var(--lm-drop), 0 6px 6px -3px var(--lm-drop),
+    0 12px 12px -6px var(--lm-drop);
+  --shadow-6:
+    0 0 0 1px var(--lm-ring-6), 0 1px 1px -0.5px var(--lm-drop),
+    0 3px 3px -1.5px var(--lm-drop), 0 6px 6px -3px var(--lm-drop),
+    0 12px 12px -6px var(--lm-drop), 0 24px 24px -12px var(--lm-drop);
+  --shadow-7:
+    0 0 0 1px var(--lm-ring-7), 0 1px 1px -0.5px var(--lm-drop),
+    0 3px 3px -1.5px var(--lm-drop), 0 6px 6px -3px var(--lm-drop),
+    0 12px 12px -6px var(--lm-drop), 0 24px 24px -12px var(--lm-drop),
+    0 48px 48px -24px var(--lm-drop);
+  --shadow-8:
+    0 0 0 1px var(--lm-ring-8), 0 1px 1px -0.5px var(--lm-drop),
+    0 3px 3px -1.5px var(--lm-drop), 0 6px 6px -3px var(--lm-drop),
+    0 12px 12px -6px var(--lm-drop), 0 24px 24px -12px var(--lm-drop),
+    0 48px 48px -24px var(--lm-drop), 0 96px 96px -48px var(--lm-drop);
 }
 
 .dark {
-  --hero-block-rgb: 255, 255, 255;
-  --background: oklch(0.145 0 0);
+  /* Not pure black: a low-chroma cool cast (hue 264) with just enough
+     lightness to read as a deliberate floor rather than an absence of colour.
+     Stays a full ladder step below --surface-1 (#191919, L* 8.76).
+     Raised from L 0.17 (#0e0f12, L* 4.44) to 0.185 (#111315, L* 5.72) — same
+     hue, lighter floor. Not the literal #151515 that was asked for, because
+     that lands at L* 6.77 and squeezes the gap to --surface-1 down to 1.98 L*;
+     0.185 keeps 3.04 L*, still a readable step. Contrast against
+     --foreground stays at 17.9:1. */
+  --background: oklch(0.185 0.006 264);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
@@ -71,6 +137,64 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+
+  /* Surfaces — 8-level elevation ladder (dark).
+     Steps are spaced in CIE L* (~4–6 per level), not in raw sRGB, so every
+     adjacent pair separates by roughly the same perceived amount. A uniform
+     sRGB step would collapse to ~3 L* at the top of the ladder. */
+  --surface-1: #191919;
+  --surface-2: #242424;
+  --surface-3: #2e2e2e;
+  --surface-4: #393939;
+  --surface-5: #444444;
+  --surface-6: #4e4e4e;
+  --surface-7: #575757;
+  --surface-8: #616161;
+  --dm-hi-base: rgba(255, 255, 255, 0.01);
+  --dm-hi-mid: rgba(255, 255, 255, 0.02);
+  --dm-hi-high: rgba(255, 255, 255, 0.04);
+  --dm-hi-peak: rgba(255, 255, 255, 0.06);
+  --dm-ring-base: rgba(255, 255, 255, 0.02);
+  --dm-ring-mid: rgba(255, 255, 255, 0.04);
+  --dm-ring-high: rgba(255, 255, 255, 0.06);
+  --dm-drop: rgba(0, 0, 0, 0.18);
+  --shadow-1: inset 0 0 0 1px var(--dm-ring-base);
+  --shadow-2:
+    inset 0 1px 0 0 var(--dm-hi-base), inset 0 0 0 1px var(--dm-ring-base),
+    0 1px 1px -0.5px var(--dm-drop);
+  --shadow-3:
+    inset 0 1px 0 0 var(--dm-hi-mid),
+    inset 0 0 0 1px var(--dm-ring-base), 0 0 0 1px rgba(0, 0, 0, 0.12),
+    0 1px 1px -0.5px var(--dm-drop), 0 3px 3px -1.5px var(--dm-drop);
+  --shadow-4:
+    inset 0 1px 0 0 var(--dm-hi-mid),
+    inset 0 0 0 1px var(--dm-ring-mid), 0 0 0 1px rgba(0, 0, 0, 0.14),
+    0 1px 1px -0.5px var(--dm-drop), 0 3px 3px -1.5px var(--dm-drop),
+    0 6px 6px -3px var(--dm-drop);
+  --shadow-5:
+    inset 0 1px 0 0 var(--dm-hi-high),
+    inset 0 0 0 1px var(--dm-ring-mid), 0 0 0 1px rgba(0, 0, 0, 0.16),
+    0 1px 1px -0.5px var(--dm-drop), 0 3px 3px -1.5px var(--dm-drop),
+    0 6px 6px -3px var(--dm-drop), 0 12px 12px -6px var(--dm-drop);
+  --shadow-6:
+    inset 0 1px 0 0 var(--dm-hi-high),
+    inset 0 0 0 1px var(--dm-ring-high), 0 0 0 1px rgba(0, 0, 0, 0.18),
+    0 1px 1px -0.5px var(--dm-drop), 0 3px 3px -1.5px var(--dm-drop),
+    0 6px 6px -3px var(--dm-drop), 0 12px 12px -6px var(--dm-drop),
+    0 24px 24px -12px var(--dm-drop);
+  --shadow-7:
+    inset 0 1px 0 0 var(--dm-hi-peak),
+    inset 0 0 0 1px var(--dm-ring-high), 0 0 0 1px rgba(0, 0, 0, 0.2),
+    0 1px 1px -0.5px var(--dm-drop), 0 3px 3px -1.5px var(--dm-drop),
+    0 6px 6px -3px var(--dm-drop), 0 12px 12px -6px var(--dm-drop),
+    0 24px 24px -12px var(--dm-drop), 0 48px 48px -24px var(--dm-drop);
+  --shadow-8:
+    inset 0 1px 0 0 var(--dm-hi-peak),
+    inset 0 0 0 1px var(--dm-ring-high), 0 0 0 1px rgba(0, 0, 0, 0.22),
+    0 1px 1px -0.5px var(--dm-drop), 0 3px 3px -1.5px var(--dm-drop),
+    0 6px 6px -3px var(--dm-drop), 0 12px 12px -6px var(--dm-drop),
+    0 24px 24px -12px var(--dm-drop), 0 48px 48px -24px var(--dm-drop),
+    0 96px 96px -48px var(--dm-drop);
 }
 
 @theme inline {
@@ -105,16 +229,94 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-surface-4: var(--surface-4);
+  --color-surface-5: var(--surface-5);
+  --color-surface-6: var(--surface-6);
+  --color-surface-7: var(--surface-7);
+  --color-surface-8: var(--surface-8);
+  --shadow-surface-1: var(--shadow-1);
+  --shadow-surface-2: var(--shadow-2);
+  --shadow-surface-3: var(--shadow-3);
+  --shadow-surface-4: var(--shadow-4);
+  --shadow-surface-5: var(--shadow-5);
+  --shadow-surface-6: var(--shadow-6);
+  --shadow-surface-7: var(--shadow-7);
+  --shadow-surface-8: var(--shadow-8);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 10px);
+  --radius-3xl: calc(var(--radius) + 18px);
+  /* Typography roles. The source variables come from next/font on <html>
+     (see app/[locale]/layout.tsx). Registry components never name a typeface —
+     they use `font-sans`/`font-mono`, so they pick up whatever the host app
+     maps here, and stay neutral when installed elsewhere. */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display:
+    var(--font-satoshi), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
   --font-logo: "Trebuchet MS", ui-sans-serif, system-ui, sans-serif;
+
+  /* CSS-transition counterpart to the spring tiers in
+     registry/new-york-v4/lib/motion-tokens.ts. spring.fast and
+     spring.moderate are both critically damped (bounce: 0), so their CSS
+     equivalent is a fast-start/soft-land deceleration curve, not a
+     bounce/overshoot one — closer to a spring's settle than Tailwind's
+     stock `ease-out`, which decelerates too evenly to read as alive.
+     Durations run well past their spring counterpart because a plain
+     transition has no snap-then-settle shape of its own, so it needs the
+     extra time to *read* as equally smooth — pushed further still (was
+     120/180/260ms) after the first pass still read as too quick to
+     register as motion rather than a jump-cut. The curve itself softened
+     too: a wider late tail (0.36 vs 0.3 on the third control point) so the
+     settle glides rather than snapping shut. `--default-transition-*`
+     below is what every bare `transition-colors`/`transition-opacity`
+     utility resolves through, so hover states that never set their own
+     duration/easing inherit this automatically.
+
+     No `--duration-fast` entry: verified (renaming it, and separately
+     forcing it through an explicit `var()` reference) that this Tailwind
+     v4/Turbopack setup silently drops the utility class for a *named*
+     `--duration-*` theme entry whenever nothing in this file's own CSS
+     also references it via `var()` — moderate/slow survive only because
+     `--default-transition-duration` and the view-transition rule below
+     happen to reference them that way. A fast tier has no such natural
+     reference, so it never compiled; the 180ms fast tier below is spelled
+     out as the literal `duration-180` at its two call sites
+     (docs-sidebar.tsx, mobile-nav.tsx) instead. */
+  --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-moderate: 280ms;
+  --duration-slow: 420ms;
+  --default-transition-duration: var(--duration-moderate);
+  --default-transition-timing-function: var(--ease-spring);
+
+  /* The hover-lift tier — see the `hover-lift` utility below.
+     Deliberately NOT `--ease-spring`: that curve covers ~90% of its travel in
+     the first 15% of the time, which reads as arrival for a panel crossing
+     real distance but as a flinch for a 2px hover. This one eases in before it
+     eases out, so a control that lifts under the cursor drifts instead of
+     snapping. Both entries survive the `--duration-*` drop described above
+     because the utility references them through `var()` in this same file. */
+  --ease-lift: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-lift: 320ms;
+  --duration-lift-press: 120ms;
 }
 
 @layer components {
   html {
     scrollbar-gutter: stable;
+  }
+
+  /* MDX headings rendered by Fumadocs' DocsBody (.prose) take the display face.
+     Body copy inside .prose stays on Inter, and the `not-prose` guard keeps the
+     rule off registry components rendered inside preview canvases — those must
+     stay typography-neutral. */
+  .prose :is(h1, h2):not(:where(.not-prose, .not-prose *)) {
+    font-family: var(--font-display);
   }
 
   .steps {
@@ -136,6 +338,17 @@
   }
 }
 
+/* Page-transition timing for PageTransitions (components/page-transitions.tsx).
+   The browser's default cross-fade shape is left alone; this only retimes it
+   to the site's own motion tokens instead of the UA's ~0.25s ease. No
+   prefers-reduced-motion guard needed here — PageTransitions checks that in
+   JS and never starts a transition at all when it's set. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: var(--duration-slow);
+  animation-timing-function: var(--ease-spring);
+}
+
 .hero-grid {
   background-image:
     linear-gradient(var(--foreground) 1px, transparent 1px),
@@ -149,6 +362,57 @@
 
 .dark .hero-highlight {
   background: linear-gradient(transparent 60%, oklch(0.985 0 0 / 10%) 60%);
+}
+
+/* The hover lift, as one token.
+
+   It exists because the hand-rolled version was silently broken everywhere:
+   Tailwind v4 compiles `-translate-y-0.5` to the `translate` property and
+   `scale-[0.98]` to `scale`, but every call site listed `transform` in its
+   `transition-[…]` — a property none of them actually animate. The lift and
+   the press were therefore instant jumps, and no amount of retuning
+   `duration-moderate ease-spring` could have shown up, because that timing was
+   attached to properties that never changed.
+
+   So this utility owns the whole declaration rather than only the timing: the
+   property list is part of the token, which is the only way a call site cannot
+   get it wrong again. The list is deliberately generous — a control that never
+   changes its border-radius pays nothing for having it listed.
+
+   Distance is a local custom property: `[--lift:1px]` for a badge, `[--lift:0px]`
+   to opt a link-style variant out entirely, without touching the timing. */
+@utility hover-lift {
+  --lift: 2px;
+  transition-property:
+    translate, scale, box-shadow, background-color, border-color, border-radius,
+    color, opacity;
+  transition-duration: var(--duration-lift);
+  transition-timing-function: var(--ease-lift);
+
+  /* Hover-capable pointers only: on touch, :hover latches after a tap and the
+     control would stay lifted until something else is pressed. */
+  @media (hover: hover) {
+    &:hover {
+      translate: 0 calc(var(--lift) * -1);
+    }
+  }
+
+  /* Ordered after :hover so it wins at equal specificity. A press should feel
+     immediate even though the lift itself is slow. */
+  &:active {
+    translate: 0 0;
+    transition-duration: var(--duration-lift-press);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition-property: background-color, border-color, color, opacity;
+
+    &:hover,
+    &:active {
+      translate: none;
+      scale: none;
+    }
+  }
 }
 
 @utility step {
