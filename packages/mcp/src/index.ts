@@ -28,6 +28,10 @@ registerGetThemeOptions(server);
 async function main() {
 	const transport = new StdioServerTransport();
 	await server.connect(transport);
+	// stdout is reserved for JSON-RPC; stderr is safe for a human-readable
+	// status line so a bare `npx @matos-ui/mcp` doesn't look hung when it's
+	// just waiting for a client to speak first.
+	console.error("Matos UI MCP server running on stdio.");
 }
 
 main().catch((error) => {

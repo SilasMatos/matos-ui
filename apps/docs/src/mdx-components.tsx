@@ -6,6 +6,7 @@ import { CodeTabs } from "@/components/code-tabs";
 import { ComponentPreview } from "@/components/component-preview";
 import { ComponentSource } from "@/components/component-source";
 import { ComponentsList } from "@/components/components-list";
+import { TerminalBlock } from "@/components/terminal-block";
 import {
   Tabs,
   TabsContent,
@@ -27,6 +28,7 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
     CodeTabs,
     Tabs,
     CodeBlockCommand,
+    TerminalBlock,
     TabsContent,
     TabsList,
     TabsTrigger,

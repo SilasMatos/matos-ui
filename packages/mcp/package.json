@@ -1,6 +1,6 @@
 {
 	"name": "@matos-ui/mcp",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Read-only MCP server exposing the Matos UI registry and design-system knowledge (Surface Philosophy, Motion Tokens) to AI coding agents.",
 	"keywords": [
 		"mcp",
