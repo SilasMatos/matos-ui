@@ -47,9 +47,10 @@ export function PageTransitions() {
     resolveRef.current = null;
   }, []);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: pathname triggers this effect (see doc comment above) without being read in its body.
   useLayoutEffect(() => {
     settle();
-  }, [settle]);
+  }, [pathname, settle]);
 
   useLayoutEffect(() => {
     function onClick(event: MouseEvent) {
