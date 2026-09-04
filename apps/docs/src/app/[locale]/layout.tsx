@@ -1,6 +1,5 @@
 import { GeistMono } from "geist/font/mono";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import localFont from "next/font/local";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
@@ -37,8 +36,12 @@ const satoshi = localFont({
   display: "swap",
 });
 
-const inter = Inter({
-  subsets: ["latin"],
+// Self-hosted (not next/font/google): the docker build on the deploy VPS
+// has no reliable egress to fonts.googleapis.com, and next/font/google
+// fetches at build time — same reasoning as satoshi above.
+const inter = localFont({
+  src: "../../fonts/inter/Inter-Variable.woff2",
+  weight: "100 900",
   variable: "--font-inter",
   display: "swap",
 });
