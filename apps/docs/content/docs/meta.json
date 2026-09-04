@@ -1,4 +1,11 @@
 {
   "title": "Documentation",
-  "pages": ["index", "installation", "foundations", "components", "forms"]
+  "pages": [
+    "index",
+    "installation",
+    "mcp",
+    "foundations",
+    "components",
+    "forms"
+  ]
 }

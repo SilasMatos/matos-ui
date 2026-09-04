@@ -3,7 +3,7 @@ import { setRequestLocale } from "next-intl/server";
 
 import { FoundationsSection } from "@/components/foundations-section";
 import { HeroSection } from "@/components/hero-section";
-import { MatosAspectsSection } from "@/components/matos-aspects-section";
+import { McpSection } from "@/components/mcp-section";
 import { ScrollCardsSection } from "@/components/scroll-cards-section";
 import { SiteFooter } from "@/components/site-footer";
 import { siteConfig } from "@/lib/config";
@@ -44,7 +44,7 @@ export default async function HomePage({ params }: Props) {
       <FoundationsSection />
 
       <ScrollCardsSection />
-      <MatosAspectsSection />
+      <McpSection />
       {/* <TestimonialsSection /> */}
       <SiteFooter />
     </>

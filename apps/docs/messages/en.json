@@ -147,31 +147,11 @@
       }
     ]
   },
-  "matosAspects": {
-    "badge": "Product-ready details",
-    "title": "More about the Matos UI approach",
-    "subtitle": "A registry made to copy, style, and maintain inside your application.",
-    "items": [
-      {
-        "label": "Copy-first",
-        "title": "Open registry",
-        "description": "Install only the components you need, inspect the code, and keep everything in your project."
-      },
-      {
-        "label": "Ready interaction",
-        "title": "Accessible states",
-        "description": "Focus, disabled, loading, and ARIA hooks are part of the design from the start."
-      },
-      {
-        "label": "Theme tokens",
-        "title": "No fixed styles",
-        "description": "Components use bg-card, border-border, text-muted-foreground, and primary tokens."
-      },
-      {
-        "label": "Motion-first",
-        "title": "Subtle micro motion",
-        "description": "Hover, layout, and presence make the interface feel alive without slowing it down."
-      }
-    ]
+  "mcpSection": {
+    "badge": "Model Context Protocol",
+    "title": "Give your AI agent Matos UI, natively",
+    "subtitle": "Matos UI ships an MCP server so Claude, Cursor, Copilot, and any AI coding agent can browse the registry, install components, and read the Surface Philosophy and Motion Tokens without guessing.",
+    "copy": "Copy",
+    "cta": "Read the MCP docs"
   }
 }

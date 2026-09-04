@@ -22,7 +22,7 @@
 	},
 	"type": "module",
 	"bin": {
-		"matos-ui-mcp": "./dist/index.js"
+		"matos-ui-mcp": "dist/index.js"
 	},
 	"files": [
 		"dist",
