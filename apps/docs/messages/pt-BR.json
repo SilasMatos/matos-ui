@@ -147,31 +147,11 @@
       }
     ]
   },
-  "matosAspects": {
-    "badge": "Detalhes prontos para produto",
-    "title": "Mais sobre a abordagem do Matos UI",
-    "subtitle": "Um registry feito para copiar, estilizar e manter dentro da sua aplicação.",
-    "items": [
-      {
-        "label": "Copy-first",
-        "title": "Registry aberto",
-        "description": "Instale só os componentes que precisa, inspecione o código e mantenha tudo no seu projeto."
-      },
-      {
-        "label": "Interação pronta",
-        "title": "Estados acessíveis",
-        "description": "Foco, disabled, loading e hooks de ARIA fazem parte do design, não ficam para depois."
-      },
-      {
-        "label": "Tokens do tema",
-        "title": "Sem estilos fixos",
-        "description": "Os componentes usam bg-card, border-border, text-muted-foreground e tokens primários."
-      },
-      {
-        "label": "Motion-first",
-        "title": "Micro motion sutil",
-        "description": "Hover, layout e presença deixam a interface viva sem perder velocidade."
-      }
-    ]
+  "mcpSection": {
+    "badge": "Model Context Protocol",
+    "title": "Leve o Matos UI direto para o seu agente de IA",
+    "subtitle": "O Matos UI tem um servidor MCP para que Claude, Cursor, Copilot e qualquer agente de IA consigam navegar no registry, instalar componentes e ler a Surface Philosophy e os Motion Tokens sem chutar.",
+    "copy": "Copiar",
+    "cta": "Ver a documentação do MCP"
   }
 }
