@@ -10,7 +10,13 @@ import {
 } from "react";
 import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
+import { spring } from "@/registry/new-york-v4/lib/motion-tokens";
 import { useChartInteraction } from "./chart-interaction";
+import {
+  chartAccentTransition,
+  chartCascadeStep,
+  chartDraw,
+} from "./chart-motion";
 
 export const activityHeatmapChartVariants = tv({
   base: "not-prose w-full text-foreground",
@@ -355,20 +361,19 @@ export function ActivityHeatmapChart({
                   }}
                   transition={{
                     opacity: {
+                      ...chartDraw(0.32),
                       delay: motionEnabled
-                        ? motionDelay + (c.column + c.row) * 0.018
+                        ? motionDelay + (c.column + c.row) * chartCascadeStep
                         : 0,
-                      duration: 0.32,
-                      ease: [0.16, 1, 0.3, 1],
                     },
                     scale: isActive
-                      ? { type: "spring", stiffness: 320, damping: 18 }
+                      ? chartAccentTransition
                       : {
+                          ...chartDraw(0.32),
                           delay: motionEnabled
-                            ? motionDelay + (c.column + c.row) * 0.018
+                            ? motionDelay +
+                              (c.column + c.row) * chartCascadeStep
                             : 0,
-                          duration: 0.32,
-                          ease: [0.16, 1, 0.3, 1],
                         },
                   }}
                   style={{
@@ -392,7 +397,7 @@ export function ActivityHeatmapChart({
                   }
                   animate={{ opacity: 1, y: tooltipY, scale: 1 }}
                   exit={{ opacity: 0, y: tooltipY + 4, scale: 0.96 }}
-                  transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+                  transition={spring.fast}
                   style={{ transformOrigin: `${tooltipX}px ${tooltipY}px` }}
                 >
                   <rect

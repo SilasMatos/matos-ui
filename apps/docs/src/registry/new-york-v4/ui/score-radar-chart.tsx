@@ -4,7 +4,13 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { type ComponentProps, type ReactNode, useId, useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
+import { spring } from "@/registry/new-york-v4/lib/motion-tokens";
 import { useChartInteraction } from "./chart-interaction";
+import {
+  chartAccentTransition,
+  chartDraw,
+  chartStaggerStep,
+} from "./chart-motion";
 
 export const scoreRadarChartVariants = tv({
   base: "not-prose w-full text-foreground",
@@ -303,11 +309,7 @@ export function ScoreRadarChart({
               fill={`url(#${id}-fill)`}
               initial={motionEnabled ? { scale: 0, opacity: 0 } : false}
               animate={{ scale: 1, opacity: 1 }}
-              transition={{
-                delay: motionDelay,
-                duration: 0.7,
-                ease: [0.16, 1, 0.3, 1],
-              }}
+              transition={{ ...chartDraw(0.7), delay: motionDelay }}
               style={{ transformOrigin: `${cx}px ${cy}px` }}
             />
 
@@ -321,11 +323,7 @@ export function ScoreRadarChart({
               strokeLinejoin="round"
               initial={motionEnabled ? { pathLength: 0 } : false}
               animate={{ pathLength: 1 }}
-              transition={{
-                delay: motionDelay + 0.08,
-                duration: 1.0,
-                ease: [0.16, 1, 0.3, 1],
-              }}
+              transition={{ ...chartDraw(1), delay: motionDelay + 0.08 }}
             />
 
             {/* Axis labels */}
@@ -367,7 +365,7 @@ export function ScoreRadarChart({
                       fillOpacity="0.12"
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.18, ease: "easeOut" }}
+                      transition={chartAccentTransition}
                       style={{ transformOrigin: `${v.vx}px ${v.vy}px` }}
                     />
                   ) : null}
@@ -383,10 +381,8 @@ export function ScoreRadarChart({
                     initial={motionEnabled ? { scale: 0, opacity: 0 } : false}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{
-                      delay: motionDelay + 0.55 + v.i * 0.07,
-                      type: "spring",
-                      stiffness: 280,
-                      damping: 18,
+                      ...spring.moderate,
+                      delay: motionDelay + 0.55 + v.i * chartStaggerStep,
                     }}
                     style={{ transformOrigin: `${v.vx}px ${v.vy}px` }}
                   />
@@ -401,7 +397,7 @@ export function ScoreRadarChart({
                       className="text-[11px] font-semibold tabular-nums"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      transition={{ duration: 0.18 }}
+                      transition={chartAccentTransition}
                     >
                       {v.value}
                     </motion.text>
@@ -433,7 +429,7 @@ export function ScoreRadarChart({
                     y: tooltipY + 4,
                     scale: 0.97,
                   }}
-                  transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
+                  transition={spring.fast}
                 >
                   <rect
                     width={tooltipWidth}

@@ -48,8 +48,12 @@ export const chartCursorTransition = {
   ease: ease.standard,
 };
 
-/** Per-mark delay when a series staggers itself in. */
+/** Per-mark delay when a series staggers itself in (bars, points, bands). */
 export const chartStaggerStep = stagger.moderate;
+
+/** Tighter step for a dense grid or diagonal wave (a heatmap filling in), where
+ *  `chartStaggerStep` across dozens of cells would drag. */
+export const chartCascadeStep = stagger.fast;
 
 /**
  * The draw-on transition. Pass the data-scaled length in seconds; the ease is

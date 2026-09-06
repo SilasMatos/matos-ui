@@ -10,7 +10,9 @@ import {
 } from "react";
 import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
+import { spring } from "@/registry/new-york-v4/lib/motion-tokens";
 import { useChartInteraction } from "./chart-interaction";
+import { chartCascadeStep, chartDraw, chartStaggerStep } from "./chart-motion";
 
 export const activityWaveformChartVariants = tv({
   base: "not-prose w-full text-foreground",
@@ -331,9 +333,10 @@ export function ActivityWaveformChart({
                   initial={motionEnabled ? { scaleY: 0, opacity: 0 } : false}
                   animate={{ scaleY: 1, opacity: 1 }}
                   transition={{
-                    duration: motionDuration,
-                    delay: motionEnabled ? motionDelay + bar.index * 0.012 : 0,
-                    ease: [0.16, 1, 0.3, 1],
+                    ...chartDraw(motionDuration),
+                    delay: motionEnabled
+                      ? motionDelay + bar.index * chartCascadeStep
+                      : 0,
                   }}
                   style={{
                     transformOrigin: `${bar.centerX}px ${baseline}px`,
@@ -356,7 +359,7 @@ export function ActivityWaveformChart({
                   }
                   animate={{ opacity: 1, y: tooltipY, scale: 1 }}
                   exit={{ opacity: 0, y: tooltipY + 4, scale: 0.96 }}
-                  transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
+                  transition={spring.fast}
                   style={{ transformOrigin: `${tooltipX}px ${tooltipY}px` }}
                 >
                   <rect
@@ -404,9 +407,8 @@ export function ActivityWaveformChart({
                 initial={motionEnabled ? { scaleX: 0 } : false}
                 animate={{ scaleX: 1 }}
                 transition={{
-                  duration: 0.5,
-                  delay: motionDelay + 0.1 + index * 0.08,
-                  ease: [0.16, 1, 0.3, 1],
+                  ...chartDraw(0.5),
+                  delay: motionDelay + 0.1 + index * chartStaggerStep,
                 }}
               />
             ))}

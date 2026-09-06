@@ -10,7 +10,13 @@ import {
 } from "react";
 import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
+import { spring } from "@/registry/new-york-v4/lib/motion-tokens";
 import { useChartInteraction } from "./chart-interaction";
+import {
+  chartAccentTransition,
+  chartDraw,
+  chartStaggerStep,
+} from "./chart-motion";
 
 export const candlestickChartVariants = tv({
   base: "not-prose w-full text-foreground",
@@ -328,7 +334,7 @@ export function CandlestickChart({
                   aria-label={`${candle.label}: open ${format(candle.open)}, high ${format(candle.high)}, low ${format(candle.low)}, close ${format(candle.close)}`}
                   {...getItemProps(candle.index)}
                   animate={{ opacity: dim ? 0.4 : 1 }}
-                  transition={{ duration: 0.25, ease: "easeOut" }}
+                  transition={chartAccentTransition}
                   style={{ color: candle.color, cursor: "pointer" }}
                   className="outline-none"
                 >
@@ -343,9 +349,8 @@ export function CandlestickChart({
                     initial={motionEnabled ? { scaleY: 0, opacity: 0 } : false}
                     animate={{ scaleY: 1, opacity: 1 }}
                     transition={{
-                      duration: motionDuration,
-                      delay: motionDelay + candle.index * 0.035,
-                      ease: [0.16, 1, 0.3, 1],
+                      ...chartDraw(motionDuration),
+                      delay: motionDelay + candle.index * chartStaggerStep,
                     }}
                     style={{
                       transformOrigin: `${candle.cx}px ${
@@ -363,9 +368,9 @@ export function CandlestickChart({
                     initial={motionEnabled ? { scaleY: 0, opacity: 0 } : false}
                     animate={{ scaleY: 1, opacity: 1 }}
                     transition={{
-                      duration: motionDuration,
-                      delay: motionDelay + 0.06 + candle.index * 0.035,
-                      ease: [0.16, 1, 0.3, 1],
+                      ...chartDraw(motionDuration),
+                      delay:
+                        motionDelay + 0.06 + candle.index * chartStaggerStep,
                     }}
                     style={{
                       transformOrigin: `${candle.cx}px ${
@@ -403,7 +408,7 @@ export function CandlestickChart({
                   }
                   animate={{ opacity: 1, y: tooltipY, scale: 1 }}
                   exit={{ opacity: 0, y: tooltipY + 4, scale: 0.97 }}
-                  transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+                  transition={spring.fast}
                   style={{ transformOrigin: `${tooltipX}px ${tooltipY}px` }}
                 >
                   <rect
