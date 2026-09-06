@@ -4,7 +4,13 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { type ComponentProps, type ReactNode, useId, useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
+import { spring } from "@/registry/new-york-v4/lib/motion-tokens";
 import { useChartInteraction } from "./chart-interaction";
+import {
+  chartAccentTransition,
+  chartDraw,
+  chartStaggerStep,
+} from "./chart-motion";
 
 export const performanceWaterfallChartVariants = tv({
   base: "not-prose w-full text-foreground",
@@ -212,9 +218,8 @@ export function PerformanceWaterfallChart({
                     initial={motionEnabled ? { scaleX: 0 } : false}
                     animate={{ scaleX: 1 }}
                     transition={{
-                      delay: motionDelay + bar.i * 0.09,
-                      duration: 0.62,
-                      ease: [0.16, 1, 0.3, 1],
+                      ...chartDraw(0.62),
+                      delay: motionDelay + bar.i * chartStaggerStep,
                     }}
                     style={{
                       transformBox: "fill-box",
@@ -266,7 +271,7 @@ export function PerformanceWaterfallChart({
                   aria-label={`${bar.label}: ${valueFormatter(bar.start)} + ${valueFormatter(bar.duration)}`}
                   {...getItemProps(bar.i)}
                   animate={{ opacity: isActive ? 1 : 0.78 }}
-                  transition={{ duration: 0.22 }}
+                  transition={chartAccentTransition}
                   className="outline-none focus-visible:[&>rect]:stroke-ring focus-visible:[&>rect]:stroke-2"
                   style={{ color: bar.color }}
                 >
@@ -308,8 +313,8 @@ export function PerformanceWaterfallChart({
                       initial={motionEnabled ? { opacity: 0 } : false}
                       animate={{ opacity: 1 }}
                       transition={{
-                        delay: motionDelay + bar.i * 0.09 + 0.45,
-                        duration: 0.22,
+                        ...chartAccentTransition,
+                        delay: motionDelay + bar.i * chartStaggerStep + 0.45,
                       }}
                       clipPath={`url(#${id}-bc-${bar.i})`}
                     >
@@ -374,11 +379,7 @@ export function PerformanceWaterfallChart({
                     motionEnabled ? { pathLength: 0, opacity: 0 } : false
                   }
                   animate={{ pathLength: 1, opacity: 0.55 }}
-                  transition={{
-                    delay: motionDelay + 0.7,
-                    duration: 0.45,
-                    ease: [0.22, 1, 0.36, 1],
-                  }}
+                  transition={{ ...chartDraw(0.45), delay: motionDelay + 0.7 }}
                 />
                 <motion.text
                   x={markerX + 5}
@@ -387,7 +388,10 @@ export function PerformanceWaterfallChart({
                   className="text-[10px] font-semibold"
                   initial={motionEnabled ? { opacity: 0 } : false}
                   animate={{ opacity: 0.72 }}
-                  transition={{ delay: motionDelay + 1.1, duration: 0.24 }}
+                  transition={{
+                    ...chartAccentTransition,
+                    delay: motionDelay + 1.1,
+                  }}
                 >
                   {markerLabel}
                 </motion.text>
@@ -424,7 +428,7 @@ export function PerformanceWaterfallChart({
                     y: tooltipY + 4,
                     scale: 0.97,
                   }}
-                  transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+                  transition={spring.fast}
                 >
                   <rect
                     width={tooltipWidth}

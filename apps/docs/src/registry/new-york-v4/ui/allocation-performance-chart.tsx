@@ -12,7 +12,14 @@ import {
 } from "react";
 import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
+import { spring } from "@/registry/new-york-v4/lib/motion-tokens";
 import { useChartInteraction } from "./chart-interaction";
+import {
+  chartAccentTransition,
+  chartDraw,
+  chartStaggerStep,
+  useChartTooltipSurface,
+} from "./chart-motion";
 
 export const allocationPerformanceChartVariants = tv({
   base: "not-prose w-full text-foreground",
@@ -193,6 +200,9 @@ export function AllocationPerformanceChart({
   const shouldReduceMotion = useReducedMotion();
   const rawId = useId();
   const id = rawId.replace(/:/g, "");
+  // The asset picker is a dropdown — a popover surface, offset 2 from wherever
+  // the chart sits.
+  const menuSurface = useChartTooltipSurface();
   const [selectorOpen, setSelectorOpen] = useState(false);
   const safeMax = Math.max(1, max);
 
@@ -350,7 +360,7 @@ export function AllocationPerformanceChart({
               <motion.span
                 aria-hidden="true"
                 animate={{ rotate: selectorOpen ? 180 : 0 }}
-                transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                transition={chartAccentTransition}
               >
                 <ChevronDown className="size-3.5 text-muted-foreground" />
               </motion.span>
@@ -373,11 +383,15 @@ export function AllocationPerformanceChart({
               {selectorOpen ? (
                 <motion.div
                   data-slot="allocation-performance-chart-menu"
-                  className="absolute right-12 top-12 z-20 min-w-44 overflow-hidden rounded-xl border border-border bg-popover p-1 text-popover-foreground shadow-sm"
+                  data-surface={menuSurface.level}
+                  className={twMerge(
+                    "absolute right-12 top-12 z-20 min-w-44 overflow-hidden rounded-xl p-1",
+                    menuSurface.className,
+                  )}
                   initial={{ opacity: 0, y: -4, scale: 0.98 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -4, scale: 0.98 }}
-                  transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+                  transition={spring.fast}
                 >
                   {normalizedData.map((item, index) => (
                     <button
@@ -534,7 +548,7 @@ export function AllocationPerformanceChart({
                   y1: activeBar.markerY,
                   y2: activeBar.markerY,
                 }}
-                transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+                transition={chartDraw(0.38)}
               />
             ) : null}
 
@@ -570,12 +584,7 @@ export function AllocationPerformanceChart({
                   whileHover={
                     motionEnabled ? { y: -1.2, scale: 1.003 } : undefined
                   }
-                  transition={{
-                    type: "spring",
-                    stiffness: 150,
-                    damping: 24,
-                    mass: 0.8,
-                  }}
+                  transition={spring.moderate}
                   style={{
                     color: bar.color,
                     transformOrigin: `${bar.centerX}px ${baselineY}px`,
@@ -614,12 +623,8 @@ export function AllocationPerformanceChart({
                     initial={motionEnabled ? { scaleY: 0, opacity: 0 } : false}
                     animate={{ scaleY: 1, opacity: 1 }}
                     transition={{
-                      type: "spring",
-                      stiffness: 118,
-                      damping: 24,
-                      mass: 0.9,
-                      delay: motionDelay + index * 0.07,
-                      duration: motionDuration,
+                      ...chartDraw(motionDuration),
+                      delay: motionDelay + index * chartStaggerStep,
                     }}
                     style={{
                       transformOrigin: `${bar.centerX}px ${baselineY}px`,
@@ -642,8 +647,8 @@ export function AllocationPerformanceChart({
                         y: valueY,
                       }}
                       transition={{
-                        delay: motionDelay + 0.12 + index * 0.05,
-                        duration: 0.26,
+                        ...chartAccentTransition,
+                        delay: motionDelay + 0.12 + index * chartStaggerStep,
                       }}
                     >
                       {bar.formattedValue}
@@ -672,7 +677,7 @@ export function AllocationPerformanceChart({
                       opacity: active ? 0.8 : 0,
                       scaleX: active ? 1 : 0.35,
                     }}
-                    transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+                    transition={chartAccentTransition}
                     style={{
                       transformOrigin: `${bar.centerX}px ${labelY + 11}px`,
                     }}
@@ -708,7 +713,7 @@ export function AllocationPerformanceChart({
                     y: tooltipY + 6,
                     scale: 0.98,
                   }}
-                  transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+                  transition={spring.fast}
                 >
                   <rect
                     width={tooltipWidth}
