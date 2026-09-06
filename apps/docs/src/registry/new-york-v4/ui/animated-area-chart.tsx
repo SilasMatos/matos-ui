@@ -16,6 +16,14 @@ import {
 import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
 import { useChartInteraction } from "./chart-interaction";
+import {
+  chartAccentTransition,
+  chartCursorTransition,
+  chartDraw,
+  chartStaggerStep,
+  chartTooltipMotion,
+  useChartTooltipSurface,
+} from "./chart-motion";
 
 export const animatedAreaChartVariants = tv({
   base: "not-prose w-full text-foreground",
@@ -165,10 +173,7 @@ function AreaDot({
           fill="currentColor"
           initial={animated ? { r: 4, opacity: 0 } : false}
           animate={{ r: ringRadius, opacity: 0.14 }}
-          transition={{
-            duration: 0.18,
-            ease: "easeOut",
-          }}
+          transition={chartAccentTransition}
         />
       ) : null}
       <motion.circle
@@ -182,9 +187,8 @@ function AreaDot({
         initial={animated ? { r: 0, opacity: 0 } : false}
         animate={{ r: active ? 4 : 3, opacity: active ? 1 : 0.78 }}
         transition={{
-          delay: motionDelay + index * 0.035,
-          duration: 0.28,
-          ease: [0.22, 1, 0.36, 1],
+          ...chartAccentTransition,
+          delay: motionDelay + index * chartStaggerStep,
         }}
       />
     </g>
@@ -210,6 +214,7 @@ function AreaCursor({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
+      transition={chartCursorTransition}
     >
       <line
         x1={x}
@@ -239,6 +244,8 @@ function ChartTooltip({
   valueFormatter,
   labelFormatter,
 }: ChartTooltipProps) {
+  const tooltipSurface = useChartTooltipSurface();
+
   if (!active || !payload?.length) {
     return null;
   }
@@ -249,10 +256,12 @@ function ChartTooltip({
   return (
     <motion.div
       data-slot="animated-area-chart-tooltip"
-      initial={{ opacity: 0, y: 6, scale: 0.98 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
-      className="rounded-xl border border-border bg-background/95 px-3 py-2 text-xs shadow-sm backdrop-blur tabular-nums"
+      data-surface={tooltipSurface.level}
+      {...chartTooltipMotion}
+      className={twMerge(
+        "rounded-xl px-3 py-2 text-xs tabular-nums",
+        tooltipSurface.className,
+      )}
     >
       <p className="text-[11px] font-medium text-muted-foreground">
         {labelFormatter?.(String(label)) ?? label}
@@ -388,9 +397,8 @@ export function AnimatedAreaChart({
                       initial={resolvedAnimated ? { width: 0 } : false}
                       animate={{ width: 1 }}
                       transition={{
-                        duration: motionDuration,
+                        ...chartDraw(motionDuration),
                         delay: motionDelay,
-                        ease: [0.16, 1, 0.3, 1],
                       }}
                     />
                   </clipPath>

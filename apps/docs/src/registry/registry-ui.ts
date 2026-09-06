@@ -484,12 +484,18 @@ export const ui: Registry["items"] = [
       "tailwind-merge",
       "tailwind-variants",
     ],
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "ui/animated-area-chart.tsx",
         type: "registry:ui",
       },
       { path: "ui/chart-interaction.ts", type: "registry:ui" },
+      { path: "ui/chart-motion.ts", type: "registry:ui" },
     ],
   },
   {
@@ -501,12 +507,18 @@ export const ui: Registry["items"] = [
       "tailwind-merge",
       "tailwind-variants",
     ],
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "ui/allocation-performance-chart.tsx",
         type: "registry:ui",
       },
       { path: "ui/chart-interaction.ts", type: "registry:ui" },
+      { path: "ui/chart-motion.ts", type: "registry:ui" },
     ],
   },
   {
@@ -519,132 +531,198 @@ export const ui: Registry["items"] = [
       "tailwind-merge",
       "tailwind-variants",
     ],
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "ui/sparkline-card.tsx",
         type: "registry:ui",
       },
       { path: "ui/chart-interaction.ts", type: "registry:ui" },
+      { path: "ui/chart-motion.ts", type: "registry:ui" },
     ],
   },
   {
     name: "signal-flow-chart",
     type: "registry:ui",
     dependencies: ["framer-motion", "tailwind-merge", "tailwind-variants"],
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "ui/signal-flow-chart.tsx",
         type: "registry:ui",
       },
       { path: "ui/chart-interaction.ts", type: "registry:ui" },
+      { path: "ui/chart-motion.ts", type: "registry:ui" },
     ],
   },
   {
     name: "activity-heatmap-chart",
     type: "registry:ui",
     dependencies: ["framer-motion", "tailwind-merge", "tailwind-variants"],
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "ui/activity-heatmap-chart.tsx",
         type: "registry:ui",
       },
       { path: "ui/chart-interaction.ts", type: "registry:ui" },
+      { path: "ui/chart-motion.ts", type: "registry:ui" },
     ],
   },
   {
     name: "candlestick-chart",
     type: "registry:ui",
     dependencies: ["framer-motion", "tailwind-merge", "tailwind-variants"],
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "ui/candlestick-chart.tsx",
         type: "registry:ui",
       },
       { path: "ui/chart-interaction.ts", type: "registry:ui" },
+      { path: "ui/chart-motion.ts", type: "registry:ui" },
     ],
   },
   {
     name: "bubble-chart",
     type: "registry:ui",
     dependencies: ["framer-motion", "tailwind-merge", "tailwind-variants"],
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "ui/bubble-chart.tsx",
         type: "registry:ui",
       },
       { path: "ui/chart-interaction.ts", type: "registry:ui" },
+      { path: "ui/chart-motion.ts", type: "registry:ui" },
     ],
   },
   {
     name: "activity-waveform-chart",
     type: "registry:ui",
     dependencies: ["framer-motion", "tailwind-merge", "tailwind-variants"],
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "ui/activity-waveform-chart.tsx",
         type: "registry:ui",
       },
       { path: "ui/chart-interaction.ts", type: "registry:ui" },
+      { path: "ui/chart-motion.ts", type: "registry:ui" },
     ],
   },
   {
     name: "performance-waterfall-chart",
     type: "registry:ui",
     dependencies: ["framer-motion", "tailwind-merge", "tailwind-variants"],
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "ui/performance-waterfall-chart.tsx",
         type: "registry:ui",
       },
       { path: "ui/chart-interaction.ts", type: "registry:ui" },
+      { path: "ui/chart-motion.ts", type: "registry:ui" },
     ],
   },
   {
     name: "threshold-band-chart",
     type: "registry:ui",
     dependencies: ["framer-motion", "tailwind-merge", "tailwind-variants"],
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "ui/threshold-band-chart.tsx",
         type: "registry:ui",
       },
       { path: "ui/chart-interaction.ts", type: "registry:ui" },
+      { path: "ui/chart-motion.ts", type: "registry:ui" },
     ],
   },
   {
     name: "impact-priority-matrix",
     type: "registry:ui",
     dependencies: ["framer-motion", "tailwind-merge", "tailwind-variants"],
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "ui/impact-priority-matrix.tsx",
         type: "registry:ui",
       },
       { path: "ui/chart-interaction.ts", type: "registry:ui" },
+      { path: "ui/chart-motion.ts", type: "registry:ui" },
     ],
   },
   {
     name: "resource-treemap-chart",
     type: "registry:ui",
     dependencies: ["framer-motion", "tailwind-merge", "tailwind-variants"],
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "ui/resource-treemap-chart.tsx",
         type: "registry:ui",
       },
       { path: "ui/chart-interaction.ts", type: "registry:ui" },
+      { path: "ui/chart-motion.ts", type: "registry:ui" },
     ],
   },
   {
     name: "score-radar-chart",
     type: "registry:ui",
     dependencies: ["framer-motion", "tailwind-merge", "tailwind-variants"],
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "ui/score-radar-chart.tsx",
         type: "registry:ui",
       },
       { path: "ui/chart-interaction.ts", type: "registry:ui" },
+      { path: "ui/chart-motion.ts", type: "registry:ui" },
     ],
   },
   {

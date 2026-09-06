@@ -537,7 +537,11 @@ export const Index: Record<string, any> = {
   "animated-area-chart": {
     name: "animated-area-chart",
     type: "registry:ui",
-    registryDependencies: undefined,
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "src/registry/new-york-v4/ui/animated-area-chart.tsx",
@@ -546,6 +550,11 @@ export const Index: Record<string, any> = {
       },
       {
         path: "src/registry/new-york-v4/ui/chart-interaction.ts",
+        type: "registry:ui",
+        target: "",
+      },
+      {
+        path: "src/registry/new-york-v4/ui/chart-motion.ts",
         type: "registry:ui",
         target: "",
       },
@@ -565,7 +574,11 @@ export const Index: Record<string, any> = {
   "allocation-performance-chart": {
     name: "allocation-performance-chart",
     type: "registry:ui",
-    registryDependencies: undefined,
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "src/registry/new-york-v4/ui/allocation-performance-chart.tsx",
@@ -574,6 +587,11 @@ export const Index: Record<string, any> = {
       },
       {
         path: "src/registry/new-york-v4/ui/chart-interaction.ts",
+        type: "registry:ui",
+        target: "",
+      },
+      {
+        path: "src/registry/new-york-v4/ui/chart-motion.ts",
         type: "registry:ui",
         target: "",
       },
@@ -593,7 +611,11 @@ export const Index: Record<string, any> = {
   "sparkline-card": {
     name: "sparkline-card",
     type: "registry:ui",
-    registryDependencies: undefined,
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "src/registry/new-york-v4/ui/sparkline-card.tsx",
@@ -602,6 +624,11 @@ export const Index: Record<string, any> = {
       },
       {
         path: "src/registry/new-york-v4/ui/chart-interaction.ts",
+        type: "registry:ui",
+        target: "",
+      },
+      {
+        path: "src/registry/new-york-v4/ui/chart-motion.ts",
         type: "registry:ui",
         target: "",
       },
@@ -619,7 +646,11 @@ export const Index: Record<string, any> = {
   "signal-flow-chart": {
     name: "signal-flow-chart",
     type: "registry:ui",
-    registryDependencies: undefined,
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "src/registry/new-york-v4/ui/signal-flow-chart.tsx",
@@ -628,6 +659,11 @@ export const Index: Record<string, any> = {
       },
       {
         path: "src/registry/new-york-v4/ui/chart-interaction.ts",
+        type: "registry:ui",
+        target: "",
+      },
+      {
+        path: "src/registry/new-york-v4/ui/chart-motion.ts",
         type: "registry:ui",
         target: "",
       },
@@ -647,7 +683,11 @@ export const Index: Record<string, any> = {
   "activity-heatmap-chart": {
     name: "activity-heatmap-chart",
     type: "registry:ui",
-    registryDependencies: undefined,
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "src/registry/new-york-v4/ui/activity-heatmap-chart.tsx",
@@ -656,6 +696,11 @@ export const Index: Record<string, any> = {
       },
       {
         path: "src/registry/new-york-v4/ui/chart-interaction.ts",
+        type: "registry:ui",
+        target: "",
+      },
+      {
+        path: "src/registry/new-york-v4/ui/chart-motion.ts",
         type: "registry:ui",
         target: "",
       },
@@ -675,7 +720,11 @@ export const Index: Record<string, any> = {
   "candlestick-chart": {
     name: "candlestick-chart",
     type: "registry:ui",
-    registryDependencies: undefined,
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "src/registry/new-york-v4/ui/candlestick-chart.tsx",
@@ -684,6 +733,11 @@ export const Index: Record<string, any> = {
       },
       {
         path: "src/registry/new-york-v4/ui/chart-interaction.ts",
+        type: "registry:ui",
+        target: "",
+      },
+      {
+        path: "src/registry/new-york-v4/ui/chart-motion.ts",
         type: "registry:ui",
         target: "",
       },
@@ -703,7 +757,11 @@ export const Index: Record<string, any> = {
   "bubble-chart": {
     name: "bubble-chart",
     type: "registry:ui",
-    registryDependencies: undefined,
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "src/registry/new-york-v4/ui/bubble-chart.tsx",
@@ -712,6 +770,11 @@ export const Index: Record<string, any> = {
       },
       {
         path: "src/registry/new-york-v4/ui/chart-interaction.ts",
+        type: "registry:ui",
+        target: "",
+      },
+      {
+        path: "src/registry/new-york-v4/ui/chart-motion.ts",
         type: "registry:ui",
         target: "",
       },
@@ -729,7 +792,11 @@ export const Index: Record<string, any> = {
   "activity-waveform-chart": {
     name: "activity-waveform-chart",
     type: "registry:ui",
-    registryDependencies: undefined,
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "src/registry/new-york-v4/ui/activity-waveform-chart.tsx",
@@ -738,6 +805,11 @@ export const Index: Record<string, any> = {
       },
       {
         path: "src/registry/new-york-v4/ui/chart-interaction.ts",
+        type: "registry:ui",
+        target: "",
+      },
+      {
+        path: "src/registry/new-york-v4/ui/chart-motion.ts",
         type: "registry:ui",
         target: "",
       },
@@ -757,7 +829,11 @@ export const Index: Record<string, any> = {
   "performance-waterfall-chart": {
     name: "performance-waterfall-chart",
     type: "registry:ui",
-    registryDependencies: undefined,
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "src/registry/new-york-v4/ui/performance-waterfall-chart.tsx",
@@ -766,6 +842,11 @@ export const Index: Record<string, any> = {
       },
       {
         path: "src/registry/new-york-v4/ui/chart-interaction.ts",
+        type: "registry:ui",
+        target: "",
+      },
+      {
+        path: "src/registry/new-york-v4/ui/chart-motion.ts",
         type: "registry:ui",
         target: "",
       },
@@ -785,7 +866,11 @@ export const Index: Record<string, any> = {
   "threshold-band-chart": {
     name: "threshold-band-chart",
     type: "registry:ui",
-    registryDependencies: undefined,
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "src/registry/new-york-v4/ui/threshold-band-chart.tsx",
@@ -794,6 +879,11 @@ export const Index: Record<string, any> = {
       },
       {
         path: "src/registry/new-york-v4/ui/chart-interaction.ts",
+        type: "registry:ui",
+        target: "",
+      },
+      {
+        path: "src/registry/new-york-v4/ui/chart-motion.ts",
         type: "registry:ui",
         target: "",
       },
@@ -813,7 +903,11 @@ export const Index: Record<string, any> = {
   "impact-priority-matrix": {
     name: "impact-priority-matrix",
     type: "registry:ui",
-    registryDependencies: undefined,
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "src/registry/new-york-v4/ui/impact-priority-matrix.tsx",
@@ -822,6 +916,11 @@ export const Index: Record<string, any> = {
       },
       {
         path: "src/registry/new-york-v4/ui/chart-interaction.ts",
+        type: "registry:ui",
+        target: "",
+      },
+      {
+        path: "src/registry/new-york-v4/ui/chart-motion.ts",
         type: "registry:ui",
         target: "",
       },
@@ -841,7 +940,11 @@ export const Index: Record<string, any> = {
   "resource-treemap-chart": {
     name: "resource-treemap-chart",
     type: "registry:ui",
-    registryDependencies: undefined,
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "src/registry/new-york-v4/ui/resource-treemap-chart.tsx",
@@ -850,6 +953,11 @@ export const Index: Record<string, any> = {
       },
       {
         path: "src/registry/new-york-v4/ui/chart-interaction.ts",
+        type: "registry:ui",
+        target: "",
+      },
+      {
+        path: "src/registry/new-york-v4/ui/chart-motion.ts",
         type: "registry:ui",
         target: "",
       },
@@ -869,7 +977,11 @@ export const Index: Record<string, any> = {
   "score-radar-chart": {
     name: "score-radar-chart",
     type: "registry:ui",
-    registryDependencies: undefined,
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "src/registry/new-york-v4/ui/score-radar-chart.tsx",
@@ -878,6 +990,11 @@ export const Index: Record<string, any> = {
       },
       {
         path: "src/registry/new-york-v4/ui/chart-interaction.ts",
+        type: "registry:ui",
+        target: "",
+      },
+      {
+        path: "src/registry/new-york-v4/ui/chart-motion.ts",
         type: "registry:ui",
         target: "",
       },

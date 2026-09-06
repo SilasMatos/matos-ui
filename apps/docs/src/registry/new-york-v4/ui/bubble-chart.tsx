@@ -10,7 +10,9 @@ import {
 } from "react";
 import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
+import { spring } from "@/registry/new-york-v4/lib/motion-tokens";
 import { useChartInteraction } from "./chart-interaction";
+import { chartAccentTransition, chartStaggerStep } from "./chart-motion";
 
 export const bubbleChartVariants = tv({
   base: "not-prose w-full text-foreground",
@@ -288,7 +290,7 @@ export function BubbleChart({
                   aria-label={`${bubble.label}: ${format(bubble.value)}`}
                   {...getItemProps(bubble.index)}
                   animate={{ opacity: dim ? 0.45 : 1 }}
-                  transition={{ duration: 0.25, ease: "easeOut" }}
+                  transition={chartAccentTransition}
                   style={{ color: bubble.color, cursor: "pointer" }}
                   className="outline-none"
                 >
@@ -310,12 +312,14 @@ export function BubbleChart({
                     initial={motionEnabled ? { scale: 0, opacity: 0 } : false}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{
-                      type: "spring",
-                      stiffness: 220,
-                      damping: 18,
-                      delay: motionDelay + bubble.index * 0.08,
+                      ...spring.moderate,
+                      delay: motionDelay + bubble.index * chartStaggerStep,
                     }}
-                    whileHover={motionEnabled ? { scale: 1.015 } : undefined}
+                    whileHover={
+                      motionEnabled
+                        ? { scale: 1.015, transition: chartAccentTransition }
+                        : undefined
+                    }
                     style={{ transformOrigin: `${bubble.cx}px ${bubble.cy}px` }}
                   >
                     <g>
@@ -365,7 +369,7 @@ export function BubbleChart({
                   }
                   animate={{ opacity: 1, y: tooltipY, scale: 1 }}
                   exit={{ opacity: 0, y: tooltipY + 4, scale: 0.97 }}
-                  transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+                  transition={spring.fast}
                   style={{ transformOrigin: `${tooltipX}px ${tooltipY}px` }}
                 >
                   <rect

@@ -4,7 +4,13 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { type ComponentProps, type ReactNode, useId, useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
+import { duration, spring } from "@/registry/new-york-v4/lib/motion-tokens";
 import { useChartInteraction } from "./chart-interaction";
+import {
+  chartAccentTransition,
+  chartDraw,
+  chartStaggerStep,
+} from "./chart-motion";
 
 export const thresholdBandChartVariants = tv({
   base: "not-prose w-full text-foreground",
@@ -214,9 +220,8 @@ export function ThresholdBandChart({
                       width: ((band.end - band.start) / safeTotal) * bandAreaW,
                     }}
                     transition={{
-                      delay: motionDelay + bi * 0.1,
-                      duration: 0.64,
-                      ease: [0.16, 1, 0.3, 1],
+                      ...chartDraw(0.64),
+                      delay: motionDelay + bi * chartStaggerStep,
                     }}
                   />
                 </clipPath>
@@ -287,7 +292,7 @@ export function ThresholdBandChart({
                           ? 0.45
                           : 0.3,
                     }}
-                    transition={{ duration: 0.22 }}
+                    transition={chartAccentTransition}
                   />
                   {/* Band label above */}
                   <motion.text
@@ -302,8 +307,8 @@ export function ThresholdBandChart({
                     }
                     animate={{ opacity: isCurrent ? 1 : 0.6, y: bandY - 10 }}
                     transition={{
-                      delay: motionDelay + bi * 0.1 + 0.3,
-                      duration: 0.28,
+                      ...chartAccentTransition,
+                      delay: motionDelay + bi * chartStaggerStep + 0.3,
                     }}
                   >
                     {band.label}
@@ -334,12 +339,11 @@ export function ThresholdBandChart({
               }
               animate={{ x: markerX - 1, opacity: 1 }}
               transition={{
-                x: {
+                x: { ...chartDraw(0.9), delay: motionDelay + 0.5 },
+                opacity: {
                   delay: motionDelay + 0.5,
-                  duration: 0.9,
-                  ease: [0.16, 1, 0.3, 1],
+                  duration: duration.moderate,
                 },
-                opacity: { delay: motionDelay + 0.5, duration: 0.32 },
               }}
             >
               {/* Vertical line */}
@@ -366,7 +370,7 @@ export function ThresholdBandChart({
                 fill="var(--foreground)"
                 className="text-[12.5px] font-semibold tabular-nums"
                 animate={{ opacity: activeBand ? 0 : 1 }}
-                transition={{ duration: 0.14 }}
+                transition={{ duration: duration.fast }}
               >
                 {fmt(safeValue)}
               </motion.text>
@@ -397,7 +401,7 @@ export function ThresholdBandChart({
                     y: tooltipY + 3,
                     scale: 0.97,
                   }}
-                  transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
+                  transition={spring.fast}
                 >
                   <path
                     d={`M ${tooltipArrowX - 6} 0 L ${tooltipArrowX} -7 L ${tooltipArrowX + 6} 0 Z`}

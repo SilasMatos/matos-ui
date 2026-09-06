@@ -477,6 +477,11 @@
         "tailwind-merge",
         "tailwind-variants"
       ],
+      "registryDependencies": [
+        "motion-tokens",
+        "surface-classes",
+        "surface-context"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/animated-area-chart.tsx",
@@ -484,6 +489,10 @@
         },
         {
           "path": "src/registry/new-york-v4/ui/chart-interaction.ts",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/registry/new-york-v4/ui/chart-motion.ts",
           "type": "registry:ui"
         }
       ]
@@ -497,6 +506,11 @@
         "tailwind-merge",
         "tailwind-variants"
       ],
+      "registryDependencies": [
+        "motion-tokens",
+        "surface-classes",
+        "surface-context"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/allocation-performance-chart.tsx",
@@ -504,6 +518,10 @@
         },
         {
           "path": "src/registry/new-york-v4/ui/chart-interaction.ts",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/registry/new-york-v4/ui/chart-motion.ts",
           "type": "registry:ui"
         }
       ]
@@ -518,6 +536,11 @@
         "tailwind-merge",
         "tailwind-variants"
       ],
+      "registryDependencies": [
+        "motion-tokens",
+        "surface-classes",
+        "surface-context"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/sparkline-card.tsx",
@@ -526,6 +549,10 @@
         {
           "path": "src/registry/new-york-v4/ui/chart-interaction.ts",
           "type": "registry:ui"
+        },
+        {
+          "path": "src/registry/new-york-v4/ui/chart-motion.ts",
+          "type": "registry:ui"
         }
       ]
     },
@@ -533,6 +560,11 @@
       "name": "signal-flow-chart",
       "type": "registry:ui",
       "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "registryDependencies": [
+        "motion-tokens",
+        "surface-classes",
+        "surface-context"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/signal-flow-chart.tsx",
@@ -541,6 +573,10 @@
         {
           "path": "src/registry/new-york-v4/ui/chart-interaction.ts",
           "type": "registry:ui"
+        },
+        {
+          "path": "src/registry/new-york-v4/ui/chart-motion.ts",
+          "type": "registry:ui"
         }
       ]
     },
@@ -548,6 +584,11 @@
       "name": "activity-heatmap-chart",
       "type": "registry:ui",
       "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "registryDependencies": [
+        "motion-tokens",
+        "surface-classes",
+        "surface-context"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/activity-heatmap-chart.tsx",
@@ -556,6 +597,10 @@
         {
           "path": "src/registry/new-york-v4/ui/chart-interaction.ts",
           "type": "registry:ui"
+        },
+        {
+          "path": "src/registry/new-york-v4/ui/chart-motion.ts",
+          "type": "registry:ui"
         }
       ]
     },
@@ -563,6 +608,11 @@
       "name": "candlestick-chart",
       "type": "registry:ui",
       "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "registryDependencies": [
+        "motion-tokens",
+        "surface-classes",
+        "surface-context"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/candlestick-chart.tsx",
@@ -571,6 +621,10 @@
         {
           "path": "src/registry/new-york-v4/ui/chart-interaction.ts",
           "type": "registry:ui"
+        },
+        {
+          "path": "src/registry/new-york-v4/ui/chart-motion.ts",
+          "type": "registry:ui"
         }
       ]
     },
@@ -578,6 +632,11 @@
       "name": "bubble-chart",
       "type": "registry:ui",
       "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "registryDependencies": [
+        "motion-tokens",
+        "surface-classes",
+        "surface-context"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/bubble-chart.tsx",
@@ -586,6 +645,10 @@
         {
           "path": "src/registry/new-york-v4/ui/chart-interaction.ts",
           "type": "registry:ui"
+        },
+        {
+          "path": "src/registry/new-york-v4/ui/chart-motion.ts",
+          "type": "registry:ui"
         }
       ]
     },
@@ -593,6 +656,11 @@
       "name": "activity-waveform-chart",
       "type": "registry:ui",
       "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "registryDependencies": [
+        "motion-tokens",
+        "surface-classes",
+        "surface-context"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/activity-waveform-chart.tsx",
@@ -601,6 +669,10 @@
         {
           "path": "src/registry/new-york-v4/ui/chart-interaction.ts",
           "type": "registry:ui"
+        },
+        {
+          "path": "src/registry/new-york-v4/ui/chart-motion.ts",
+          "type": "registry:ui"
         }
       ]
     },
@@ -608,6 +680,11 @@
       "name": "performance-waterfall-chart",
       "type": "registry:ui",
       "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "registryDependencies": [
+        "motion-tokens",
+        "surface-classes",
+        "surface-context"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/performance-waterfall-chart.tsx",
@@ -616,6 +693,10 @@
         {
           "path": "src/registry/new-york-v4/ui/chart-interaction.ts",
           "type": "registry:ui"
+        },
+        {
+          "path": "src/registry/new-york-v4/ui/chart-motion.ts",
+          "type": "registry:ui"
         }
       ]
     },
@@ -623,6 +704,11 @@
       "name": "threshold-band-chart",
       "type": "registry:ui",
       "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "registryDependencies": [
+        "motion-tokens",
+        "surface-classes",
+        "surface-context"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/threshold-band-chart.tsx",
@@ -631,6 +717,10 @@
         {
           "path": "src/registry/new-york-v4/ui/chart-interaction.ts",
           "type": "registry:ui"
+        },
+        {
+          "path": "src/registry/new-york-v4/ui/chart-motion.ts",
+          "type": "registry:ui"
         }
       ]
     },
@@ -638,6 +728,11 @@
       "name": "impact-priority-matrix",
       "type": "registry:ui",
       "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "registryDependencies": [
+        "motion-tokens",
+        "surface-classes",
+        "surface-context"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/impact-priority-matrix.tsx",
@@ -646,6 +741,10 @@
         {
           "path": "src/registry/new-york-v4/ui/chart-interaction.ts",
           "type": "registry:ui"
+        },
+        {
+          "path": "src/registry/new-york-v4/ui/chart-motion.ts",
+          "type": "registry:ui"
         }
       ]
     },
@@ -653,6 +752,11 @@
       "name": "resource-treemap-chart",
       "type": "registry:ui",
       "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "registryDependencies": [
+        "motion-tokens",
+        "surface-classes",
+        "surface-context"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/resource-treemap-chart.tsx",
@@ -661,6 +765,10 @@
         {
           "path": "src/registry/new-york-v4/ui/chart-interaction.ts",
           "type": "registry:ui"
+        },
+        {
+          "path": "src/registry/new-york-v4/ui/chart-motion.ts",
+          "type": "registry:ui"
         }
       ]
     },
@@ -668,6 +776,11 @@
       "name": "score-radar-chart",
       "type": "registry:ui",
       "dependencies": ["framer-motion", "tailwind-merge", "tailwind-variants"],
+      "registryDependencies": [
+        "motion-tokens",
+        "surface-classes",
+        "surface-context"
+      ],
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/score-radar-chart.tsx",
@@ -675,6 +788,10 @@
         },
         {
           "path": "src/registry/new-york-v4/ui/chart-interaction.ts",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/registry/new-york-v4/ui/chart-motion.ts",
           "type": "registry:ui"
         }
       ]
