@@ -3,6 +3,11 @@
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
+import {
+  CURSOR_TRAVEL_MS,
+  GuidedCursor,
+  useGuidedCursor,
+} from "@/components/guided-cursor";
 import { useAmbientLoop } from "@/hooks/use-ambient-loop";
 import { cn } from "@/lib/utils";
 import { spring } from "@/registry/new-york-v4/lib/motion-tokens";
@@ -21,7 +26,9 @@ import { Elevated } from "@/registry/new-york-v4/ui/elevated";
  */
 const LEVELS = [3, 4, 5, 6] as const;
 
-/** Long enough to read the label that changes with it. */
+/** How long a rung stays lit after the pointer clicks it, before the pointer
+ *  sets off for the next one. Long enough to read the label that changes with
+ *  it. */
 const DWELL_MS = 1200;
 
 /**
@@ -57,12 +64,21 @@ const RUNG_SHAPE = [
   "size-16 rounded-lg",
 ];
 
-function Rung({ depth, activeLevel }: { depth: number; activeLevel: number }) {
+function Rung({
+  depth,
+  activeLevel,
+  registerRung,
+}: {
+  depth: number;
+  activeLevel: number;
+  registerRung: (depth: number, el: HTMLDivElement | null) => void;
+}) {
   const level = LEVELS[depth];
   const isCore = depth === LEVELS.length - 1;
 
   return (
     <Elevated
+      ref={(el) => registerRung(depth, el)}
       offset={1}
       className={cn(
         "relative flex items-center justify-center",
@@ -82,7 +98,11 @@ function Rung({ depth, activeLevel }: { depth: number; activeLevel: number }) {
       />
       {!isCore && (
         <div className="relative">
-          <Rung depth={depth + 1} activeLevel={activeLevel} />
+          <Rung
+            depth={depth + 1}
+            activeLevel={activeLevel}
+            registerRung={registerRung}
+          />
         </div>
       )}
     </Elevated>
@@ -91,26 +111,53 @@ function Rung({ depth, activeLevel }: { depth: number; activeLevel: number }) {
 
 /**
  * Four real surfaces, one at a time, in a slow loop — with the token that names
- * the lit rung changing under it.
+ * the lit rung changing under it, and a scripted pointer stepping the highlight
+ * inward by clicking each rung.
  *
  * The point is the pairing rather than either half: a reader who watches the
- * highlight step inward while `surface-3` becomes `surface-4` has learned what
- * the token means without being told, which a paragraph about nested elevation
- * cannot do at this length.
+ * pointer click `surface-3`, then `surface-4` one step further in, has learned
+ * what the token means without being told, which a paragraph about nested
+ * elevation cannot do at this length.
  */
 export function SurfaceLadderDemo() {
   const stageRef = useRef<HTMLDivElement>(null);
   const { cycling, shouldReduceMotion } = useAmbientLoop(stageRef);
   const [index, setIndex] = useState(0);
+  const rungRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const indexRef = useRef(0);
+
+  const cursor = useGuidedCursor(stageRef, { active: cycling });
+  const { moveTo, click, reset } = cursor;
 
   useEffect(() => {
-    if (!cycling) return;
-    const id = setInterval(
-      () => setIndex((current) => (current + 1) % LEVELS.length),
-      DWELL_MS,
-    );
-    return () => clearInterval(id);
-  }, [cycling]);
+    if (!cycling) {
+      reset();
+      return;
+    }
+
+    let alive = true;
+    let timer: ReturnType<typeof setTimeout>;
+
+    // Resume from wherever the walk had got to, so scrolling the section out
+    // and back does not snap the highlight to the top rung.
+    const step = (k: number) => {
+      if (!alive) return;
+      indexRef.current = k;
+      moveTo(rungRefs.current[k], 700);
+      timer = setTimeout(() => {
+        if (!alive) return;
+        click();
+        setIndex(k);
+        timer = setTimeout(() => step((k + 1) % LEVELS.length), DWELL_MS);
+      }, CURSOR_TRAVEL_MS);
+    };
+
+    step(indexRef.current);
+    return () => {
+      alive = false;
+      clearTimeout(timer);
+    };
+  }, [cycling, moveTo, click, reset]);
 
   // Derived rather than pushed into state on a reduced-motion effect: this way
   // flipping the OS setting while the loop is mid-walk parks it immediately,
@@ -120,10 +167,17 @@ export function SurfaceLadderDemo() {
   return (
     <div
       ref={stageRef}
-      className="flex flex-col items-center gap-4"
+      className="relative flex flex-col items-center gap-4"
       aria-hidden="true"
+      {...(shouldReduceMotion ? {} : cursor.bind)}
     >
-      <Rung depth={0} activeLevel={activeLevel} />
+      <Rung
+        depth={0}
+        activeLevel={activeLevel}
+        registerRung={(depth, el) => {
+          rungRefs.current[depth] = el;
+        }}
+      />
 
       {/* Keyed, so each token arrives rather than cross-fading with the one
        *  before it — at 1.2s apart a cross-fade would be over long before the
@@ -138,6 +192,15 @@ export function SurfaceLadderDemo() {
       >
         surface-{activeLevel}
       </motion.span>
+
+      {!shouldReduceMotion && (
+        <GuidedCursor
+          point={cursor.point}
+          clicking={cursor.clicking}
+          clickId={cursor.clickId}
+          visible={cursor.visible}
+        />
+      )}
     </div>
   );
 }

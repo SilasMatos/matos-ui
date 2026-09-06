@@ -1,13 +1,11 @@
 "use client";
 
 import { motion, type Variants } from "framer-motion";
-import { ArrowUpRight, Terminal } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
-import { CopyButton } from "@/components/copy-button";
 import { aiLogos } from "@/components/icons/ai-logos";
-
-const MCP_COMMAND = "claude mcp add matos-ui -- npx -y @matos-ui/mcp@latest";
+import { McpInstallClaude } from "@/components/mcp-install";
 
 const sectionVariants: Variants = {
   hidden: { opacity: 0 },
@@ -111,24 +109,8 @@ export function McpSection() {
                 {t("subtitle")}
               </motion.p>
 
-              <motion.div
-                variants={itemVariants}
-                className="mt-8 flex flex-wrap items-center gap-3"
-              >
-                <div className="flex items-center gap-2 rounded-lg border border-border/60 bg-muted/40 px-3.5 py-2.5 font-mono text-xs text-foreground/90 sm:text-sm">
-                  <Terminal
-                    className="size-3.5 shrink-0 text-muted-foreground"
-                    aria-hidden="true"
-                  />
-                  <code className="overflow-x-auto whitespace-nowrap">
-                    {MCP_COMMAND}
-                  </code>
-                  <CopyButton
-                    value={MCP_COMMAND}
-                    className="ml-1 shrink-0"
-                    tooltip={t("copy")}
-                  />
-                </div>
+              <motion.div variants={itemVariants} className="mt-8">
+                <McpInstallClaude />
               </motion.div>
 
               <motion.div variants={itemVariants} className="mt-5">

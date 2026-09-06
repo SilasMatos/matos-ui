@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "progress-ring-demo",
+  "registryDependencies": [
+    "progress-ring",
+    "elevated",
+    "button"
+  ],
+  "files": [
+    {
+      "path": "components/matos-ui/examples/progress-ring-demo.tsx",
+      "content": "\"use client\";\n\nimport { Minus, Plus, RotateCcw } from \"lucide-react\";\nimport { useState } from \"react\";\nimport { Button } from \"@/components/matos-ui/button\";\nimport { Elevated } from \"@/components/matos-ui/elevated\";\nimport { ProgressRing } from \"@/components/matos-ui/progress-ring\";\n\nconst PRESETS = [\n  { label: \"Storage\", value: 41, tier: \"moderate\" as const },\n  { label: \"Coverage\", value: 78, tier: \"slow\" as const },\n  { label: \"Onboarding\", value: 100, tier: \"playful\" as const },\n];\n\nexport default function ProgressRingDemo() {\n  const [value, setValue] = useState(64);\n  const step = (delta: number) =>\n    setValue((v) => Math.max(0, Math.min(100, v + delta)));\n\n  return (\n    <div className=\"mx-auto flex w-full max-w-[420px] flex-col items-center gap-6 py-8\">\n      <Elevated\n        offset={1}\n        className=\"flex w-full flex-col items-center gap-4 rounded-2xl p-6\"\n      >\n        <ProgressRing size=\"lg\" value={value} aria-label=\"Monthly usage\" />\n\n        <div className=\"flex items-center gap-1.5\">\n          <Button\n            size=\"icon-sm\"\n            variant=\"outline\"\n            onClick={() => step(-8)}\n            aria-label=\"Decrease\"\n          >\n            <Minus />\n          </Button>\n          <Button\n            size=\"icon-sm\"\n            variant=\"outline\"\n            onClick={() => step(8)}\n            aria-label=\"Increase\"\n          >\n            <Plus />\n          </Button>\n          <Button\n            size=\"icon-sm\"\n            variant=\"ghost\"\n            onClick={() => setValue(0)}\n            aria-label=\"Reset\"\n          >\n            <RotateCcw />\n          </Button>\n        </div>\n      </Elevated>\n\n      <div className=\"flex w-full items-start justify-around gap-3\">\n        {PRESETS.map((preset) => (\n          <div key={preset.label} className=\"flex flex-col items-center gap-2\">\n            <ProgressRing\n              size=\"md\"\n              value={preset.value}\n              tier={preset.tier}\n              aria-label={preset.label}\n            />\n            <span className=\"text-muted-foreground text-xs\">\n              {preset.label}\n            </span>\n          </div>\n        ))}\n      </div>\n    </div>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/progress-ring-demo.tsx"
+    }
+  ],
+  "type": "registry:example"
+}

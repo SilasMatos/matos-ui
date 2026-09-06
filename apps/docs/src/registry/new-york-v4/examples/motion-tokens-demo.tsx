@@ -26,6 +26,11 @@ const TIERS: {
     use: "Toggles, checkboxes, a single-step surface lift.",
   },
   {
+    name: "snappy",
+    tier: spring.snappy,
+    use: "Zero-latency follow — a dragged sheet, a magnetic button, anything tracking the cursor. No bounce, shorter than fast.",
+  },
+  {
     name: "moderate",
     tier: spring.moderate,
     use: "Dropdowns, tabs, drawers — decelerates into place, no visible overshoot.",
@@ -34,6 +39,11 @@ const TIERS: {
     name: "slow",
     tier: spring.slow,
     use: "Dialogs and sheets, travelling far enough to earn a little overshoot.",
+  },
+  {
+    name: "gentle",
+    tier: spring.gentle,
+    use: "Ambient, unhurried motion — a backdrop fading up, a section easing in on scroll. Longer and calmer than slow, barely any bounce.",
   },
   {
     name: "morph",
@@ -183,9 +193,9 @@ export default function MotionTokensDemo() {
     <div className="w-full max-w-2xl space-y-4">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <p className="font-medium text-foreground text-sm">Five tiers</p>
+          <p className="font-medium text-foreground text-sm">Seven tiers</p>
           <p className="text-muted-foreground text-xs">
-            Same distance, five characters. Watch them land.
+            Same distance, seven characters. Watch them land.
           </p>
         </div>
         <Button variant="outline" size="sm" onClick={replay}>

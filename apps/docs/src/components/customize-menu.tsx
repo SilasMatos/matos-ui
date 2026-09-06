@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, Check, SlidersHorizontal } from "lucide-react";
+import { ArrowRight, Check, SwatchBook } from "lucide-react";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { useThemeCustomizer } from "@/hooks/use-theme-customizer";
 import { Link } from "@/i18n/navigation";
@@ -58,7 +58,7 @@ export function CustomizeMenu() {
         className="size-8"
         onClick={() => setOpen((value) => !value)}
       >
-        <SlidersHorizontal className="size-4" aria-hidden="true" />
+        <SwatchBook className="size-4" aria-hidden="true" />
       </Button>
 
       {mounted ? (

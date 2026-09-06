@@ -104,6 +104,48 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
   },
+  "progress-ring": {
+    name: "progress-ring",
+    type: "registry:ui",
+    registryDependencies: ["motion-tokens"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/progress-ring.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/ui/progress-ring.tsx");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "avatar-group": {
+    name: "avatar-group",
+    type: "registry:ui",
+    registryDependencies: ["motion-tokens"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/avatar-group.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/ui/avatar-group.tsx");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
   "floating-action-menu": {
     name: "floating-action-menu",
     type: "registry:ui",
@@ -1495,6 +1537,52 @@ export const Index: Record<string, any> = {
     component: React.lazy(async () => {
       const mod = await import(
         "@/registry/new-york-v4/examples/physics-counter-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "progress-ring-demo": {
+    name: "progress-ring-demo",
+    type: "registry:example",
+    registryDependencies: ["progress-ring", "elevated", "button"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/progress-ring-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/progress-ring-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "avatar-group-demo": {
+    name: "avatar-group-demo",
+    type: "registry:example",
+    registryDependencies: ["avatar-group", "elevated"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/avatar-group-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/avatar-group-demo.tsx"
       );
       const exportName =
         Object.keys(mod).find(

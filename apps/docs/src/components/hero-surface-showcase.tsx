@@ -6,13 +6,22 @@ import {
   useInView,
   useReducedMotion,
 } from "framer-motion";
-import { ArrowRight, ArrowUp, SearchIcon } from "lucide-react";
+import { ArrowRight, Check, SearchIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 
+import {
+  CURSOR_TRAVEL_MS,
+  GuidedCursor,
+  useGuidedCursor,
+} from "@/components/guided-cursor";
 import { usePageVisible } from "@/hooks/use-ambient-loop";
 import { cn } from "@/lib/utils";
-import { spring } from "@/registry/new-york-v4/lib/motion-tokens";
+import {
+  liftVariants,
+  spring,
+  staggerContainer,
+} from "@/registry/new-york-v4/lib/motion-tokens";
 import {
   SURFACE_SHADOW,
   surfaceClasses,
@@ -20,49 +29,54 @@ import {
 import { SurfaceProvider } from "@/registry/new-york-v4/lib/surface-context";
 import { Elevated } from "@/registry/new-york-v4/ui/elevated";
 
-type ShowcaseState = "surface" | "input" | "metric" | "avatar" | "button";
+type ShowcaseState = "surface" | "input" | "popover" | "dialog";
 
 /**
- * Ordered so no two neighbours share a silhouette and no single morph has to
- * cross the whole range at once: square → wide pill → portrait card → small
- * circle → short pill → back to square. The circle sits between the two most
- * extreme shapes deliberately, since a portrait card collapsing straight into
- * a landscape pill is the one pair that reads as a glitch rather than a change.
+ * Four identities, the two foundations twice each. `surface` and `popover` are
+ * the elevation ladder: a passive nested stack, then that same stack opened as
+ * a menu on an `Elevated` at offset 2. `input` and `dialog` are the copy and
+ * the motion tokens: a field at rest, then an `Elevated` at offset 4 landing
+ * its content on the `slow` tier. Between `popover` (surface-3) and `dialog`
+ * (surface-5) the rung of the ladder is meant to be visible.
+ *
+ * Order is chosen for area, not silhouette: the sizes are roughly
+ * input (~17k px²) < surface (~26k) < popover (~34k) < dialog (~51k), and the
+ * cycle runs surface → input → popover → dialog → surface so the smallest state
+ * always sits between two larger ones and the largest between two smaller ones.
+ * That keeps every morph to a partial step — the widest jump is input → popover
+ * at ~2×, against a full range of ~3× — and never lets one run the whole range
+ * at once, which is what a widest-to-narrowest wrap used to do and what read as
+ * the surface snapping rather than morphing. popover → dialog is a width-only
+ * morph: the two share a height, and only the box getting wider distinguishes
+ * the menu from the dialog it could sit inside.
  */
 const NEXT_STATE: Record<ShowcaseState, ShowcaseState> = {
   surface: "input",
-  input: "metric",
-  metric: "avatar",
-  avatar: "button",
-  button: "surface",
+  input: "popover",
+  popover: "dialog",
+  dialog: "surface",
 };
 
 /**
  * Only width and height change between states.
  *
- * `rounded-3xl` resolves to 28.4px here, which is at or above half the height
- * of the input (56px), the avatar (56px) and the button (48px), so the browser
- * clamps each of those into a true pill — or, at w = h, a true circle — on its
- * own. The radius therefore never has to interpolate across any of the five
- * shapes, and an interpolating radius is the usual reason a shape morph
+ * `rounded-3xl` resolves to ~28px here, at or above half the input's 56px
+ * height, so the browser clamps that one state into a true pill on its own.
+ * Every other state is tall enough that the same single radius token reads as a
+ * rounded rectangle. The radius therefore never has to interpolate across the
+ * four shapes, and an interpolating radius is the usual reason a shape morph
  * develops a visible kink in its corners halfway through.
  *
- * The avatar is the state that proves the point: same single radius token as
- * the square surface, and it lands as a circle purely because width caught up
- * with height.
+ * Heights stay within one frame: `popover` and `dialog` are the tallest at
+ * 176px, under the 192px fixed frame below — re-check that when a state's
+ * height changes.
  */
 const STATE_SHAPE: Record<ShowcaseState, string> = {
-  surface: "size-28",
-  input: "h-14 w-[17rem] sm:w-80",
-  metric: "h-36 w-24",
-  avatar: "size-14",
-  button: "h-12 w-44",
+  surface: "size-40",
+  input: "h-14 w-[19rem] sm:w-80",
+  popover: "h-44 w-48",
+  dialog: "h-44 w-[18rem] sm:w-80",
 };
-
-/** Decorative, and deliberately free of a decimal separator so neither locale
- *  needs its own copy of a number nobody is meant to read as data. */
-const METRIC_VALUE = "98%";
-const METRIC_TREND = "+12%";
 
 /** How long each identity holds before the next morph. Long enough that the
  *  surface reads as *being* a thing rather than cycling through things.
@@ -76,39 +90,22 @@ const METRIC_TREND = "+12%";
  *  this constant exists to prevent, arrived at by changing a different one. */
 const DWELL_MS = 3200;
 
-/** The simulated press in the button state: nobody's cursor is on a
- *  decorative hero element, so the tactile half of the affordance has to be
- *  performed. Placed past the midpoint of the dwell so it lands well after
- *  the label has settled and well before the next morph starts — which is why
- *  it moved with DWELL_MS rather than staying where it was. */
-const PRESS_AT_MS = 1700;
-/** The hold is deliberately longer than the travel: at equal values the
- *  surface would still be on its way down when the release began and never
- *  actually reach PRESS_SCALE, which reads as a twitch rather than a press. */
-const PRESS_HOLD_MS = 150;
-const PRESS_TRAVEL_S = 0.12;
-const PRESS_SCALE = 0.97;
+/** The quick ease-out used when the wind-up releases back to rest. */
+const REST_TRAVEL_S = 0.12;
 
 /**
- * Anticipation: the same trick as the press, generalised from one state to all
- * five. The surface draws in a little over the last beat of every dwell, so the
- * morph is announced rather than sprung — the shape stops being something that
- * happens *to* the surface and starts being something it does.
+ * Anticipation: the surface draws in a little over the last beat of every dwell,
+ * so the morph is announced rather than sprung — the shape stops being something
+ * that happens *to* the surface and starts being something it does.
  *
- * 0.985 against the press's 0.97: this one has to be felt without being seen.
- * A wind-up as deep as a press would read as a second press, and the button
- * state would then appear to be pressed twice per cycle.
- *
- * The two gestures must not overlap, and at these values they cannot: the press
- * occupies 1700–1850ms of the dwell and the wind-up 2850–3200ms, a clear second
- * apart. Shortening DWELL_MS without moving PRESS_AT_MS with it is the change
- * that would collide them — the guard is in the scale selection below, which
- * lets the press win.
+ * 0.985 is deep enough to be felt and shallow enough not to be seen: a wind-up
+ * any deeper would read as a press, which is the wrong cue right before the
+ * surface lands on the `dialog` state, whose action row already looks pressable.
  */
 const ANTICIPATION_LEAD_MS = 350;
 const ANTICIPATION_AT_MS = DWELL_MS - ANTICIPATION_LEAD_MS;
 const ANTICIPATION_SCALE = 0.985;
-/** Fills the whole lead rather than snapping and waiting: at the press's 0.12s
+/** Fills the whole lead rather than snapping and waiting: at a 0.12s travel
  *  the surface would arrive at ANTICIPATION_SCALE with 230ms still to run and
  *  simply sit there, which is a smaller box, not a wind-up. `easeIn` for the
  *  same reason — the draw-in should accelerate into the morph, so the morph
@@ -153,8 +150,8 @@ const CONTENT_IN_S = 0.2;
  * state's width on the very first frame and Framer scales it back so it *looks*
  * unchanged. So for the length of the exit the label was living inside a box
  * that had already shrunk — and a label in normal flow does what any label does
- * when it stops fitting. Leaving the button state, "Get started" broke into two
- * lines and dragged its arrow down with it, visibly, on every single cycle.
+ * when it stops fitting. Leaving the `dialog` state, its action row wrapped and
+ * dragged the arrow down with it, visibly, on every single cycle.
  *
  * The content therefore leaves *before* the shape moves rather than with it:
  * the fade is armed a beat early in the dwell and is over by the time the state
@@ -187,6 +184,24 @@ const CONTENT_IN_SCALE = 0.96;
 const CARET_DELAY_S = CONTENT_IN_DELAY_S + 0.2;
 
 /**
+ * When the guided pointer may start operating a state: the content mounts
+ * `CONTENT_IN_DELAY_S` after the state flips (it waits out the morph) and
+ * fades over `CONTENT_IN_S`, so before that sum there is nothing on screen to
+ * aim at. Derived, not typed, for the same reason every other delay in this
+ * file is — retuning `spring.morph` moves this with it.
+ */
+const CURSOR_START_MS =
+  Math.round((CONTENT_IN_DELAY_S + CONTENT_IN_S) * 1000) + 60;
+/** Beat between pointer hops while it scans the menu rows before choosing one. */
+const CURSOR_SCAN_MS = 360;
+/** Beat between the pointer brushing the dismiss control and the primary action. */
+const CURSOR_HOP_MS = 500;
+/** The menu row the pointer lands on each time the `popover` state comes round;
+ *  it is re-selected from a different default so the choice is a visible move. */
+const CURSOR_MENU_PICK = 0;
+const CURSOR_MENU_REST = 2;
+
+/**
  * The input state's ghost tone, carrying both the search icon and the
  * placeholder — they inherit it together, exactly as the real search field in
  * blocks/sidebar-surface-01 puts its icon and its placeholder on one token.
@@ -194,10 +209,10 @@ const CARET_DELAY_S = CONTENT_IN_DELAY_S + 0.2;
  * That token is `muted-foreground`, and it is the right answer *in a field*,
  * where a border, a label and a focus ring carry the field's identity next to
  * the text. Here the icon and the ghost text are the entire state, and against
- * --surface-1 they were landing at 6.8:1 while the other four states' content
- * sits at 12.3:1 (the avatar initial) to 16.9:1 (the button label, the metric
- * value). Five states of one surface should not imply that one of them is
- * subordinate to the rest; that gap was reading as exactly that.
+ * --surface-1 they were landing near 6.8:1 while the other three states' content
+ * — the menu rows, the dialog title and body — sits close to full foreground.
+ * Four states of one surface should not imply that one of them is subordinate
+ * to the rest; that gap was reading as exactly that.
  *
  * /70 lifts it to 8.7:1 in dark and 5.6:1 in light — still visibly a ghost,
  * still well short of the full-foreground states, but legible in the same
@@ -236,14 +251,17 @@ const ROOT_LEVEL = 1;
 function HeroLadder({
   steps,
   shouldReduceMotion,
+  registerTarget,
 }: {
   steps: number;
   shouldReduceMotion: boolean;
+  registerTarget?: (key: string, el: HTMLElement | null) => void;
 }) {
   if (steps <= 0) {
     return (
       <motion.div
-        className="size-7 rounded-lg bg-surface-4 shadow-surface-4"
+        ref={(el) => registerTarget?.("core", el)}
+        className="size-8 rounded-lg bg-surface-4 shadow-surface-4"
         animate={
           shouldReduceMotion
             ? undefined
@@ -257,9 +275,13 @@ function HeroLadder({
   return (
     <Elevated
       offset={1}
-      className="flex items-center justify-center rounded-2xl p-2.5"
+      className="flex items-center justify-center rounded-2xl p-3.5"
     >
-      <HeroLadder steps={steps - 1} shouldReduceMotion={shouldReduceMotion} />
+      <HeroLadder
+        steps={steps - 1}
+        shouldReduceMotion={shouldReduceMotion}
+        registerTarget={registerTarget}
+      />
     </Elevated>
   );
 }
@@ -283,35 +305,137 @@ function Caret() {
 }
 
 /**
- * A compressed quote of ui/metric-card.tsx: eyebrow, then the value and its
- * trend badge on an inset panel. That inset panel is a real `Elevated`, not a
- * painted-on rectangle — which is the whole reason this state earns its place
- * in the cycle. It is the ladder from the Surface state, wearing a job.
+ * The `popover` state: the level-1 surface opens a real menu on an `Elevated` at
+ * the conventional offset of 2, so the panel resolves to surface-3 — a visible
+ * rung above the base, and a visible rung below the `dialog` state's surface-5.
+ * It is inset from the morph box rather than full-bleed so that in light mode,
+ * where a rung is carried by shadow rather than fill, `--shadow-3`'s ring and
+ * near drops have room to show against the surface-1 frame instead of being
+ * clipped at the box edge.
  *
- * The trend badge takes the neutral branch of the real TrendBadge
- * (`bg-muted`/`text-muted-foreground`) rather than its positive one: the
- * system stays achromatic, and a hero decoration has no business implying a
- * number went up in a way a colourblind reader would have to take on faith.
+ * The rows are a real `staggerContainer` + `liftVariants(2)` — offset 2 resolves
+ * to the `moderate` tier through `motionForOffset`, so the menu lands with the
+ * exact timing a Matos UI dropdown would. `delayChildren` waits out the morph
+ * so the stagger is seen against a box that has stopped moving.
+ *
+ * The selected row (`bg-accent` + check) and the hovered row (`bg-foreground/6`)
+ * are both driven by the guided pointer: it scans the rows and clicks one, and
+ * the selection lands where it clicked.
  */
-function MetricContent({ label }: { label: string }) {
+function PopoverContent({
+  items,
+  hoveredRow,
+  selectedRow,
+  registerTarget,
+}: {
+  items: string[];
+  hoveredRow: number | null;
+  selectedRow: number;
+  registerTarget: (key: string, el: HTMLElement | null) => void;
+}) {
   return (
-    <div className="flex h-full w-full flex-col gap-1.5 p-2.5">
-      <span className="truncate px-1 pt-0.5 font-medium text-[10px] text-muted-foreground uppercase tracking-widest">
-        {label}
-      </span>
-      <Elevated
-        offset={1}
-        className="flex flex-1 flex-col items-center justify-center gap-1.5 rounded-2xl px-2"
+    <Elevated
+      offset={2}
+      className="absolute inset-2.5 flex flex-col justify-center rounded-2xl p-2"
+    >
+      <motion.ul
+        className="flex w-full flex-col gap-1 text-left"
+        variants={staggerContainer("moderate", CONTENT_IN_DELAY_S)}
+        initial="hidden"
+        animate="visible"
       >
-        <span className="font-semibold text-foreground text-xl leading-none tabular-nums tracking-[-0.03em]">
-          {METRIC_VALUE}
-        </span>
-        <span className="flex items-center gap-0.5 rounded-full bg-muted px-1.5 py-0.5 font-medium text-[11px] text-muted-foreground tabular-nums">
-          <ArrowUp className="size-3 shrink-0" strokeWidth={2.5} />
-          {METRIC_TREND}
-        </span>
-      </Elevated>
-    </div>
+        {items.map((item, index) => (
+          <motion.li
+            key={item}
+            ref={(el) => registerTarget(`row-${index}`, el)}
+            variants={liftVariants(2)}
+            className={cn(
+              "flex items-center justify-between rounded-lg px-3 py-2.5 text-xs transition-colors",
+              index === selectedRow
+                ? "bg-accent font-medium text-accent-foreground"
+                : index === hoveredRow
+                  ? "bg-foreground/[0.06] text-foreground/90"
+                  : "text-foreground/75",
+            )}
+          >
+            {item}
+            {index === selectedRow && <Check className="size-3.5 shrink-0" />}
+          </motion.li>
+        ))}
+      </motion.ul>
+    </Elevated>
+  );
+}
+
+/**
+ * The `dialog` state: the level-1 surface stands a panel up on an `Elevated` at
+ * offset 4 — the conventional dialog offset — so it resolves to surface-5, two
+ * rungs above the `popover` state's surface-3. Same inset from the morph box as
+ * the popover, for the same reason: the light-mode rung is `--shadow-5`, and it
+ * needs frame around it to read.
+ *
+ * `motionForOffset` maps offset 4 to the `slow` tier. Title, body and the
+ * action row ride `staggerContainer("slow")` + `liftVariants(4)`, so the copy
+ * settles at dialog weight. The primary action is painted, not a real button
+ * (the whole showcase is `aria-hidden`); the ghost dismiss keeps the row
+ * reading as a decision rather than a single call to action.
+ */
+function DialogContent({
+  title,
+  body,
+  action,
+  dismiss,
+  registerTarget,
+}: {
+  title: string;
+  body: string;
+  action: string;
+  dismiss: string;
+  registerTarget: (key: string, el: HTMLElement | null) => void;
+}) {
+  return (
+    <Elevated
+      offset={4}
+      className="absolute inset-2.5 flex flex-col rounded-2xl p-4 text-left"
+    >
+      <motion.div
+        className="flex h-full w-full flex-col gap-2"
+        variants={staggerContainer("slow", CONTENT_IN_DELAY_S)}
+        initial="hidden"
+        animate="visible"
+      >
+        <motion.p
+          variants={liftVariants(4)}
+          className="font-display font-semibold text-foreground text-sm"
+        >
+          {title}
+        </motion.p>
+        <motion.p
+          variants={liftVariants(4)}
+          className="flex-1 whitespace-normal text-muted-foreground text-xs leading-relaxed"
+        >
+          {body}
+        </motion.p>
+        <motion.div
+          variants={liftVariants(4)}
+          className="flex items-center justify-end gap-1.5"
+        >
+          <span
+            ref={(el) => registerTarget("dismiss", el)}
+            className="rounded-lg px-2.5 py-1.5 text-muted-foreground text-xs"
+          >
+            {dismiss}
+          </span>
+          <span
+            ref={(el) => registerTarget("action", el)}
+            className="flex items-center gap-1 rounded-lg bg-primary px-2.5 py-1.5 font-medium text-primary-foreground text-xs"
+          >
+            {action}
+            <ArrowRight className="size-3 shrink-0" />
+          </span>
+        </motion.div>
+      </motion.div>
+    </Elevated>
   );
 }
 
@@ -321,18 +445,33 @@ function StateContent({
   shouldReduceMotion,
   searchLabel,
   actionLabel,
-  metricLabel,
+  menuItems,
+  dialogTitle,
+  dialogBody,
+  dismissLabel,
+  hoveredRow,
+  selectedRow,
+  registerTarget,
 }: {
   state: ShowcaseState;
   steps: number;
   shouldReduceMotion: boolean;
   searchLabel: string;
   actionLabel: string;
-  metricLabel: string;
+  menuItems: string[];
+  dialogTitle: string;
+  dialogBody: string;
+  dismissLabel: string;
+  hoveredRow: number | null;
+  selectedRow: number;
+  registerTarget: (key: string, el: HTMLElement | null) => void;
 }) {
   if (state === "input") {
     return (
-      <div className={cn("flex w-full items-center gap-2.5 px-5", INPUT_GHOST)}>
+      <div
+        ref={(el) => registerTarget("field", el)}
+        className={cn("flex w-full items-center gap-2.5 px-5", INPUT_GHOST)}
+      >
         <SearchIcon className="size-4 shrink-0" />
         <span className="flex min-w-0 items-center gap-1 text-sm">
           <span className="truncate">{searchLabel}</span>
@@ -342,51 +481,58 @@ function StateContent({
     );
   }
 
-  if (state === "metric") {
-    return <MetricContent label={metricLabel} />;
-  }
-
-  // The brand initial rather than an icon: at 56px the circle has room for
-  // exactly one glyph, and a letterform reads as an avatar where a generic
-  // icon would just read as a button that lost its label.
-  if (state === "avatar") {
+  if (state === "popover") {
     return (
-      <span className="font-display font-semibold text-foreground/85 text-lg leading-none">
-        M
-      </span>
+      <PopoverContent
+        items={menuItems}
+        hoveredRow={hoveredRow}
+        selectedRow={selectedRow}
+        registerTarget={registerTarget}
+      />
     );
   }
 
-  if (state === "button") {
+  if (state === "dialog") {
     return (
-      <span className="flex items-center gap-2 px-6 font-medium text-foreground text-sm">
-        {actionLabel}
-        <ArrowRight className="size-4 shrink-0" />
-      </span>
+      <DialogContent
+        title={dialogTitle}
+        body={dialogBody}
+        action={actionLabel}
+        dismiss={dismissLabel}
+        registerTarget={registerTarget}
+      />
     );
   }
 
-  return <HeroLadder steps={steps} shouldReduceMotion={shouldReduceMotion} />;
+  return (
+    <HeroLadder
+      steps={steps}
+      shouldReduceMotion={shouldReduceMotion}
+      registerTarget={registerTarget}
+    />
+  );
 }
 
 /**
- * One surface, five identities.
+ * One surface, four identities — the two foundations, twice each.
  *
  * The elevation ladder on its own says "surfaces have depth"; it can't say
- * "and anything can be one". So the same level-1 surface holds its shape long
- * enough to be read as a block, then stretches into a search field, stands up
- * into a metric card, closes into an avatar, flattens into a button, and comes
- * back — and the interpolation between those shapes *is* the demo, which is
- * why the content inside always waits for the box to stop moving before it
- * fades in.
+ * "and anything can be one". So the same level-1 surface holds as a block, then
+ * stretches into a search field, opens a real `Elevated` menu at offset 2
+ * (surface-3), stands up a real `Elevated` dialog at offset 4 (surface-5), and
+ * comes back. The interpolation between those shapes *is* the Surface demo, and
+ * the rung you can see between the menu and the dialog is the ladder itself;
+ * the stagger timing inside each *is* the Motion demo — offset picks the tier,
+ * nothing here names a spring.
  *
- * Five rather than three because three were all rounded boxes of roughly the
- * same family. The portrait card and the circle are what turn the claim from
- * "a surface can be various widths" into "a surface can be any geometry".
+ * A scripted pointer (`useGuidedCursor`) operates each state while it holds —
+ * clicking into the field, scanning the menu and choosing a row, brushing the
+ * dialog's actions — so the surface reads as something being used, not just a
+ * shape cycling. The morph itself stays on the dwell timer; the pointer fills
+ * the dwell. It is not mounted under `prefers-reduced-motion`.
  *
- * `aria-hidden`: the input takes no text, the button does nothing, and the
- * metric is a number nobody measured. It is a picture of components, not
- * components.
+ * `aria-hidden`: the input takes no text, the menu selects nothing, the dialog
+ * dismisses nothing. It is a picture of components, not components.
  */
 export function HeroSurfaceShowcase({ steps = 3 }: { steps?: number }) {
   const t = useTranslations("hero");
@@ -395,10 +541,15 @@ export function HeroSurfaceShowcase({ steps = 3 }: { steps?: number }) {
   const inView = useInView(frameRef);
   const pageVisible = usePageVisible();
   const [state, setState] = useState<ShowcaseState>("surface");
-  const [pressed, setPressed] = useState(false);
   const [anticipating, setAnticipating] = useState(false);
   const [morphing, setMorphing] = useState(false);
   const [contentVisible, setContentVisible] = useState(true);
+  // The guided pointer operates whatever the current state is showing. The
+  // targets are registered by the content as it mounts (a beat after the state
+  // flips — see CURSOR_START_MS), keyed by role.
+  const targets = useRef<Record<string, HTMLElement | null>>({});
+  const [hoveredRow, setHoveredRow] = useState<number | null>(null);
+  const [selectedRow, setSelectedRow] = useState(CURSOR_MENU_REST);
   // The morph flag has to fire on a *change* of state, not on every run of its
   // effect: the effect also re-runs when the cycle pauses and resumes, and on
   // mount, neither of which is a morph. Without this the surface would lift its
@@ -407,6 +558,9 @@ export function HeroSurfaceShowcase({ steps = 3 }: { steps?: number }) {
   const previousState = useRef(state);
 
   const cycling = !shouldReduceMotion && inView && pageVisible;
+
+  const cursor = useGuidedCursor(frameRef, { active: cycling });
+  const { moveTo, click, reset: resetCursor } = cursor;
 
   // Reduced motion parks on Surface — the state that carries the depth idea
   // on its own, and the one this element already was before it learned to
@@ -457,20 +611,6 @@ export function HeroSurfaceShowcase({ steps = 3 }: { steps?: number }) {
   }, [cycling, state]);
 
   useEffect(() => {
-    if (!cycling || state !== "button") {
-      setPressed(false);
-      return;
-    }
-
-    const down = setTimeout(() => setPressed(true), PRESS_AT_MS);
-    const up = setTimeout(() => setPressed(false), PRESS_AT_MS + PRESS_HOLD_MS);
-    return () => {
-      clearTimeout(down);
-      clearTimeout(up);
-    };
-  }, [cycling, state]);
-
-  useEffect(() => {
     const changed = previousState.current !== state;
     previousState.current = state;
 
@@ -484,41 +624,105 @@ export function HeroSurfaceShowcase({ steps = 3 }: { steps?: number }) {
     return () => clearTimeout(timer);
   }, [cycling, state]);
 
+  // The pointer choreography for the current state. It re-runs on every state
+  // change (and on pause/resume), starting only once CURSOR_START_MS has passed
+  // so the content it aims at is mounted. Each branch has to finish inside the
+  // stable window — after CURSOR_START_MS, before CONTENT_OUT_AT_MS — so the
+  // longest sequence (the menu scan) uses the shortest hops.
+  useEffect(() => {
+    if (!cycling) {
+      resetCursor();
+      return;
+    }
+
+    let alive = true;
+    const timers: ReturnType<typeof setTimeout>[] = [];
+    const at = (ms: number, fn: () => void) => {
+      timers.push(
+        setTimeout(() => {
+          if (alive) fn();
+        }, ms),
+      );
+    };
+    const g = targets.current;
+    const T = CURSOR_TRAVEL_MS;
+
+    if (state === "surface") {
+      at(CURSOR_START_MS, () => moveTo(g.core, 500));
+      at(CURSOR_START_MS + T, click);
+    } else if (state === "input") {
+      at(CURSOR_START_MS, () => moveTo(g.field, 500));
+      at(CURSOR_START_MS + T, click);
+    } else if (state === "popover") {
+      setHoveredRow(0);
+      at(CURSOR_START_MS, () => {
+        moveTo(g["row-0"], 400);
+        setHoveredRow(0);
+      });
+      at(CURSOR_START_MS + CURSOR_SCAN_MS, () => {
+        moveTo(g["row-1"], 400);
+        setHoveredRow(1);
+      });
+      at(CURSOR_START_MS + CURSOR_SCAN_MS * 2, () => {
+        moveTo(g["row-2"], 400);
+        setHoveredRow(2);
+      });
+      at(CURSOR_START_MS + CURSOR_SCAN_MS * 3, () => {
+        moveTo(g[`row-${CURSOR_MENU_PICK}`], 400);
+        setHoveredRow(CURSOR_MENU_PICK);
+      });
+      at(CURSOR_START_MS + CURSOR_SCAN_MS * 3 + T, () => {
+        click();
+        setSelectedRow(CURSOR_MENU_PICK);
+      });
+    } else if (state === "dialog") {
+      at(CURSOR_START_MS, () => moveTo(g.dismiss, 400));
+      at(CURSOR_START_MS + CURSOR_HOP_MS, () => moveTo(g.action, 400));
+      at(CURSOR_START_MS + CURSOR_HOP_MS + T, click);
+    }
+
+    return () => {
+      alive = false;
+      for (const timer of timers) clearTimeout(timer);
+    };
+  }, [state, cycling, moveTo, click, resetCursor]);
+
+  // The menu selection resets to its resting row while the popover is off
+  // screen, so next time the state comes round the pointer's pick is a move the
+  // reader can see rather than a no-op on an already-selected row.
+  useEffect(() => {
+    if (state !== "popover") {
+      setSelectedRow(CURSOR_MENU_REST);
+      setHoveredRow(null);
+    }
+  }, [state]);
+
   return (
     // Fixed frame, not a shrink-wrap: the surface's own height swings between
-    // 144px and 48px, and the DOM applies that instantly even while Framer is
+    // 176px and 56px, and the DOM applies that instantly even while Framer is
     // still animating the projection. Without a frame that never resizes,
     // every morph would shove the rest of the page up and down.
     //
-    // `h-36` is the metric card's 144px, the tallest state in the cycle — this
-    // has to be re-checked against STATE_SHAPE whenever a state is added, and
-    // the failure is silent: a too-short frame doesn't clip, it reflows.
+    // `h-48` (192px) clears the 176px of the popover and dialog, the tallest
+    // states in the cycle, with a little slack — re-check this against
+    // STATE_SHAPE whenever a state's height changes, and note the failure is
+    // silent: a too-short frame doesn't clip, it reflows.
     <div
       ref={frameRef}
       aria-hidden="true"
-      className="flex h-36 w-full items-center justify-center"
+      className="relative flex h-48 w-full items-center justify-center"
+      {...(shouldReduceMotion ? {} : cursor.bind)}
     >
       <SurfaceProvider value={ROOT_LEVEL}>
         <motion.div
           layout={!shouldReduceMotion}
-          // One scale, three sources. The press wins a tie rather than the
-          // wind-up: they cannot currently overlap, but if a shorter DWELL_MS
-          // ever brought them together, a press masked by a wind-up would be a
-          // gesture that visibly failed to happen, where a wind-up masked by a
-          // press is one nobody was going to notice anyway.
-          animate={{
-            scale: pressed
-              ? PRESS_SCALE
-              : anticipating
-                ? ANTICIPATION_SCALE
-                : 1,
-          }}
+          // Scale has two sources: the wind-up before each morph, and rest.
+          animate={{ scale: anticipating ? ANTICIPATION_SCALE : 1 }}
           transition={{
             layout: spring.morph,
-            scale:
-              anticipating && !pressed
-                ? { duration: ANTICIPATION_TRAVEL_S, ease: "easeIn" }
-                : { duration: PRESS_TRAVEL_S, ease: "easeOut" },
+            scale: anticipating
+              ? { duration: ANTICIPATION_TRAVEL_S, ease: "easeIn" }
+              : { duration: REST_TRAVEL_S, ease: "easeOut" },
           }}
           className={cn(
             "relative rounded-3xl will-change-transform",
@@ -601,7 +805,15 @@ export function HeroSurfaceShowcase({ steps = 3 }: { steps?: number }) {
                     shouldReduceMotion={shouldReduceMotion}
                     searchLabel={t("showcaseSearch")}
                     actionLabel={t("showcaseAction")}
-                    metricLabel={t("showcaseMetricLabel")}
+                    menuItems={t.raw("showcaseMenu") as string[]}
+                    dialogTitle={t("showcaseDialogTitle")}
+                    dialogBody={t("showcaseDialogBody")}
+                    dismissLabel={t("showcaseDismiss")}
+                    hoveredRow={hoveredRow}
+                    selectedRow={selectedRow}
+                    registerTarget={(key, el) => {
+                      targets.current[key] = el;
+                    }}
                   />
                 </motion.div>
               )}
@@ -609,6 +821,15 @@ export function HeroSurfaceShowcase({ steps = 3 }: { steps?: number }) {
           </div>
         </motion.div>
       </SurfaceProvider>
+
+      {!shouldReduceMotion && (
+        <GuidedCursor
+          point={cursor.point}
+          clicking={cursor.clicking}
+          clickId={cursor.clickId}
+          visible={cursor.visible}
+        />
+      )}
     </div>
   );
 }

@@ -34,6 +34,22 @@ export const examples: Registry["items"] = [
     ],
   },
   {
+    name: "progress-ring-demo",
+    type: "registry:example",
+    registryDependencies: ["progress-ring", "elevated", "button"],
+    files: [
+      { path: "examples/progress-ring-demo.tsx", type: "registry:example" },
+    ],
+  },
+  {
+    name: "avatar-group-demo",
+    type: "registry:example",
+    registryDependencies: ["avatar-group", "elevated"],
+    files: [
+      { path: "examples/avatar-group-demo.tsx", type: "registry:example" },
+    ],
+  },
+  {
     name: "floating-action-menu-demo",
     type: "registry:example",
     registryDependencies: ["floating-action-menu"],

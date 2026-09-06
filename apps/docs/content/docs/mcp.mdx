@@ -20,7 +20,7 @@ Matos UI already follows the shadcn registry spec, so generic third-party MCPs t
 </TabsList>
 <TabsContent value="claude-code">
 
-<TerminalBlock code="claude mcp add matos-ui -- npx -y @matos-ui/mcp@latest" />
+<McpInstallClaude />
 
 Check it registered with `claude mcp list` — it should show `matos-ui` as connected.
 
@@ -49,7 +49,7 @@ Add this to your `.cursor/mcp.json`:
 
 Any MCP-compatible client that can spawn a stdio server can run it directly:
 
-<TerminalBlock code="npx -y @matos-ui/mcp@latest" />
+<McpInstallManual />
 
 Running that bare in a terminal is expected to print a single status line
 (`Matos UI MCP server running on stdio.`) and then sit there — it's holding

@@ -166,6 +166,20 @@ export const ui: Registry["items"] = [
     files: [{ path: "ui/physics-counter.tsx", type: "registry:ui" }],
   },
   {
+    name: "progress-ring",
+    type: "registry:ui",
+    dependencies: [...physicsDeps, "lucide-react"],
+    registryDependencies: ["motion-tokens"],
+    files: [{ path: "ui/progress-ring.tsx", type: "registry:ui" }],
+  },
+  {
+    name: "avatar-group",
+    type: "registry:ui",
+    dependencies: physicsDeps,
+    registryDependencies: ["motion-tokens"],
+    files: [{ path: "ui/avatar-group.tsx", type: "registry:ui" }],
+  },
+  {
     name: "floating-action-menu",
     type: "registry:ui",
     dependencies: [...physicsDeps, "lucide-react"],

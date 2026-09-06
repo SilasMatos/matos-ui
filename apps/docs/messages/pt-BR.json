@@ -30,14 +30,17 @@
     "badge": "Surface Philosophy · Motion Tokens",
     "badgeCount": "{count} componentes",
     "titleBrand": "Matos UI",
-    "titleTagline": "— componentes com profundidade embutida",
-    "description": "Copie o código pro seu projeto. Estilizado, acessível e animado por padrão.",
+    "titleTagline": "componentes que você cola no projeto e faz seus",
+    "description": "47 componentes React para Tailwind e shadcn. A CLI do shadcn põe o código no seu repositório, onde ele fica seu para editar, sem dependência em runtime.",
     "browseComponents": "Ver componentes",
     "viewOnGitHub": "Ver no GitHub",
-    "trust": "Feito com Framer Motion e Base UI. Distribuído via shadcn.",
+    "trust": "Feito com Base UI e Framer Motion.",
     "showcaseSearch": "Buscar componentes…",
     "showcaseAction": "Começar",
-    "showcaseMetricLabel": "Adoção"
+    "showcaseMenu": ["Renomear", "Duplicar", "Mover para…"],
+    "showcaseDialogTitle": "Publique com confiança",
+    "showcaseDialogBody": "Cada superfície e transição é um token, não um caso isolado. Muda uma vez e tudo acompanha.",
+    "showcaseDismiss": "Agora não"
   },
   "footer": {
     "openSource": "Open Source",
@@ -151,7 +154,6 @@
     "badge": "Model Context Protocol",
     "title": "Leve o Matos UI direto para o seu agente de IA",
     "subtitle": "O Matos UI tem um servidor MCP para que Claude, Cursor, Copilot e qualquer agente de IA consigam navegar no registry, instalar componentes e ler a Surface Philosophy e os Motion Tokens sem chutar.",
-    "copy": "Copiar",
     "cta": "Ver a documentação do MCP"
   }
 }

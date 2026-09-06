@@ -1,0 +1,88 @@
+---
+title: Avatar Group
+description: A stack of overlapping avatars that fans out on hover with a staggered spring, each name floating in as it clears its neighbour.
+---
+
+<ComponentPreview name="avatar-group-demo" chromeless align="start" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/avatar-group.json" />
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the following dependencies:</Step>
+
+<CodeBlockCommand command="npm install framer-motion tailwind-merge tailwind-variants" />
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="avatar-group" title="components/matos-ui/avatar-group.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { AvatarGroup } from '@/components/matos-ui/avatar-group'
+```
+
+```tsx
+<AvatarGroup
+  items={[
+    { name: 'Ana Ribeiro', src: '/ana.jpg' },
+    { name: 'Bruno Alves' },
+    { name: 'Carla Mendes' },
+  ]}
+  max={5}
+/>
+```
+
+Avatars overlap by a negative margin. On hover or keyboard focus the stack
+"opens": each avatar slides right by one step on a staggered `moderate` spring so
+the fan unrolls left-to-right, and the avatar under the cursor lifts with a
+floating name label. `src` is optional — a missing or broken image falls back to
+initials derived from `name`.
+
+Set `spreadOnHover={false}` for a static stack, or `showLabels={false}` to keep
+the fan without the name tooltips. When `prefers-reduced-motion` is set the stack
+never opens — it stays a clean, legible overlap.
+
+## Reference
+
+### AvatarGroup Props
+
+| Prop            | Type                    | Default    | Description                                                        |
+| --------------- | ----------------------- | ---------- | ---------------------------------------------------------------- |
+| `items`         | `AvatarGroupItem[]`     | -          | People to render. `{ src?, name, fallback? }`.                    |
+| `max`           | `number`                | -          | Cap visible avatars; the remainder collapse into a `+N` chip.     |
+| `size`          | `"sm" \| "md" \| "lg"`  | `"md"`     | Avatar diameter and label scale.                                  |
+| `spreadOnHover` | `boolean`               | `true`     | Fan the stack apart on hover / focus.                             |
+| `showLabels`    | `boolean`               | `true`     | Float each name above its avatar while the stack is open.         |
+| `aria-label`    | `string`                | `"People"` | Accessible name for the group.                                    |
+
+### AvatarGroupItem
+
+| Field      | Type     | Description                                             |
+| ---------- | -------- | ---------------------------------------------------- |
+| `src`      | `string` | Image URL. Falls back to initials when absent/broken.  |
+| `name`     | `string` | Full name — alt text, title, and hover label.          |
+| `fallback` | `string` | Explicit initials. Derived from `name` when omitted.   |

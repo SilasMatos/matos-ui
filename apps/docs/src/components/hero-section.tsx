@@ -1,46 +1,63 @@
 "use client";
 
-import { motion, type Variants } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { HeroSurfaceShowcase } from "@/components/hero-surface-showcase";
 import { Link } from "@/i18n/navigation";
 import { siteConfig } from "@/lib/config";
+import {
+  liftVariants,
+  revealVariants,
+  staggerContainer,
+  withReducedMotion,
+} from "@/registry/new-york-v4/lib/motion-tokens";
 import { Button } from "@/registry/new-york-v4/ui/button";
-
-const container: Variants = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.08, delayChildren: 0.1 },
-  },
-};
-
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 12 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.45, ease: [0.25, 0.4, 0.25, 1] },
-  },
-};
 
 export function HeroSection({ componentCount }: { componentCount: number }) {
   const t = useTranslations("hero");
+  const shouldReduceMotion = !!useReducedMotion();
+
+  // One element carries the entrance: the headline. It is the only node that
+  // rides `revealVariants` — the longer travel and the focus-pull blur — so it
+  // reads as the hero coming into focus. Everything else (badge, copy, buttons,
+  // trust) enters on a quiet `liftVariants(2)`: a short fade with 4px of
+  // travel, no blur, no character of its own. Support behind the headline, not
+  // six identical reveals. `withReducedMotion` keeps every crossfade and drops
+  // the travel and the blur, so the final states are identical.
+  const headlineBase = revealVariants({ y: 24, blur: 8 });
+  const supportBase = liftVariants(2);
+  const headline = shouldReduceMotion
+    ? withReducedMotion(headlineBase)
+    : headlineBase;
+  const support = shouldReduceMotion
+    ? withReducedMotion(supportBase)
+    : supportBase;
+
+  // The showcase is its own stagger container with its own `delayChildren`, so
+  // it enters last, after the headline block has settled. It rides
+  // `liftVariants(4)` — dialog weight, `slow` tier — with the travel widened
+  // because 4px on a panel this size reads as a twitch. Its internal ladder
+  // pulse and morph clock both run from first paint, so it fades in already in
+  // motion rather than sitting still waiting for the first cycle.
+  const showcaseBase = liftVariants(4, { y: 12 });
+  const showcase = shouldReduceMotion
+    ? withReducedMotion(showcaseBase)
+    : showcaseBase;
 
   return (
     // Altura de conteúdo, não de viewport: `min-h-svh` sozinho respondia por
     // boa parte da sensação de "área excessiva" antes da dobra.
     <section className="flex flex-col items-center px-4 py-20 sm:px-6 sm:py-24">
       <motion.div
-        variants={container}
+        variants={staggerContainer("slow", 0.1)}
         initial="hidden"
-        animate="show"
+        animate="visible"
         className="flex w-full max-w-3xl flex-col items-center gap-5 text-center"
       >
         <motion.div
-          variants={fadeUp}
+          variants={support}
           className="flex flex-wrap items-center justify-center gap-2"
         >
           <p className="inline-flex items-center gap-2 rounded-full border border-border/70 px-3 py-1 text-muted-foreground text-xs">
@@ -56,7 +73,7 @@ export function HeroSection({ componentCount }: { componentCount: number }) {
         </motion.div>
 
         <motion.h1
-          variants={fadeUp}
+          variants={headline}
           className="text-balance font-display text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl md:tracking-tighter"
         >
           {t("titleBrand")}{" "}
@@ -64,14 +81,14 @@ export function HeroSection({ componentCount }: { componentCount: number }) {
         </motion.h1>
 
         <motion.p
-          variants={fadeUp}
+          variants={support}
           className="max-w-xl text-balance text-base text-muted-foreground"
         >
           {t("description")}
         </motion.p>
 
         <motion.div
-          variants={fadeUp}
+          variants={support}
           className="mt-1 flex flex-wrap items-center justify-center gap-3"
         >
           <Button
@@ -104,13 +121,20 @@ export function HeroSection({ componentCount }: { componentCount: number }) {
         </motion.div>
 
         <motion.p
-          variants={fadeUp}
+          variants={support}
           className="text-muted-foreground/70 text-xs"
         >
           {t("trust")}
         </motion.p>
+      </motion.div>
 
-        <motion.div variants={fadeUp} className="mt-2 w-full">
+      <motion.div
+        variants={staggerContainer("slow", 0.85)}
+        initial="hidden"
+        animate="visible"
+        className="mt-7 w-full max-w-3xl"
+      >
+        <motion.div variants={showcase}>
           <HeroSurfaceShowcase />
         </motion.div>
       </motion.div>

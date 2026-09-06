@@ -1,0 +1,37 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "palette-lume",
+  "cssVars": {
+    "light": {
+      "primary": "oklch(0.88 0.21 128)",
+      "primary-foreground": "oklch(0.24 0.06 128)",
+      "accent": "oklch(0.96 0.06 128)",
+      "accent-foreground": "oklch(0.42 0.13 128)",
+      "ring": "oklch(0.88 0.21 128 / 0.5)",
+      "chart-1": "oklch(0.94 0.13 128)",
+      "chart-2": "oklch(0.9 0.19 128)",
+      "chart-3": "oklch(0.85 0.21 128)",
+      "chart-4": "oklch(0.77 0.2 128)",
+      "chart-5": "oklch(0.68 0.17 128)",
+      "sidebar-primary": "oklch(0.88 0.21 128)",
+      "sidebar-primary-foreground": "oklch(0.24 0.06 128)",
+      "sidebar-ring": "oklch(0.88 0.21 128 / 0.5)"
+    },
+    "dark": {
+      "primary": "oklch(0.88 0.22 128)",
+      "primary-foreground": "oklch(0.22 0.06 128)",
+      "accent": "oklch(0.29 0.06 128)",
+      "accent-foreground": "oklch(0.9 0.16 128)",
+      "ring": "oklch(0.88 0.22 128 / 0.5)",
+      "chart-1": "oklch(0.94 0.14 128)",
+      "chart-2": "oklch(0.89 0.2 128)",
+      "chart-3": "oklch(0.82 0.21 128)",
+      "chart-4": "oklch(0.74 0.19 128)",
+      "chart-5": "oklch(0.65 0.16 128)",
+      "sidebar-primary": "oklch(0.88 0.22 128)",
+      "sidebar-primary-foreground": "oklch(0.22 0.06 128)",
+      "sidebar-ring": "oklch(0.88 0.22 128 / 0.5)"
+    }
+  },
+  "type": "registry:theme"
+}

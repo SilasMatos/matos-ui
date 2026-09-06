@@ -33,27 +33,37 @@ export function CustomizeStudio() {
             {PALETTES.map((item) => {
               const selected = item.name === paletteName;
               const vars = item.cssVars[isDark ? "dark" : "light"];
-              // Three real tokens instead of one: with a dozen palettes on
-              // screen, `primary` alone leaves neighbours like teal/emerald
-              // indistinguishable. Values come straight from the registry —
-              // never a hand-picked stand-in.
+              // A light → identity → deep stop of the one hue, straight from the
+              // registry ramp — shows the palette *is* a scale, not a flat tone.
+              // De-duped: a few palettes reuse one value for two stops, and a
+              // repeated colour is both an invisible stripe and a key collision.
               const swatches = [
-                vars.primary,
-                vars["chart-2"],
-                vars["chart-4"],
-              ].filter(Boolean);
+                ...new Set(
+                  [vars["chart-1"], vars.primary, vars["chart-5"]].filter(
+                    Boolean,
+                  ),
+                ),
+              ];
               return (
                 <Elevated
                   key={item.name}
                   offset={1}
                   hoverLift
-                  className={cn("rounded-xl", selected && "ring-2 ring-ring")}
+                  className={cn(
+                    "rounded-xl",
+                    selected && "ring-1 ring-primary/60",
+                  )}
                 >
                   <button
                     type="button"
                     aria-pressed={selected}
                     onClick={() => setPalette(item.name)}
-                    className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm outline-none transition-colors duration-moderate ease-spring hover:bg-foreground/8 focus-visible:ring-2 focus-visible:ring-ring"
+                    className={cn(
+                      "flex w-full items-center gap-2.5 rounded-xl border px-3 py-2.5 text-left text-sm outline-none transition-colors duration-moderate ease-spring focus-visible:ring-2 focus-visible:ring-primary/50",
+                      selected
+                        ? "border-primary/70 bg-primary/10 hover:bg-primary/[0.15]"
+                        : "border-transparent hover:bg-foreground/8",
+                    )}
                   >
                     <span
                       aria-hidden="true"
@@ -71,7 +81,7 @@ export function CustomizeStudio() {
                       {paletteLabel(item.name)}
                     </span>
                     {selected ? (
-                      <Check className="size-3.5 shrink-0 text-foreground" />
+                      <Check className="size-3.5 shrink-0 text-foreground/70" />
                     ) : null}
                   </button>
                 </Elevated>
@@ -228,7 +238,7 @@ function PreviewCard() {
             +12%
           </span>
         </div>
-        <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-foreground/10">
+        <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-primary/15">
           <div className="h-full w-[68%] rounded-full bg-primary" />
         </div>
       </Elevated>

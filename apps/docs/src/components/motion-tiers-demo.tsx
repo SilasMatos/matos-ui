@@ -1,8 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { type RefObject, useEffect, useRef, useState } from "react";
 
+import {
+  CURSOR_TRAVEL_MS,
+  GuidedCursor,
+  useGuidedCursor,
+} from "@/components/guided-cursor";
 import { useAmbientLoop } from "@/hooks/use-ambient-loop";
 import {
   type SpringTier,
@@ -71,11 +76,13 @@ function TierRow({
   tier,
   played,
   reduced,
+  knobRef,
 }: {
   name: SpringTierName;
   tier: SpringTier;
   played: boolean;
   reduced: boolean;
+  knobRef?: RefObject<HTMLDivElement | null>;
 }) {
   const [trackRef, trackWidth] = useTrackWidth();
   const travel = Math.max(0, trackWidth - KNOB_SIZE);
@@ -102,6 +109,7 @@ function TierRow({
         className="relative h-7 overflow-visible rounded-full bg-foreground/10"
       >
         <motion.div
+          ref={knobRef}
           className="absolute top-1/2 left-0 grid size-6 -translate-y-1/2 place-items-center rounded-full bg-primary font-medium text-[10px] text-primary-foreground"
           animate={{ x: played ? travel : 0 }}
           // The return leg is a cut, not an animation. `animate` alone would
@@ -141,19 +149,38 @@ export function MotionTiersDemo() {
   const stageRef = useRef<HTMLDivElement>(null);
   const { cycling, shouldReduceMotion } = useAmbientLoop(stageRef);
   const [played, setPlayed] = useState(false);
+  const firstKnobRef = useRef<HTMLDivElement>(null);
+
+  const cursor = useGuidedCursor(stageRef, { active: cycling });
+  const { moveTo, click, reset } = cursor;
 
   useEffect(() => {
-    if (!cycling) return;
+    if (!cycling) {
+      reset();
+      return;
+    }
 
     let firstFrame = 0;
     let secondFrame = 0;
+    let launch: ReturnType<typeof setTimeout> | undefined;
     let interval: ReturnType<typeof setInterval> | undefined;
 
-    const run = () => {
+    const play = () => {
       setPlayed(false);
       firstFrame = requestAnimationFrame(() => {
         secondFrame = requestAnimationFrame(() => setPlayed(true));
       });
+    };
+
+    // The pointer flicks the top knob and *all five* leave together — the
+    // comparison only works if they share a start line, so one tap stands in
+    // for a "go" the removed Replay button used to be.
+    const run = () => {
+      moveTo(firstKnobRef, 500);
+      launch = setTimeout(() => {
+        click();
+        play();
+      }, CURSOR_TRAVEL_MS);
     };
 
     // The interval is armed from inside the kickoff rather than alongside it,
@@ -167,11 +194,12 @@ export function MotionTiersDemo() {
 
     return () => {
       clearTimeout(kickoff);
+      if (launch) clearTimeout(launch);
       if (interval) clearInterval(interval);
       cancelAnimationFrame(firstFrame);
       cancelAnimationFrame(secondFrame);
     };
-  }, [cycling]);
+  }, [cycling, moveTo, click, reset]);
 
   // Reduced motion parks the knobs at the end of the rail rather than the
   // start: at rest they are five identical dots either way, but at the far end
@@ -180,16 +208,31 @@ export function MotionTiersDemo() {
   const settled = shouldReduceMotion || played;
 
   return (
-    <div ref={stageRef} aria-hidden="true" className="space-y-3.5">
-      {TIER_NAMES.map((name) => (
+    <div
+      ref={stageRef}
+      aria-hidden="true"
+      className="relative space-y-3.5"
+      {...(shouldReduceMotion ? {} : cursor.bind)}
+    >
+      {TIER_NAMES.map((name, i) => (
         <TierRow
           key={name}
           name={name}
           tier={spring[name]}
           played={settled}
           reduced={shouldReduceMotion}
+          knobRef={i === 0 ? firstKnobRef : undefined}
         />
       ))}
+
+      {!shouldReduceMotion && (
+        <GuidedCursor
+          point={cursor.point}
+          clicking={cursor.clicking}
+          clickId={cursor.clickId}
+          visible={cursor.visible}
+        />
+      )}
     </div>
   );
 }

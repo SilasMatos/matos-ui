@@ -5,7 +5,25 @@
 			"source": "raphaelsalaja/skill",
 			"sourceType": "github",
 			"skillPath": "skills/12-principles-of-animation/SKILL.md",
-			"computedHash": "028c3bad9e7417460e0d2094fc0c1b9d601e56317d38c4f5d124666b06a9405b"
+			"computedHash": "fd8f83df6be0cebd89ac8c5e5345f7b5f4028a5e32f98f1699d52fa5008c7082"
+		},
+		"60fps-animation": {
+			"source": "iart-ai/web-animation-skills",
+			"sourceType": "github",
+			"skillPath": "skills/60fps-animation/SKILL.md",
+			"computedHash": "d832ea4a0dc07c18483d4fd39352c65e4daa2f298998290730cf159df30f400e"
+		},
+		"frontend-ui-engineering": {
+			"source": "addyosmani/agent-skills",
+			"sourceType": "github",
+			"skillPath": "skills/frontend-ui-engineering/SKILL.md",
+			"computedHash": "cb4e981ecb5f701b451fc4e937a38049b49fd4523f213e06cffbd00b007060dc"
+		},
+		"generating-sounds-with-ai": {
+			"source": "raphaelsalaja/skill",
+			"sourceType": "github",
+			"skillPath": "skills/generating-sounds-with-ai/SKILL.md",
+			"computedHash": "bc271f63fef92d29df8ed64b3d7a0b592e39ae3ce668bafabcefc43fda425f32"
 		},
 		"grill-with-docs": {
 			"source": "mattpocock/skills",
@@ -13,16 +31,46 @@
 			"skillPath": "skills/engineering/grill-with-docs/SKILL.md",
 			"computedHash": "96718e0a89e48c7d76cc9759c7094a82ff34eb89ddc46a30388063fa9812356f"
 		},
+		"humanizer": {
+			"source": "Aboudjem/humanizer-skill",
+			"sourceType": "github",
+			"skillPath": "skills/humanizer/SKILL.md",
+			"computedHash": "4ac947ef5cb8bba8f710ec9f891e512bcf7621b80e649deeb027f319c5eeac51"
+		},
 		"motion-design": {
 			"source": "lottiefiles/motion-design-skill",
 			"sourceType": "github",
 			"computedHash": "4f16f46c81f25a2a25b7a4720b7ea001e65f384b31b5b7f4b455fef87fbc9016"
+		},
+		"page-transition-animation": {
+			"source": "iart-ai/web-animation-skills",
+			"sourceType": "github",
+			"skillPath": "skills/page-transition-animation/SKILL.md",
+			"computedHash": "62e103e2313433e77db26c67fdcae1c425030e1a51d0f5ffc0fb6fdac6d36132"
 		},
 		"responsive-design": {
 			"source": "wshobson/agents",
 			"sourceType": "github",
 			"skillPath": "plugins/ui-design/skills/responsive-design/SKILL.md",
 			"computedHash": "155eff4b1bc8d867ae6bea9900c485ab1081de0b4873c1900adb66bf62466aed"
+		},
+		"svg-animation": {
+			"source": "iart-ai/web-animation-skills",
+			"sourceType": "github",
+			"skillPath": "skills/svg-animation/SKILL.md",
+			"computedHash": "b6902577f093a1cd724052b94e633154cb42020b5001138185982fb4ce230404"
+		},
+		"threejs-animation": {
+			"source": "cloudai-x/threejs-skills",
+			"sourceType": "github",
+			"skillPath": "skills/threejs-animation/SKILL.md",
+			"computedHash": "8c50b1493812bd88f3ed0637c0c3c5d846afdb322157b67b2ffba4ce8e552835"
+		},
+		"threejs-fundamentals": {
+			"source": "cloudai-x/threejs-skills",
+			"sourceType": "github",
+			"skillPath": "skills/threejs-fundamentals/SKILL.md",
+			"computedHash": "e08d49571071f0f54ef2a76fdfcb96c16673e4fda478067727def4659feb80ca"
 		}
 	}
 }
