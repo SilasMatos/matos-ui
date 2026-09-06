@@ -47,6 +47,25 @@ export const CURSOR_TRAVEL_MS = Math.round(duration.slower * 1000);
  *  press rather than a flicker; `spring.fast` carries it in and out. */
 const CLICK_HOLD_MS = 150;
 
+/**
+ * How long after the reader's real cursor last moved over the stage before the
+ * scripted one is allowed back. `pointerleave` alone is not enough: a browser
+ * does not always fire it when the element under the pointer unmounts (which
+ * the hero surface does on every morph), so without a movement-based timeout
+ * the scripted pointer could vanish for good after a single hover.
+ */
+const USER_IDLE_MS = 2500;
+
+/** The idle float. A pointer that has arrived and is waiting out a dwell should
+ *  still be breathing, not frozen — matches the ambient-pulse convention the
+ *  demo files already use (`duration` + `repeat: Infinity` + `easeInOut`). */
+const IDLE_BOB_ANIMATE = { y: [0, -2, 0] };
+const IDLE_BOB_TRANSITION = {
+  duration: 2.8,
+  repeat: Number.POSITIVE_INFINITY,
+  ease: "easeInOut" as const,
+};
+
 function PointerIcon() {
   return (
     <svg
@@ -100,23 +119,31 @@ export function GuidedCursor({
         scale: spring.fast,
       }}
     >
-      <motion.div
-        className="relative"
-        animate={{ scale: clicking ? 0.82 : 1 }}
-        transition={spring.fast}
-      >
-        <PointerIcon />
-        {/* One ripple per click: keying on the counter remounts the ring so its
-         *  keyframe replays without an AnimatePresence round-trip. `border` +
-         *  `opacity` + `scale` are all compositor-cheap. */}
-        <motion.span
-          key={clickId}
-          className="absolute rounded-full border border-foreground/45"
-          style={{ left: TIP.x - 4, top: TIP.y - 4, width: 8, height: 8 }}
-          initial={clickId > 0 ? { scale: 0.4, opacity: 0.75 } : { opacity: 0 }}
-          animate={clickId > 0 ? { scale: 3.4, opacity: 0 } : { opacity: 0 }}
-          transition={{ duration: duration.slow, ease: ease.decelerate }}
-        />
+      {/* Idle float on its own layer, so it composes with the travel above and
+       *  the click-press below instead of fighting either. It never stops —
+       *  that is the point: the pointer is always animating, even mid-dwell. */}
+      <motion.div animate={IDLE_BOB_ANIMATE} transition={IDLE_BOB_TRANSITION}>
+        <motion.div
+          className="relative"
+          animate={{ scale: clicking ? 0.82 : 1 }}
+          transition={spring.fast}
+        >
+          <PointerIcon />
+
+          {/* One ripple per click: keying on the counter remounts the ring so
+           *  its keyframe replays without an AnimatePresence round-trip.
+           *  `border` + `opacity` + `scale` are all compositor-cheap. */}
+          <motion.span
+            key={clickId}
+            className="absolute rounded-full border border-foreground/45"
+            style={{ left: TIP.x - 4, top: TIP.y - 4, width: 8, height: 8 }}
+            initial={
+              clickId > 0 ? { scale: 0.4, opacity: 0.75 } : { opacity: 0 }
+            }
+            animate={clickId > 0 ? { scale: 3.4, opacity: 0 } : { opacity: 0 }}
+            transition={{ duration: duration.slow, ease: ease.decelerate }}
+          />
+        </motion.div>
       </motion.div>
     </motion.div>
   );
@@ -132,12 +159,13 @@ function resolve(target: MaybeRef): HTMLElement | null {
 /**
  * Wiring for one guided pointer. The demo drives it: `moveTo(ref)` aims at an
  * element's centre (measured live, so it follows a morphing box), `click()`
- * fires the press pulse, `reset()` parks it. `bind` goes on the stage so the
- * scripted pointer yields the moment the reader's real cursor arrives.
+ * fires the press pulse, `reset()` stops the tracking work but leaves the
+ * pointer where it is. `bind` goes on the stage so the scripted pointer yields
+ * while the reader's real cursor is moving over it and returns USER_IDLE_MS
+ * after it stops.
  *
- * `visible` is `active && !userPresent`; when it goes false the component fades
- * and the demo's own effects (which also gate on `active`) tear their timers
- * down.
+ * `visible` is `active && !userPresent`; when it goes false the component just
+ * fades out (staying put), and fades back in where it left off.
  */
 export function useGuidedCursor(
   stageRef: RefObject<HTMLElement | null>,
@@ -151,6 +179,7 @@ export function useGuidedCursor(
   const rafRef = useRef(0);
   const pollUntilRef = useRef(0);
   const clickTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // One read of the stage, one of the target — batched, no interleaved writes.
   const sample = useCallback(() => {
@@ -201,10 +230,11 @@ export function useGuidedCursor(
     clickTimerRef.current = setTimeout(() => setClicking(false), CLICK_HOLD_MS);
   }, []);
 
+  // Stops the tracking work but keeps the last point: while the demo is paused
+  // (off screen, tab in back) the pointer just fades out via `visible` and
+  // fades back in where it left off, rather than blanking and re-homing.
   const reset = useCallback(() => {
-    targetRef.current = null;
     cancelAnimationFrame(rafRef.current);
-    setPoint(null);
   }, []);
 
   // Follow the stage resizing under a parked target.
@@ -220,17 +250,33 @@ export function useGuidedCursor(
     () => () => {
       cancelAnimationFrame(rafRef.current);
       if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
+      if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
     },
     [],
   );
 
-  const bind = useMemo(
-    () => ({
-      onPointerEnter: () => setUserPresent(true),
-      onPointerLeave: () => setUserPresent(false),
-    }),
-    [],
-  );
+  // Movement-based, not enter/leave-based: the scripted pointer steps aside
+  // while the reader is actively moving over the stage and comes back
+  // USER_IDLE_MS after they stop. `pointerleave` still clears it immediately
+  // when it does fire, but nothing depends on it firing.
+  const bind = useMemo(() => {
+    const markPresent = () => {
+      setUserPresent(true);
+      if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+      idleTimerRef.current = setTimeout(
+        () => setUserPresent(false),
+        USER_IDLE_MS,
+      );
+    };
+    return {
+      onPointerMove: markPresent,
+      onPointerDown: markPresent,
+      onPointerLeave: () => {
+        if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+        setUserPresent(false);
+      },
+    };
+  }, []);
 
   return {
     point,

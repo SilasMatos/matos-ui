@@ -35,7 +35,7 @@
     "browseComponents": "Ver componentes",
     "viewOnGitHub": "Ver no GitHub",
     "trust": "Feito com Base UI e Framer Motion.",
-    "showcaseSearch": "Buscar componentes…",
+    "showcaseSegments": ["Prévia", "Código", "CLI"],
     "showcaseAction": "Começar",
     "showcaseMenu": ["Renomear", "Duplicar", "Mover para…"],
     "showcaseDialogTitle": "Publique com confiança",

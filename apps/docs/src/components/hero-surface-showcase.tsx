@@ -6,7 +6,7 @@ import {
   useInView,
   useReducedMotion,
 } from "framer-motion";
-import { ArrowRight, Check, SearchIcon } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 
@@ -29,30 +29,32 @@ import {
 import { SurfaceProvider } from "@/registry/new-york-v4/lib/surface-context";
 import { Elevated } from "@/registry/new-york-v4/ui/elevated";
 
-type ShowcaseState = "surface" | "input" | "popover" | "dialog";
+type ShowcaseState = "surface" | "segmented" | "popover" | "dialog";
 
 /**
  * Four identities, the two foundations twice each. `surface` and `popover` are
  * the elevation ladder: a passive nested stack, then that same stack opened as
- * a menu on an `Elevated` at offset 2. `input` and `dialog` are the copy and
- * the motion tokens: a field at rest, then an `Elevated` at offset 4 landing
- * its content on the `slow` tier. Between `popover` (surface-3) and `dialog`
- * (surface-5) the rung of the ladder is meant to be visible.
+ * a menu on an `Elevated` at offset 2. `segmented` and `dialog` are the motion
+ * tokens: a segmented control whose active pill glides between options on the
+ * `moderate` tier (a shared-`layoutId` slide, the same move `ui/motion-tabs`
+ * makes), then an `Elevated` dialog at offset 4 whose copy settles on `slow`.
+ * Between `popover` (surface-3) and `dialog` (surface-5) the rung of the ladder
+ * is meant to be visible.
  *
  * Order is chosen for area, not silhouette: the sizes are roughly
- * input (~17k px²) < surface (~26k) < popover (~34k) < dialog (~51k), and the
- * cycle runs surface → input → popover → dialog → surface so the smallest state
- * always sits between two larger ones and the largest between two smaller ones.
- * That keeps every morph to a partial step — the widest jump is input → popover
- * at ~2×, against a full range of ~3× — and never lets one run the whole range
- * at once, which is what a widest-to-narrowest wrap used to do and what read as
- * the surface snapping rather than morphing. popover → dialog is a width-only
- * morph: the two share a height, and only the box getting wider distinguishes
- * the menu from the dialog it could sit inside.
+ * segmented (~17k px²) < surface (~26k) < popover (~34k) < dialog (~51k), and
+ * the cycle runs surface → segmented → popover → dialog → surface so the
+ * smallest state always sits between two larger ones and the largest between
+ * two smaller ones. That keeps every morph to a partial step — the widest jump
+ * is segmented → popover at ~2×, against a full range of ~3× — and never lets
+ * one run the whole range at once, which is what a widest-to-narrowest wrap
+ * used to do and what read as the surface snapping rather than morphing.
+ * popover → dialog is a width-only morph: the two share a height, and only the
+ * box getting wider distinguishes the menu from the dialog it could sit inside.
  */
 const NEXT_STATE: Record<ShowcaseState, ShowcaseState> = {
-  surface: "input",
-  input: "popover",
+  surface: "segmented",
+  segmented: "popover",
   popover: "dialog",
   dialog: "surface",
 };
@@ -60,12 +62,12 @@ const NEXT_STATE: Record<ShowcaseState, ShowcaseState> = {
 /**
  * Only width and height change between states.
  *
- * `rounded-3xl` resolves to ~28px here, at or above half the input's 56px
- * height, so the browser clamps that one state into a true pill on its own.
- * Every other state is tall enough that the same single radius token reads as a
- * rounded rectangle. The radius therefore never has to interpolate across the
- * four shapes, and an interpolating radius is the usual reason a shape morph
- * develops a visible kink in its corners halfway through.
+ * `rounded-3xl` resolves to ~28px here, at or above half the 56px height of the
+ * `segmented` state, so the browser clamps that one into a true pill on its
+ * own. Every other state is tall enough that the same single radius token reads
+ * as a rounded rectangle. The radius therefore never has to interpolate across
+ * the four shapes, and an interpolating radius is the usual reason a shape
+ * morph develops a visible kink in its corners halfway through.
  *
  * Heights stay within one frame: `popover` and `dialog` are the tallest at
  * 176px, under the 192px fixed frame below — re-check that when a state's
@@ -73,7 +75,7 @@ const NEXT_STATE: Record<ShowcaseState, ShowcaseState> = {
  */
 const STATE_SHAPE: Record<ShowcaseState, string> = {
   surface: "size-40",
-  input: "h-14 w-[19rem] sm:w-80",
+  segmented: "h-14 w-[19rem] sm:w-80",
   popover: "h-44 w-48",
   dialog: "h-44 w-[18rem] sm:w-80",
 };
@@ -180,9 +182,6 @@ const CONTENT_OUT_AT_MS = DWELL_MS - CONTENT_OUT_LEAD_MS;
  */
 const CONTENT_IN_SCALE = 0.96;
 
-/** A beat after the ghost text, not with it. */
-const CARET_DELAY_S = CONTENT_IN_DELAY_S + 0.2;
-
 /**
  * When the guided pointer may start operating a state: the content mounts
  * `CONTENT_IN_DELAY_S` after the state flips (it waits out the morph) and
@@ -194,34 +193,17 @@ const CURSOR_START_MS =
   Math.round((CONTENT_IN_DELAY_S + CONTENT_IN_S) * 1000) + 60;
 /** Beat between pointer hops while it scans the menu rows before choosing one. */
 const CURSOR_SCAN_MS = 360;
-/** Beat between the pointer brushing the dismiss control and the primary action. */
+/** Beat between the pointer brushing the dismiss control and the primary action,
+ *  and between the two segments it visits in the `segmented` state. */
 const CURSOR_HOP_MS = 500;
 /** The menu row the pointer lands on each time the `popover` state comes round;
  *  it is re-selected from a different default so the choice is a visible move. */
 const CURSOR_MENU_PICK = 0;
 const CURSOR_MENU_REST = 2;
-
-/**
- * The input state's ghost tone, carrying both the search icon and the
- * placeholder — they inherit it together, exactly as the real search field in
- * blocks/sidebar-surface-01 puts its icon and its placeholder on one token.
- *
- * That token is `muted-foreground`, and it is the right answer *in a field*,
- * where a border, a label and a focus ring carry the field's identity next to
- * the text. Here the icon and the ghost text are the entire state, and against
- * --surface-1 they were landing near 6.8:1 while the other three states' content
- * — the menu rows, the dialog title and body — sits close to full foreground.
- * Four states of one surface should not imply that one of them is subordinate
- * to the rest; that gap was reading as exactly that.
- *
- * /70 lifts it to 8.7:1 in dark and 5.6:1 in light — still visibly a ghost,
- * still well short of the full-foreground states, but legible in the same
- * breath as them. It is also the tone the caret was already using, so the two
- * halves of the ghost now read as one element instead of the 1px caret
- * outshining the words in front of it. Keep them equal: if this moves, move
- * `Caret`'s `bg-foreground/70` with it.
- */
-const INPUT_GHOST = "text-foreground/70";
+/** The segment the pointer drives the control to, from its resting one — again
+ *  so the active pill visibly slides rather than sitting where it already was. */
+const CURSOR_SEG_PICK = 2;
+const CURSOR_SEG_REST = 0;
 
 /**
  * The morphing surface sits at the base of the ladder, level 1.
@@ -286,21 +268,50 @@ function HeroLadder({
   );
 }
 
-function Caret() {
+/**
+ * The `segmented` state: a compact segmented control, the plainest surface for
+ * the motion tokens to speak through. The active pill is a shared-`layoutId`
+ * element on `spring.moderate` — the exact move `ui/motion-tabs` makes for its
+ * indicator — so when the guided pointer taps another segment the pill glides
+ * across rather than cutting. The track is `bg-muted` and the pill `bg-background`
+ * so the selection reads as raised off it, the same figure/ground the real
+ * component uses.
+ */
+function SegmentedContent({
+  segments,
+  active,
+  registerTarget,
+}: {
+  segments: string[];
+  active: number;
+  registerTarget: (key: string, el: HTMLElement | null) => void;
+}) {
   return (
-    <motion.span
-      // Deliberately the same tone as INPUT_GHOST — see the note there.
-      className="h-4 w-px shrink-0 bg-foreground/70"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: [1, 1, 0, 0] }}
-      transition={{
-        duration: 1.1,
-        times: [0, 0.5, 0.5, 1],
-        repeat: Infinity,
-        ease: "linear",
-        delay: CARET_DELAY_S,
-      }}
-    />
+    <div className="flex w-full items-center px-4">
+      <div className="relative flex w-full gap-1 rounded-2xl border border-border/60 bg-muted/50 p-1">
+        {segments.map((segment, index) => (
+          <button
+            key={segment}
+            type="button"
+            tabIndex={-1}
+            ref={(el) => registerTarget(`seg-${index}`, el)}
+            className={cn(
+              "relative flex-1 rounded-xl px-3 py-2 text-center font-medium text-xs transition-colors",
+              index === active ? "text-foreground" : "text-muted-foreground",
+            )}
+          >
+            {index === active && (
+              <motion.span
+                layoutId="hero-segmented-indicator"
+                className="absolute inset-0 rounded-xl border border-border bg-background shadow-xs"
+                transition={spring.moderate}
+              />
+            )}
+            <span className="relative z-10">{segment}</span>
+          </button>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -443,7 +454,8 @@ function StateContent({
   state,
   steps,
   shouldReduceMotion,
-  searchLabel,
+  segments,
+  activeSegment,
   actionLabel,
   menuItems,
   dialogTitle,
@@ -456,7 +468,8 @@ function StateContent({
   state: ShowcaseState;
   steps: number;
   shouldReduceMotion: boolean;
-  searchLabel: string;
+  segments: string[];
+  activeSegment: number;
   actionLabel: string;
   menuItems: string[];
   dialogTitle: string;
@@ -466,18 +479,13 @@ function StateContent({
   selectedRow: number;
   registerTarget: (key: string, el: HTMLElement | null) => void;
 }) {
-  if (state === "input") {
+  if (state === "segmented") {
     return (
-      <div
-        ref={(el) => registerTarget("field", el)}
-        className={cn("flex w-full items-center gap-2.5 px-5", INPUT_GHOST)}
-      >
-        <SearchIcon className="size-4 shrink-0" />
-        <span className="flex min-w-0 items-center gap-1 text-sm">
-          <span className="truncate">{searchLabel}</span>
-          <Caret />
-        </span>
-      </div>
+      <SegmentedContent
+        segments={segments}
+        active={activeSegment}
+        registerTarget={registerTarget}
+      />
     );
   }
 
@@ -518,21 +526,23 @@ function StateContent({
  *
  * The elevation ladder on its own says "surfaces have depth"; it can't say
  * "and anything can be one". So the same level-1 surface holds as a block, then
- * stretches into a search field, opens a real `Elevated` menu at offset 2
+ * stretches into a segmented control, opens a real `Elevated` menu at offset 2
  * (surface-3), stands up a real `Elevated` dialog at offset 4 (surface-5), and
  * comes back. The interpolation between those shapes *is* the Surface demo, and
  * the rung you can see between the menu and the dialog is the ladder itself;
- * the stagger timing inside each *is* the Motion demo — offset picks the tier,
- * nothing here names a spring.
+ * the sliding pill in the segmented state and the stagger timing inside the
+ * menu and dialog *are* the Motion demo — offset picks the tier, nothing here
+ * names a spring.
  *
  * A scripted pointer (`useGuidedCursor`) operates each state while it holds —
- * clicking into the field, scanning the menu and choosing a row, brushing the
- * dialog's actions — so the surface reads as something being used, not just a
- * shape cycling. The morph itself stays on the dwell timer; the pointer fills
- * the dwell. It is not mounted under `prefers-reduced-motion`.
+ * sliding the segmented control between options, scanning the menu and choosing
+ * a row, brushing the dialog's actions — so the surface reads as something
+ * being used, not just a shape cycling. The morph itself stays on the dwell
+ * timer; the pointer fills the dwell. It is not mounted under
+ * `prefers-reduced-motion`.
  *
- * `aria-hidden`: the input takes no text, the menu selects nothing, the dialog
- * dismisses nothing. It is a picture of components, not components.
+ * `aria-hidden`: the control changes nothing, the menu selects nothing, the
+ * dialog dismisses nothing. It is a picture of components, not components.
  */
 export function HeroSurfaceShowcase({ steps = 3 }: { steps?: number }) {
   const t = useTranslations("hero");
@@ -550,6 +560,7 @@ export function HeroSurfaceShowcase({ steps = 3 }: { steps?: number }) {
   const targets = useRef<Record<string, HTMLElement | null>>({});
   const [hoveredRow, setHoveredRow] = useState<number | null>(null);
   const [selectedRow, setSelectedRow] = useState(CURSOR_MENU_REST);
+  const [activeSegment, setActiveSegment] = useState(CURSOR_SEG_REST);
   // The morph flag has to fire on a *change* of state, not on every run of its
   // effect: the effect also re-runs when the cycle pauses and resumes, and on
   // mount, neither of which is a morph. Without this the surface would lift its
@@ -565,7 +576,7 @@ export function HeroSurfaceShowcase({ steps = 3 }: { steps?: number }) {
   // Reduced motion parks on Surface — the state that carries the depth idea
   // on its own, and the one this element already was before it learned to
   // morph. Also covers the mid-cycle case: flip the OS setting while the
-  // input is on screen and it returns home rather than freezing there.
+  // segmented control is on screen and it returns home rather than freezing there.
   useEffect(() => {
     if (shouldReduceMotion) setState("surface");
   }, [shouldReduceMotion]);
@@ -650,9 +661,19 @@ export function HeroSurfaceShowcase({ steps = 3 }: { steps?: number }) {
     if (state === "surface") {
       at(CURSOR_START_MS, () => moveTo(g.core, 500));
       at(CURSOR_START_MS + T, click);
-    } else if (state === "input") {
-      at(CURSOR_START_MS, () => moveTo(g.field, 500));
-      at(CURSOR_START_MS + T, click);
+    } else if (state === "segmented") {
+      at(CURSOR_START_MS, () => moveTo(g[`seg-${CURSOR_SEG_REST + 1}`], 400));
+      at(CURSOR_START_MS + T, () => {
+        click();
+        setActiveSegment(CURSOR_SEG_REST + 1);
+      });
+      at(CURSOR_START_MS + T + CURSOR_HOP_MS, () =>
+        moveTo(g[`seg-${CURSOR_SEG_PICK}`], 400),
+      );
+      at(CURSOR_START_MS + T + CURSOR_HOP_MS + T, () => {
+        click();
+        setActiveSegment(CURSOR_SEG_PICK);
+      });
     } else if (state === "popover") {
       setHoveredRow(0);
       at(CURSOR_START_MS, () => {
@@ -687,13 +708,16 @@ export function HeroSurfaceShowcase({ steps = 3 }: { steps?: number }) {
     };
   }, [state, cycling, moveTo, click, resetCursor]);
 
-  // The menu selection resets to its resting row while the popover is off
-  // screen, so next time the state comes round the pointer's pick is a move the
-  // reader can see rather than a no-op on an already-selected row.
+  // Selections reset to their resting option while their state is off screen, so
+  // next time it comes round the pointer's pick is a move the reader can see
+  // rather than a no-op on an already-selected row or segment.
   useEffect(() => {
     if (state !== "popover") {
       setSelectedRow(CURSOR_MENU_REST);
       setHoveredRow(null);
+    }
+    if (state !== "segmented") {
+      setActiveSegment(CURSOR_SEG_REST);
     }
   }, [state]);
 
@@ -803,7 +827,8 @@ export function HeroSurfaceShowcase({ steps = 3 }: { steps?: number }) {
                     state={state}
                     steps={steps}
                     shouldReduceMotion={shouldReduceMotion}
-                    searchLabel={t("showcaseSearch")}
+                    segments={t.raw("showcaseSegments") as string[]}
+                    activeSegment={activeSegment}
                     actionLabel={t("showcaseAction")}
                     menuItems={t.raw("showcaseMenu") as string[]}
                     dialogTitle={t("showcaseDialogTitle")}
