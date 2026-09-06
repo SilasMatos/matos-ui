@@ -84,9 +84,10 @@ const COMMANDS: Command[] = [
  * over a dimmed scrim. The highlighted row is a second `Elevated`, `offset={1}`
  * *inside* the palette, so it lands at surface-6: a popover-weight surface
  * nested in a dialog-weight one, each reading its own substrate, in light and
- * dark. Arrow keys slide that highlight between rows on the `moderate` tier
- * (a shared `layoutId`), the rows stagger in on `liftVariants(4)`, and the
- * panel enters with `directionalVariants("bottom")`.
+ * dark. Hover and arrow keys slide that highlight between rows on the `fast`
+ * tier (a shared `layoutId`, the same move `ui/motion-tabs` makes), the rows
+ * stagger in fast on `liftVariants(2)` — a result list is a menu, not the
+ * panel — and the panel itself enters with `directionalVariants("bottom")`.
  *
  * Under `prefers-reduced-motion` the panel crossfades, the rows crossfade in
  * place, and the highlight jumps rather than slides.
@@ -206,7 +207,7 @@ export function CommandMenu01() {
 
                 <motion.div
                   className="max-h-64 space-y-3 overflow-y-auto p-2"
-                  variants={staggerContainer("moderate", reduce ? 0 : 0.06)}
+                  variants={staggerContainer("fast", reduce ? 0 : 0.03)}
                   initial="hidden"
                   animate="visible"
                 >
@@ -227,10 +228,10 @@ export function CommandMenu01() {
                               aria-selected={isActive}
                               variants={
                                 reduce
-                                  ? withReducedMotion(liftVariants(4))
-                                  : liftVariants(4)
+                                  ? withReducedMotion(liftVariants(2))
+                                  : liftVariants(2)
                               }
-                              onMouseMove={() => setActive(index)}
+                              onMouseEnter={() => setActive(index)}
                               onFocus={() => setActive(index)}
                               className="relative flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm outline-none"
                             >
@@ -240,9 +241,9 @@ export function CommandMenu01() {
                                   offset={1}
                                   aria-hidden="true"
                                   transition={
-                                    reduce ? { duration: 0 } : spring.moderate
+                                    reduce ? { duration: 0 } : spring.fast
                                   }
-                                  className="absolute inset-0 rounded-lg"
+                                  className="pointer-events-none absolute inset-0 rounded-lg"
                                 />
                               ) : null}
                               <span
