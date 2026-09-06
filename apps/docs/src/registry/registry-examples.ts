@@ -13,6 +13,17 @@ export const examples: Registry["items"] = [
     ],
   },
   {
+    name: "hoop-shot-demo",
+    type: "registry:example",
+    registryDependencies: ["https://matos-ui.com/r/hoop-shot.json"],
+    files: [
+      {
+        path: "examples/hoop-shot-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
     name: "magnetic-card-demo",
     type: "registry:example",
     registryDependencies: ["magnetic-card"],

@@ -67,6 +67,32 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
   },
+  "hoop-shot": {
+    name: "hoop-shot",
+    type: "registry:ui",
+    registryDependencies: [
+      "https://matos-ui.com/r/elevated.json",
+      "https://matos-ui.com/r/motion-tokens.json",
+      "https://matos-ui.com/r/arena-motion.json",
+      "utils",
+    ],
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/hoop-shot.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/ui/hoop-shot.tsx");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
   "magnetic-card": {
     name: "magnetic-card",
     type: "registry:ui",
@@ -1631,6 +1657,29 @@ export const Index: Record<string, any> = {
     component: React.lazy(async () => {
       const mod = await import(
         "@/registry/new-york-v4/examples/rally-court-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "hoop-shot-demo": {
+    name: "hoop-shot-demo",
+    type: "registry:example",
+    registryDependencies: ["https://matos-ui.com/r/hoop-shot.json"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/hoop-shot-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/hoop-shot-demo.tsx"
       );
       const exportName =
         Object.keys(mod).find(

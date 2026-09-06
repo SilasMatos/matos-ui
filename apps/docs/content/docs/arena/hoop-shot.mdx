@@ -1,0 +1,90 @@
+---
+title: Hoop Shot
+description: A basketball shooting drill drawn on an SVG half-court — the ball winds up, arcs to the rim, and either swishes the net or rims out, with a streak that lights an on-fire state.
+---
+
+<ComponentPreview name="hoop-shot-demo" />
+
+Every shot runs the same beats: a short wind-up dip, an arc to the rim carried
+by a three-keyframe `y` (up through the apex, down to the ring), then either the
+net bulging on a make or the ball clanging off the front rim and bouncing to the
+floor on a miss. Points, field goals and the current streak update as it lands;
+three makes in a row lights the on-fire badge and sets the rim pulsing. `playful`
+is opt-in and only touches the scoreboard bump.
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/hoop-shot.json" />
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the following dependencies:</Step>
+
+<CodeBlockCommand command="npm install framer-motion lucide-react" />
+
+<Step>Copy the `arena-motion` helper and the component into your project.</Step>
+
+<ComponentSource name="hoop-shot" title="components/matos-ui/hoop-shot.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { HoopShot, type HoopShotLabels } from "@/components/matos-ui/hoop-shot";
+
+const labels: HoopShotLabels = {
+  title: "Range session",
+  reset: "Reset session",
+  shoot: "Shoot",
+  points: "Pts",
+  made: "FG",
+  streak: "Streak",
+  swish: "All net.",
+  rimOut: "Front rim.",
+  onFire: "On fire",
+};
+
+<HoopShot labels={labels} onScore={(points) => console.log(points)} />;
+```
+
+## Props
+
+| Prop         | Type                       | Default | Description                                                        |
+| ------------ | -------------------------- | ------- | ---------------------------------------------------------------- |
+| `labels`     | `HoopShotLabels`           | —       | Every visible string.                                            |
+| `offset`     | `number`                   | `1`     | Elevation steps above the current substrate.                     |
+| `playful`    | `boolean`                  | `false` | Bump the scoreboard on the high-bounce `playful` tier.           |
+| `makeChance` | `number`                   | `0.62`  | Chance a shot falls (0–1). The first two attempts always drop.   |
+| `fireAt`     | `number`                   | `3`     | Consecutive makes needed for the on-fire state.                  |
+| `onScore`    | `(points: 2 \| 3) => void` | —       | Fired when a shot goes in.                                       |
+
+## Court colour
+
+The court ink and hardwood are local custom properties with token-derived
+defaults:
+
+```tsx
+<HoopShot
+  labels={labels}
+  style={{ "--hoop-wood": "var(--color-secondary)" } as React.CSSProperties}
+/>
+```

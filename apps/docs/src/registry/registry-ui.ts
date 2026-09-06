@@ -162,6 +162,20 @@ export const ui: Registry["items"] = [
     files: [{ path: "ui/rally-court.tsx", type: "registry:ui" }],
   },
   {
+    name: "hoop-shot",
+    type: "registry:ui",
+    description:
+      "Basketball shooting drill on an SVG half-court: the ball arcs to the rim, swishes the net or rims out, and a streak of makes lights an on-fire state. Arena component.",
+    dependencies: ["framer-motion", "lucide-react"],
+    registryDependencies: [
+      "https://matos-ui.com/r/elevated.json",
+      "https://matos-ui.com/r/motion-tokens.json",
+      "https://matos-ui.com/r/arena-motion.json",
+      "utils",
+    ],
+    files: [{ path: "ui/hoop-shot.tsx", type: "registry:ui" }],
+  },
+  {
     name: "magnetic-card",
     type: "registry:ui",
     dependencies: physicsDeps,
