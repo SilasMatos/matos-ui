@@ -53,6 +53,40 @@
       "files": []
     },
     {
+      "name": "arena-motion",
+      "type": "registry:lib",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/lib/arena-motion.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "rally-court",
+      "type": "registry:ui",
+      "description": "Tennis scoreboard on an SVG court: full point → game → set scoring with deuce and advantage, an animated rally, and a serve side that flips. Arena component.",
+      "dependencies": [
+        "framer-motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "https://matos-ui.com/r/elevated.json",
+        "https://matos-ui.com/r/motion-tokens.json",
+        "https://matos-ui.com/r/arena-motion.json",
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/rally-court.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "magnetic-card",
       "type": "registry:ui",
       "dependencies": [
@@ -1716,6 +1750,19 @@
           "sidebar-ring": "oklch(0.58 0.24 288 / 0.5)"
         }
       }
+    },
+    {
+      "name": "rally-court-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "https://matos-ui.com/r/rally-court.json"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/rally-court-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
     },
     {
       "name": "magnetic-card-demo",

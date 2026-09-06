@@ -1,0 +1,16 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "rally-court-demo",
+  "registryDependencies": [
+    "https://matos-ui.com/r/rally-court.json"
+  ],
+  "files": [
+    {
+      "path": "components/matos-ui/examples/rally-court-demo.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\n\nimport {\n  RallyCourt,\n  type RallyCourtLabels,\n} from \"@/components/matos-ui/rally-court\";\n\nconst labels: RallyCourtLabels = {\n  title: \"Match on serve\",\n  reset: \"Reset match\",\n  you: \"You\",\n  opponent: \"Opponent\",\n  serving: \"Serving\",\n  pointYou: \"Point — you\",\n  pointOpponent: \"Point — opponent\",\n  inRally: \"Rally in play\",\n  deuce: \"Deuce\",\n  advantage: \"Advantage, {player}\",\n  gameWon: \"Game, {player}\",\n  setWon: \"Set, {player}\",\n  matchWon: \"Match, {player}\",\n};\n\nexport default function RallyCourtDemo() {\n  const [playful, setPlayful] = useState(false);\n\n  return (\n    <div className=\"flex w-full flex-col items-center gap-3\">\n      <label className=\"flex items-center gap-2 self-end text-muted-foreground text-xs\">\n        <input\n          type=\"checkbox\"\n          checked={playful}\n          onChange={(event) => setPlayful(event.target.checked)}\n          className=\"size-3.5 accent-primary\"\n        />\n        Playful motion\n      </label>\n      <RallyCourt labels={labels} playful={playful} />\n    </div>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/rally-court-demo.tsx"
+    }
+  ],
+  "type": "registry:example"
+}

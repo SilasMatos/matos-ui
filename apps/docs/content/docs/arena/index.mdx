@@ -1,0 +1,38 @@
+---
+title: Arena
+description: Gamified, sport-themed components built on SVG courts and the Matos UI surface and motion tokens.
+---
+
+Arena is a family of playful, sport-themed components. Each one draws its court
+or field as an SVG and animates the action on it — a rally crossing the net, a
+ball arcing to the hoop, a formation shifting shape. They are meant to feel like
+a game, not a dashboard widget.
+
+They still obey the rest of the system. Surfaces use `Elevated` and `offset`,
+never a fixed background. Timing comes from the
+[Motion tokens](/docs/foundations/motion), and the high-bounce `playful` tier is
+opt-in through a prop — off by default, so a component reads as sober until you
+ask it to celebrate. Reduced motion keeps the state changes and drops the
+travel, and `arena-motion` (installed alongside every Arena component) keeps
+that preference live during a session.
+
+## Rules of the section
+
+- **Accent colour follows the palette.** No pitch green, no clay orange. If a
+  component needs a semantic colour of its own it exposes a local custom
+  property with a token-derived default, overridable at the call site.
+- **No real IP.** No club crests, league names, competitions or athletes — in
+  components, demos, or example copy. Sample data is invented and generic.
+- **No illustrations, mascots or emoji.** The section is typographic and
+  geometric. A Lucide line icon is the ceiling.
+- **The component contract applies in full.** Forwarded `ref`, merged
+  `className`, `data-slot`, text passed in as props.
+
+## v1
+
+- [Rally Court](/docs/arena/rally-court) — a tennis scoreboard on an SVG court:
+  full point → game → set scoring with deuce and advantage, an animated rally,
+  and a serve side that flips.
+
+More sports (a basketball hoop shot, a soccer formation board, a stadium hype
+meter) land in the next round once the section has proven itself.

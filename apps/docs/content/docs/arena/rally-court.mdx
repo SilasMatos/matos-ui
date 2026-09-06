@@ -1,0 +1,101 @@
+---
+title: Rally Court
+description: A tennis scoreboard drawn on an SVG court — full point, game and set scoring with deuce and advantage, an animated rally, and a serve side that flips.
+---
+
+<ComponentPreview name="rally-court-demo" />
+
+Rally Court keeps a real tennis score: points climb `0 → 15 → 30 → 40`, `40-40`
+is deuce, and a player needs a two-point lead to take the game. Six games with a
+two-game lead wins the set, or a first-to-seven tiebreak at `6-6`; the match is
+best of three. Between points the ball rallies across the net on the `moderate`
+spring; the winning point flies to a corner on `slow`, or on `playful` when you
+opt in.
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/rally-court.json" />
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the following dependencies:</Step>
+
+<CodeBlockCommand command="npm install framer-motion lucide-react" />
+
+<Step>Copy the `arena-motion` helper and the component into your project.</Step>
+
+<ComponentSource name="rally-court" title="components/matos-ui/rally-court.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import {
+  RallyCourt,
+  type RallyCourtLabels,
+} from "@/components/matos-ui/rally-court";
+
+const labels: RallyCourtLabels = {
+  title: "Match on serve",
+  reset: "Reset match",
+  you: "You",
+  opponent: "Opponent",
+  serving: "Serving",
+  pointYou: "Point — you",
+  pointOpponent: "Point — opponent",
+  inRally: "Rally in play",
+  deuce: "Deuce",
+  advantage: "Advantage, {player}",
+  gameWon: "Game, {player}",
+  setWon: "Set, {player}",
+  matchWon: "Match, {player}",
+};
+
+<RallyCourt labels={labels} onMatchEnd={(winner) => console.log(winner)} />;
+```
+
+## Props
+
+| Prop            | Type                          | Default | Description                                                             |
+| --------------- | ----------------------------- | ------- | --------------------------------------------------------------------- |
+| `labels`        | `RallyCourtLabels`            | —       | Every visible string. `advantage` / `gameWon` / `setWon` / `matchWon` take a `{player}` placeholder. |
+| `offset`        | `number`                      | `1`     | Elevation steps above the current substrate.                          |
+| `playful`       | `boolean`                     | `false` | Send the point-winning ball on the high-bounce `playful` tier.        |
+| `defaultServer` | `0 \| 1`                      | `0`     | Which player serves first (`0` is “you”).                             |
+| `onPoint`       | `(winner: 0 \| 1) => void`    | —       | Fired on every point.                                                 |
+| `onMatchEnd`    | `(winner: 0 \| 1) => void`    | —       | Fired once, when the match is decided.                                |
+
+The scoring is a pure function — `scoreRallyPoint(state, winner)` — and
+`formatGameScore` turns raw point counts into `0/15/30/40/Ad`, so the match
+logic is testable on its own.
+
+## Court colour
+
+The court ink and surface are local custom properties with token-derived
+defaults, so a call site can retint the court without leaving the theme:
+
+```tsx
+<RallyCourt
+  labels={labels}
+  style={{ "--rally-turf": "var(--color-secondary)" } as React.CSSProperties}
+/>
+```

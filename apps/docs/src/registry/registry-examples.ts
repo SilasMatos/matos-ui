@@ -2,6 +2,17 @@ import type { Registry } from "shadcn/schema";
 
 export const examples: Registry["items"] = [
   {
+    name: "rally-court-demo",
+    type: "registry:example",
+    registryDependencies: ["https://matos-ui.com/r/rally-court.json"],
+    files: [
+      {
+        path: "examples/rally-court-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
     name: "magnetic-card-demo",
     type: "registry:example",
     registryDependencies: ["magnetic-card"],

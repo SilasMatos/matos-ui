@@ -8,7 +8,6 @@ import {
   type Variants,
 } from "framer-motion";
 import { ChevronDown, SearchIcon } from "lucide-react";
-import { usePathname } from "next/navigation";
 import {
   type ComponentProps,
   type ReactNode,
@@ -17,7 +16,7 @@ import {
   useState,
 } from "react";
 
-import { Link } from "@/i18n/navigation";
+import { Link, usePathname } from "@/i18n/navigation";
 import { NEW_COMPONENTS } from "@/lib/new-components";
 import {
   type DocsPageTree,
