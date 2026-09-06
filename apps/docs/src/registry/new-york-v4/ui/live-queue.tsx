@@ -18,8 +18,11 @@ import {
 
 import { cn } from "@/lib/utils";
 import {
+  liftVariants,
+  marqueeTransition,
   spring,
   staggerContainer,
+  withReducedMotion,
 } from "@/registry/new-york-v4/lib/motion-tokens";
 import { Elevated } from "@/registry/new-york-v4/ui/elevated";
 
@@ -83,15 +86,11 @@ export function LiveQueue<T extends LiveQueueItemData>({
   );
 }
 
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 8, scale: 0.98 },
-  visible: { opacity: 1, y: 0, scale: 1, transition: spring.fast },
-};
-
-const reducedItemVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0 } },
-};
+// A queue row lifts one step off the page as it arrives — `liftVariants(1)` is
+// the tier `motionForOffset` already assigns to that, with the travel widened
+// to 8px so a full-width row reads it. `withReducedMotion` keeps the crossfade.
+const itemVariants: Variants = liftVariants(1, { y: 8 });
+const reducedItemVariants: Variants = withReducedMotion(itemVariants);
 
 const statusConfig: Record<
   LiveQueueItemStatus,
@@ -204,7 +203,7 @@ export function LiveQueueItem<T extends LiveQueueItemData>({
             type="button"
             onClick={() => onItemComplete?.(item.id)}
             aria-label={`Dismiss ${item.title}`}
-            className="shrink-0 rounded-md p-1 text-muted-foreground outline-none transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+            className="hover-lift [--lift:1px] shrink-0 rounded-md p-1 text-muted-foreground outline-none hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
           >
             <X className="size-3.5" aria-hidden="true" />
           </button>
@@ -221,13 +220,7 @@ export function LiveQueueItem<T extends LiveQueueItemData>({
                 shouldReduceMotion ? { x: "0%" } : { x: ["-100%", "300%"] }
               }
               transition={
-                shouldReduceMotion
-                  ? { duration: 0 }
-                  : {
-                      duration: 1.1,
-                      ease: "linear",
-                      repeat: Number.POSITIVE_INFINITY,
-                    }
+                shouldReduceMotion ? { duration: 0 } : marqueeTransition(1.1)
               }
             />
           </span>

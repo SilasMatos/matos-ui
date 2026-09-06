@@ -19,6 +19,8 @@ import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
 
 import { spring } from "@/registry/new-york-v4/lib/motion-tokens";
+import { surfaceClasses } from "@/registry/new-york-v4/lib/surface-classes";
+import { useSurface } from "@/registry/new-york-v4/lib/surface-context";
 import { Elevated } from "@/registry/new-york-v4/ui/elevated";
 
 export const motionTabsVariants = tv({
@@ -98,6 +100,10 @@ function MotionTabs({
 }: MotionTabsProps) {
   const shouldReduceMotion = useReducedMotion();
   const generatedId = useId().replace(/:/g, "");
+  // The active-tab indicator lifts off the muted track: two rungs above the
+  // substrate this component was dropped on (one for the tabs surface, one for
+  // the pill sitting on it). No fixed fill.
+  const indicatorLevel = Math.min(useSurface() + 2, 8);
   const buttonRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const firstEnabled = items.find((item) => !item.disabled)?.value;
   const [internalValue, setInternalValue] = useState(
@@ -227,9 +233,6 @@ function MotionTabs({
               data-active={isSelected ? "" : undefined}
               onClick={() => setSelected(item.value)}
               onKeyDown={(event) => handleKeyDown(event, index)}
-              whileHover={
-                item.disabled || shouldReduceMotion ? undefined : { y: -1 }
-              }
               whileTap={
                 item.disabled || shouldReduceMotion
                   ? undefined
@@ -237,7 +240,9 @@ function MotionTabs({
               }
               className={twMerge(
                 "group relative flex h-10 min-w-[7.5rem] flex-1 items-center justify-center gap-2 rounded-lg px-3",
-                "text-sm font-medium outline-none transition-colors duration-[var(--motion-duration)]",
+                // hover-lift owns the 1px float and its curve, touch guard and
+                // reduced-motion guard — the DESIGN 3.9 way, not a raw whileHover.
+                "hover-lift [--lift:1px] text-sm font-medium outline-none",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                 "disabled:pointer-events-none disabled:opacity-45",
                 isSelected
@@ -249,7 +254,11 @@ function MotionTabs({
                 <motion.span
                   layoutId={`${generatedId}-motion-tabs-indicator`}
                   data-slot="motion-tabs-indicator"
-                  className="absolute inset-0 rounded-lg border border-border bg-background shadow-xs"
+                  data-surface={indicatorLevel}
+                  className={twMerge(
+                    "absolute inset-0 rounded-lg",
+                    surfaceClasses(indicatorLevel),
+                  )}
                   transition={spring.fast}
                 />
               ) : null}

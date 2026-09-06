@@ -82,8 +82,9 @@ const reducedMotionVariants: Variants = {
 
 export const actionBarVariants = tv({
   base: [
+    // Background, shadow and substrate all come from `Elevated` at
+    // ACTION_BAR_OFFSET — the surface is opaque, so no backdrop blur to add.
     "fixed z-50 flex w-[calc(100vw-2rem)] max-w-[calc(100vw-2rem)] flex-col gap-3 border sm:w-auto sm:max-w-[calc(100vw-3rem)] sm:flex-row sm:items-center",
-    "supports-[backdrop-filter]:backdrop-blur-sm",
     "will-change-transform",
   ],
   variants: {
