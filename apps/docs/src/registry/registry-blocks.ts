@@ -8,6 +8,86 @@ function dep(name: string) {
 
 export const blocks: Registry["items"] = [
   {
+    name: "notification-center-01",
+    type: "registry:block",
+    description:
+      "Notification centre on the Surfaces system — every card lifts one step off the panel and another under the cursor, new items slide in, and dismissals play their exit before the list closes the gap.",
+    dependencies: ["framer-motion", "lucide-react", "tailwind-merge"],
+    registryDependencies: [
+      dep("badge"),
+      dep("button"),
+      dep("elevated"),
+      dep("motion-tokens"),
+      dep("surface-classes"),
+      dep("surface-context"),
+    ],
+    files: [
+      {
+        path: "blocks/notification-center-01/notification-center-01.tsx",
+        type: "registry:block",
+      },
+    ],
+  },
+  {
+    name: "command-menu-01",
+    type: "registry:block",
+    description:
+      "Command palette that spells out the elevation rule: a dialog-weight Elevated over a scrim, with a popover-weight Elevated highlight nested inside it, sliding between rows on arrow keys.",
+    dependencies: ["framer-motion", "lucide-react", "tailwind-merge"],
+    registryDependencies: [
+      dep("elevated"),
+      dep("motion-tokens"),
+      dep("surface-classes"),
+      dep("surface-context"),
+    ],
+    files: [
+      {
+        path: "blocks/command-menu-01/command-menu-01.tsx",
+        type: "registry:block",
+      },
+    ],
+  },
+  {
+    name: "pricing-tiers-01",
+    type: "registry:block",
+    description:
+      "Pricing table where the featured tier sits a full elevation rung above its neighbours, with a shared-layoutId billing toggle and a price that slides on switch.",
+    dependencies: ["framer-motion", "lucide-react", "tailwind-merge"],
+    registryDependencies: [
+      dep("badge"),
+      dep("button"),
+      dep("elevated"),
+      dep("motion-tokens"),
+      dep("surface-classes"),
+      dep("surface-context"),
+    ],
+    files: [
+      {
+        path: "blocks/pricing-tiers-01/pricing-tiers-01.tsx",
+        type: "registry:block",
+      },
+    ],
+  },
+  {
+    name: "stat-tiles-01",
+    type: "registry:block",
+    description:
+      "A row of KPI tiles that reads its substrate and animates once on scroll — reveal + stagger, counting numbers, and a self-drawing sparkline per tile.",
+    dependencies: ["framer-motion", "lucide-react", "tailwind-merge"],
+    registryDependencies: [
+      dep("elevated"),
+      dep("motion-tokens"),
+      dep("surface-classes"),
+      dep("surface-context"),
+    ],
+    files: [
+      {
+        path: "blocks/stat-tiles-01/stat-tiles-01.tsx",
+        type: "registry:block",
+      },
+    ],
+  },
+  {
     name: "dashboard-overview-01",
     type: "registry:block",
     description:

@@ -1321,6 +1321,122 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
   },
+  "notification-center-01": {
+    name: "notification-center-01",
+    type: "registry:block",
+    registryDependencies: [
+      "https://matos-ui.com/r/badge.json",
+      "https://matos-ui.com/r/button.json",
+      "https://matos-ui.com/r/elevated.json",
+      "https://matos-ui.com/r/motion-tokens.json",
+      "https://matos-ui.com/r/surface-classes.json",
+      "https://matos-ui.com/r/surface-context.json",
+    ],
+    files: [
+      {
+        path: "src/registry/new-york-v4/blocks/notification-center-01/notification-center-01.tsx",
+        type: "registry:block",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/blocks/notification-center-01/notification-center-01.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "command-menu-01": {
+    name: "command-menu-01",
+    type: "registry:block",
+    registryDependencies: [
+      "https://matos-ui.com/r/elevated.json",
+      "https://matos-ui.com/r/motion-tokens.json",
+      "https://matos-ui.com/r/surface-classes.json",
+      "https://matos-ui.com/r/surface-context.json",
+    ],
+    files: [
+      {
+        path: "src/registry/new-york-v4/blocks/command-menu-01/command-menu-01.tsx",
+        type: "registry:block",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/blocks/command-menu-01/command-menu-01.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "pricing-tiers-01": {
+    name: "pricing-tiers-01",
+    type: "registry:block",
+    registryDependencies: [
+      "https://matos-ui.com/r/badge.json",
+      "https://matos-ui.com/r/button.json",
+      "https://matos-ui.com/r/elevated.json",
+      "https://matos-ui.com/r/motion-tokens.json",
+      "https://matos-ui.com/r/surface-classes.json",
+      "https://matos-ui.com/r/surface-context.json",
+    ],
+    files: [
+      {
+        path: "src/registry/new-york-v4/blocks/pricing-tiers-01/pricing-tiers-01.tsx",
+        type: "registry:block",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/blocks/pricing-tiers-01/pricing-tiers-01.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "stat-tiles-01": {
+    name: "stat-tiles-01",
+    type: "registry:block",
+    registryDependencies: [
+      "https://matos-ui.com/r/elevated.json",
+      "https://matos-ui.com/r/motion-tokens.json",
+      "https://matos-ui.com/r/surface-classes.json",
+      "https://matos-ui.com/r/surface-context.json",
+    ],
+    files: [
+      {
+        path: "src/registry/new-york-v4/blocks/stat-tiles-01/stat-tiles-01.tsx",
+        type: "registry:block",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/blocks/stat-tiles-01/stat-tiles-01.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
   "dashboard-overview-01": {
     name: "dashboard-overview-01",
     type: "registry:block",
