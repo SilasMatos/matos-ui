@@ -296,9 +296,9 @@ export function CandlestickChart({
             viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
             className="size-full"
             role="img"
-            aria-labelledby={`${id}-title ${id}-desc`}
+            aria-label={String(title)}
+            aria-describedby={`${id}-desc`}
           >
-            <title id={`${id}-title`}>{String(title)}</title>
             <desc id={`${id}-desc`}>
               Candlestick chart with {candles.length} periods. Latest close:{" "}
               {format(normalized[normalized.length - 1].close)}.

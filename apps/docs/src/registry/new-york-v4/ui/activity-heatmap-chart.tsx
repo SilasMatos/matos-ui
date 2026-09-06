@@ -295,9 +295,9 @@ export function ActivityHeatmapChart({
             viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
             className="w-full"
             role="img"
-            aria-labelledby={`${id}-title ${id}-desc`}
+            aria-label={String(title)}
+            aria-describedby={`${id}-desc`}
           >
-            <title id={`${id}-title`}>{String(title)}</title>
             <desc id={`${id}-desc`}>
               Activity heatmap with {cells.length} days across {columns} weeks.
               Total activity: {total}.

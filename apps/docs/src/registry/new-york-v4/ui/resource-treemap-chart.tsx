@@ -231,9 +231,8 @@ export function ResourceTreemapChart({
             viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
             className="size-full"
             role="img"
-            aria-labelledby={`${id}-title`}
+            aria-label={String(title)}
           >
-            <title id={`${id}-title`}>{String(title)}</title>
             <defs>
               {tiles.map((tile) => (
                 <radialGradient

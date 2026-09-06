@@ -225,9 +225,8 @@ export function ScoreRadarChart({
             viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
             className="w-full"
             role="img"
-            aria-labelledby={`${id}-title`}
+            aria-label={String(title)}
           >
-            <title id={`${id}-title`}>{String(title)}</title>
             <defs>
               <linearGradient id={`${id}-fill`} x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="currentColor" stopOpacity="0.24" />
