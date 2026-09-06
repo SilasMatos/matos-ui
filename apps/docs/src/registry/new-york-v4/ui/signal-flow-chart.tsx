@@ -10,7 +10,13 @@ import {
 } from "react";
 import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
+import { spring } from "@/registry/new-york-v4/lib/motion-tokens";
 import { useChartInteraction } from "./chart-interaction";
+import {
+  chartAccentTransition,
+  chartDraw,
+  chartStaggerStep,
+} from "./chart-motion";
 
 export const signalFlowChartVariants = tv({
   base: "not-prose w-full text-foreground",
@@ -385,7 +391,7 @@ export function SignalFlowChart({
                   aria-label={`${lane.label}: ${lane.formattedValue}`}
                   {...getItemProps(lane.index)}
                   animate={{ opacity: dimmed ? 0.58 : 1 }}
-                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  transition={chartAccentTransition}
                   style={{ color: lane.color }}
                   className="cursor-pointer outline-none focus-visible:[&_[data-fill]]:stroke-ring focus-visible:[&_[data-fill]]:stroke-[7]"
                 >
@@ -462,12 +468,11 @@ export function SignalFlowChart({
                     }}
                     transition={{
                       pathLength: {
-                        duration: motionDuration,
-                        ease: [0.16, 1, 0.3, 1],
-                        delay: motionDelay + lane.index * 0.08,
+                        ...chartDraw(motionDuration),
+                        delay: motionDelay + lane.index * chartStaggerStep,
                       },
-                      opacity: { duration: 0.3, delay: motionDelay },
-                      strokeWidth: { duration: 0.25 },
+                      opacity: { ...chartAccentTransition, delay: motionDelay },
+                      strokeWidth: chartAccentTransition,
                     }}
                   />
 
@@ -531,10 +536,11 @@ export function SignalFlowChart({
                     initial={motionEnabled ? { scale: 0, opacity: 0 } : false}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{
+                      ...chartDraw(0.3),
                       delay:
-                        motionDelay + motionDuration * 0.7 + lane.index * 0.08,
-                      duration: 0.3,
-                      ease: [0.16, 1, 0.3, 1],
+                        motionDelay +
+                        motionDuration * 0.7 +
+                        lane.index * chartStaggerStep,
                     }}
                     style={{ transformOrigin: `${lane.tipX}px ${lane.tipY}px` }}
                   >
@@ -546,7 +552,7 @@ export function SignalFlowChart({
                         r: isActive ? 8 : 5,
                         opacity: isActive ? 0.14 : 0,
                       }}
-                      transition={{ duration: 0.18, ease: "easeOut" }}
+                      transition={chartAccentTransition}
                     />
                     <circle
                       cx={lane.tipX}
@@ -592,8 +598,9 @@ export function SignalFlowChart({
                       }
                       animate={{ opacity: isActive ? 1 : 0.85, x: valueX }}
                       transition={{
-                        delay: motionDelay + 0.2 + lane.index * 0.07,
-                        duration: 0.3,
+                        ...chartAccentTransition,
+                        delay:
+                          motionDelay + 0.2 + lane.index * chartStaggerStep,
                       }}
                     >
                       {lane.formattedValue}
@@ -625,7 +632,7 @@ export function SignalFlowChart({
                     y: tooltipY + 6,
                     scale: 0.98,
                   }}
-                  transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+                  transition={spring.fast}
                 >
                   <rect
                     width={tooltipWidth}
