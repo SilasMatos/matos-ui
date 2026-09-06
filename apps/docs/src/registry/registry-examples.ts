@@ -1,28 +1,24 @@
 import type { Registry } from "shadcn/schema";
 
 export const examples: Registry["items"] = [
-  {
-    name: "rally-court-demo",
-    type: "registry:example",
-    registryDependencies: ["https://matos-ui.com/r/rally-court.json"],
-    files: [
-      {
-        path: "examples/rally-court-demo.tsx",
-        type: "registry:example",
-      },
-    ],
-  },
-  {
-    name: "hoop-shot-demo",
-    type: "registry:example",
-    registryDependencies: ["https://matos-ui.com/r/hoop-shot.json"],
-    files: [
-      {
-        path: "examples/hoop-shot-demo.tsx",
-        type: "registry:example",
-      },
-    ],
-  },
+  // --- Arena (parked) — see the note in registry-ui.ts ---------------------
+  // {
+  //   name: "rally-court-demo",
+  //   type: "registry:example",
+  //   registryDependencies: ["https://matos-ui.com/r/rally-court.json"],
+  //   files: [
+  //     { path: "examples/rally-court-demo.tsx", type: "registry:example" },
+  //   ],
+  // },
+  // {
+  //   name: "hoop-shot-demo",
+  //   type: "registry:example",
+  //   registryDependencies: ["https://matos-ui.com/r/hoop-shot.json"],
+  //   files: [
+  //     { path: "examples/hoop-shot-demo.tsx", type: "registry:example" },
+  //   ],
+  // },
+  // ------------------------------------------------------------------------
   {
     name: "magnetic-card-demo",
     type: "registry:example",

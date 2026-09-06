@@ -141,40 +141,47 @@ const liftCss = {
 const physicsDeps = ["framer-motion", "tailwind-merge", "tailwind-variants"];
 
 export const ui: Registry["items"] = [
-  {
-    name: "arena-motion",
-    type: "registry:lib",
-    dependencies: ["framer-motion"],
-    files: [{ path: "lib/arena-motion.ts", type: "registry:lib" }],
-  },
-  {
-    name: "rally-court",
-    type: "registry:ui",
-    description:
-      "Tennis scoreboard on an SVG court: full point → game → set scoring with deuce and advantage, an animated rally, and a serve side that flips. Arena component.",
-    dependencies: ["framer-motion", "lucide-react"],
-    registryDependencies: [
-      "https://matos-ui.com/r/elevated.json",
-      "https://matos-ui.com/r/motion-tokens.json",
-      "https://matos-ui.com/r/arena-motion.json",
-      "utils",
-    ],
-    files: [{ path: "ui/rally-court.tsx", type: "registry:ui" }],
-  },
-  {
-    name: "hoop-shot",
-    type: "registry:ui",
-    description:
-      "Basketball shooting drill on an SVG half-court: the ball arcs to the rim, swishes the net or rims out, and a streak of makes lights an on-fire state. Arena component.",
-    dependencies: ["framer-motion", "lucide-react"],
-    registryDependencies: [
-      "https://matos-ui.com/r/elevated.json",
-      "https://matos-ui.com/r/motion-tokens.json",
-      "https://matos-ui.com/r/arena-motion.json",
-      "utils",
-    ],
-    files: [{ path: "ui/hoop-shot.tsx", type: "registry:ui" }],
-  },
+  // --- Arena (parked) -------------------------------------------------------
+  // The Arena family (arena-motion, rally-court, hoop-shot) is commented out
+  // pending a redesign. The component sources still live under
+  // registry/new-york-v4/ui/ and .../examples/ — re-enable these entries and
+  // restore content/docs/arena/ + the "arena" entry in content/docs/meta.json
+  // to bring the section back.
+  // {
+  //   name: "arena-motion",
+  //   type: "registry:lib",
+  //   dependencies: ["framer-motion"],
+  //   files: [{ path: "lib/arena-motion.ts", type: "registry:lib" }],
+  // },
+  // {
+  //   name: "rally-court",
+  //   type: "registry:ui",
+  //   description:
+  //     "Tennis scoreboard on an SVG court: full point → game → set scoring with deuce and advantage, an animated rally, and a serve side that flips. Arena component.",
+  //   dependencies: ["framer-motion", "lucide-react"],
+  //   registryDependencies: [
+  //     "https://matos-ui.com/r/elevated.json",
+  //     "https://matos-ui.com/r/motion-tokens.json",
+  //     "https://matos-ui.com/r/arena-motion.json",
+  //     "utils",
+  //   ],
+  //   files: [{ path: "ui/rally-court.tsx", type: "registry:ui" }],
+  // },
+  // {
+  //   name: "hoop-shot",
+  //   type: "registry:ui",
+  //   description:
+  //     "Basketball shooting drill on an SVG half-court: the ball arcs to the rim, swishes the net or rims out, and a streak of makes lights an on-fire state. Arena component.",
+  //   dependencies: ["framer-motion", "lucide-react"],
+  //   registryDependencies: [
+  //     "https://matos-ui.com/r/elevated.json",
+  //     "https://matos-ui.com/r/motion-tokens.json",
+  //     "https://matos-ui.com/r/arena-motion.json",
+  //     "utils",
+  //   ],
+  //   files: [{ path: "ui/hoop-shot.tsx", type: "registry:ui" }],
+  // },
+  // ------------------------------------------------------------------------
   {
     name: "magnetic-card",
     type: "registry:ui",
