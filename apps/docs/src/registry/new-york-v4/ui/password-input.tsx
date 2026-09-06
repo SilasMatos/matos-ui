@@ -14,11 +14,22 @@ import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
 
 import {
+  duration,
+  motionForOffset,
+  spring,
+} from "@/registry/new-york-v4/lib/motion-tokens";
+import { Elevated } from "@/registry/new-york-v4/ui/elevated";
+import {
   Field,
   FieldLabel,
   FieldMessage,
 } from "@/registry/new-york-v4/ui/field";
 import { Input } from "@/registry/new-york-v4/ui/input";
+
+// The strength popover is a real dropdown: `Elevated` at the conventional
+// offset of 2, on the tier `motionForOffset(2)` gives it (`moderate`).
+const MotionElevated = motion.create(Elevated);
+const meterMotion = motionForOffset(2);
 
 type IconCircleCheckProps = ComponentProps<"svg"> & {
   size?: string | number;
@@ -83,8 +94,9 @@ function IconCircleCheck({ size = "14px", ...props }: IconCircleCheckProps) {
             y2="18"
             gradientUnits="userSpaceOnUse"
           >
-            <stop stopColor="#34D399" />
-            <stop offset="1" stopColor="#047857" />
+            {/* Tinted by the icon's own text colour so it follows the palette. */}
+            <stop stopColor="currentColor" />
+            <stop offset="1" stopColor="currentColor" stopOpacity="0.72" />
           </linearGradient>
 
           <linearGradient
@@ -200,19 +212,19 @@ export const passwordInputVariants = tv({
     control: "relative",
     toggle: [
       "absolute inset-y-0 right-1.5 my-auto inline-flex size-7 items-center justify-center rounded-lg text-muted-foreground",
-      "transition-[background-color,color,transform] duration-300 ease-spring hover:bg-muted/60 hover:text-foreground active:scale-[0.98]",
+      "transition-[background-color,color,transform] hover:bg-muted/60 hover:text-foreground active:scale-[0.98]",
       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
       "disabled:pointer-events-none disabled:opacity-50",
     ],
     meter:
-      "absolute inset-x-0 top-[calc(100%+0.375rem)] z-20 grid gap-1.5 rounded-xl border border-border bg-background/95 p-2.5 shadow-lg backdrop-blur-sm",
+      "absolute inset-x-0 top-[calc(100%+0.375rem)] z-20 grid gap-1.5 rounded-xl p-2.5",
     meterHeader:
       "flex items-center justify-between gap-2 text-[11px] text-muted-foreground",
     meterTrack: "h-1 overflow-hidden rounded-full bg-muted",
     meterBar: "h-full rounded-full bg-foreground",
     criteria: "grid gap-1 pt-0.5 sm:grid-cols-2",
     criterion:
-      "flex items-center gap-1.5 text-[11px] text-muted-foreground transition-colors duration-200 data-[met=true]:text-emerald-700 dark:data-[met=true]:text-emerald-400",
+      "flex items-center gap-1.5 text-[11px] text-muted-foreground transition-colors data-[met=true]:text-primary",
     criterionIcon: "flex size-3.5 shrink-0 items-center justify-center",
   },
   variants: {
@@ -360,7 +372,9 @@ export function PasswordInput({
               }
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.94 }}
-              transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
+              transition={
+                shouldReduceMotion ? { duration: duration.fast } : spring.fast
+              }
             >
               {visible ? (
                 <EyeOff className="size-4" aria-hidden="true" />
@@ -372,7 +386,8 @@ export function PasswordInput({
         </button>
         <AnimatePresence initial={false}>
           {showCriteria && isMeterOpen ? (
-            <motion.div
+            <MotionElevated
+              offset={2}
               id={criteriaId}
               data-slot="password-input-meter"
               className={styles.meter()}
@@ -385,12 +400,14 @@ export function PasswordInput({
               exit={
                 shouldReduceMotion
                   ? { opacity: 0 }
-                  : { opacity: 0, y: -4, scale: 0.99 }
+                  : {
+                      opacity: 0,
+                      y: -4,
+                      scale: 0.99,
+                      transition: meterMotion.exit,
+                    }
               }
-              transition={{
-                duration: shouldReduceMotion ? 0 : 0.28,
-                ease: [0.2, 0, 0, 1],
-              }}
+              transition={shouldReduceMotion ? { duration: 0 } : meterMotion}
             >
               <div className={styles.meterHeader()}>
                 <span>Password strength</span>
@@ -407,10 +424,9 @@ export function PasswordInput({
                     width: `${meterWidth}%`,
                     opacity: password ? 1 : 0,
                   }}
-                  transition={{
-                    duration: shouldReduceMotion ? 0 : 0.32,
-                    ease: [0.4, 0, 0.2, 1],
-                  }}
+                  transition={
+                    shouldReduceMotion ? { duration: 0 } : spring.moderate
+                  }
                 />
               </div>
               <ul className={styles.criteria()}>
@@ -432,13 +448,14 @@ export function PasswordInput({
                           }
                           animate={{ opacity: 1, scale: 1 }}
                           exit={{ opacity: 0, scale: 0.88 }}
-                          transition={{
-                            duration: 0.24,
-                            ease: [0.4, 0, 0.2, 1],
-                          }}
+                          transition={
+                            shouldReduceMotion
+                              ? { duration: duration.fast }
+                              : spring.fast
+                          }
                         >
                           {criterion.met ? (
-                            <IconCircleCheck className="drop-shadow-[0_1px_2px_rgba(16,185,129,0.25)]" />
+                            <IconCircleCheck className="text-primary drop-shadow-sm" />
                           ) : (
                             <Circle className="size-2 fill-muted text-muted" />
                           )}
@@ -449,7 +466,7 @@ export function PasswordInput({
                   </li>
                 ))}
               </ul>
-            </motion.div>
+            </MotionElevated>
           ) : null}
         </AnimatePresence>
       </div>

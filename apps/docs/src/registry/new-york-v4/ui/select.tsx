@@ -18,6 +18,8 @@ import {
   motionForOffset,
   useExitAnimation,
 } from "@/registry/new-york-v4/lib/motion-tokens";
+import { surfaceClasses } from "@/registry/new-york-v4/lib/surface-classes";
+import { useSurface } from "@/registry/new-york-v4/lib/surface-context";
 import {
   Field,
   FieldLabel,
@@ -56,7 +58,9 @@ export const selectTriggerVariants = cva(
 
 export const selectPopupVariants = cva(
   [
-    "not-prose min-w-(--anchor-width) max-w-(--available-width) overflow-hidden rounded-xl border border-border bg-background/95 p-1 shadow-xl backdrop-blur-xl outline-none will-change-[opacity,transform,filter]",
+    // Background, shadow and substrate come from `surfaceClasses` at the call
+    // site (the conventional dropdown offset of 2) — no fixed popover fill.
+    "not-prose min-w-(--anchor-width) max-w-(--available-width) overflow-hidden rounded-xl p-1 outline-none will-change-[opacity,transform,filter]",
     "origin-(--transform-origin) transition-[opacity,transform,filter] duration-[var(--motion-duration)]",
     "data-starting-style:translate-y-[-6px] data-starting-style:scale-[0.975] data-starting-style:opacity-0 data-starting-style:blur-[3px]",
     "data-ending-style:translate-y-[-3px] data-ending-style:scale-[0.99] data-ending-style:opacity-0 data-ending-style:blur-[1px] data-ending-style:duration-[var(--motion-exit-duration)]",
@@ -140,6 +144,8 @@ export function Select({
   ...props
 }: SelectProps) {
   const generatedId = useId();
+  const substrate = useSurface();
+  const popupLevel = Math.min(substrate + 2, 8);
   const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
   const open = openProp ?? uncontrolledOpen;
   const { mounted, onAnimationComplete } = useExitAnimation(open, selectMotion);
@@ -266,7 +272,12 @@ export function Select({
             >
               <ComboboxPrimitive.Popup
                 data-slot="select-popup"
-                className={cn(selectPopupVariants({ density }), popupClassName)}
+                data-surface={popupLevel}
+                className={cn(
+                  selectPopupVariants({ density }),
+                  surfaceClasses(popupLevel),
+                  popupClassName,
+                )}
                 style={motionStyle}
                 onTransitionEnd={handlePopupTransitionEnd}
               >

@@ -7,6 +7,7 @@ import { Check, LoaderCircle } from "lucide-react";
 import { type ComponentProps, type ReactNode, useId } from "react";
 
 import { cn } from "@/lib/utils";
+import { duration, spring } from "@/registry/new-york-v4/lib/motion-tokens";
 import {
   Field,
   FieldLabel,
@@ -17,7 +18,7 @@ export const inputVariants = cva(
   [
     "not-prose h-9 w-full min-w-0 rounded-xl border border-border bg-background px-3 py-1.5 text-sm text-foreground shadow-xs",
     "placeholder:text-muted-foreground file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground",
-    "transition-[background-color,border-color,box-shadow,transform] duration-300 ease-spring",
+    "transition-[background-color,border-color,box-shadow,transform]",
     "hover:border-border/80 focus-visible:-translate-y-px focus-visible:border-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25",
     "aria-invalid:border-destructive aria-invalid:bg-destructive/10 aria-invalid:focus-visible:border-destructive aria-invalid:focus-visible:ring-destructive/20",
     "data-[invalid=true]:border-destructive data-[invalid=true]:bg-destructive/10 data-[invalid=true]:focus-visible:border-destructive data-[invalid=true]:focus-visible:ring-destructive/20",
@@ -156,7 +157,9 @@ export function InputField({
               }
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.92 }}
-              transition={{ duration: 0.24, ease: [0.4, 0, 0.2, 1] }}
+              transition={
+                shouldReduceMotion ? { duration: duration.fast } : spring.fast
+              }
               className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-muted-foreground"
             >
               {trailing ??
