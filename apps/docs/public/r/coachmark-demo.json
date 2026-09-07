@@ -1,0 +1,16 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "coachmark-demo",
+  "registryDependencies": [
+    "coachmark"
+  ],
+  "files": [
+    {
+      "path": "components/matos-ui/examples/coachmark-demo.tsx",
+      "content": "\"use client\";\n\nimport { Bell, Plus, Search, Settings } from \"lucide-react\";\nimport { useState } from \"react\";\n\nimport {\n  Coachmark,\n  type CoachmarkStep,\n} from \"@/components/matos-ui/coachmark\";\n\nconst STEPS: CoachmarkStep[] = [\n  {\n    target: \"#cm-new\",\n    title: \"Start here\",\n    description: \"Create a project — or an issue, a doc, a view — from one place.\",\n  },\n  {\n    target: \"#cm-search\",\n    title: \"Jump anywhere\",\n    description: \"Search across everything. It's also ⌘K from any screen.\",\n  },\n  {\n    target: \"#cm-notifs\",\n    title: \"Stay in the loop\",\n    description: \"Mentions and assignments land here. Nothing else.\",\n    placement: \"bottom\",\n  },\n  {\n    target: \"#cm-settings\",\n    title: \"Make it yours\",\n    description: \"Theme, shortcuts, and workspace defaults live in settings.\",\n  },\n];\n\nexport default function CoachmarkDemo() {\n  const [open, setOpen] = useState(false);\n\n  return (\n    <div className=\"mx-auto w-full max-w-md py-6\">\n      <div className=\"flex items-center justify-between rounded-xl border border-border bg-card p-2\">\n        <button\n          id=\"cm-new\"\n          type=\"button\"\n          className=\"inline-flex h-8 items-center gap-1.5 rounded-lg bg-primary px-3 font-medium text-primary-foreground text-sm\"\n        >\n          <Plus className=\"size-4\" />\n          New\n        </button>\n        <div className=\"flex items-center gap-1\">\n          <button\n            id=\"cm-search\"\n            type=\"button\"\n            aria-label=\"Search\"\n            className=\"grid size-8 place-items-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground\"\n          >\n            <Search className=\"size-4\" />\n          </button>\n          <button\n            id=\"cm-notifs\"\n            type=\"button\"\n            aria-label=\"Notifications\"\n            className=\"grid size-8 place-items-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground\"\n          >\n            <Bell className=\"size-4\" />\n          </button>\n          <button\n            id=\"cm-settings\"\n            type=\"button\"\n            aria-label=\"Settings\"\n            className=\"grid size-8 place-items-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground\"\n          >\n            <Settings className=\"size-4\" />\n          </button>\n        </div>\n      </div>\n\n      <button\n        type=\"button\"\n        onClick={() => setOpen(true)}\n        className=\"mt-4 inline-flex h-8 items-center rounded-lg border border-border px-3 font-medium text-sm hover:bg-muted\"\n      >\n        Take the tour\n      </button>\n\n      <Coachmark\n        steps={STEPS}\n        open={open}\n        onOpenChange={setOpen}\n        onComplete={() => setOpen(false)}\n      />\n    </div>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/coachmark-demo.tsx"
+    }
+  ],
+  "type": "registry:example"
+}

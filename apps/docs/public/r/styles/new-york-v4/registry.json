@@ -329,6 +329,49 @@
       ]
     },
     {
+      "name": "coachmark",
+      "type": "registry:ui",
+      "cssVars": {
+        "theme": {
+          "ease-lift": "cubic-bezier(0.4, 0, 0.2, 1)",
+          "duration-lift": "320ms",
+          "duration-lift-press": "120ms"
+        }
+      },
+      "css": {
+        "@utility hover-lift": {
+          "--lift": "2px",
+          "transition-property": "translate, scale, box-shadow, background-color, border-color, border-radius, color, opacity",
+          "transition-duration": "var(--duration-lift)",
+          "transition-timing-function": "var(--ease-lift)",
+          "@media (hover: hover)": {
+            "&:hover": {
+              "translate": "0 calc(var(--lift) * -1)"
+            }
+          },
+          "&:active": {
+            "translate": "0 0",
+            "transition-duration": "var(--duration-lift-press)"
+          },
+          "@media (prefers-reduced-motion: reduce)": {
+            "transition-property": "background-color, border-color, color, opacity",
+            "&:hover, &:active": {
+              "translate": "none",
+              "scale": "none"
+            }
+          }
+        }
+      },
+      "dependencies": ["framer-motion", "lucide-react"],
+      "registryDependencies": ["elevated", "motion-tokens", "surface-context"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/coachmark.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "floating-action-menu",
       "type": "registry:ui",
       "dependencies": [
@@ -1902,6 +1945,17 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/nested-menu-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "coachmark-demo",
+      "type": "registry:example",
+      "registryDependencies": ["coachmark"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/coachmark-demo.tsx",
           "type": "registry:example"
         }
       ]

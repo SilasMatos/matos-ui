@@ -1,0 +1,116 @@
+---
+title: Coachmark
+description: An onboarding tour — a scrim with a cutout on the target, an attention ring, and an anchored card. Three things moving at once, on three deliberately different tiers.
+---
+
+<ComponentPreview name="coachmark-demo" chromeless align="start" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/coachmark.json" />
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the following dependencies:</Step>
+
+<CodeBlockCommand command="npm install framer-motion lucide-react" />
+
+<Step>Add the <code>elevated</code> primitive, then copy this in.</Step>
+
+<ComponentSource name="coachmark" title="components/matos-ui/coachmark.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { Coachmark, type CoachmarkStep } from '@/components/matos-ui/coachmark'
+```
+
+```tsx
+const steps: CoachmarkStep[] = [
+  { target: '#new-button', title: 'Start here', description: 'Create anything from one place.' },
+  { target: '#search', title: 'Jump anywhere', description: 'Also ⌘K from any screen.' },
+]
+
+const [open, setOpen] = useState(false)
+
+<button onClick={() => setOpen(true)}>Take the tour</button>
+<Coachmark steps={steps} open={open} onOpenChange={setOpen} />
+```
+
+A `target` is a CSS selector, an `Element`, a ref, or a function returning one.
+
+## Three tiers, on purpose
+
+Three things move the moment a step opens, and none of them can share timing:
+
+| Element | Tier | Why |
+| --- | --- | --- |
+| **Scrim** (cutout) | `spring.gentle` (0.6s, ~no bounce) | Ambient — it should recede, not announce. The cutout glides between steps on the same tier. |
+| **Card** | `spring.moderate` | A panel that has to land exactly where it was aimed. |
+| **Ring** | `attentionGlow`, once per step | A "look here" cue — no offset, no elevation, nothing to compose with. Not a tier. |
+
+`spring.gentle` on the card would drift; `spring.moderate` on the scrim would
+snap; a looping glow would nag. This component is the one place all three are on
+screen together, and the contrast is the argument.
+
+## How it's built
+
+- **The scrim is a box-shadow.** A cutout element the size of the target casts a
+  `100vmax` shadow — that shadow *is* the dimming. Moving it (`x` / `y` /
+  `width` / `height`) on `gentle` glides the spotlight; a flat click-catcher
+  behind it blocks the page.
+- **The card is `Elevated offset={4}`**, portaled to `document.body` with the
+  substrate reset to the page (like [Achievement Toast](/docs/components/achievement-toast)),
+  so that rung means the same wherever the tour runs. It flips above the target
+  when there's no room below.
+- **The ring** fires `attentionGlow` once when `rect` first resolves for a step
+  — never on the re-measure poll that follows the target into view.
+- **`prefers-reduced-motion`** drops the glide, the card slide and the glow;
+  scrolling to the target is instant, and the scrim and card still fade.
+
+## Reference
+
+### Coachmark Props
+
+| Prop            | Type                          | Default | Description                                       |
+| --------------- | ----------------------------- | ------- | ----------------------------------------------- |
+| `steps`         | `CoachmarkStep[]`             | —       | The tour, in order.                              |
+| `open`          | `boolean`                     | —       | Controlled visibility.                           |
+| `defaultOpen`   | `boolean`                     | `false` | —                                               |
+| `onOpenChange`  | `(open: boolean) => void`     | —       | —                                               |
+| `step`          | `number`                      | —       | Controlled step index.                           |
+| `defaultStep`   | `number`                      | `0`     | —                                               |
+| `onStepChange`  | `(step: number) => void`      | —       | —                                               |
+| `onComplete`    | `() => void`                  | —       | Fires when the last step is passed.             |
+| `dismissible`   | `boolean`                     | `true`  | Scrim click / `Esc` closes; shows a Skip / ×.   |
+| `labels`        | `Partial<{ back, next, done, skip, of }>` | — | Button and counter text.               |
+
+### CoachmarkStep
+
+| Field         | Type                                    | Description                          |
+| ------------- | --------------------------------------- | ---------------------------------- |
+| `target`      | `string \| Element \| Ref \| () => Element` | What to spotlight.             |
+| `title`       | `ReactNode`                             | —                                  |
+| `description` | `ReactNode`                             | —                                  |
+| `placement`   | `"top" \| "bottom"`                     | Forces the card side.               |
+| `padding`     | `number`                               | Cutout breathing room (default 8).  |

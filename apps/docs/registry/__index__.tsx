@@ -308,6 +308,27 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
   },
+  coachmark: {
+    name: "coachmark",
+    type: "registry:ui",
+    registryDependencies: ["elevated", "motion-tokens", "surface-context"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/coachmark.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/ui/coachmark.tsx");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
   "floating-action-menu": {
     name: "floating-action-menu",
     type: "registry:ui",
@@ -2005,6 +2026,29 @@ export const Index: Record<string, any> = {
     component: React.lazy(async () => {
       const mod = await import(
         "@/registry/new-york-v4/examples/nested-menu-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "coachmark-demo": {
+    name: "coachmark-demo",
+    type: "registry:example",
+    registryDependencies: ["coachmark"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/coachmark-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/coachmark-demo.tsx"
       );
       const exportName =
         Object.keys(mod).find(

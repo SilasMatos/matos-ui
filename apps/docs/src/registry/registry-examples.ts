@@ -94,6 +94,12 @@ export const examples: Registry["items"] = [
     ],
   },
   {
+    name: "coachmark-demo",
+    type: "registry:example",
+    registryDependencies: ["coachmark"],
+    files: [{ path: "examples/coachmark-demo.tsx", type: "registry:example" }],
+  },
+  {
     name: "physics-counter-demo",
     type: "registry:example",
     registryDependencies: ["physics-counter"],

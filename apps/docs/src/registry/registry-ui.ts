@@ -296,6 +296,15 @@ export const ui: Registry["items"] = [
     files: [{ path: "ui/nested-menu.tsx", type: "registry:ui" }],
   },
   {
+    name: "coachmark",
+    type: "registry:ui",
+    cssVars: liftCssVars,
+    css: liftCss,
+    dependencies: ["framer-motion", "lucide-react"],
+    registryDependencies: ["elevated", "motion-tokens", "surface-context"],
+    files: [{ path: "ui/coachmark.tsx", type: "registry:ui" }],
+  },
+  {
     name: "floating-action-menu",
     type: "registry:ui",
     dependencies: [...physicsDeps, "lucide-react"],
