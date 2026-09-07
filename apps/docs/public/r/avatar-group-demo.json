@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "avatar-group-demo",
+  "registryDependencies": [
+    "avatar-group",
+    "elevated"
+  ],
+  "files": [
+    {
+      "path": "components/matos-ui/examples/avatar-group-demo.tsx",
+      "content": "\"use client\";\n\nimport { AvatarGroup } from \"@/components/matos-ui/avatar-group\";\nimport { Elevated } from \"@/components/matos-ui/elevated\";\n\nconst TEAM = [\n  { name: \"Ana Ribeiro\" },\n  { name: \"Bruno Alves\" },\n  { name: \"Carla Mendes\" },\n  { name: \"Diego Souza\" },\n  { name: \"Elena Costa\" },\n  { name: \"Felipe Lima\" },\n  { name: \"Gabriela Nunes\" },\n];\n\nexport default function AvatarGroupDemo() {\n  return (\n    <div className=\"mx-auto flex w-full max-w-[420px] flex-col items-center gap-6 py-10\">\n      <Elevated\n        offset={1}\n        className=\"flex w-full flex-col gap-4 rounded-2xl p-6\"\n      >\n        <div>\n          <p className=\"font-semibold text-foreground text-sm\">\n            Project collaborators\n          </p>\n          <p className=\"text-muted-foreground text-xs\">\n            Hover the stack to fan it out\n          </p>\n        </div>\n        <AvatarGroup items={TEAM} max={5} aria-label=\"Project collaborators\" />\n      </Elevated>\n\n      <div className=\"flex w-full items-center justify-between gap-4\">\n        <AvatarGroup size=\"sm\" items={TEAM.slice(0, 4)} />\n        <AvatarGroup size=\"md\" items={TEAM.slice(0, 4)} />\n        <AvatarGroup size=\"lg\" items={TEAM.slice(0, 4)} />\n      </div>\n    </div>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/avatar-group-demo.tsx"
+    }
+  ],
+  "type": "registry:example"
+}

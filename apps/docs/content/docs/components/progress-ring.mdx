@@ -1,0 +1,87 @@
+---
+title: Progress Ring
+description: A circular progress indicator whose arc and centre value spring from one motion source, with a check that pops in on completion.
+---
+
+<ComponentPreview name="progress-ring-demo" chromeless align="start" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/progress-ring.json" />
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the following dependencies:</Step>
+
+<CodeBlockCommand command="npm install framer-motion tailwind-merge tailwind-variants lucide-react" />
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="progress-ring" title="components/matos-ui/progress-ring.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { ProgressRing } from '@/components/matos-ui/progress-ring'
+```
+
+```tsx
+<ProgressRing value={64} aria-label="Monthly usage" />
+```
+
+The arc and the centered percentage are driven by a single motion value, so they
+never fall out of sync no matter how fast `value` changes. The spring character
+comes from the shared [motion tokens](/docs/foundations/motion) — pick a `tier`
+rather than tuning stiffness by hand.
+
+```tsx
+<ProgressRing value={progress} tier="slow" size="lg" />
+```
+
+Put your own content in the middle by passing `children` — the animated value and
+the completion check step aside:
+
+```tsx
+<ProgressRing value={82} size="lg">
+  <span className="text-sm font-semibold">4.2k</span>
+</ProgressRing>
+```
+
+Motion is gated on `prefers-reduced-motion`: the ring snaps to its value and the
+count-up and pop are skipped.
+
+## Reference
+
+### ProgressRing Props
+
+| Prop              | Type                                          | Default      | Description                                                            |
+| ----------------- | --------------------------------------------- | ------------ | -------------------------------------------------------------------- |
+| `value`           | `number`                                      | -            | Progress from `0` to `100`. Values outside the range are clamped.     |
+| `size`            | `"sm" \| "md" \| "lg"`                         | `"md"`       | Ring diameter and centre type scale.                                  |
+| `thickness`       | `number`                                      | `6` / `8` / `10` | Stroke width in viewBox units (the ring is a 100-unit square).     |
+| `tier`            | `"fast" \| "moderate" \| "slow" \| "playful"` | `"moderate"` | Spring character for the fill and count-up.                           |
+| `gradient`        | `boolean`                                     | `true`       | Draw the arc as a `primary` → `chart-2` gradient.                     |
+| `showValue`       | `boolean`                                     | `true`       | Render the animated percentage in the centre.                        |
+| `checkOnComplete` | `boolean`                                     | `true`       | Swap the centre for a check once `value` reaches `100`.               |
+| `children`        | `ReactNode`                                   | -            | Replaces the centre entirely.                                         |
+| `aria-label`      | `string`                                      | `"Progress"` | Accessible name for the `progressbar`.                                |

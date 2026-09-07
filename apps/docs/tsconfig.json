@@ -33,5 +33,5 @@
     "scripts/**/*.{ts,mts}",
     "src/scripts/build-registry.mts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "_parked"]
 }

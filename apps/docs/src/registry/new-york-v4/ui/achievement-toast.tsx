@@ -333,9 +333,8 @@ export type AchievementToastGroupProps = {
  * pipeline, not a running feed. Uses `stagger.playful`, the widest gap in the
  * scale, so each one reads as its own arrival instead of as a list appearing.
  *
- * Like Live Queue, the stagger orchestrates whatever is already in the array
- * on mount; items appended later enter individually, without inheriting a
- * queued-up delay.
+ * The stagger orchestrates whatever is already in the array on mount; items
+ * appended later enter individually, without inheriting a queued-up delay.
  */
 export function AchievementToastGroup({
   achievements,

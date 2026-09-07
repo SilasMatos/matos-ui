@@ -1,0 +1,115 @@
+---
+title: Stepper Input
+description: A number field whose value rolls in the direction it changed, with buttons that accelerate while held.
+---
+
+<ComponentPreview name="stepper-input-demo" chromeless align="start" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/stepper-input.json" />
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the following dependencies:</Step>
+
+<CodeBlockCommand command="npm install framer-motion lucide-react tailwind-merge tailwind-variants" />
+
+<Step>Install the `elevated` primitive (the surface ladder it builds on):</Step>
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/elevated.json" />
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="stepper-input" title="components/matos-ui/stepper-input.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { StepperInput } from '@/components/matos-ui/stepper-input'
+```
+
+```tsx
+const [qty, setQty] = useState(1)
+
+<StepperInput value={qty} onValueChange={setQty} min={1} max={10} />
+```
+
+## Examples
+
+### Fractional step and formatting
+
+```tsx
+<StepperInput
+  defaultValue={12}
+  step={0.5}
+  min={0}
+  formatValue={(n) => `$${n.toFixed(2)}`}
+/>
+```
+
+### Inside a form
+
+```tsx
+<form action={submit}>
+  <StepperInput name="quantity" defaultValue={1} min={1} />
+  <button type="submit">Add to cart</button>
+</form>
+```
+
+## Accessibility
+
+The value is an ARIA `spinbutton`. Arrow keys step by `step`, `PageUp` /
+`PageDown` take the large step (`step * 10` by default), and `Home` / `End` jump
+to `min` / `max` when they are set. The `−` / `+` buttons repeat and accelerate
+while held; a press that hits a bound shakes the field once.
+
+Under `prefers-reduced-motion` the roll and the shake are dropped — the number
+updates in place.
+
+## Surface
+
+The field is an `Elevated` one step above whatever substrate it sits on. The
+`−` / `+` keys read that level and sit a further step up, so they render as
+raised keys; the value well drops back to the substrate. The control keeps its
+depth on any rung of the ladder, in light and dark, with no fixed background —
+drop it inside a dialog or a card and it re-levels itself.
+
+## Reference
+
+### StepperInput Props
+
+| Prop            | Type                       | Default        | Description                                            |
+| --------------- | -------------------------- | -------------- | ----------------------------------------------------- |
+| `value`         | `number`                   | -              | Controlled value.                                     |
+| `defaultValue`  | `number`                   | `0`            | Initial value when uncontrolled.                      |
+| `onValueChange` | `(value: number) => void`  | -              | Fires with the clamped, snapped value.                |
+| `min`           | `number`                   | `-Infinity`    | Lower bound.                                          |
+| `max`           | `number`                   | `Infinity`     | Upper bound.                                          |
+| `step`          | `number`                   | `1`            | Increment per press / arrow key.                      |
+| `largeStep`     | `number`                   | `step * 10`    | Increment for `PageUp` / `PageDown`.                  |
+| `formatValue`   | `(value: number) => string`| -              | Render the value, e.g. as currency.                   |
+| `disabled`      | `boolean`                  | `false`        | Disable interaction and dim the control.              |
+| `readOnly`      | `boolean`                  | `false`        | Render the value without interaction.                 |
+| `name`          | `string`                   | -              | Name for a hidden input, so the value posts in a form.|
+| `size`          | `"sm" \| "md" \| "lg"`     | `"md"`         | Size preset.                                          |

@@ -5,6 +5,7 @@ export const blockCategories = [
   "Application",
   "Authentication",
   "Dashboard",
+  "Marketing",
   "Settings",
 ] as const;
 
@@ -27,6 +28,54 @@ export type BlockMeta = {
 };
 
 export const blockCollection: BlockMeta[] = [
+  {
+    id: "notification-center-01",
+    name: "Notification Center",
+    description:
+      "Cards that lift off the panel and again under the cursor, with slide-in arrivals and animated dismissals.",
+    category: "Application",
+    tags: ["notifications", "surface", "animation", "list"],
+    status: "stable",
+    isNew: true,
+    dependencies: ["framer-motion", "lucide-react", "tailwind-merge"],
+    matosComponents: ["elevated", "surface-context", "badge", "button"],
+  },
+  {
+    id: "command-menu-01",
+    name: "Command Menu",
+    description:
+      "A ⌘K palette: a dialog-weight surface over a scrim with a popover-weight highlight nested inside, sliding between rows.",
+    category: "Application",
+    tags: ["command", "palette", "surface", "keyboard"],
+    status: "stable",
+    isNew: true,
+    dependencies: ["framer-motion", "lucide-react", "tailwind-merge"],
+    matosComponents: ["elevated", "surface-context", "motion-tokens"],
+  },
+  {
+    id: "pricing-tiers-01",
+    name: "Pricing Tiers",
+    description:
+      "The featured tier sits a full elevation rung above its neighbours, with a sliding billing toggle and a price that swaps on switch.",
+    category: "Marketing",
+    tags: ["pricing", "marketing", "surface", "toggle"],
+    status: "stable",
+    isNew: true,
+    dependencies: ["framer-motion", "lucide-react", "tailwind-merge"],
+    matosComponents: ["elevated", "surface-context", "badge", "button"],
+  },
+  {
+    id: "stat-tiles-01",
+    name: "Stat Tiles",
+    description:
+      "KPI tiles that read their substrate and animate once on scroll — reveal, counting numbers, and a self-drawing sparkline.",
+    category: "Dashboard",
+    tags: ["dashboard", "stats", "kpi", "sparkline", "scroll"],
+    status: "stable",
+    isNew: true,
+    dependencies: ["framer-motion", "lucide-react", "tailwind-merge"],
+    matosComponents: ["elevated", "surface-context", "motion-tokens"],
+  },
   {
     id: "dashboard-overview-01",
     name: "Dashboard Overview",

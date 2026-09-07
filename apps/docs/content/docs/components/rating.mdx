@@ -1,0 +1,101 @@
+---
+title: Rating
+description: A star rating whose fill sweeps out from the pointer and whose committed star pops on the fast spring.
+---
+
+<ComponentPreview name="rating-demo" chromeless align="start" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/rating.json" />
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the following dependencies:</Step>
+
+<CodeBlockCommand command="npm install framer-motion lucide-react tailwind-merge tailwind-variants" />
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="rating" title="components/matos-ui/rating.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { Rating } from '@/components/matos-ui/rating'
+```
+
+```tsx
+const [value, setValue] = useState(3)
+
+<Rating value={value} onValueChange={setValue} />
+```
+
+## Examples
+
+### Half steps
+
+```tsx
+<Rating defaultValue={3.5} allowHalf />
+```
+
+### Read only
+
+```tsx
+<Rating value={4} readOnly />
+```
+
+### Inside a form
+
+```tsx
+<form action={submit}>
+  <Rating name="score" defaultValue={0} />
+  <button type="submit">Send</button>
+</form>
+```
+
+## Accessibility
+
+The control is a single `role="slider"` node. Arrow keys move by one step —
+half a star when `allowHalf` — and `Home` / `End` jump to the ends. Clicking the
+star the rating already rests on clears it back to `0`.
+
+Under `prefers-reduced-motion` the pop and the sweep are dropped; the fill still
+changes colour, it just doesn't scale or ripple.
+
+## Reference
+
+### Rating Props
+
+| Prop            | Type                        | Default   | Description                                            |
+| --------------- | --------------------------- | --------- | ----------------------------------------------------- |
+| `value`         | `number`                    | -         | Controlled value (`0`–`max`).                          |
+| `defaultValue`  | `number`                    | `0`       | Initial value when uncontrolled.                       |
+| `onValueChange` | `(value: number) => void`   | -         | Fires with the committed rating; `0` when cleared.     |
+| `max`           | `number`                    | `5`       | Number of stars.                                       |
+| `allowHalf`     | `boolean`                   | `false`   | Half-star precision on hover, click and keyboard.      |
+| `readOnly`      | `boolean`                   | `false`   | Render the stars without interaction.                  |
+| `disabled`      | `boolean`                   | `false`   | Disable interaction and dim the control.               |
+| `showValue`     | `boolean`                   | `false`   | Print the numeric value next to the stars.             |
+| `name`          | `string`                    | -         | Name for a hidden input, so the value posts in a form. |
+| `size`          | `"sm" \| "md" \| "lg"`      | `"md"`    | Star size preset.                                      |

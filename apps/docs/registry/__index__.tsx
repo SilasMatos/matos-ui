@@ -104,6 +104,111 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
   },
+  "progress-ring": {
+    name: "progress-ring",
+    type: "registry:ui",
+    registryDependencies: ["motion-tokens"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/progress-ring.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/ui/progress-ring.tsx");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "avatar-group": {
+    name: "avatar-group",
+    type: "registry:ui",
+    registryDependencies: ["motion-tokens"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/avatar-group.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/ui/avatar-group.tsx");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  rating: {
+    name: "rating",
+    type: "registry:ui",
+    registryDependencies: ["motion-tokens"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/rating.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/ui/rating.tsx");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "stepper-input": {
+    name: "stepper-input",
+    type: "registry:ui",
+    registryDependencies: ["elevated", "motion-tokens"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/stepper-input.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/ui/stepper-input.tsx");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "copy-button": {
+    name: "copy-button",
+    type: "registry:ui",
+    registryDependencies: ["motion-tokens"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/copy-button.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/ui/copy-button.tsx");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
   "floating-action-menu": {
     name: "floating-action-menu",
     type: "registry:ui",
@@ -257,27 +362,6 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
   },
-  "dynamic-island": {
-    name: "dynamic-island",
-    type: "registry:ui",
-    registryDependencies: undefined,
-    files: [
-      {
-        path: "src/registry/new-york-v4/ui/dynamic-island.tsx",
-        type: "registry:ui",
-        target: "",
-      },
-    ],
-    component: React.lazy(async () => {
-      const mod = await import("@/registry/new-york-v4/ui/dynamic-island.tsx");
-      const exportName =
-        Object.keys(mod).find(
-          (key) =>
-            typeof mod[key] === "function" || typeof mod[key] === "object",
-        ) || item.name;
-      return { default: mod.default || mod[exportName] };
-    }),
-  },
   accordion: {
     name: "accordion",
     type: "registry:ui",
@@ -362,48 +446,6 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
   },
-  "expandable-list": {
-    name: "expandable-list",
-    type: "registry:ui",
-    registryDependencies: ["elevated", "motion-tokens"],
-    files: [
-      {
-        path: "src/registry/new-york-v4/ui/expandable-list.tsx",
-        type: "registry:ui",
-        target: "",
-      },
-    ],
-    component: React.lazy(async () => {
-      const mod = await import("@/registry/new-york-v4/ui/expandable-list.tsx");
-      const exportName =
-        Object.keys(mod).find(
-          (key) =>
-            typeof mod[key] === "function" || typeof mod[key] === "object",
-        ) || item.name;
-      return { default: mod.default || mod[exportName] };
-    }),
-  },
-  "live-queue": {
-    name: "live-queue",
-    type: "registry:ui",
-    registryDependencies: ["elevated", "motion-tokens"],
-    files: [
-      {
-        path: "src/registry/new-york-v4/ui/live-queue.tsx",
-        type: "registry:ui",
-        target: "",
-      },
-    ],
-    component: React.lazy(async () => {
-      const mod = await import("@/registry/new-york-v4/ui/live-queue.tsx");
-      const exportName =
-        Object.keys(mod).find(
-          (key) =>
-            typeof mod[key] === "function" || typeof mod[key] === "object",
-        ) || item.name;
-      return { default: mod.default || mod[exportName] };
-    }),
-  },
   "achievement-toast": {
     name: "achievement-toast",
     type: "registry:ui",
@@ -448,29 +490,6 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
   },
-  "notification-stack": {
-    name: "notification-stack",
-    type: "registry:ui",
-    registryDependencies: ["elevated", "motion-tokens"],
-    files: [
-      {
-        path: "src/registry/new-york-v4/ui/notification-stack.tsx",
-        type: "registry:ui",
-        target: "",
-      },
-    ],
-    component: React.lazy(async () => {
-      const mod = await import(
-        "@/registry/new-york-v4/ui/notification-stack.tsx"
-      );
-      const exportName =
-        Object.keys(mod).find(
-          (key) =>
-            typeof mod[key] === "function" || typeof mod[key] === "object",
-        ) || item.name;
-      return { default: mod.default || mod[exportName] };
-    }),
-  },
   "metric-card": {
     name: "metric-card",
     type: "registry:ui",
@@ -495,7 +514,11 @@ export const Index: Record<string, any> = {
   "animated-area-chart": {
     name: "animated-area-chart",
     type: "registry:ui",
-    registryDependencies: undefined,
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "src/registry/new-york-v4/ui/animated-area-chart.tsx",
@@ -504,6 +527,11 @@ export const Index: Record<string, any> = {
       },
       {
         path: "src/registry/new-york-v4/ui/chart-interaction.ts",
+        type: "registry:ui",
+        target: "",
+      },
+      {
+        path: "src/registry/new-york-v4/ui/chart-motion.ts",
         type: "registry:ui",
         target: "",
       },
@@ -523,7 +551,11 @@ export const Index: Record<string, any> = {
   "allocation-performance-chart": {
     name: "allocation-performance-chart",
     type: "registry:ui",
-    registryDependencies: undefined,
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "src/registry/new-york-v4/ui/allocation-performance-chart.tsx",
@@ -532,6 +564,11 @@ export const Index: Record<string, any> = {
       },
       {
         path: "src/registry/new-york-v4/ui/chart-interaction.ts",
+        type: "registry:ui",
+        target: "",
+      },
+      {
+        path: "src/registry/new-york-v4/ui/chart-motion.ts",
         type: "registry:ui",
         target: "",
       },
@@ -551,7 +588,11 @@ export const Index: Record<string, any> = {
   "sparkline-card": {
     name: "sparkline-card",
     type: "registry:ui",
-    registryDependencies: undefined,
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "src/registry/new-york-v4/ui/sparkline-card.tsx",
@@ -560,6 +601,11 @@ export const Index: Record<string, any> = {
       },
       {
         path: "src/registry/new-york-v4/ui/chart-interaction.ts",
+        type: "registry:ui",
+        target: "",
+      },
+      {
+        path: "src/registry/new-york-v4/ui/chart-motion.ts",
         type: "registry:ui",
         target: "",
       },
@@ -577,7 +623,11 @@ export const Index: Record<string, any> = {
   "signal-flow-chart": {
     name: "signal-flow-chart",
     type: "registry:ui",
-    registryDependencies: undefined,
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "src/registry/new-york-v4/ui/signal-flow-chart.tsx",
@@ -586,6 +636,11 @@ export const Index: Record<string, any> = {
       },
       {
         path: "src/registry/new-york-v4/ui/chart-interaction.ts",
+        type: "registry:ui",
+        target: "",
+      },
+      {
+        path: "src/registry/new-york-v4/ui/chart-motion.ts",
         type: "registry:ui",
         target: "",
       },
@@ -605,7 +660,11 @@ export const Index: Record<string, any> = {
   "activity-heatmap-chart": {
     name: "activity-heatmap-chart",
     type: "registry:ui",
-    registryDependencies: undefined,
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "src/registry/new-york-v4/ui/activity-heatmap-chart.tsx",
@@ -614,6 +673,11 @@ export const Index: Record<string, any> = {
       },
       {
         path: "src/registry/new-york-v4/ui/chart-interaction.ts",
+        type: "registry:ui",
+        target: "",
+      },
+      {
+        path: "src/registry/new-york-v4/ui/chart-motion.ts",
         type: "registry:ui",
         target: "",
       },
@@ -633,7 +697,11 @@ export const Index: Record<string, any> = {
   "candlestick-chart": {
     name: "candlestick-chart",
     type: "registry:ui",
-    registryDependencies: undefined,
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "src/registry/new-york-v4/ui/candlestick-chart.tsx",
@@ -642,6 +710,11 @@ export const Index: Record<string, any> = {
       },
       {
         path: "src/registry/new-york-v4/ui/chart-interaction.ts",
+        type: "registry:ui",
+        target: "",
+      },
+      {
+        path: "src/registry/new-york-v4/ui/chart-motion.ts",
         type: "registry:ui",
         target: "",
       },
@@ -661,7 +734,11 @@ export const Index: Record<string, any> = {
   "bubble-chart": {
     name: "bubble-chart",
     type: "registry:ui",
-    registryDependencies: undefined,
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "src/registry/new-york-v4/ui/bubble-chart.tsx",
@@ -670,6 +747,11 @@ export const Index: Record<string, any> = {
       },
       {
         path: "src/registry/new-york-v4/ui/chart-interaction.ts",
+        type: "registry:ui",
+        target: "",
+      },
+      {
+        path: "src/registry/new-york-v4/ui/chart-motion.ts",
         type: "registry:ui",
         target: "",
       },
@@ -687,7 +769,11 @@ export const Index: Record<string, any> = {
   "activity-waveform-chart": {
     name: "activity-waveform-chart",
     type: "registry:ui",
-    registryDependencies: undefined,
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "src/registry/new-york-v4/ui/activity-waveform-chart.tsx",
@@ -696,6 +782,11 @@ export const Index: Record<string, any> = {
       },
       {
         path: "src/registry/new-york-v4/ui/chart-interaction.ts",
+        type: "registry:ui",
+        target: "",
+      },
+      {
+        path: "src/registry/new-york-v4/ui/chart-motion.ts",
         type: "registry:ui",
         target: "",
       },
@@ -715,7 +806,11 @@ export const Index: Record<string, any> = {
   "performance-waterfall-chart": {
     name: "performance-waterfall-chart",
     type: "registry:ui",
-    registryDependencies: undefined,
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "src/registry/new-york-v4/ui/performance-waterfall-chart.tsx",
@@ -724,6 +819,11 @@ export const Index: Record<string, any> = {
       },
       {
         path: "src/registry/new-york-v4/ui/chart-interaction.ts",
+        type: "registry:ui",
+        target: "",
+      },
+      {
+        path: "src/registry/new-york-v4/ui/chart-motion.ts",
         type: "registry:ui",
         target: "",
       },
@@ -743,7 +843,11 @@ export const Index: Record<string, any> = {
   "threshold-band-chart": {
     name: "threshold-band-chart",
     type: "registry:ui",
-    registryDependencies: undefined,
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "src/registry/new-york-v4/ui/threshold-band-chart.tsx",
@@ -752,6 +856,11 @@ export const Index: Record<string, any> = {
       },
       {
         path: "src/registry/new-york-v4/ui/chart-interaction.ts",
+        type: "registry:ui",
+        target: "",
+      },
+      {
+        path: "src/registry/new-york-v4/ui/chart-motion.ts",
         type: "registry:ui",
         target: "",
       },
@@ -771,7 +880,11 @@ export const Index: Record<string, any> = {
   "impact-priority-matrix": {
     name: "impact-priority-matrix",
     type: "registry:ui",
-    registryDependencies: undefined,
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "src/registry/new-york-v4/ui/impact-priority-matrix.tsx",
@@ -780,6 +893,11 @@ export const Index: Record<string, any> = {
       },
       {
         path: "src/registry/new-york-v4/ui/chart-interaction.ts",
+        type: "registry:ui",
+        target: "",
+      },
+      {
+        path: "src/registry/new-york-v4/ui/chart-motion.ts",
         type: "registry:ui",
         target: "",
       },
@@ -799,7 +917,11 @@ export const Index: Record<string, any> = {
   "resource-treemap-chart": {
     name: "resource-treemap-chart",
     type: "registry:ui",
-    registryDependencies: undefined,
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "src/registry/new-york-v4/ui/resource-treemap-chart.tsx",
@@ -808,6 +930,11 @@ export const Index: Record<string, any> = {
       },
       {
         path: "src/registry/new-york-v4/ui/chart-interaction.ts",
+        type: "registry:ui",
+        target: "",
+      },
+      {
+        path: "src/registry/new-york-v4/ui/chart-motion.ts",
         type: "registry:ui",
         target: "",
       },
@@ -827,7 +954,11 @@ export const Index: Record<string, any> = {
   "score-radar-chart": {
     name: "score-radar-chart",
     type: "registry:ui",
-    registryDependencies: undefined,
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "src/registry/new-york-v4/ui/score-radar-chart.tsx",
@@ -836,6 +967,11 @@ export const Index: Record<string, any> = {
       },
       {
         path: "src/registry/new-york-v4/ui/chart-interaction.ts",
+        type: "registry:ui",
+        target: "",
+      },
+      {
+        path: "src/registry/new-york-v4/ui/chart-motion.ts",
         type: "registry:ui",
         target: "",
       },
@@ -1279,6 +1415,122 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
   },
+  "notification-center-01": {
+    name: "notification-center-01",
+    type: "registry:block",
+    registryDependencies: [
+      "https://matos-ui.com/r/badge.json",
+      "https://matos-ui.com/r/button.json",
+      "https://matos-ui.com/r/elevated.json",
+      "https://matos-ui.com/r/motion-tokens.json",
+      "https://matos-ui.com/r/surface-classes.json",
+      "https://matos-ui.com/r/surface-context.json",
+    ],
+    files: [
+      {
+        path: "src/registry/new-york-v4/blocks/notification-center-01/notification-center-01.tsx",
+        type: "registry:block",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/blocks/notification-center-01/notification-center-01.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "command-menu-01": {
+    name: "command-menu-01",
+    type: "registry:block",
+    registryDependencies: [
+      "https://matos-ui.com/r/elevated.json",
+      "https://matos-ui.com/r/motion-tokens.json",
+      "https://matos-ui.com/r/surface-classes.json",
+      "https://matos-ui.com/r/surface-context.json",
+    ],
+    files: [
+      {
+        path: "src/registry/new-york-v4/blocks/command-menu-01/command-menu-01.tsx",
+        type: "registry:block",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/blocks/command-menu-01/command-menu-01.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "pricing-tiers-01": {
+    name: "pricing-tiers-01",
+    type: "registry:block",
+    registryDependencies: [
+      "https://matos-ui.com/r/badge.json",
+      "https://matos-ui.com/r/button.json",
+      "https://matos-ui.com/r/elevated.json",
+      "https://matos-ui.com/r/motion-tokens.json",
+      "https://matos-ui.com/r/surface-classes.json",
+      "https://matos-ui.com/r/surface-context.json",
+    ],
+    files: [
+      {
+        path: "src/registry/new-york-v4/blocks/pricing-tiers-01/pricing-tiers-01.tsx",
+        type: "registry:block",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/blocks/pricing-tiers-01/pricing-tiers-01.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "stat-tiles-01": {
+    name: "stat-tiles-01",
+    type: "registry:block",
+    registryDependencies: [
+      "https://matos-ui.com/r/elevated.json",
+      "https://matos-ui.com/r/motion-tokens.json",
+      "https://matos-ui.com/r/surface-classes.json",
+      "https://matos-ui.com/r/surface-context.json",
+    ],
+    files: [
+      {
+        path: "src/registry/new-york-v4/blocks/stat-tiles-01/stat-tiles-01.tsx",
+        type: "registry:block",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/blocks/stat-tiles-01/stat-tiles-01.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
   "dashboard-overview-01": {
     name: "dashboard-overview-01",
     type: "registry:block",
@@ -1481,6 +1733,75 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
   },
+  "rating-demo": {
+    name: "rating-demo",
+    type: "registry:example",
+    registryDependencies: ["rating"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/rating-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/rating-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "stepper-input-demo": {
+    name: "stepper-input-demo",
+    type: "registry:example",
+    registryDependencies: ["stepper-input"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/stepper-input-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/stepper-input-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "copy-button-demo": {
+    name: "copy-button-demo",
+    type: "registry:example",
+    registryDependencies: ["copy-button"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/copy-button-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/copy-button-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
   "physics-counter-demo": {
     name: "physics-counter-demo",
     type: "registry:example",
@@ -1495,6 +1816,52 @@ export const Index: Record<string, any> = {
     component: React.lazy(async () => {
       const mod = await import(
         "@/registry/new-york-v4/examples/physics-counter-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "progress-ring-demo": {
+    name: "progress-ring-demo",
+    type: "registry:example",
+    registryDependencies: ["progress-ring", "elevated", "button"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/progress-ring-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/progress-ring-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "avatar-group-demo": {
+    name: "avatar-group-demo",
+    type: "registry:example",
+    registryDependencies: ["avatar-group", "elevated"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/avatar-group-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/avatar-group-demo.tsx"
       );
       const exportName =
         Object.keys(mod).find(
@@ -1642,29 +2009,6 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
   },
-  "dynamic-island-demo": {
-    name: "dynamic-island-demo",
-    type: "registry:example",
-    registryDependencies: ["dynamic-island"],
-    files: [
-      {
-        path: "src/registry/new-york-v4/examples/dynamic-island-demo.tsx",
-        type: "registry:example",
-        target: "",
-      },
-    ],
-    component: React.lazy(async () => {
-      const mod = await import(
-        "@/registry/new-york-v4/examples/dynamic-island-demo.tsx"
-      );
-      const exportName =
-        Object.keys(mod).find(
-          (key) =>
-            typeof mod[key] === "function" || typeof mod[key] === "object",
-        ) || item.name;
-      return { default: mod.default || mod[exportName] };
-    }),
-  },
   "accordion-demo": {
     name: "accordion-demo",
     type: "registry:example",
@@ -1757,52 +2101,6 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
   },
-  "expandable-list-demo": {
-    name: "expandable-list-demo",
-    type: "registry:example",
-    registryDependencies: ["expandable-list"],
-    files: [
-      {
-        path: "src/registry/new-york-v4/examples/expandable-list-demo.tsx",
-        type: "registry:example",
-        target: "",
-      },
-    ],
-    component: React.lazy(async () => {
-      const mod = await import(
-        "@/registry/new-york-v4/examples/expandable-list-demo.tsx"
-      );
-      const exportName =
-        Object.keys(mod).find(
-          (key) =>
-            typeof mod[key] === "function" || typeof mod[key] === "object",
-        ) || item.name;
-      return { default: mod.default || mod[exportName] };
-    }),
-  },
-  "live-queue-demo": {
-    name: "live-queue-demo",
-    type: "registry:example",
-    registryDependencies: ["live-queue"],
-    files: [
-      {
-        path: "src/registry/new-york-v4/examples/live-queue-demo.tsx",
-        type: "registry:example",
-        target: "",
-      },
-    ],
-    component: React.lazy(async () => {
-      const mod = await import(
-        "@/registry/new-york-v4/examples/live-queue-demo.tsx"
-      );
-      const exportName =
-        Object.keys(mod).find(
-          (key) =>
-            typeof mod[key] === "function" || typeof mod[key] === "object",
-        ) || item.name;
-      return { default: mod.default || mod[exportName] };
-    }),
-  },
   "stacked-dialog-demo": {
     name: "stacked-dialog-demo",
     type: "registry:example",
@@ -1863,29 +2161,6 @@ export const Index: Record<string, any> = {
     component: React.lazy(async () => {
       const mod = await import(
         "@/registry/new-york-v4/examples/context-menu-demo.tsx"
-      );
-      const exportName =
-        Object.keys(mod).find(
-          (key) =>
-            typeof mod[key] === "function" || typeof mod[key] === "object",
-        ) || item.name;
-      return { default: mod.default || mod[exportName] };
-    }),
-  },
-  "notification-stack-demo": {
-    name: "notification-stack-demo",
-    type: "registry:example",
-    registryDependencies: ["notification-stack"],
-    files: [
-      {
-        path: "src/registry/new-york-v4/examples/notification-stack-demo.tsx",
-        type: "registry:example",
-        target: "",
-      },
-    ],
-    component: React.lazy(async () => {
-      const mod = await import(
-        "@/registry/new-york-v4/examples/notification-stack-demo.tsx"
       );
       const exportName =
         Object.keys(mod).find(

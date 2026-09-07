@@ -141,6 +141,47 @@ const liftCss = {
 const physicsDeps = ["framer-motion", "tailwind-merge", "tailwind-variants"];
 
 export const ui: Registry["items"] = [
+  // --- Arena (parked) -------------------------------------------------------
+  // The Arena family (arena-motion, rally-court, hoop-shot) is commented out
+  // pending a redesign. The component sources still live under
+  // registry/new-york-v4/ui/ and .../examples/ — re-enable these entries and
+  // restore content/docs/arena/ + the "arena" entry in content/docs/meta.json
+  // to bring the section back.
+  // {
+  //   name: "arena-motion",
+  //   type: "registry:lib",
+  //   dependencies: ["framer-motion"],
+  //   files: [{ path: "lib/arena-motion.ts", type: "registry:lib" }],
+  // },
+  // {
+  //   name: "rally-court",
+  //   type: "registry:ui",
+  //   description:
+  //     "Tennis scoreboard on an SVG court: full point → game → set scoring with deuce and advantage, an animated rally, and a serve side that flips. Arena component.",
+  //   dependencies: ["framer-motion", "lucide-react"],
+  //   registryDependencies: [
+  //     "https://matos-ui.com/r/elevated.json",
+  //     "https://matos-ui.com/r/motion-tokens.json",
+  //     "https://matos-ui.com/r/arena-motion.json",
+  //     "utils",
+  //   ],
+  //   files: [{ path: "ui/rally-court.tsx", type: "registry:ui" }],
+  // },
+  // {
+  //   name: "hoop-shot",
+  //   type: "registry:ui",
+  //   description:
+  //     "Basketball shooting drill on an SVG half-court: the ball arcs to the rim, swishes the net or rims out, and a streak of makes lights an on-fire state. Arena component.",
+  //   dependencies: ["framer-motion", "lucide-react"],
+  //   registryDependencies: [
+  //     "https://matos-ui.com/r/elevated.json",
+  //     "https://matos-ui.com/r/motion-tokens.json",
+  //     "https://matos-ui.com/r/arena-motion.json",
+  //     "utils",
+  //   ],
+  //   files: [{ path: "ui/hoop-shot.tsx", type: "registry:ui" }],
+  // },
+  // ------------------------------------------------------------------------
   {
     name: "magnetic-card",
     type: "registry:ui",
@@ -164,6 +205,45 @@ export const ui: Registry["items"] = [
     type: "registry:ui",
     dependencies: physicsDeps,
     files: [{ path: "ui/physics-counter.tsx", type: "registry:ui" }],
+  },
+  {
+    name: "progress-ring",
+    type: "registry:ui",
+    dependencies: [...physicsDeps, "lucide-react"],
+    registryDependencies: ["motion-tokens"],
+    files: [{ path: "ui/progress-ring.tsx", type: "registry:ui" }],
+  },
+  {
+    name: "avatar-group",
+    type: "registry:ui",
+    dependencies: physicsDeps,
+    registryDependencies: ["motion-tokens"],
+    files: [{ path: "ui/avatar-group.tsx", type: "registry:ui" }],
+  },
+  {
+    name: "rating",
+    type: "registry:ui",
+    dependencies: [...physicsDeps, "lucide-react"],
+    registryDependencies: ["motion-tokens"],
+    files: [{ path: "ui/rating.tsx", type: "registry:ui" }],
+  },
+  {
+    name: "stepper-input",
+    type: "registry:ui",
+    cssVars: liftCssVars,
+    css: liftCss,
+    dependencies: [...physicsDeps, "lucide-react"],
+    registryDependencies: ["elevated", "motion-tokens"],
+    files: [{ path: "ui/stepper-input.tsx", type: "registry:ui" }],
+  },
+  {
+    name: "copy-button",
+    type: "registry:ui",
+    cssVars: liftCssVars,
+    css: liftCss,
+    dependencies: [...physicsDeps, "lucide-react"],
+    registryDependencies: ["motion-tokens"],
+    files: [{ path: "ui/copy-button.tsx", type: "registry:ui" }],
   },
   {
     name: "floating-action-menu",
@@ -262,22 +342,23 @@ export const ui: Registry["items"] = [
       },
     ],
   },
-  {
-    name: "dynamic-island",
-    type: "registry:ui",
-    dependencies: [
-      "framer-motion",
-      "lucide-react",
-      "tailwind-merge",
-      "tailwind-variants",
-    ],
-    files: [
-      {
-        path: "ui/dynamic-island.tsx",
-        type: "registry:ui",
-      },
-    ],
-  },
+  // Disabled — kept in `ui/` but not published or documented.
+  // {
+  //   name: "dynamic-island",
+  //   type: "registry:ui",
+  //   dependencies: [
+  //     "framer-motion",
+  //     "lucide-react",
+  //     "tailwind-merge",
+  //     "tailwind-variants",
+  //   ],
+  //   files: [
+  //     {
+  //       path: "ui/dynamic-island.tsx",
+  //       type: "registry:ui",
+  //     },
+  //   ],
+  // },
   {
     name: "accordion",
     type: "registry:ui",
@@ -340,30 +421,6 @@ export const ui: Registry["items"] = [
     ],
   },
   {
-    name: "expandable-list",
-    type: "registry:ui",
-    dependencies: ["framer-motion", "lucide-react"],
-    registryDependencies: ["elevated", "motion-tokens"],
-    files: [
-      {
-        path: "ui/expandable-list.tsx",
-        type: "registry:ui",
-      },
-    ],
-  },
-  {
-    name: "live-queue",
-    type: "registry:ui",
-    dependencies: ["framer-motion", "lucide-react"],
-    registryDependencies: ["elevated", "motion-tokens"],
-    files: [
-      {
-        path: "ui/live-queue.tsx",
-        type: "registry:ui",
-      },
-    ],
-  },
-  {
     name: "achievement-toast",
     type: "registry:ui",
     dependencies: ["framer-motion", "lucide-react"],
@@ -387,23 +444,24 @@ export const ui: Registry["items"] = [
       },
     ],
   },
-  {
-    name: "notification-stack",
-    type: "registry:ui",
-    dependencies: [
-      "framer-motion",
-      "lucide-react",
-      "tailwind-merge",
-      "tailwind-variants",
-    ],
-    registryDependencies: ["elevated", "motion-tokens"],
-    files: [
-      {
-        path: "ui/notification-stack.tsx",
-        type: "registry:ui",
-      },
-    ],
-  },
+  // Disabled — kept in `ui/` but not published or documented.
+  // {
+  //   name: "notification-stack",
+  //   type: "registry:ui",
+  //   dependencies: [
+  //     "framer-motion",
+  //     "lucide-react",
+  //     "tailwind-merge",
+  //     "tailwind-variants",
+  //   ],
+  //   registryDependencies: ["elevated", "motion-tokens"],
+  //   files: [
+  //     {
+  //       path: "ui/notification-stack.tsx",
+  //       type: "registry:ui",
+  //     },
+  //   ],
+  // },
   {
     name: "metric-card",
     type: "registry:ui",
@@ -429,12 +487,18 @@ export const ui: Registry["items"] = [
       "tailwind-merge",
       "tailwind-variants",
     ],
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "ui/animated-area-chart.tsx",
         type: "registry:ui",
       },
       { path: "ui/chart-interaction.ts", type: "registry:ui" },
+      { path: "ui/chart-motion.ts", type: "registry:ui" },
     ],
   },
   {
@@ -446,12 +510,18 @@ export const ui: Registry["items"] = [
       "tailwind-merge",
       "tailwind-variants",
     ],
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "ui/allocation-performance-chart.tsx",
         type: "registry:ui",
       },
       { path: "ui/chart-interaction.ts", type: "registry:ui" },
+      { path: "ui/chart-motion.ts", type: "registry:ui" },
     ],
   },
   {
@@ -464,132 +534,198 @@ export const ui: Registry["items"] = [
       "tailwind-merge",
       "tailwind-variants",
     ],
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "ui/sparkline-card.tsx",
         type: "registry:ui",
       },
       { path: "ui/chart-interaction.ts", type: "registry:ui" },
+      { path: "ui/chart-motion.ts", type: "registry:ui" },
     ],
   },
   {
     name: "signal-flow-chart",
     type: "registry:ui",
     dependencies: ["framer-motion", "tailwind-merge", "tailwind-variants"],
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "ui/signal-flow-chart.tsx",
         type: "registry:ui",
       },
       { path: "ui/chart-interaction.ts", type: "registry:ui" },
+      { path: "ui/chart-motion.ts", type: "registry:ui" },
     ],
   },
   {
     name: "activity-heatmap-chart",
     type: "registry:ui",
     dependencies: ["framer-motion", "tailwind-merge", "tailwind-variants"],
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "ui/activity-heatmap-chart.tsx",
         type: "registry:ui",
       },
       { path: "ui/chart-interaction.ts", type: "registry:ui" },
+      { path: "ui/chart-motion.ts", type: "registry:ui" },
     ],
   },
   {
     name: "candlestick-chart",
     type: "registry:ui",
     dependencies: ["framer-motion", "tailwind-merge", "tailwind-variants"],
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "ui/candlestick-chart.tsx",
         type: "registry:ui",
       },
       { path: "ui/chart-interaction.ts", type: "registry:ui" },
+      { path: "ui/chart-motion.ts", type: "registry:ui" },
     ],
   },
   {
     name: "bubble-chart",
     type: "registry:ui",
     dependencies: ["framer-motion", "tailwind-merge", "tailwind-variants"],
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "ui/bubble-chart.tsx",
         type: "registry:ui",
       },
       { path: "ui/chart-interaction.ts", type: "registry:ui" },
+      { path: "ui/chart-motion.ts", type: "registry:ui" },
     ],
   },
   {
     name: "activity-waveform-chart",
     type: "registry:ui",
     dependencies: ["framer-motion", "tailwind-merge", "tailwind-variants"],
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "ui/activity-waveform-chart.tsx",
         type: "registry:ui",
       },
       { path: "ui/chart-interaction.ts", type: "registry:ui" },
+      { path: "ui/chart-motion.ts", type: "registry:ui" },
     ],
   },
   {
     name: "performance-waterfall-chart",
     type: "registry:ui",
     dependencies: ["framer-motion", "tailwind-merge", "tailwind-variants"],
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "ui/performance-waterfall-chart.tsx",
         type: "registry:ui",
       },
       { path: "ui/chart-interaction.ts", type: "registry:ui" },
+      { path: "ui/chart-motion.ts", type: "registry:ui" },
     ],
   },
   {
     name: "threshold-band-chart",
     type: "registry:ui",
     dependencies: ["framer-motion", "tailwind-merge", "tailwind-variants"],
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "ui/threshold-band-chart.tsx",
         type: "registry:ui",
       },
       { path: "ui/chart-interaction.ts", type: "registry:ui" },
+      { path: "ui/chart-motion.ts", type: "registry:ui" },
     ],
   },
   {
     name: "impact-priority-matrix",
     type: "registry:ui",
     dependencies: ["framer-motion", "tailwind-merge", "tailwind-variants"],
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "ui/impact-priority-matrix.tsx",
         type: "registry:ui",
       },
       { path: "ui/chart-interaction.ts", type: "registry:ui" },
+      { path: "ui/chart-motion.ts", type: "registry:ui" },
     ],
   },
   {
     name: "resource-treemap-chart",
     type: "registry:ui",
     dependencies: ["framer-motion", "tailwind-merge", "tailwind-variants"],
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "ui/resource-treemap-chart.tsx",
         type: "registry:ui",
       },
       { path: "ui/chart-interaction.ts", type: "registry:ui" },
+      { path: "ui/chart-motion.ts", type: "registry:ui" },
     ],
   },
   {
     name: "score-radar-chart",
     type: "registry:ui",
     dependencies: ["framer-motion", "tailwind-merge", "tailwind-variants"],
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
     files: [
       {
         path: "ui/score-radar-chart.tsx",
         type: "registry:ui",
       },
       { path: "ui/chart-interaction.ts", type: "registry:ui" },
+      { path: "ui/chart-motion.ts", type: "registry:ui" },
     ],
   },
   {

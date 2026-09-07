@@ -4,7 +4,9 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { type ComponentProps, type ReactNode, useId, useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
+import { spring } from "@/registry/new-york-v4/lib/motion-tokens";
 import { useChartInteraction } from "./chart-interaction";
+import { chartAccentTransition, chartCascadeStep } from "./chart-motion";
 
 export const resourceTreemapChartVariants = tv({
   base: "not-prose w-full text-foreground",
@@ -229,9 +231,8 @@ export function ResourceTreemapChart({
             viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
             className="size-full"
             role="img"
-            aria-labelledby={`${id}-title`}
+            aria-label={String(title)}
           >
-            <title id={`${id}-title`}>{String(title)}</title>
             <defs>
               {tiles.map((tile) => (
                 <radialGradient
@@ -280,11 +281,7 @@ export function ResourceTreemapChart({
                   animate={{
                     scale: isActive ? 1.012 : 1,
                   }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 300,
-                    damping: 22,
-                  }}
+                  transition={chartAccentTransition}
                 >
                   <motion.rect
                     x={rx}
@@ -304,14 +301,12 @@ export function ResourceTreemapChart({
                     animate={{ scale: 1, opacity: isActive ? 1 : 0.88 }}
                     transition={{
                       scale: {
-                        delay: motionDelay + tile.i * 0.06,
-                        type: "spring",
-                        stiffness: 180,
-                        damping: 20,
+                        ...spring.moderate,
+                        delay: motionDelay + tile.i * chartCascadeStep,
                       },
                       opacity: {
-                        delay: motionDelay + tile.i * 0.06,
-                        duration: 0.32,
+                        ...chartAccentTransition,
+                        delay: motionDelay + tile.i * chartCascadeStep,
                       },
                     }}
                     style={{ transformOrigin: `${cx}px ${cy}px` }}
@@ -343,7 +338,10 @@ export function ResourceTreemapChart({
                       className="text-[11px] font-semibold tabular-nums"
                       initial={motionEnabled ? { opacity: 0 } : false}
                       animate={{ opacity: 1 }}
-                      transition={{ delay: motionDelay + 0.5, duration: 0.3 }}
+                      transition={{
+                        ...chartAccentTransition,
+                        delay: motionDelay + 0.5,
+                      }}
                     >
                       {tile.percent}%
                     </motion.text>
@@ -361,8 +359,8 @@ export function ResourceTreemapChart({
                       initial={motionEnabled ? { opacity: 0 } : false}
                       animate={{ opacity: 1 }}
                       transition={{
-                        delay: motionDelay + tile.i * 0.06 + 0.32,
-                        duration: 0.28,
+                        ...chartAccentTransition,
+                        delay: motionDelay + tile.i * chartCascadeStep + 0.32,
                       }}
                     >
                       {tile.label}
@@ -381,8 +379,8 @@ export function ResourceTreemapChart({
                       initial={motionEnabled ? { opacity: 0 } : false}
                       animate={{ opacity: 1 }}
                       transition={{
-                        delay: motionDelay + tile.i * 0.06 + 0.4,
-                        duration: 0.28,
+                        ...chartAccentTransition,
+                        delay: motionDelay + tile.i * chartCascadeStep + 0.4,
                       }}
                     >
                       {fmt(tile)}
@@ -415,7 +413,7 @@ export function ResourceTreemapChart({
                     y: tooltipY + 4,
                     scale: 0.97,
                   }}
-                  transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
+                  transition={spring.fast}
                 >
                   <rect
                     width={tooltipWidth}

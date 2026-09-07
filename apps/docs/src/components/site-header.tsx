@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
 import logoLightSrc from "@/assets/logo-black.png";
 import logoDarkSrc from "@/assets/logo-white.png";
 import { CommandMenu } from "@/components/command-menu";
@@ -14,6 +15,7 @@ import { ModeSwitcher } from "@/components/mode-switcher";
 import { Link, usePathname } from "@/i18n/navigation";
 import { siteConfig } from "@/lib/config";
 import type { DocsPageTree } from "@/lib/page-tree";
+import { cn } from "@/lib/utils";
 import { Button } from "@/registry/new-york-v4/ui/button";
 import { Separator } from "@/registry/new-york-v4/ui/separator";
 import { XformerlyTwitter } from "@/registry/new-york-v4/ui/x-icon";
@@ -23,6 +25,16 @@ export function SiteHeader({ pageTree }: { pageTree: DocsPageTree }) {
   const tNav = useTranslations("nav");
   const isHome = pathname === "/";
 
+  // Frosted-glass once the page leaves the very top. Passive listener + a cheap
+  // boolean flip, so it never fights the scroll thread.
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   const navItems = siteConfig.navItems.map((item) => ({
     href: item.href,
     label: tNav(item.labelKey),
@@ -30,7 +42,15 @@ export function SiteHeader({ pageTree }: { pageTree: DocsPageTree }) {
 
   return (
     <header
-      className={`sticky top-0 z-50 w-full transition-colors ${isHome ? "h-11 bg-transparent backdrop-blur-md" : "h-(--header-height) border-border/60 border-b bg-background/90 backdrop-blur-md"}`}
+      className={cn(
+        "sticky top-0 z-50 w-full transition-[background-color,backdrop-filter,border-color,box-shadow] duration-moderate ease-spring",
+        isHome ? "h-11" : "h-(--header-height)",
+        scrolled
+          ? "border-border/60 border-b bg-background/60 shadow-[0_1px_0_0_var(--color-border)] backdrop-blur-xl backdrop-saturate-150"
+          : isHome
+            ? "border-transparent bg-transparent"
+            : "border-border/60 border-b bg-background/90 backdrop-blur-md",
+      )}
     >
       <div
         className={`mx-auto flex h-full max-w-[1600px] items-center justify-between gap-3 ${isHome ? "px-3 sm:px-4" : "px-4 sm:px-6"}`}
@@ -47,7 +67,7 @@ export function SiteHeader({ pageTree }: { pageTree: DocsPageTree }) {
           <Link
             href="/"
             aria-label={siteConfig.name}
-            className="group/brand flex min-w-0 items-center rounded-lg outline-none transition-[opacity,transform] duration-moderate ease-spring hover:scale-[1.03] hover:opacity-85 active:scale-95 motion-reduce:transition-none motion-reduce:hover:scale-100 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            className="flex min-w-0 items-center rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             <span className="relative flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-lg">
               <Image

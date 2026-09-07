@@ -1,6 +1,6 @@
 ---
 title: Motion
-description: A motion philosophy — four spring tiers, tied to elevation instead of chosen by hand. Components read their tier from how far they lift, so every overlay in the system settles at the same rate in both light and dark mode.
+description: A motion philosophy — seven spring tiers and a tween half, tied to elevation instead of chosen by hand. Components read their tier from how far they lift, so every overlay in the system settles at the same rate in both light and dark mode.
 ---
 
 <ComponentPreview name="motion-tokens-demo" chromeless />
@@ -18,27 +18,36 @@ nothing feels like it belongs to the same surface.
 
 ## The solution
 
-Three pieces: **tiers**, an **elevation mapping**, and **entrance helpers**.
+Four pieces: **spring tiers**, a **tween half**, an **elevation mapping**, and
+**entrance helpers**.
 
-- **Tiers** — five springs, named by character rather than by number. Each
-  carries a little overshoot, `slow` a bit more, `morph` is for shape rather
-  than distance, and `playful` is loud on purpose.
+- **Spring tiers** — seven springs, named by character rather than by number.
+  Three (`fast`, `moderate`, `slow`) are reached automatically from elevation;
+  the other four (`snappy`, `gentle`, `morph`, `playful`) are opted into by
+  hand, because none of them is a distance.
+- **The tween half** — `ease` (six named curves) and `duration` (a handful of
+  seconds values) for motion that is a shape over time rather than a mass
+  arriving: a keyframe sequence, a colour or blur crossfade, a constant-velocity
+  loop.
 - **`motionForOffset`** — the same `offset` an `Elevated` surface already
-  declares picks the tier. How far a panel travels away from its substrate
-  decides how it moves, so a component never chooses twice.
-- **`liftVariants` / `directionalVariants`** — the entrance half. Elevation is
-  the fill, the shadow, *and* the arrival: one decision, not three.
+  declares picks the spring tier. How far a panel travels away from its
+  substrate decides how it moves, so a component never chooses twice.
+- **`liftVariants` / `revealVariants` / `directionalVariants` / `slideVariants`**
+  — the entrance half. Elevation is the fill, the shadow, *and* the arrival: one
+  decision, not three.
 
 Motion and elevation are the same story told twice — see
 [Elevated](/docs/foundations/elevated) for the fill and shadow half.
 
-## The tiers
+## The spring tiers
 
 | Tier       | Visual duration | Bounce | For                                                                 |
 | ---------- | --------------- | ------ | ------------------------------------------------------------------- |
 | `fast`     | `0.15s`         | `0.1`  | Micro-feedback: toggles, checkboxes, a single-step surface lift.     |
+| `snappy`   | `0.11s`         | `0`    | Zero-latency follow: a dragged sheet, a magnetic button, an element tracking the cursor. Opt in by hand. |
 | `moderate` | `0.28s`         | `0.15` | Panels that must land exactly: dropdowns, tabs, drawers, selects.    |
 | `slow`     | `0.42s`         | `0.2`  | Dialogs and sheets — far enough that a touch of overshoot reads alive. |
+| `gentle`   | `0.6s`          | `0.06` | Ambient, unhurried: a backdrop fading up, a hero settling on load, a section easing in on scroll. Opt in by hand. |
 | `morph`    | `0.75s`         | `0.12` | Shape, not distance: a `layout` animation changing width, height and radius together. |
 | `playful`  | `0.5s`          | `0.45` | A tone, not a speed. Opt in by hand, never reached by offset.        |
 
@@ -54,10 +63,23 @@ perceived speed; the difference is where they end. `moderate`'s bounce is small
 enough to have no visible overshoot at the distances a panel travels, so a
 select menu still settles under the cursor rather than past the item the user is
 already reaching for — it just decelerates into place instead of stopping dead.
-Nothing in the scale is critically damped any more: `bounce: 0` on a short
+Nothing *common* is critically damped any more: `bounce: 0` on a short
 transition is what makes movement read as a state swap rather than as movement.
 If one specific panel ever reads as unstable, take that tier to `0`, not the
 pair of them.
+
+`snappy` is the one deliberate exception. It is the opposite of `playful`:
+where `playful` adds character, `snappy` removes all of it — bounce `0` and a
+visual duration shorter than `fast`, because any overshoot on something the
+user is *actively moving* — dragging a sheet, pulling an element with the
+cursor — reads as lag, not as life. `motionForOffset` never returns it; a
+component opts in.
+
+`gentle` is the calm pair of `slow`. Longer, with almost no bounce, for motion
+that should recede rather than announce itself — a background rising into place,
+a section easing in as it scrolls into the viewport. `slow` is still the dialog
+tier; `gentle` is for what happens behind it. It is opt-in by hand for the same
+reason `snappy` is: a mood is not a distance.
 
 `morph` is the odd one out: it is the only tier that is longer than the ones
 above it, because it is the only one measuring a different thing. The others
@@ -72,6 +94,31 @@ changing shape.
 Each tier carries its own `exit.duration` — a plain tween, held at roughly 70%
 of its entrance. Nothing needs character on the way out, and an overlay leaving
 should get out of the way faster than it arrived.
+
+## The tween half
+
+A spring is the default for anything that travels — a panel, a lift, a list
+entrance. For motion that is a *shape over time* rather than a mass arriving
+somewhere — a multi-keyframe sequence, a colour or blur crossfade, a
+constant-velocity loop — the system has a `duration`-driven counterpart.
+
+```ts
+ease = { standard, decelerate, accelerate, emphasized, anticipate, linear }
+duration = { instant: 0, fast: 0.18, moderate: 0.28, slow: 0.42, slower: 0.6 }
+```
+
+- `decelerate` — fast start, soft landing: for something *entering* (a reveal, a
+  value counting up).
+- `accelerate` — soft start, fast exit: for something *leaving* the frame.
+- `emphasized` — a slow, expressive start and a long glide out, for a hero
+  element.
+- `anticipate` — dips backward before it moves: the twelve-principles
+  anticipation beat, for a playful confirm.
+
+`duration.fast` / `moderate` / `slow` are the exact JavaScript twin of
+`--duration-*` in the CSS and move together with them. `slower` has no CSS pair
+— it is for `gentle`-tier tweens. The `ease` curves are JS-only; the CSS side
+keeps just `--ease-spring` and `--ease-lift`.
 
 ## Installation
 
@@ -213,9 +260,53 @@ const POPOVER_OFFSET = 2
 />
 ```
 
-`motionForOffset` maps onto `fast`/`moderate`/`slow` only — `playful` is a tone
-and cannot be reached by distance, so no ordinary overlay turns festive by
-accident.
+`motionForOffset` maps onto `fast`/`moderate`/`slow` only. `snappy` is a
+response, `gentle` a mood, `playful` a tone and `morph` a kind of change — none
+of them a distance — so no ordinary overlay turns draggable, ambient, festive or
+shape-shifting by accident.
+
+### Reveal on scroll
+
+`revealVariants` is the premium in-view entrance: a fade, a longer travel than
+`liftVariants`, and an optional focus-pull (`blur(6px) → blur(0)`) that reads as
+content coming into focus rather than sliding on. It runs on a `decelerate`
+tween — a reveal should glide to a stop, not bounce. The blur is GPU work: keep
+it to text blocks, cards and media, and always pair it with `withReducedMotion`,
+which strips the travel and the blur a vestibular-sensitive reader needs gone
+while keeping the crossfade.
+
+```tsx
+const reduce = useReducedMotion()
+const v = reduce ? withReducedMotion(revealVariants()) : revealVariants()
+
+<motion.section variants={v} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+```
+
+`slideVariants(direction)` is a whole surface sliding in from an edge — a
+drawer, a sheet, a toast rail. Bigger travel than `directionalVariants` (that
+one is a 6px hint on an anchored popup; this is the panel entering the screen)
+and it settles on the `slow` tier by default, for the same reason a sheet does.
+
+### Interaction helpers
+
+`pressable()` is press/hover feedback for a surface that is *itself* the target
+— a card, a tile, a custom button: it floats and scales a hair on hover, presses
+back in on tap, on the `fast` spring. Spread the return onto a `motion` element,
+and pass `reduced` to collapse it to nothing.
+
+```tsx
+const reduce = useReducedMotion()
+<motion.button {...pressable({ reduced: !!reduce })} />
+```
+
+`useMagneticPull(strength?)` leans a button or card toward the pointer on hover
+and springs it back on leave, on the `snappy` tier so it feels attached to the
+hand. It returns `{ ref, style, handlers }` and no-ops under
+`prefers-reduced-motion`.
+
+`marqueeTransition(seconds?)` is a constant-velocity loop for a marquee, a logo
+strip or a ticker — pair it with a track translated by exactly one copy of its
+content.
 
 ### Stagger a group
 
@@ -239,10 +330,12 @@ arrive with the same character as the panel around them.
 
 <ComponentPreview name="motion-attention-demo" />
 
-`attentionShake` and `attentionPulse` are cues, not tiers: no offset, no
-elevation, nothing to compose with. They interrupt a component the user is
-already looking at — a field that just failed validation, a total that changed
-underneath them. Drive them by flipping `animate` to the variant name and back.
+`attentionShake`, `attentionPulse` and `attentionGlow` are cues, not tiers: no
+offset, no elevation, nothing to compose with. They interrupt a component the
+user is already looking at — a field that just failed validation (`shake`), a
+total that changed underneath them (`pulse`), a row that needs a glance
+(`glow`, a ring that blooms and fades on `var(--color-ring)`). Drive them by
+flipping `animate` to the variant name and back.
 
 ```tsx
 <motion.div variants={attentionShake} animate={invalid ? 'shake' : undefined}>
@@ -274,9 +367,16 @@ return (
 
 ### `spring`
 
-Five tiers, each a framer-motion `Transition` plus an `exit` duration.
-`spring.fast`, `spring.moderate`, `spring.slow`, `spring.morph`,
-`spring.playful`.
+Seven tiers, each a framer-motion `Transition` plus an `exit` duration:
+`spring.fast`, `spring.snappy`, `spring.moderate`, `spring.slow`,
+`spring.gentle`, `spring.morph`, `spring.playful`.
+
+### `ease` / `duration`
+
+`ease` holds six named cubic-bézier curves (`standard`, `decelerate`,
+`accelerate`, `emphasized`, `anticipate`, `linear`), JS-only. `duration` holds
+five seconds values (`instant` `0`, `fast` `0.18`, `moderate` `0.28`, `slow`
+`0.42`, `slower` `0.6`); the middle three are the exact twin of `--duration-*`.
 
 ### `motionForOffset`
 
@@ -299,6 +399,13 @@ transition comes from `motionForOffset(offset)`.
 | `y`     | `number` | `4`     | Travel distance. Raise it when the surface is large enough that 4px reads as a twitch. |
 | `scale` | `number` | `0.98`  | Starting scale.                                                      |
 
+### `revealVariants`
+
+`revealVariants(options?): Variants` — a premium in-view entrance: fade + a
+longer travel than `liftVariants` + an optional focus-pull blur, on a
+`decelerate` tween. Options: `y` / `x` (`14` / `0`), `blur` (`6`), `scale`
+(`1`), `tier` (`"slow"`). Always pair with `withReducedMotion`.
+
 ### `directionalVariants`
 
 `directionalVariants(direction, tier?): Variants` — an element that grows out of
@@ -307,15 +414,42 @@ an anchored popup is the opposite of its resolved placement: a menu that flipped
 above the cursor (side `top`) enters from `bottom`. Travels 6px, not 4 — this
 reads as origin, not as lift.
 
+### `slideVariants`
+
+`slideVariants(direction, options?): Variants` — a whole surface sliding in from
+an edge: a drawer, a sheet, a toast rail. Options: `distance` (`24`), `tier`
+(`spring.slow`), `fade` (`true`).
+
+### `pressable` / `useMagneticPull`
+
+`pressable(options?)` returns `whileHover` / `whileTap` / `transition` for a
+surface that is itself the clickable target — spread it onto a `motion`
+element. `useMagneticPull(strength?)` → `{ ref, style, handlers }` for
+cursor-magnetism on the `snappy` tier; no-ops under `prefers-reduced-motion`.
+
+### `withReducedMotion`
+
+`withReducedMotion(variants): Variants` — the accessibility filter for the
+tiered-not-all-or-nothing pattern: keeps the opacity crossfade, drops every
+transform, blur and rotation. Run a variants object through it when
+`useReducedMotion()` is `true`.
+
+### `marqueeTransition`
+
+`marqueeTransition(seconds?): Transition` — a constant-velocity linear loop for
+a marquee, a logo strip or a ticker.
+
 ### `stagger` / `staggerContainer`
 
 `stagger` holds the four delays (`0.02`–`0.08s`) under the same tier names.
 `staggerContainer(tier?, delayChildren?)` returns the container `Variants`.
 
-### `attentionShake` / `attentionPulse`
+### `attentionShake` / `attentionPulse` / `attentionGlow`
 
-Standalone `Variants` with a single `shake` / `pulse` key. Meant to live inside
-existing form and feedback components rather than be wrapped in one of their own.
+Standalone `Variants` with a single `shake` / `pulse` / `glow` key. Meant to
+live inside existing form and feedback components rather than be wrapped in one
+of their own. `attentionGlow` uses `var(--color-ring)`, so it follows the active
+palette.
 
 ### `useExitAnimation`
 
