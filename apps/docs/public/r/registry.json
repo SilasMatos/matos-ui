@@ -365,6 +365,26 @@
       ]
     },
     {
+      "name": "nested-menu",
+      "type": "registry:ui",
+      "dependencies": [
+        "@base-ui/react",
+        "framer-motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "motion-tokens",
+        "surface-classes",
+        "surface-context"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/nested-menu.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "floating-action-menu",
       "type": "registry:ui",
       "dependencies": [
@@ -2104,6 +2124,19 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/tag-input-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "nested-menu-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "nested-menu"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/nested-menu-demo.tsx",
           "type": "registry:example"
         }
       ]

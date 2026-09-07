@@ -1,0 +1,16 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "nested-menu-demo",
+  "registryDependencies": [
+    "nested-menu"
+  ],
+  "files": [
+    {
+      "path": "components/matos-ui/examples/nested-menu-demo.tsx",
+      "content": "\"use client\";\n\nimport {\n  NestedMenu,\n  NestedMenuContent,\n  NestedMenuItem,\n  NestedMenuLabel,\n  NestedMenuSeparator,\n  NestedMenuSub,\n  NestedMenuSubContent,\n  NestedMenuSubTrigger,\n  NestedMenuTrigger,\n} from \"@/components/matos-ui/nested-menu\";\n\nexport default function NestedMenuDemo() {\n  return (\n    <div className=\"flex justify-center py-16\">\n      <NestedMenu>\n        <NestedMenuTrigger className=\"inline-flex h-9 items-center rounded-lg border border-border bg-background px-3 font-medium text-sm shadow-xs outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring data-popup-open:bg-muted\">\n          Move to…\n        </NestedMenuTrigger>\n\n        <NestedMenuContent>\n          <NestedMenuLabel>Destination</NestedMenuLabel>\n          <NestedMenuItem>Inbox</NestedMenuItem>\n\n          <NestedMenuSub>\n            <NestedMenuSubTrigger>Projects</NestedMenuSubTrigger>\n            <NestedMenuSubContent>\n              <NestedMenuItem>Website</NestedMenuItem>\n              <NestedMenuItem>Mobile app</NestedMenuItem>\n\n              <NestedMenuSub>\n                <NestedMenuSubTrigger>2026</NestedMenuSubTrigger>\n                <NestedMenuSubContent>\n                  <NestedMenuItem>Q1</NestedMenuItem>\n\n                  <NestedMenuSub>\n                    <NestedMenuSubTrigger>Q2</NestedMenuSubTrigger>\n                    <NestedMenuSubContent>\n                      <NestedMenuItem>April</NestedMenuItem>\n                      <NestedMenuItem>May</NestedMenuItem>\n                      <NestedMenuItem>June</NestedMenuItem>\n                    </NestedMenuSubContent>\n                  </NestedMenuSub>\n\n                  <NestedMenuItem>Q3</NestedMenuItem>\n                  <NestedMenuItem>Q4</NestedMenuItem>\n                </NestedMenuSubContent>\n              </NestedMenuSub>\n            </NestedMenuSubContent>\n          </NestedMenuSub>\n\n          <NestedMenuSeparator />\n          <NestedMenuItem variant=\"destructive\">Archive instead</NestedMenuItem>\n        </NestedMenuContent>\n      </NestedMenu>\n    </div>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/nested-menu-demo.tsx"
+    }
+  ],
+  "type": "registry:example"
+}

@@ -283,6 +283,31 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
   },
+  "nested-menu": {
+    name: "nested-menu",
+    type: "registry:ui",
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/nested-menu.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/ui/nested-menu.tsx");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
   "floating-action-menu": {
     name: "floating-action-menu",
     type: "registry:ui",
@@ -1957,6 +1982,29 @@ export const Index: Record<string, any> = {
     component: React.lazy(async () => {
       const mod = await import(
         "@/registry/new-york-v4/examples/tag-input-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "nested-menu-demo": {
+    name: "nested-menu-demo",
+    type: "registry:example",
+    registryDependencies: ["nested-menu"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/nested-menu-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/nested-menu-demo.tsx"
       );
       const exportName =
         Object.keys(mod).find(

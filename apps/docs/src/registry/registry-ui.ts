@@ -285,6 +285,17 @@ export const ui: Registry["items"] = [
     files: [{ path: "ui/tag-input.tsx", type: "registry:ui" }],
   },
   {
+    name: "nested-menu",
+    type: "registry:ui",
+    dependencies: ["@base-ui/react", "framer-motion", "lucide-react"],
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
+    files: [{ path: "ui/nested-menu.tsx", type: "registry:ui" }],
+  },
+  {
     name: "floating-action-menu",
     type: "registry:ui",
     dependencies: [...physicsDeps, "lucide-react"],

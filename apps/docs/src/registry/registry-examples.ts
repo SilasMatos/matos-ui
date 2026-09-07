@@ -86,6 +86,14 @@ export const examples: Registry["items"] = [
     files: [{ path: "examples/tag-input-demo.tsx", type: "registry:example" }],
   },
   {
+    name: "nested-menu-demo",
+    type: "registry:example",
+    registryDependencies: ["nested-menu"],
+    files: [
+      { path: "examples/nested-menu-demo.tsx", type: "registry:example" },
+    ],
+  },
+  {
     name: "physics-counter-demo",
     type: "registry:example",
     registryDependencies: ["physics-counter"],
