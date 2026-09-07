@@ -1,0 +1,16 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "tag-input-demo",
+  "registryDependencies": [
+    "tag-input"
+  ],
+  "files": [
+    {
+      "path": "components/matos-ui/examples/tag-input-demo.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\n\nimport { TagInput } from \"@/components/matos-ui/tag-input\";\n\nconst FRAMEWORKS = [\n  \"React\",\n  \"Next.js\",\n  \"Vue\",\n  \"Svelte\",\n  \"Solid\",\n  \"Astro\",\n  \"Remix\",\n  \"Nuxt\",\n];\n\nexport default function TagInputDemo() {\n  const [tags, setTags] = useState<string[]>([\"React\", \"Next.js\"]);\n  const [free, setFree] = useState<string[]>([]);\n\n  return (\n    <div className=\"mx-auto flex w-full max-w-sm flex-col gap-6 py-6\">\n      <TagInput\n        label=\"Stack\"\n        value={tags}\n        onValueChange={setTags}\n        suggestions={FRAMEWORKS}\n        max={5}\n        description=\"Pick from the list or type your own. Up to 5.\"\n      />\n\n      <TagInput\n        label=\"Keywords\"\n        value={free}\n        onValueChange={setFree}\n        placeholder=\"Type, press Enter, paste a,b,c\"\n        validate={(tag) =>\n          tag.length <= 20 || \"Keep keywords under 20 characters.\"\n        }\n      />\n    </div>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/tag-input-demo.tsx"
+    }
+  ],
+  "type": "registry:example"
+}

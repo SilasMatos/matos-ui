@@ -80,6 +80,12 @@ export const examples: Registry["items"] = [
     ],
   },
   {
+    name: "tag-input-demo",
+    type: "registry:example",
+    registryDependencies: ["tag-input"],
+    files: [{ path: "examples/tag-input-demo.tsx", type: "registry:example" }],
+  },
+  {
     name: "physics-counter-demo",
     type: "registry:example",
     registryDependencies: ["physics-counter"],

@@ -343,6 +343,28 @@
       ]
     },
     {
+      "name": "tag-input",
+      "type": "registry:ui",
+      "dependencies": [
+        "@base-ui/react",
+        "class-variance-authority",
+        "framer-motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "field",
+        "motion-tokens",
+        "surface-classes",
+        "surface-context"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/tag-input.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "floating-action-menu",
       "type": "registry:ui",
       "dependencies": [
@@ -2069,6 +2091,19 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/date-picker-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "tag-input-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "tag-input"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/tag-input-demo.tsx",
           "type": "registry:example"
         }
       ]

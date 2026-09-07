@@ -257,6 +257,32 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
   },
+  "tag-input": {
+    name: "tag-input",
+    type: "registry:ui",
+    registryDependencies: [
+      "field",
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/tag-input.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/ui/tag-input.tsx");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
   "floating-action-menu": {
     name: "floating-action-menu",
     type: "registry:ui",
@@ -1908,6 +1934,29 @@ export const Index: Record<string, any> = {
     component: React.lazy(async () => {
       const mod = await import(
         "@/registry/new-york-v4/examples/date-picker-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "tag-input-demo": {
+    name: "tag-input-demo",
+    type: "registry:example",
+    registryDependencies: ["tag-input"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/tag-input-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/tag-input-demo.tsx"
       );
       const exportName =
         Object.keys(mod).find(

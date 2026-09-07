@@ -1,0 +1,130 @@
+---
+title: Tag Input
+description: A multi-value input — type a tag and press Enter, or pick one from the suggestions, and it becomes a chip.
+---
+
+<ComponentPreview name="tag-input-demo" chromeless align="start" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/tag-input.json" />
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the following dependencies:</Step>
+
+<CodeBlockCommand command="npm install @base-ui/react class-variance-authority framer-motion lucide-react" />
+
+<Step>Add the <code>field</code> component, then copy this one in.</Step>
+
+<ComponentSource name="tag-input" title="components/matos-ui/tag-input.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { TagInput } from '@/components/matos-ui/tag-input'
+```
+
+```tsx
+const [tags, setTags] = useState<string[]>([])
+
+<TagInput value={tags} onValueChange={setTags} />
+```
+
+## Examples
+
+### With suggestions and a cap
+
+```tsx
+<TagInput
+  label="Stack"
+  suggestions={['React', 'Vue', 'Svelte', 'Solid']}
+  max={5}
+  value={tags}
+  onValueChange={setTags}
+/>
+```
+
+### Free entry with validation
+
+```tsx
+<TagInput
+  validate={(tag) => tag.length <= 20 || 'Under 20 characters.'}
+  placeholder="Type, press Enter, paste a,b,c"
+/>
+```
+
+### In a form
+
+```tsx
+<form action={submit}>
+  <TagInput name="labels" defaultValue={['bug']} />
+  <button type="submit">Save</button>
+</form>
+```
+
+Each tag posts as its own hidden `<input name="labels">`.
+
+## How it's built
+
+- **Base UI does the hard part.** `@base-ui/react/combobox` with `multiple`
+  carries the ARIA (`role="combobox"`, the chip group, the listbox) and the
+  keyboard: typeahead, arrows through the list, `Backspace` on an empty input
+  removes the last chip, `←` / `→` move between chips, `Esc` closes.
+- **Free entry sits on top.** `Enter` (or `Tab`) with text that isn't a
+  suggestion adds it as a tag — unless an item is highlighted, in which case
+  Base UI's selection wins. `delimiter` splits typed or pasted text (`a, b, c`
+  → three tags). `creatable={false}` turns it back into a chip-style
+  multi-select.
+- **Chips are surface, not fill.** A soft `--muted` chip, a `pressable` remove
+  button. They add on `spring.fast` from `scale: 0.8` and reflow their
+  neighbours with `layout`; removing one shrinks it out under
+  `AnimatePresence mode="popLayout"`.
+- **The popup rides the ladder.** `surfaceClasses(useSurface() + 2)` — the
+  dropdown convention — with the same `data-open` / `data-closed` transition and
+  `useExitAnimation` guard the [Select](/docs/components/select) uses. It only
+  renders when there are suggestions or something to create.
+- **Rejections shake.** A tag that fails `validate` (or `max`, or a duplicate)
+  isn't added; the field does one `attentionShake` and shows the message.
+- **`prefers-reduced-motion`** drops the chip scale and the shake, keeps the
+  fades.
+
+## Reference
+
+### TagInput Props
+
+| Prop              | Type                                    | Default        | Description                                          |
+| ----------------- | --------------------------------------- | -------------- | -------------------------------------------------- |
+| `value`           | `string[]`                              | —              | Controlled tags.                                    |
+| `defaultValue`    | `string[]`                              | `[]`           | Initial tags when uncontrolled.                     |
+| `onValueChange`   | `(tags: string[]) => void`              | —              | Fires with the full tag list.                       |
+| `suggestions`     | `Array<string \| { value, label }>`     | —              | Autocomplete options. Omit for pure free entry.     |
+| `creatable`       | `boolean`                               | `true`         | Allow tags that aren't suggestions.                 |
+| `max`             | `number`                                | —              | Cap the number of tags.                             |
+| `allowDuplicates` | `boolean`                               | `false`        | —                                                  |
+| `delimiter`       | `RegExp`                                | `/[,\n\t]/`    | Split typed / pasted text into several tags.        |
+| `validate`        | `(tag: string) => boolean \| string`    | —              | Reject a tag; a string is the shown message.        |
+| `name`            | `string`                                | —              | One hidden input per tag, for form posting.         |
+| `label` / `description` / `error` | `ReactNode`             | —              | `Field` composition.                                |
+| `disabled`        | `boolean`                               | `false`        | —                                                  |
+| `size`            | `"sm" \| "md" \| "lg"`                  | `"md"`         | —                                                  |

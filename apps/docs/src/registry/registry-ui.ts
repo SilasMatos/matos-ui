@@ -268,6 +268,23 @@ export const ui: Registry["items"] = [
     files: [{ path: "ui/date-picker.tsx", type: "registry:ui" }],
   },
   {
+    name: "tag-input",
+    type: "registry:ui",
+    dependencies: [
+      "@base-ui/react",
+      "class-variance-authority",
+      "framer-motion",
+      "lucide-react",
+    ],
+    registryDependencies: [
+      "field",
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
+    files: [{ path: "ui/tag-input.tsx", type: "registry:ui" }],
+  },
+  {
     name: "floating-action-menu",
     type: "registry:ui",
     dependencies: [...physicsDeps, "lucide-react"],
