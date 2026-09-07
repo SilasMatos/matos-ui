@@ -246,6 +246,15 @@ export const ui: Registry["items"] = [
     files: [{ path: "ui/copy-button.tsx", type: "registry:ui" }],
   },
   {
+    name: "calendar",
+    type: "registry:ui",
+    cssVars: liftCssVars,
+    css: liftCss,
+    dependencies: [...physicsDeps, "lucide-react"],
+    registryDependencies: ["motion-tokens", "date"],
+    files: [{ path: "ui/calendar.tsx", type: "registry:ui" }],
+  },
+  {
     name: "floating-action-menu",
     type: "registry:ui",
     dependencies: [...physicsDeps, "lucide-react"],
@@ -995,6 +1004,11 @@ export const ui: Registry["items"] = [
         type: "registry:lib",
       },
     ],
+  },
+  {
+    name: "date",
+    type: "registry:lib",
+    files: [{ path: "lib/date.ts", type: "registry:lib" }],
   },
   {
     name: "elevated",
