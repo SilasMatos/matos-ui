@@ -255,6 +255,19 @@ export const ui: Registry["items"] = [
     files: [{ path: "ui/calendar.tsx", type: "registry:ui" }],
   },
   {
+    name: "date-picker",
+    type: "registry:ui",
+    dependencies: ["framer-motion", "lucide-react", "tailwind-merge"],
+    registryDependencies: [
+      "calendar",
+      "popover",
+      "input",
+      "surface-classes",
+      "surface-context",
+    ],
+    files: [{ path: "ui/date-picker.tsx", type: "registry:ui" }],
+  },
+  {
     name: "floating-action-menu",
     type: "registry:ui",
     dependencies: [...physicsDeps, "lucide-react"],

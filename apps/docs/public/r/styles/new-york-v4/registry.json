@@ -273,6 +273,24 @@
       ]
     },
     {
+      "name": "date-picker",
+      "type": "registry:ui",
+      "dependencies": ["framer-motion", "lucide-react", "tailwind-merge"],
+      "registryDependencies": [
+        "calendar",
+        "popover",
+        "input",
+        "surface-classes",
+        "surface-context"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/date-picker.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "floating-action-menu",
       "type": "registry:ui",
       "dependencies": [
@@ -1813,6 +1831,17 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/calendar-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "date-picker-demo",
+      "type": "registry:example",
+      "registryDependencies": ["date-picker"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/date-picker-demo.tsx",
           "type": "registry:example"
         }
       ]
