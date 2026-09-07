@@ -74,14 +74,13 @@ function dismiss(id: string) {
 ;<AchievementToastGroup achievements={achievements} onDismiss={dismiss} />
 ```
 
-## When to use this and not Notification Stack
+## When to use this
 
-[Notification Stack](/docs/components/notification-stack) is informational and
-continuous: things keep arriving, and the tone stays neutral because the next
-one is always coming. Achievement Toast is the opposite shape — a single
-moment that happened once and is worth marking. That difference is what the
-motion is spending itself on. If you find yourself firing one of these on
-every save, it wants to be a notification instead.
+A continuous notification feed is informational: things keep arriving, and the
+tone stays neutral because the next one is always coming. Achievement Toast is
+the opposite shape — a single moment that happened once and is worth marking.
+That difference is what the motion is spending itself on. If you find yourself
+firing one of these on every save, it wants to be a plain notification instead.
 
 ## How it's built
 
@@ -101,9 +100,8 @@ every save, it wants to be a notification instead.
   top-corner one drops. The bounce then lands against the edge it came from.
 - `AchievementToastGroup` uses `staggerContainer("playful")` — the widest gap
   in the scale (80ms), so each item reads as its own arrival rather than as a
-  list appearing. As in [Live Queue](/docs/components/live-queue), the stagger
-  orchestrates what's in the array on mount; items appended later enter
-  individually without a queued-up delay.
+  list appearing. The stagger orchestrates what's in the array on mount; items
+  appended later enter individually without a queued-up delay.
 - The icon pulses once with `attentionPulse`, cued by the entrance completing
   rather than by mount — so it reads as the toast settling, not as a second
   thing happening at the same time.

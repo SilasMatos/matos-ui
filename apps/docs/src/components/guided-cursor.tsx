@@ -1,6 +1,11 @@
 "use client";
 
-import { motion } from "framer-motion";
+import {
+  type MotionValue,
+  motion,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 import {
   type RefObject,
   useCallback,
@@ -23,9 +28,20 @@ import {
  *
  * Not part of the registry: it names no font, it is `aria-hidden` decoration,
  * and it exists only for these marketing surfaces. It does lean on the motion
- * tokens for every timing — the travel is a `duration` + `ease` tween (a real
- * cursor does not overshoot, so no spring), and the click depress is
- * `spring.fast`, the tier for micro-feedback.
+ * tokens for every timing — the travel is a spring calibrated to `duration.slow`
+ * with a hair of bounce (0.1: no perceptible overshoot on a pointer hop, but it
+ * arrives with intent instead of creeping the last few pixels), and the click
+ * depress is `spring.fast`, the tier for micro-feedback.
+ *
+ * ## Why the position never touches React state
+ *
+ * The hook re-samples the target rectangle every frame for up to a second
+ * after each aim (the hero surface finishing a morph, content mounting a beat
+ * late). Routing that through `useState` re-rendered the whole subtree ~60
+ * times per hop. Instead the raw target is written to a `MotionValue` and a
+ * `useSpring` follows it — the glide, the morph-tracking and the framerate all
+ * live on the compositor, and React only re-renders when `visible`/`clicking`
+ * actually flip.
  *
  * Vestibular note: a pointer travelling across a region is Tier-1 motion. The
  * hook does not run and the component is not mounted under
@@ -33,15 +49,22 @@ import {
  * whose `cycling` folds that in — and each demo keeps its own frozen frame.
  */
 
-/** The tip of the SVG below, in its own 22px box — the point that has to land
- *  on the target, not the box's centre. */
-const TIP = { x: 4.6, y: 2.9 } as const;
+/** The tip of the SVG below, in its own 24px box — the point that has to land
+ *  on the target, not the box's centre. The art is authored in a 32-unit
+ *  viewBox and rendered at 24px, so the index fingertip at (12.9, 8.5) maps to
+ *  (12.9, 8.5) × 24/32. */
+const TIP = { x: 9.7, y: 6.4 } as const;
 
-/** Travel time for one hop, matched to the tween that actually moves the
+/** Travel time for one hop, matched to the spring that actually moves the
  *  cursor so a demo's `setTimeout` choreography and the animation agree.
- *  `duration.slower` is the ambient/`gentle` tween length — right for a glide
- *  that should read as unhurried rather than as a panel arriving. */
-export const CURSOR_TRAVEL_MS = Math.round(duration.slower * 1000);
+ *  `duration.slow` reads as a deliberate glide without the dead air a longer
+ *  hop left between arriving and clicking. */
+export const CURSOR_TRAVEL_MS = Math.round(duration.slow * 1000);
+
+/** Follow spring for the pointer's travel. `visualDuration` keeps its arrival
+ *  in step with `CURSOR_TRAVEL_MS`; the small bounce gives an organic
+ *  deceleration rather than the slow creep a `bounce: 0` tail leaves. */
+const TRAVEL_SPRING = { visualDuration: duration.slow, bounce: 0.1 } as const;
 
 /** How long the pointer holds its pressed pose. Long enough to register as a
  *  press rather than a flicker; `spring.fast` carries it in and out. */
@@ -59,9 +82,9 @@ const USER_IDLE_MS = 2500;
 /** The idle float. A pointer that has arrived and is waiting out a dwell should
  *  still be breathing, not frozen — matches the ambient-pulse convention the
  *  demo files already use (`duration` + `repeat: Infinity` + `easeInOut`). */
-const IDLE_BOB_ANIMATE = { y: [0, -2, 0] };
+const IDLE_BOB_ANIMATE = { y: [0, -2.5, 0] };
 const IDLE_BOB_TRANSITION = {
-  duration: 2.8,
+  duration: 2.4,
   repeat: Number.POSITIVE_INFINITY,
   ease: "easeInOut" as const,
 };
@@ -69,52 +92,79 @@ const IDLE_BOB_TRANSITION = {
 function PointerIcon() {
   return (
     <svg
-      width="22"
-      height="22"
-      viewBox="0 0 24 24"
+      width="24"
+      height="24"
+      viewBox="0 0 32 32"
       aria-hidden="true"
       // Foreground fill with a background-coloured seam, so the pointer keeps
       // its edge on any rung of the surface ladder, in either theme.
       className="fill-foreground stroke-background drop-shadow-sm"
     >
       <path
-        d="M5 3 L5 19 L9 15.3 L11.5 20.8 L14 19.7 L11.5 14.2 L17.5 14 Z"
+        d="M11.3,20.4c-0.3-0.4-0.6-1.1-1.2-2c-0.3-0.5-1.2-1.5-1.5-1.9c-0.2-0.4-0.2-0.6-0.1-1
+        c0.1-0.6,0.7-1.1,1.4-1.1c0.5,0,1,0.4,1.4,0.7c0.2,0.2,0.5,0.6,0.7,0.8c0.2,0.2,0.2,0.3,0.4,0.5c0.2,0.3,0.3,0.5,0.2,0.1
+        c-0.1-0.5-0.2-1.3-0.4-2.1c-0.1-0.6-0.2-0.7-0.3-1.1c-0.1-0.5-0.2-0.8-0.3-1.3c-0.1-0.3-0.2-1.1-0.3-1.5c-0.1-0.5-0.1-1.4,0.3-1.8
+        c0.3-0.3,0.9-0.4,1.3-0.2c0.5,0.3,0.8,1,0.9,1.3c0.2,0.5,0.4,1.2,0.5,2c0.2,1,0.5,2.5,0.5,2.8c0-0.4-0.1-1.1,0-1.5
+        c0.1-0.3,0.3-0.7,0.7-0.8c0.3-0.1,0.6-0.1,0.9-0.1c0.3,0.1,0.6,0.3,0.8,0.5c0.4,0.6,0.4,1.9,0.4,1.8c0.1-0.4,0.1-1.2,0.3-1.6
+        c0.1-0.2,0.5-0.4,0.7-0.5c0.3-0.1,0.7-0.1,1,0c0.2,0,0.6,0.3,0.7,0.5c0.2,0.3,0.3,1.3,0.4,1.7c0,0.1,0.1-0.4,0.3-0.7
+        c0.4-0.6,1.8-0.8,1.9,0.6c0,0.7,0,0.6,0,1.1c0,0.5,0,0.8,0,1.2c0,0.4-0.1,1.3-0.2,1.7c-0.1,0.3-0.4,1-0.7,1.4c0,0-1.1,1.2-1.2,1.8
+        c-0.1,0.6-0.1,0.6-0.1,1c0,0.4,0.1,0.9,0.1,0.9s-0.8,0.1-1.2,0c-0.4-0.1-0.9-0.8-1-1.1c-0.2-0.3-0.5-0.3-0.7,0
+        c-0.2,0.4-0.7,1.1-1.1,1.1c-0.7,0.1-2.1,0-3.1,0c0,0,0.2-1-0.2-1.4c-0.3-0.3-0.8-0.8-1.1-1.1L11.3,20.4z"
         strokeWidth="1.4"
         strokeLinejoin="round"
+        strokeLinecap="round"
       />
+      {/* Knuckle creases — same background stroke, dialled back so they read as
+       *  detail rather than a second outline. */}
+      <g
+        className="stroke-background/70"
+        strokeWidth="0.9"
+        strokeLinecap="round"
+        fill="none"
+      >
+        <line x1="19.6" y1="20.7" x2="19.6" y2="17.3" />
+        <line x1="17.6" y1="20.7" x2="17.5" y2="17.3" />
+        <line x1="15.6" y1="17.3" x2="15.6" y2="20.7" />
+      </g>
     </svg>
   );
 }
 
 export function GuidedCursor({
-  point,
+  x,
+  y,
+  ready,
   clicking,
   clickId,
   visible,
 }: {
-  point: { x: number; y: number } | null;
+  x: MotionValue<number>;
+  y: MotionValue<number>;
+  ready: boolean;
   clicking: boolean;
   clickId: number;
   visible: boolean;
 }) {
-  const show = visible && point !== null;
+  const show = visible && ready;
+
+  // Offset the tip onto the target without a second animated property: the
+  // spring drives `x`/`y`, this just shifts the frame it renders in.
+  const tx = useTransform(x, (v) => v - TIP.x);
+  const ty = useTransform(y, (v) => v - TIP.y);
 
   return (
     <motion.div
       aria-hidden="true"
       className="pointer-events-none absolute top-0 left-0 z-20 will-change-transform"
+      style={{ x: tx, y: ty }}
       initial={false}
       animate={{
-        x: (point?.x ?? 0) - TIP.x,
-        y: (point?.y ?? 0) - TIP.y,
         opacity: show ? 1 : 0,
         // Shrinks away rather than just fading, so a real cursor entering the
         // area (which flips `visible` off) reads as this one stepping aside.
         scale: show ? 1 : 0.5,
       }}
       transition={{
-        x: { duration: duration.slower, ease: ease.standard },
-        y: { duration: duration.slower, ease: ease.standard },
         opacity: { duration: duration.moderate, ease: ease.standard },
         scale: spring.fast,
       }}
@@ -171,7 +221,13 @@ export function useGuidedCursor(
   stageRef: RefObject<HTMLElement | null>,
   { active }: { active: boolean },
 ) {
-  const [point, setPoint] = useState<{ x: number; y: number } | null>(null);
+  // Raw target, written straight from a rAF loop; `x`/`y` are the spring that
+  // the component actually renders. Neither touches React state, so the
+  // per-frame re-sampling below costs nothing in the tree.
+  const x = useSpring(0, TRAVEL_SPRING);
+  const y = useSpring(0, TRAVEL_SPRING);
+  const [ready, setReady] = useState(false);
+  const readyRef = useRef(false);
   const [clicking, setClicking] = useState(false);
   const [clickId, setClickId] = useState(0);
   const [userPresent, setUserPresent] = useState(false);
@@ -189,11 +245,22 @@ export function useGuidedCursor(
     const s = stage.getBoundingClientRect();
     const r = el.getBoundingClientRect();
     if (r.width === 0 && r.height === 0) return;
-    setPoint({
-      x: r.left - s.left + r.width / 2,
-      y: r.top - s.top + r.height / 2,
-    });
-  }, [stageRef]);
+    const cx = r.left - s.left + r.width / 2;
+    const cy = r.top - s.top + r.height / 2;
+
+    if (!readyRef.current) {
+      // First placement: land there, don't glide in from the origin.
+      x.jump(cx);
+      y.jump(cy);
+      readyRef.current = true;
+      setReady(true);
+      return;
+    }
+    // Sub-pixel deltas aren't worth waking the spring for.
+    if (Math.abs(x.get() - cx) < 0.1 && Math.abs(y.get() - cy) < 0.1) return;
+    x.set(cx);
+    y.set(cy);
+  }, [stageRef, x, y]);
 
   // Re-sample every frame for a short window after each aim, so the pointer
   // tracks a target that is still settling (the hero surface finishing a morph,
@@ -279,7 +346,9 @@ export function useGuidedCursor(
   }, []);
 
   return {
-    point,
+    x,
+    y,
+    ready,
     clicking,
     clickId,
     visible: active && !userPresent,

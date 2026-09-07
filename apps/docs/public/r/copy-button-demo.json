@@ -1,0 +1,16 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "copy-button-demo",
+  "registryDependencies": [
+    "copy-button"
+  ],
+  "files": [
+    {
+      "path": "components/matos-ui/examples/copy-button-demo.tsx",
+      "content": "\"use client\";\n\nimport { CopyButton, CopyField } from \"@/components/matos-ui/copy-button\";\n\nexport default function CopyButtonDemo() {\n  return (\n    <div className=\"mx-auto flex w-full max-w-md flex-col gap-5 py-6\">\n      <div className=\"flex items-center gap-3\">\n        <code className=\"rounded-md bg-muted px-2 py-1 font-mono text-sm text-foreground\">\n          usr_8Kd2mPqR7x\n        </code>\n        <CopyButton value=\"usr_8Kd2mPqR7xW3nL5vT\" aria-label=\"Copy user ID\" />\n        <CopyButton value=\"usr_8Kd2mPqR7xW3nL5vT\" label=\"Copy\" />\n      </div>\n\n      <CopyField value=\"https://api.matos-ui.com/v1/webhooks/9f3c2a\" />\n\n      <CopyField secret value=\"key_9fK3c2a8Kd2mPqR7xW3nL5vTbQ8sJ\" />\n    </div>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/copy-button-demo.tsx"
+    }
+  ],
+  "type": "registry:example"
+}

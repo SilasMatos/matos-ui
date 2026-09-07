@@ -1,0 +1,114 @@
+---
+title: Copy Button
+description: Copy a value to the clipboard — an icon button, or a read-only field for API keys, resource ids and webhook URLs.
+---
+
+<ComponentPreview name="copy-button-demo" chromeless align="start" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/copy-button.json" />
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the following dependencies:</Step>
+
+<CodeBlockCommand command="npm install framer-motion lucide-react tailwind-merge tailwind-variants" />
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="copy-button" title="components/matos-ui/copy-button.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { CopyButton, CopyField } from '@/components/matos-ui/copy-button'
+```
+
+```tsx
+<CopyButton value="usr_8Kd2mPqR7xW3nL5vT" aria-label="Copy user ID" />
+```
+
+## Examples
+
+### Labelled
+
+```tsx
+<CopyButton value={apiKey} label="Copy" />
+```
+
+### A value field
+
+```tsx
+<CopyField value="https://api.example.com/v1/webhooks/9f3c2a" />
+```
+
+### A secret
+
+```tsx
+<CopyField secret value={liveKey} revealChars={4} />
+```
+
+The value is masked behind dots with a reveal toggle; the copy button always
+takes the whole value, revealed or not.
+
+## How it's built
+
+- **The confirmation is a tier, not a colour.** The clipboard glyph swaps to a
+  check on `spring.playful` — the one tier the system keeps for a small thing
+  that went right — and reverts on `spring.fast` after `timeout` (2s). Both
+  glyphs share one grid cell, so nothing reflows during the swap.
+- **It tells the truth.** `navigator.clipboard.writeText` can fail — an
+  insecure context, a denied permission — so the hook returns `false` and the
+  button stays in its resting state rather than flashing "Copied". A
+  visually-hidden `aria-live` region announces the real result.
+- **`CopyField` is flush.** A 1px `border-input` and no fill — it mirrors the
+  input it looks like, so it sits *on* its substrate rather than floating.
+- **`hover-lift`** carries the 1px float and its press-back for every button
+  here — the DESIGN §3.9 token, not a hand-rolled `whileHover`.
+- **`prefers-reduced-motion`** collapses every swap to a plain opacity
+  crossfade; the check, the label and the reveal toggle still change, they just
+  don't scale.
+
+## Reference
+
+### CopyButton Props
+
+| Prop       | Type                       | Default   | Description                                         |
+| ---------- | -------------------------- | --------- | ------------------------------------------------- |
+| `value`    | `string`                   | —         | The string written to the clipboard.               |
+| `label`    | `ReactNode`                | —         | Text beside the icon; swaps to "Copied" when active.|
+| `timeout`  | `number`                   | `2000`    | How long the copied state shows, in ms.            |
+| `onCopy`   | `(value: string) => void`  | —         | Fires after a successful copy.                      |
+| `size`     | `"sm" \| "md" \| "lg"`     | `"md"`    | Size preset.                                        |
+
+### CopyField Props
+
+| Prop          | Type                       | Default   | Description                                    |
+| ------------- | -------------------------- | --------- | ------------------------------------------- |
+| `value`       | `string`                   | —         | The full value — copied whole even while masked.|
+| `secret`      | `boolean`                  | `false`   | Mask the value and show a reveal toggle.         |
+| `revealChars` | `number`                   | `4`       | Trailing characters left visible while masked.   |
+| `timeout`     | `number`                   | `2000`    | Copied-state duration, in ms.                    |
+| `onCopy`      | `(value: string) => void`  | —         | Fires after a successful copy.                   |
+| `size`        | `"sm" \| "md"`             | `"md"`    | Size preset.                                     |

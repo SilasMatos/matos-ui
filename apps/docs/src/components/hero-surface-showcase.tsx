@@ -849,7 +849,9 @@ export function HeroSurfaceShowcase({ steps = 3 }: { steps?: number }) {
 
       {!shouldReduceMotion && (
         <GuidedCursor
-          point={cursor.point}
+          x={cursor.x}
+          y={cursor.y}
+          ready={cursor.ready}
           clicking={cursor.clicking}
           clickId={cursor.clickId}
           visible={cursor.visible}

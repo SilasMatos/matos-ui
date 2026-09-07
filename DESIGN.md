@@ -755,13 +755,6 @@ CIE L\*. Quem seguir a instalação manual monta uma escada diferente da que o
 amortecidos (bounce: 0)". O `motion-tokens.ts` já os move para `0.1` e `0.15`, e
 o próprio JSDoc de lá explica por quê. O comentário do CSS ficou para trás.
 
-**`motion.mdx` está atrás de `motion-tokens.ts`.** O frontmatter diz "quatro
-spring tiers" e a tabela lista cinco; o código agora tem **sete** (`snappy` e
-`gentle` adicionados) mais os tokens tween (`ease`, `duration`) e os helpers
-`revealVariants` / `slideVariants` / `pressable` / `useMagneticPull` /
-`withReducedMotion` / `marqueeTransition` / `attentionGlow`, nenhum deles
-documentado na página pública ainda.
-
 **GUIDE.md aponta para `matos-ui.vercel.app`** nos templates de MDX e instalação,
 enquanto README e docs usam `matos-ui.com`. Um componente novo criado a partir do
 template nasce documentado com a URL antiga.

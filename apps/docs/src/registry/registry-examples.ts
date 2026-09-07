@@ -44,6 +44,28 @@ export const examples: Registry["items"] = [
     ],
   },
   {
+    name: "rating-demo",
+    type: "registry:example",
+    registryDependencies: ["rating"],
+    files: [{ path: "examples/rating-demo.tsx", type: "registry:example" }],
+  },
+  {
+    name: "stepper-input-demo",
+    type: "registry:example",
+    registryDependencies: ["stepper-input"],
+    files: [
+      { path: "examples/stepper-input-demo.tsx", type: "registry:example" },
+    ],
+  },
+  {
+    name: "copy-button-demo",
+    type: "registry:example",
+    registryDependencies: ["copy-button"],
+    files: [
+      { path: "examples/copy-button-demo.tsx", type: "registry:example" },
+    ],
+  },
+  {
     name: "physics-counter-demo",
     type: "registry:example",
     registryDependencies: ["physics-counter"],
@@ -133,17 +155,18 @@ export const examples: Registry["items"] = [
       },
     ],
   },
-  {
-    name: "dynamic-island-demo",
-    type: "registry:example",
-    registryDependencies: ["dynamic-island"],
-    files: [
-      {
-        path: "examples/dynamic-island-demo.tsx",
-        type: "registry:example",
-      },
-    ],
-  },
+  // Disabled with the `dynamic-island` component.
+  // {
+  //   name: "dynamic-island-demo",
+  //   type: "registry:example",
+  //   registryDependencies: ["dynamic-island"],
+  //   files: [
+  //     {
+  //       path: "examples/dynamic-island-demo.tsx",
+  //       type: "registry:example",
+  //     },
+  //   ],
+  // },
   {
     name: "accordion-demo",
     type: "registry:example",
@@ -189,28 +212,6 @@ export const examples: Registry["items"] = [
     ],
   },
   {
-    name: "expandable-list-demo",
-    type: "registry:example",
-    registryDependencies: ["expandable-list"],
-    files: [
-      {
-        path: "examples/expandable-list-demo.tsx",
-        type: "registry:example",
-      },
-    ],
-  },
-  {
-    name: "live-queue-demo",
-    type: "registry:example",
-    registryDependencies: ["live-queue"],
-    files: [
-      {
-        path: "examples/live-queue-demo.tsx",
-        type: "registry:example",
-      },
-    ],
-  },
-  {
     name: "stacked-dialog-demo",
     type: "registry:example",
     registryDependencies: ["stacked-dialog"],
@@ -243,17 +244,18 @@ export const examples: Registry["items"] = [
       },
     ],
   },
-  {
-    name: "notification-stack-demo",
-    type: "registry:example",
-    registryDependencies: ["notification-stack"],
-    files: [
-      {
-        path: "examples/notification-stack-demo.tsx",
-        type: "registry:example",
-      },
-    ],
-  },
+  // Disabled with the `notification-stack` component.
+  // {
+  //   name: "notification-stack-demo",
+  //   type: "registry:example",
+  //   registryDependencies: ["notification-stack"],
+  //   files: [
+  //     {
+  //       path: "examples/notification-stack-demo.tsx",
+  //       type: "registry:example",
+  //     },
+  //   ],
+  // },
   {
     name: "metric-card-demo",
     type: "registry:example",

@@ -221,6 +221,31 @@ export const ui: Registry["items"] = [
     files: [{ path: "ui/avatar-group.tsx", type: "registry:ui" }],
   },
   {
+    name: "rating",
+    type: "registry:ui",
+    dependencies: [...physicsDeps, "lucide-react"],
+    registryDependencies: ["motion-tokens"],
+    files: [{ path: "ui/rating.tsx", type: "registry:ui" }],
+  },
+  {
+    name: "stepper-input",
+    type: "registry:ui",
+    cssVars: liftCssVars,
+    css: liftCss,
+    dependencies: [...physicsDeps, "lucide-react"],
+    registryDependencies: ["elevated", "motion-tokens"],
+    files: [{ path: "ui/stepper-input.tsx", type: "registry:ui" }],
+  },
+  {
+    name: "copy-button",
+    type: "registry:ui",
+    cssVars: liftCssVars,
+    css: liftCss,
+    dependencies: [...physicsDeps, "lucide-react"],
+    registryDependencies: ["motion-tokens"],
+    files: [{ path: "ui/copy-button.tsx", type: "registry:ui" }],
+  },
+  {
     name: "floating-action-menu",
     type: "registry:ui",
     dependencies: [...physicsDeps, "lucide-react"],
@@ -317,22 +342,23 @@ export const ui: Registry["items"] = [
       },
     ],
   },
-  {
-    name: "dynamic-island",
-    type: "registry:ui",
-    dependencies: [
-      "framer-motion",
-      "lucide-react",
-      "tailwind-merge",
-      "tailwind-variants",
-    ],
-    files: [
-      {
-        path: "ui/dynamic-island.tsx",
-        type: "registry:ui",
-      },
-    ],
-  },
+  // Disabled — kept in `ui/` but not published or documented.
+  // {
+  //   name: "dynamic-island",
+  //   type: "registry:ui",
+  //   dependencies: [
+  //     "framer-motion",
+  //     "lucide-react",
+  //     "tailwind-merge",
+  //     "tailwind-variants",
+  //   ],
+  //   files: [
+  //     {
+  //       path: "ui/dynamic-island.tsx",
+  //       type: "registry:ui",
+  //     },
+  //   ],
+  // },
   {
     name: "accordion",
     type: "registry:ui",
@@ -395,30 +421,6 @@ export const ui: Registry["items"] = [
     ],
   },
   {
-    name: "expandable-list",
-    type: "registry:ui",
-    dependencies: ["framer-motion", "lucide-react"],
-    registryDependencies: ["elevated", "motion-tokens"],
-    files: [
-      {
-        path: "ui/expandable-list.tsx",
-        type: "registry:ui",
-      },
-    ],
-  },
-  {
-    name: "live-queue",
-    type: "registry:ui",
-    dependencies: ["framer-motion", "lucide-react"],
-    registryDependencies: ["elevated", "motion-tokens"],
-    files: [
-      {
-        path: "ui/live-queue.tsx",
-        type: "registry:ui",
-      },
-    ],
-  },
-  {
     name: "achievement-toast",
     type: "registry:ui",
     dependencies: ["framer-motion", "lucide-react"],
@@ -442,23 +444,24 @@ export const ui: Registry["items"] = [
       },
     ],
   },
-  {
-    name: "notification-stack",
-    type: "registry:ui",
-    dependencies: [
-      "framer-motion",
-      "lucide-react",
-      "tailwind-merge",
-      "tailwind-variants",
-    ],
-    registryDependencies: ["elevated", "motion-tokens"],
-    files: [
-      {
-        path: "ui/notification-stack.tsx",
-        type: "registry:ui",
-      },
-    ],
-  },
+  // Disabled — kept in `ui/` but not published or documented.
+  // {
+  //   name: "notification-stack",
+  //   type: "registry:ui",
+  //   dependencies: [
+  //     "framer-motion",
+  //     "lucide-react",
+  //     "tailwind-merge",
+  //     "tailwind-variants",
+  //   ],
+  //   registryDependencies: ["elevated", "motion-tokens"],
+  //   files: [
+  //     {
+  //       path: "ui/notification-stack.tsx",
+  //       type: "registry:ui",
+  //     },
+  //   ],
+  // },
   {
     name: "metric-card",
     type: "registry:ui",

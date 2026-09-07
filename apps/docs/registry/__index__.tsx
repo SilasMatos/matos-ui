@@ -146,6 +146,69 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
   },
+  rating: {
+    name: "rating",
+    type: "registry:ui",
+    registryDependencies: ["motion-tokens"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/rating.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/ui/rating.tsx");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "stepper-input": {
+    name: "stepper-input",
+    type: "registry:ui",
+    registryDependencies: ["elevated", "motion-tokens"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/stepper-input.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/ui/stepper-input.tsx");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "copy-button": {
+    name: "copy-button",
+    type: "registry:ui",
+    registryDependencies: ["motion-tokens"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/copy-button.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/ui/copy-button.tsx");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
   "floating-action-menu": {
     name: "floating-action-menu",
     type: "registry:ui",
@@ -299,27 +362,6 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
   },
-  "dynamic-island": {
-    name: "dynamic-island",
-    type: "registry:ui",
-    registryDependencies: undefined,
-    files: [
-      {
-        path: "src/registry/new-york-v4/ui/dynamic-island.tsx",
-        type: "registry:ui",
-        target: "",
-      },
-    ],
-    component: React.lazy(async () => {
-      const mod = await import("@/registry/new-york-v4/ui/dynamic-island.tsx");
-      const exportName =
-        Object.keys(mod).find(
-          (key) =>
-            typeof mod[key] === "function" || typeof mod[key] === "object",
-        ) || item.name;
-      return { default: mod.default || mod[exportName] };
-    }),
-  },
   accordion: {
     name: "accordion",
     type: "registry:ui",
@@ -404,48 +446,6 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
   },
-  "expandable-list": {
-    name: "expandable-list",
-    type: "registry:ui",
-    registryDependencies: ["elevated", "motion-tokens"],
-    files: [
-      {
-        path: "src/registry/new-york-v4/ui/expandable-list.tsx",
-        type: "registry:ui",
-        target: "",
-      },
-    ],
-    component: React.lazy(async () => {
-      const mod = await import("@/registry/new-york-v4/ui/expandable-list.tsx");
-      const exportName =
-        Object.keys(mod).find(
-          (key) =>
-            typeof mod[key] === "function" || typeof mod[key] === "object",
-        ) || item.name;
-      return { default: mod.default || mod[exportName] };
-    }),
-  },
-  "live-queue": {
-    name: "live-queue",
-    type: "registry:ui",
-    registryDependencies: ["elevated", "motion-tokens"],
-    files: [
-      {
-        path: "src/registry/new-york-v4/ui/live-queue.tsx",
-        type: "registry:ui",
-        target: "",
-      },
-    ],
-    component: React.lazy(async () => {
-      const mod = await import("@/registry/new-york-v4/ui/live-queue.tsx");
-      const exportName =
-        Object.keys(mod).find(
-          (key) =>
-            typeof mod[key] === "function" || typeof mod[key] === "object",
-        ) || item.name;
-      return { default: mod.default || mod[exportName] };
-    }),
-  },
   "achievement-toast": {
     name: "achievement-toast",
     type: "registry:ui",
@@ -482,29 +482,6 @@ export const Index: Record<string, any> = {
     ],
     component: React.lazy(async () => {
       const mod = await import("@/registry/new-york-v4/ui/context-menu.tsx");
-      const exportName =
-        Object.keys(mod).find(
-          (key) =>
-            typeof mod[key] === "function" || typeof mod[key] === "object",
-        ) || item.name;
-      return { default: mod.default || mod[exportName] };
-    }),
-  },
-  "notification-stack": {
-    name: "notification-stack",
-    type: "registry:ui",
-    registryDependencies: ["elevated", "motion-tokens"],
-    files: [
-      {
-        path: "src/registry/new-york-v4/ui/notification-stack.tsx",
-        type: "registry:ui",
-        target: "",
-      },
-    ],
-    component: React.lazy(async () => {
-      const mod = await import(
-        "@/registry/new-york-v4/ui/notification-stack.tsx"
-      );
       const exportName =
         Object.keys(mod).find(
           (key) =>
@@ -1756,6 +1733,75 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
   },
+  "rating-demo": {
+    name: "rating-demo",
+    type: "registry:example",
+    registryDependencies: ["rating"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/rating-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/rating-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "stepper-input-demo": {
+    name: "stepper-input-demo",
+    type: "registry:example",
+    registryDependencies: ["stepper-input"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/stepper-input-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/stepper-input-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "copy-button-demo": {
+    name: "copy-button-demo",
+    type: "registry:example",
+    registryDependencies: ["copy-button"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/copy-button-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/copy-button-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
   "physics-counter-demo": {
     name: "physics-counter-demo",
     type: "registry:example",
@@ -1963,29 +2009,6 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
   },
-  "dynamic-island-demo": {
-    name: "dynamic-island-demo",
-    type: "registry:example",
-    registryDependencies: ["dynamic-island"],
-    files: [
-      {
-        path: "src/registry/new-york-v4/examples/dynamic-island-demo.tsx",
-        type: "registry:example",
-        target: "",
-      },
-    ],
-    component: React.lazy(async () => {
-      const mod = await import(
-        "@/registry/new-york-v4/examples/dynamic-island-demo.tsx"
-      );
-      const exportName =
-        Object.keys(mod).find(
-          (key) =>
-            typeof mod[key] === "function" || typeof mod[key] === "object",
-        ) || item.name;
-      return { default: mod.default || mod[exportName] };
-    }),
-  },
   "accordion-demo": {
     name: "accordion-demo",
     type: "registry:example",
@@ -2078,52 +2101,6 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
   },
-  "expandable-list-demo": {
-    name: "expandable-list-demo",
-    type: "registry:example",
-    registryDependencies: ["expandable-list"],
-    files: [
-      {
-        path: "src/registry/new-york-v4/examples/expandable-list-demo.tsx",
-        type: "registry:example",
-        target: "",
-      },
-    ],
-    component: React.lazy(async () => {
-      const mod = await import(
-        "@/registry/new-york-v4/examples/expandable-list-demo.tsx"
-      );
-      const exportName =
-        Object.keys(mod).find(
-          (key) =>
-            typeof mod[key] === "function" || typeof mod[key] === "object",
-        ) || item.name;
-      return { default: mod.default || mod[exportName] };
-    }),
-  },
-  "live-queue-demo": {
-    name: "live-queue-demo",
-    type: "registry:example",
-    registryDependencies: ["live-queue"],
-    files: [
-      {
-        path: "src/registry/new-york-v4/examples/live-queue-demo.tsx",
-        type: "registry:example",
-        target: "",
-      },
-    ],
-    component: React.lazy(async () => {
-      const mod = await import(
-        "@/registry/new-york-v4/examples/live-queue-demo.tsx"
-      );
-      const exportName =
-        Object.keys(mod).find(
-          (key) =>
-            typeof mod[key] === "function" || typeof mod[key] === "object",
-        ) || item.name;
-      return { default: mod.default || mod[exportName] };
-    }),
-  },
   "stacked-dialog-demo": {
     name: "stacked-dialog-demo",
     type: "registry:example",
@@ -2184,29 +2161,6 @@ export const Index: Record<string, any> = {
     component: React.lazy(async () => {
       const mod = await import(
         "@/registry/new-york-v4/examples/context-menu-demo.tsx"
-      );
-      const exportName =
-        Object.keys(mod).find(
-          (key) =>
-            typeof mod[key] === "function" || typeof mod[key] === "object",
-        ) || item.name;
-      return { default: mod.default || mod[exportName] };
-    }),
-  },
-  "notification-stack-demo": {
-    name: "notification-stack-demo",
-    type: "registry:example",
-    registryDependencies: ["notification-stack"],
-    files: [
-      {
-        path: "src/registry/new-york-v4/examples/notification-stack-demo.tsx",
-        type: "registry:example",
-        target: "",
-      },
-    ],
-    component: React.lazy(async () => {
-      const mod = await import(
-        "@/registry/new-york-v4/examples/notification-stack-demo.tsx"
       );
       const exportName =
         Object.keys(mod).find(

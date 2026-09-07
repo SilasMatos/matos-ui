@@ -112,6 +112,119 @@
       ]
     },
     {
+      "name": "rating",
+      "type": "registry:ui",
+      "dependencies": [
+        "framer-motion",
+        "tailwind-merge",
+        "tailwind-variants",
+        "lucide-react"
+      ],
+      "registryDependencies": ["motion-tokens"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/rating.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "stepper-input",
+      "type": "registry:ui",
+      "cssVars": {
+        "theme": {
+          "ease-lift": "cubic-bezier(0.4, 0, 0.2, 1)",
+          "duration-lift": "320ms",
+          "duration-lift-press": "120ms"
+        }
+      },
+      "css": {
+        "@utility hover-lift": {
+          "--lift": "2px",
+          "transition-property": "translate, scale, box-shadow, background-color, border-color, border-radius, color, opacity",
+          "transition-duration": "var(--duration-lift)",
+          "transition-timing-function": "var(--ease-lift)",
+          "@media (hover: hover)": {
+            "&:hover": {
+              "translate": "0 calc(var(--lift) * -1)"
+            }
+          },
+          "&:active": {
+            "translate": "0 0",
+            "transition-duration": "var(--duration-lift-press)"
+          },
+          "@media (prefers-reduced-motion: reduce)": {
+            "transition-property": "background-color, border-color, color, opacity",
+            "&:hover, &:active": {
+              "translate": "none",
+              "scale": "none"
+            }
+          }
+        }
+      },
+      "dependencies": [
+        "framer-motion",
+        "tailwind-merge",
+        "tailwind-variants",
+        "lucide-react"
+      ],
+      "registryDependencies": ["elevated", "motion-tokens"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/stepper-input.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "copy-button",
+      "type": "registry:ui",
+      "cssVars": {
+        "theme": {
+          "ease-lift": "cubic-bezier(0.4, 0, 0.2, 1)",
+          "duration-lift": "320ms",
+          "duration-lift-press": "120ms"
+        }
+      },
+      "css": {
+        "@utility hover-lift": {
+          "--lift": "2px",
+          "transition-property": "translate, scale, box-shadow, background-color, border-color, border-radius, color, opacity",
+          "transition-duration": "var(--duration-lift)",
+          "transition-timing-function": "var(--ease-lift)",
+          "@media (hover: hover)": {
+            "&:hover": {
+              "translate": "0 calc(var(--lift) * -1)"
+            }
+          },
+          "&:active": {
+            "translate": "0 0",
+            "transition-duration": "var(--duration-lift-press)"
+          },
+          "@media (prefers-reduced-motion: reduce)": {
+            "transition-property": "background-color, border-color, color, opacity",
+            "&:hover, &:active": {
+              "translate": "none",
+              "scale": "none"
+            }
+          }
+        }
+      },
+      "dependencies": [
+        "framer-motion",
+        "tailwind-merge",
+        "tailwind-variants",
+        "lucide-react"
+      ],
+      "registryDependencies": ["motion-tokens"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/copy-button.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "floating-action-menu",
       "type": "registry:ui",
       "dependencies": [
@@ -306,22 +419,6 @@
       ]
     },
     {
-      "name": "dynamic-island",
-      "type": "registry:ui",
-      "dependencies": [
-        "framer-motion",
-        "lucide-react",
-        "tailwind-merge",
-        "tailwind-variants"
-      ],
-      "files": [
-        {
-          "path": "src/registry/new-york-v4/ui/dynamic-island.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
       "name": "accordion",
       "type": "registry:ui",
       "dependencies": [
@@ -388,30 +485,6 @@
       ]
     },
     {
-      "name": "expandable-list",
-      "type": "registry:ui",
-      "dependencies": ["framer-motion", "lucide-react"],
-      "registryDependencies": ["elevated", "motion-tokens"],
-      "files": [
-        {
-          "path": "src/registry/new-york-v4/ui/expandable-list.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "live-queue",
-      "type": "registry:ui",
-      "dependencies": ["framer-motion", "lucide-react"],
-      "registryDependencies": ["elevated", "motion-tokens"],
-      "files": [
-        {
-          "path": "src/registry/new-york-v4/ui/live-queue.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
       "name": "achievement-toast",
       "type": "registry:ui",
       "dependencies": ["framer-motion", "lucide-react"],
@@ -431,23 +504,6 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/ui/context-menu.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "notification-stack",
-      "type": "registry:ui",
-      "dependencies": [
-        "framer-motion",
-        "lucide-react",
-        "tailwind-merge",
-        "tailwind-variants"
-      ],
-      "registryDependencies": ["elevated", "motion-tokens"],
-      "files": [
-        {
-          "path": "src/registry/new-york-v4/ui/notification-stack.tsx",
           "type": "registry:ui"
         }
       ]
@@ -1659,6 +1715,39 @@
       ]
     },
     {
+      "name": "rating-demo",
+      "type": "registry:example",
+      "registryDependencies": ["rating"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/rating-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "stepper-input-demo",
+      "type": "registry:example",
+      "registryDependencies": ["stepper-input"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/stepper-input-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "copy-button-demo",
+      "type": "registry:example",
+      "registryDependencies": ["copy-button"],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/copy-button-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
       "name": "physics-counter-demo",
       "type": "registry:example",
       "registryDependencies": ["physics-counter"],
@@ -1758,17 +1847,6 @@
       ]
     },
     {
-      "name": "dynamic-island-demo",
-      "type": "registry:example",
-      "registryDependencies": ["dynamic-island"],
-      "files": [
-        {
-          "path": "src/registry/new-york-v4/examples/dynamic-island-demo.tsx",
-          "type": "registry:example"
-        }
-      ]
-    },
-    {
       "name": "accordion-demo",
       "type": "registry:example",
       "registryDependencies": ["accordion"],
@@ -1813,28 +1891,6 @@
       ]
     },
     {
-      "name": "expandable-list-demo",
-      "type": "registry:example",
-      "registryDependencies": ["expandable-list"],
-      "files": [
-        {
-          "path": "src/registry/new-york-v4/examples/expandable-list-demo.tsx",
-          "type": "registry:example"
-        }
-      ]
-    },
-    {
-      "name": "live-queue-demo",
-      "type": "registry:example",
-      "registryDependencies": ["live-queue"],
-      "files": [
-        {
-          "path": "src/registry/new-york-v4/examples/live-queue-demo.tsx",
-          "type": "registry:example"
-        }
-      ]
-    },
-    {
       "name": "stacked-dialog-demo",
       "type": "registry:example",
       "registryDependencies": ["stacked-dialog"],
@@ -1863,17 +1919,6 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/context-menu-demo.tsx",
-          "type": "registry:example"
-        }
-      ]
-    },
-    {
-      "name": "notification-stack-demo",
-      "type": "registry:example",
-      "registryDependencies": ["notification-stack"],
-      "files": [
-        {
-          "path": "src/registry/new-york-v4/examples/notification-stack-demo.tsx",
           "type": "registry:example"
         }
       ]
