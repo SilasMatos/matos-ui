@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "calendar-demo",
+  "registryDependencies": [
+    "calendar",
+    "elevated"
+  ],
+  "files": [
+    {
+      "path": "components/matos-ui/examples/calendar-demo.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\n\nimport { Calendar } from \"@/components/matos-ui/calendar\";\nimport { Elevated } from \"@/components/matos-ui/elevated\";\n\nexport default function CalendarDemo() {\n  const [date, setDate] = useState<Date | null>(() => new Date());\n\n  return (\n    <div className=\"mx-auto flex w-full max-w-xs flex-col items-center gap-4 py-6\">\n      <Elevated offset={1} className=\"rounded-xl p-3\">\n        <Calendar value={date} onValueChange={setDate} />\n      </Elevated>\n      <p className=\"text-muted-foreground text-xs tabular-nums\">\n        {date\n          ? date.toLocaleDateString(undefined, {\n              weekday: \"long\",\n              day: \"numeric\",\n              month: \"long\",\n              year: \"numeric\",\n            })\n          : \"No date selected\"}\n      </p>\n    </div>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/calendar-demo.tsx"
+    }
+  ],
+  "type": "registry:example"
+}

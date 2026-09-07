@@ -66,6 +66,40 @@ export const examples: Registry["items"] = [
     ],
   },
   {
+    name: "calendar-demo",
+    type: "registry:example",
+    registryDependencies: ["calendar", "elevated"],
+    files: [{ path: "examples/calendar-demo.tsx", type: "registry:example" }],
+  },
+  {
+    name: "date-picker-demo",
+    type: "registry:example",
+    registryDependencies: ["date-picker"],
+    files: [
+      { path: "examples/date-picker-demo.tsx", type: "registry:example" },
+    ],
+  },
+  {
+    name: "tag-input-demo",
+    type: "registry:example",
+    registryDependencies: ["tag-input"],
+    files: [{ path: "examples/tag-input-demo.tsx", type: "registry:example" }],
+  },
+  {
+    name: "nested-menu-demo",
+    type: "registry:example",
+    registryDependencies: ["nested-menu"],
+    files: [
+      { path: "examples/nested-menu-demo.tsx", type: "registry:example" },
+    ],
+  },
+  {
+    name: "coachmark-demo",
+    type: "registry:example",
+    registryDependencies: ["coachmark"],
+    files: [{ path: "examples/coachmark-demo.tsx", type: "registry:example" }],
+  },
+  {
     name: "physics-counter-demo",
     type: "registry:example",
     registryDependencies: ["physics-counter"],

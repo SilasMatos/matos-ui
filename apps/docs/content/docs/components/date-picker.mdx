@@ -1,0 +1,112 @@
+---
+title: Date Picker
+description: An editable date field with a calendar in a popover — type it or pick it.
+---
+
+<ComponentPreview name="date-picker-demo" chromeless align="start" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/date-picker.json" />
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the following dependencies:</Step>
+
+<CodeBlockCommand command="npm install framer-motion lucide-react tailwind-merge tailwind-variants @base-ui/react" />
+
+<Step>Add the <code>calendar</code>, <code>popover</code> and <code>input</code> components, then copy this one in.</Step>
+
+<ComponentSource name="date-picker" title="components/matos-ui/date-picker.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { DatePicker } from '@/components/matos-ui/date-picker'
+```
+
+```tsx
+const [date, setDate] = useState<Date | null>(null)
+
+<DatePicker value={date} onValueChange={setDate} />
+```
+
+## Examples
+
+### Bounded, in a form
+
+```tsx
+<form action={submit}>
+  <DatePicker name="starts" defaultValue={new Date()} min={new Date()} />
+  <button type="submit">Save</button>
+</form>
+```
+
+The hidden input posts ISO `yyyy-mm-dd`.
+
+### A custom display format
+
+```tsx
+<DatePicker
+  format={(d) => d.toLocaleDateString('en-GB', { dateStyle: 'medium' })}
+/>
+```
+
+## How it's built
+
+- **Type it or pick it.** The `<input>` takes ISO `yyyy-mm-dd` or the locale's
+  numeric form — `11/22/2033` under `en-US`, `22/11/2033` under `en-GB`, the
+  field order read from `Intl.DateTimeFormat`. No natural language. It parses on
+  blur and on `Enter`; an unparseable value flags the field (`aria-invalid`)
+  rather than clearing what you typed.
+- **The popover rides the ladder.** `surfaceClasses(useSurface() + 2)` — two
+  rungs above wherever the field sits, the dropdown convention — so it never
+  disappears into a dialog it opens inside. No `bg-popover`.
+- **Focus is Base UI's job.** The popover is `@base-ui/react/popover` (through
+  the `Popover` component): it moves focus into the grid on open and back to
+  the calendar button on close, traps it while open, and closes on `Esc` and
+  outside-click.
+- **Picking closes.** Selecting a day fills the input, closes the popover, and
+  the calendar keeps whatever month you'd navigated to.
+- Everything else — the six-row grid, the sliding month change, the keyboard —
+  is the [Calendar](/docs/components/calendar) underneath.
+
+## Reference
+
+### DatePicker Props
+
+| Prop              | Type                                       | Default          | Description                                            |
+| ----------------- | ------------------------------------------ | ---------------- | ---------------------------------------------------- |
+| `value`           | `Date \| null`                             | —                | Controlled selection.                                 |
+| `defaultValue`    | `Date \| null`                             | `null`           | Initial selection when uncontrolled.                  |
+| `onValueChange`   | `(value: Date \| null) => void`            | —                | Fires with the picked or parsed date.                 |
+| `placeholder`     | `string`                                   | `"Select a date"`| Input placeholder.                                    |
+| `format`          | `(date: Date) => string`                   | `Intl` long date | Render the value in the input.                        |
+| `parse`           | `(input: string, locale: string) => Date \| null` | ISO + numeric | Parse what the reader typed.                     |
+| `name`            | `string`                                   | —                | Hidden input name; posts ISO `yyyy-mm-dd`.            |
+| `min` / `max`     | `Date \| null`                             | —                | Selectable bounds (also enforced on typed input).     |
+| `isDateDisabled`  | `(date: Date) => boolean`                  | —                | Disable specific dates.                               |
+| `weekStartsOn`    | `number`                                   | locale's first day | 0 (Sunday) – 6 (Saturday).                         |
+| `locale`          | `string`                                   | `"en-US"`        | BCP-47 tag for names and numeric parsing.             |
+| `disabled` / `readOnly` | `boolean`                            | `false`          | —                                                    |
+| `open` / `defaultOpen` / `onOpenChange` | —                     | —                | Control the popover.                                  |

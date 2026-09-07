@@ -270,6 +270,171 @@
       ]
     },
     {
+      "name": "calendar",
+      "type": "registry:ui",
+      "cssVars": {
+        "theme": {
+          "ease-lift": "cubic-bezier(0.4, 0, 0.2, 1)",
+          "duration-lift": "320ms",
+          "duration-lift-press": "120ms"
+        }
+      },
+      "css": {
+        "@utility hover-lift": {
+          "--lift": "2px",
+          "transition-property": "translate, scale, box-shadow, background-color, border-color, border-radius, color, opacity",
+          "transition-duration": "var(--duration-lift)",
+          "transition-timing-function": "var(--ease-lift)",
+          "@media (hover: hover)": {
+            "&:hover": {
+              "translate": "0 calc(var(--lift) * -1)"
+            }
+          },
+          "&:active": {
+            "translate": "0 0",
+            "transition-duration": "var(--duration-lift-press)"
+          },
+          "@media (prefers-reduced-motion: reduce)": {
+            "transition-property": "background-color, border-color, color, opacity",
+            "&:hover, &:active": {
+              "translate": "none",
+              "scale": "none"
+            }
+          }
+        }
+      },
+      "dependencies": [
+        "framer-motion",
+        "tailwind-merge",
+        "tailwind-variants",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "motion-tokens",
+        "date"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/calendar.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "date-picker",
+      "type": "registry:ui",
+      "dependencies": [
+        "framer-motion",
+        "lucide-react",
+        "tailwind-merge"
+      ],
+      "registryDependencies": [
+        "calendar",
+        "popover",
+        "input",
+        "surface-classes",
+        "surface-context"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/date-picker.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "tag-input",
+      "type": "registry:ui",
+      "dependencies": [
+        "@base-ui/react",
+        "class-variance-authority",
+        "framer-motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "field",
+        "motion-tokens",
+        "surface-classes",
+        "surface-context"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/tag-input.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "nested-menu",
+      "type": "registry:ui",
+      "dependencies": [
+        "@base-ui/react",
+        "framer-motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "motion-tokens",
+        "surface-classes",
+        "surface-context"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/nested-menu.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "coachmark",
+      "type": "registry:ui",
+      "cssVars": {
+        "theme": {
+          "ease-lift": "cubic-bezier(0.4, 0, 0.2, 1)",
+          "duration-lift": "320ms",
+          "duration-lift-press": "120ms"
+        }
+      },
+      "css": {
+        "@utility hover-lift": {
+          "--lift": "2px",
+          "transition-property": "translate, scale, box-shadow, background-color, border-color, border-radius, color, opacity",
+          "transition-duration": "var(--duration-lift)",
+          "transition-timing-function": "var(--ease-lift)",
+          "@media (hover: hover)": {
+            "&:hover": {
+              "translate": "0 calc(var(--lift) * -1)"
+            }
+          },
+          "&:active": {
+            "translate": "0 0",
+            "transition-duration": "var(--duration-lift-press)"
+          },
+          "@media (prefers-reduced-motion: reduce)": {
+            "transition-property": "background-color, border-color, color, opacity",
+            "&:hover, &:active": {
+              "translate": "none",
+              "scale": "none"
+            }
+          }
+        }
+      },
+      "dependencies": [
+        "framer-motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "elevated",
+        "motion-tokens",
+        "surface-context"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/coachmark.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "floating-action-menu",
       "type": "registry:ui",
       "dependencies": [
@@ -1325,6 +1490,16 @@
       ]
     },
     {
+      "name": "date",
+      "type": "registry:lib",
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/lib/date.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
       "name": "elevated",
       "type": "registry:ui",
       "registryDependencies": [
@@ -1959,6 +2134,72 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/copy-button-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "calendar-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "calendar",
+        "elevated"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/calendar-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "date-picker-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "date-picker"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/date-picker-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "tag-input-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "tag-input"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/tag-input-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "nested-menu-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "nested-menu"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/nested-menu-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "coachmark-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "coachmark"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/coachmark-demo.tsx",
           "type": "registry:example"
         }
       ]

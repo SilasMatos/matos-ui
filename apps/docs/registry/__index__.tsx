@@ -209,6 +209,126 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
   },
+  calendar: {
+    name: "calendar",
+    type: "registry:ui",
+    registryDependencies: ["motion-tokens", "date"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/calendar.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/ui/calendar.tsx");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "date-picker": {
+    name: "date-picker",
+    type: "registry:ui",
+    registryDependencies: [
+      "calendar",
+      "popover",
+      "input",
+      "surface-classes",
+      "surface-context",
+    ],
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/date-picker.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/ui/date-picker.tsx");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "tag-input": {
+    name: "tag-input",
+    type: "registry:ui",
+    registryDependencies: [
+      "field",
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/tag-input.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/ui/tag-input.tsx");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "nested-menu": {
+    name: "nested-menu",
+    type: "registry:ui",
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/nested-menu.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/ui/nested-menu.tsx");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  coachmark: {
+    name: "coachmark",
+    type: "registry:ui",
+    registryDependencies: ["elevated", "motion-tokens", "surface-context"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/coachmark.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/ui/coachmark.tsx");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
   "floating-action-menu": {
     name: "floating-action-menu",
     type: "registry:ui",
@@ -1391,6 +1511,27 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
   },
+  date: {
+    name: "date",
+    type: "registry:lib",
+    registryDependencies: undefined,
+    files: [
+      {
+        path: "src/registry/new-york-v4/lib/date.ts",
+        type: "registry:lib",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/lib/date.ts");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
   elevated: {
     name: "elevated",
     type: "registry:ui",
@@ -1793,6 +1934,121 @@ export const Index: Record<string, any> = {
     component: React.lazy(async () => {
       const mod = await import(
         "@/registry/new-york-v4/examples/copy-button-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "calendar-demo": {
+    name: "calendar-demo",
+    type: "registry:example",
+    registryDependencies: ["calendar", "elevated"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/calendar-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/calendar-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "date-picker-demo": {
+    name: "date-picker-demo",
+    type: "registry:example",
+    registryDependencies: ["date-picker"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/date-picker-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/date-picker-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "tag-input-demo": {
+    name: "tag-input-demo",
+    type: "registry:example",
+    registryDependencies: ["tag-input"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/tag-input-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/tag-input-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "nested-menu-demo": {
+    name: "nested-menu-demo",
+    type: "registry:example",
+    registryDependencies: ["nested-menu"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/nested-menu-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/nested-menu-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "coachmark-demo": {
+    name: "coachmark-demo",
+    type: "registry:example",
+    registryDependencies: ["coachmark"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/coachmark-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/coachmark-demo.tsx"
       );
       const exportName =
         Object.keys(mod).find(

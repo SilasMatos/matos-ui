@@ -1,0 +1,120 @@
+---
+title: Nested Menu
+description: A cascading menu — a submenu opening a submenu opening a submenu — where every level stays legible because the fill climbs the surface ladder.
+---
+
+<ComponentPreview name="nested-menu-demo" chromeless align="start" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/nested-menu.json" />
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the following dependencies:</Step>
+
+<CodeBlockCommand command="npm install @base-ui/react framer-motion lucide-react" />
+
+<Step>Add the surface tokens (the <code>elevated</code> primitive ships them), then copy this in.</Step>
+
+<ComponentSource name="nested-menu" title="components/matos-ui/nested-menu.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import {
+  NestedMenu,
+  NestedMenuTrigger,
+  NestedMenuContent,
+  NestedMenuItem,
+  NestedMenuSub,
+  NestedMenuSubTrigger,
+  NestedMenuSubContent,
+} from '@/components/matos-ui/nested-menu'
+```
+
+```tsx
+<NestedMenu>
+  <NestedMenuTrigger>Move to…</NestedMenuTrigger>
+  <NestedMenuContent>
+    <NestedMenuItem>Inbox</NestedMenuItem>
+    <NestedMenuSub>
+      <NestedMenuSubTrigger>Projects</NestedMenuSubTrigger>
+      <NestedMenuSubContent>
+        <NestedMenuItem>Website</NestedMenuItem>
+        {/* nest as deep as you need */}
+      </NestedMenuSubContent>
+    </NestedMenuSub>
+  </NestedMenuContent>
+</NestedMenu>
+```
+
+## Why this component exists
+
+`DESIGN.md` opens §2.1 with the problem: *a dropdown with a fixed background,
+opened inside another dropdown that has the same fixed background, disappears
+into it.* A four-level cascade is that problem at its worst, and it's the
+clearest possible proof that the surface ladder solves it.
+
+- **Every level is `offset={2}`.** Each panel reads the substrate its parent
+  established and climbs two rungs — from the page, the fills run
+  `surface-3 → 5 → 7 → 8` as you go deeper. No panel is ever the same colour as
+  the one it sits on — in light mode *or* dark, at any depth.
+- **The shadow is pinned.** `shadowLevel` is a constant (`surface-3`) at every
+  level. §2.5.5: a popover's shadow weight is an *identity*, not a function of
+  how deep it is. A fourth-level submenu and the first-level menu cast the same
+  shadow.
+- Each panel re-provides its level through `SurfaceProvider`, and Base UI's
+  portal keeps React context intact, so the climb works no matter how the tree
+  is nested.
+
+## How it's built
+
+- **Base UI carries the menu.** `@base-ui/react/menu` — `Item`, `SubmenuRoot`,
+  `SubmenuTrigger`, positioning, focus, typeahead, arrow navigation, `Esc` to
+  step back out one level.
+- **Motion.** Each level enters 6px from its *resolved* side —
+  `directionalVariants`, the direction read from the popup's `data-side` after
+  Base UI places it — on `motionForOffset(2)` (`moderate`). `useExitAnimation`
+  holds each level mounted through its exit tween.
+- **Not a motion token.** The hover-open delay — `delay` and `closeDelay` on
+  `NestedMenuSubTrigger` (90ms / 240ms) — is interaction *logic*. It's a plain
+  millisecond value and deliberately isn't derived from `spring` or `duration`;
+  intent-timing and animation-timing are different things.
+- **`prefers-reduced-motion`** runs the variants through `withReducedMotion` —
+  the 6px travel drops, the opacity crossfade stays.
+
+## Reference
+
+### Parts
+
+| Part                    | Notes                                                     |
+| ----------------------- | -------------------------------------------------------- |
+| `NestedMenu`            | Root. `open` / `defaultOpen` / `onOpenChange`.            |
+| `NestedMenuTrigger`     | The button that opens the first level.                    |
+| `NestedMenuContent`     | First-level panel. `side` / `align` / `sideOffset`.       |
+| `NestedMenuSub`         | Wraps a submenu trigger + content.                        |
+| `NestedMenuSubTrigger`  | The item that opens a submenu. `delay` / `closeDelay`.    |
+| `NestedMenuSubContent`  | A submenu panel. Defaults to opening on the right.        |
+| `NestedMenuItem`        | `variant?: "default" \| "destructive"`.                   |
+| `NestedMenuLabel` / `NestedMenuSeparator` / `NestedMenuShortcut` | —                       |

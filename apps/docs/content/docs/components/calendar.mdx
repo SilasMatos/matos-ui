@@ -1,0 +1,120 @@
+---
+title: Calendar
+description: A month grid for picking one date — six rows always, a sliding month change, and the full keyboard model.
+---
+
+<ComponentPreview name="calendar-demo" chromeless align="start" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/calendar.json" />
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the following dependencies:</Step>
+
+<CodeBlockCommand command="npm install framer-motion lucide-react tailwind-merge tailwind-variants" />
+
+<Step>Copy the date helpers and the component into your project.</Step>
+
+<ComponentSource name="date" title="lib/date.ts" />
+<ComponentSource name="calendar" title="components/matos-ui/calendar.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { Calendar } from '@/components/matos-ui/calendar'
+```
+
+```tsx
+const [date, setDate] = useState<Date | null>(null)
+
+<Calendar value={date} onValueChange={setDate} />
+```
+
+## Examples
+
+### Bounded range
+
+```tsx
+<Calendar
+  min={new Date()}
+  max={addMonths(new Date(), 3)}
+  isDateDisabled={(d) => d.getDay() === 0 || d.getDay() === 6}
+/>
+```
+
+### Localised
+
+```tsx
+<Calendar locale="pt-BR" />          {/* week starts Sunday, PT month names */}
+<Calendar locale="de-DE" weekStartsOn={1} />
+```
+
+## How it's built
+
+- **Six rows, always.** The grid is padded with adjacent-month days to a fixed
+  42 cells, so it never changes height — the `‹` / `›` controls don't move
+  under the cursor, and there's no height animation to chase.
+- **A month change slides.** `AnimatePresence mode="popLayout"` keyed on the
+  visible month, `custom` carrying the direction, so the outgoing month leaves
+  flow and the incoming one enters a third of a width away — on
+  `spring.moderate`, the panel-lands-exactly tier. The `overflow-hidden` frame
+  clips the travel.
+- **Selection pops, it doesn't slide.** A `spring.fast` scale-in on the pill,
+  per cell — no `layoutId`. A cell exposes `isSelected` / `onSelect`, so range
+  selection is additive later rather than a rewrite.
+- **The date math is a `lib`.** `lib/date.ts` is pure, dependency-free, and the
+  only thing that knows the grid shape. The public boundary is the native
+  `Date`; swapping the lib for `@internationalized/date` later is a local
+  change, not a breaking one. Everything works in local `y/m/d` terms and
+  constructs dates at noon so day arithmetic can't fall into a DST gap.
+- **Week start** comes from a region table (`getWeekStart`), not
+  `Intl.Locale.prototype.getWeekInfo()` — that isn't in Firefox. `weekStartsOn`
+  always wins.
+- **Keyboard:** one roving tab stop; `←→` day, `↑↓` week, `Home`/`End` week
+  edges, `PageUp`/`PageDown` month, `Shift`+those year, `Enter`/`Space` select.
+  Crossing a month edge navigates and keeps focus on the moved day. It's a
+  `<table>` of `<button>`s (`aria-pressed` for selection, `aria-current="date"`
+  for today) — a screen reader navigates it as a table.
+- **`prefers-reduced-motion`** turns the slide and the pop into opacity
+  crossfades; selection still lands, instantly.
+
+## Reference
+
+### Calendar Props
+
+| Prop              | Type                          | Default             | Description                                          |
+| ----------------- | ----------------------------- | ------------------- | -------------------------------------------------- |
+| `value`           | `Date \| null`                | —                   | Controlled selection.                                |
+| `defaultValue`    | `Date \| null`                | `null`              | Initial selection when uncontrolled.                 |
+| `onValueChange`   | `(value: Date \| null) => void`| —                  | Fires with the picked date.                          |
+| `month`           | `Date`                        | —                   | Controlled visible month.                            |
+| `defaultMonth`    | `Date`                        | selection or today  | Initial visible month.                               |
+| `onMonthChange`   | `(month: Date) => void`       | —                   | Fires when the visible month changes.                |
+| `min` / `max`     | `Date \| null`                | —                   | Selectable range bounds.                             |
+| `isDateDisabled`  | `(date: Date) => boolean`     | —                   | Disable specific dates the range allows.             |
+| `weekStartsOn`    | `number`                      | locale's first day  | 0 (Sunday) – 6 (Saturday).                           |
+| `locale`          | `string`                      | `"en-US"`           | BCP-47 tag for weekday / month names.                |
+| `showOutsideDays` | `boolean`                     | `true`              | Fill the grid with adjacent-month days.              |
+| `size`            | `"sm" \| "md" \| "lg"`        | `"md"`              | Cell size.                                           |

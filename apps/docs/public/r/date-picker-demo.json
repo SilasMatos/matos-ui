@@ -1,0 +1,16 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "date-picker-demo",
+  "registryDependencies": [
+    "date-picker"
+  ],
+  "files": [
+    {
+      "path": "components/matos-ui/examples/date-picker-demo.tsx",
+      "content": "\"use client\";\n\nimport type { ReactNode } from \"react\";\nimport { useState } from \"react\";\n\nimport { DatePicker } from \"@/components/matos-ui/date-picker\";\n\nfunction Row({\n  id,\n  label,\n  children,\n}: {\n  id: string;\n  label: string;\n  children: ReactNode;\n}) {\n  return (\n    <div className=\"flex flex-col gap-1.5 text-sm\">\n      <label htmlFor={id} className=\"font-medium text-foreground\">\n        {label}\n      </label>\n      {children}\n    </div>\n  );\n}\n\nconst today = new Date();\nconst inSixtyDays = new Date(\n  today.getFullYear(),\n  today.getMonth(),\n  today.getDate() + 60,\n);\nconst isWeekend = (d: Date) => d.getDay() === 0 || d.getDay() === 6;\n\nexport default function DatePickerDemo() {\n  const [basic, setBasic] = useState<Date | null>(null);\n  const [bounded, setBounded] = useState<Date | null>(null);\n  const [workday, setWorkday] = useState<Date | null>(null);\n  const [formatted, setFormatted] = useState<Date | null>(() => today);\n\n  return (\n    <div className=\"mx-auto grid w-full max-w-sm gap-4 py-6\">\n      <Row id=\"dp-basic\" label=\"Basic\">\n        <DatePicker id=\"dp-basic\" value={basic} onValueChange={setBasic} />\n      </Row>\n\n      <Row id=\"dp-bounded\" label=\"Next 60 days only\">\n        <DatePicker\n          id=\"dp-bounded\"\n          value={bounded}\n          onValueChange={setBounded}\n          min={today}\n          max={inSixtyDays}\n          placeholder=\"Within 60 days\"\n        />\n      </Row>\n\n      <Row id=\"dp-workday\" label=\"Weekdays only\">\n        <DatePicker\n          id=\"dp-workday\"\n          value={workday}\n          onValueChange={setWorkday}\n          isDateDisabled={isWeekend}\n        />\n      </Row>\n\n      <Row id=\"dp-fmt\" label=\"en-GB medium format\">\n        <DatePicker\n          id=\"dp-fmt\"\n          value={formatted}\n          onValueChange={setFormatted}\n          locale=\"en-GB\"\n          format={(d) => d.toLocaleDateString(\"en-GB\", { dateStyle: \"medium\" })}\n        />\n      </Row>\n\n      <Row id=\"dp-disabled\" label=\"Disabled\">\n        <DatePicker id=\"dp-disabled\" defaultValue={today} disabled />\n      </Row>\n    </div>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/date-picker-demo.tsx"
+    }
+  ],
+  "type": "registry:example"
+}
