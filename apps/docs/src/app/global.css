@@ -263,10 +263,11 @@
 
   /* CSS-transition counterpart to the spring tiers in
      registry/new-york-v4/lib/motion-tokens.ts. spring.fast and
-     spring.moderate are both critically damped (bounce: 0), so their CSS
-     equivalent is a fast-start/soft-land deceleration curve, not a
-     bounce/overshoot one — closer to a spring's settle than Tailwind's
-     stock `ease-out`, which decelerates too evenly to read as alive.
+     spring.moderate carry only a small bounce (0.10 / 0.15) — imperceptible
+     as overshoot at panel distances — so their CSS equivalent is a
+     fast-start/soft-land deceleration curve, not a bounce/overshoot one —
+     closer to a spring's settle than Tailwind's stock `ease-out`, which
+     decelerates too evenly to read as alive.
      Durations run well past their spring counterpart because a plain
      transition has no snap-then-settle shape of its own, so it needs the
      extra time to *read* as equally smooth — pushed further still (was

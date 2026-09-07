@@ -31,7 +31,7 @@
     "badgeCount": "{count} components",
     "titleBrand": "Matos UI",
     "titleTagline": "components you paste in and make yours",
-    "description": "47 React components for Tailwind and shadcn. The shadcn CLI drops the source into your repo, where it stays yours to edit, with no runtime dependency.",
+    "description": "Components for Tailwind and shadcn — copy the source in, no runtime dependency.",
     "browseComponents": "Browse Components",
     "viewOnGitHub": "View on GitHub",
     "trust": "Built with Base UI and Framer Motion.",

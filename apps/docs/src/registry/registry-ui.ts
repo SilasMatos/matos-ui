@@ -396,6 +396,7 @@ export const ui: Registry["items"] = [
       "tailwind-merge",
       "tailwind-variants",
     ],
+    registryDependencies: ["motion-tokens"],
     files: [
       {
         path: "ui/command-dock.tsx",

@@ -31,7 +31,7 @@
     "badgeCount": "{count} componentes",
     "titleBrand": "Matos UI",
     "titleTagline": "componentes que você cola no projeto e faz seus",
-    "description": "47 componentes React para Tailwind e shadcn. A CLI do shadcn põe o código no seu repositório, onde ele fica seu para editar, sem dependência em runtime.",
+    "description": "Componentes para Tailwind e shadcn — copie o código, sem dependência em runtime.",
     "browseComponents": "Ver componentes",
     "viewOnGitHub": "Ver no GitHub",
     "trust": "Feito com Base UI e Framer Motion.",

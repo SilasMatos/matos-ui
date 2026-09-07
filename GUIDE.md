@@ -164,7 +164,7 @@ description: Exibe um badge ou status indicator.
 </TabsList>
 <TabsContent value="cli">
 
-<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.vercel.app/r/badge.json" />
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/badge.json" />
 
 </TabsContent>
 
@@ -217,7 +217,7 @@ Quando você roda `bun run build` (ou `bun run registry:build` dentro de `apps/d
 Usuários instalam componentes via:
 
 ```bash
-npx shadcn@latest add https://matos-ui.vercel.app/r/NOME.json
+npx shadcn@latest add https://matos-ui.com/r/NOME.json
 ```
 
 Isso baixa o JSON do componente e copia o código fonte para o projeto do usuário.

@@ -743,21 +743,9 @@ O que um componente cumpre para entrar no registry.
 
 Encontradas ao confrontar docs contra código. Precisam de correção.
 
-**`elevated.mdx` mostra valores de superfície dark desatualizados.** O snippet de
-instalação manual traz `--surface-1: #171717`, `--surface-2: #1e1e1e`,
-`--surface-3: #252525` e o comentário "+7 lightness per step, up to #484848". O
-`global.css` real usa `#191919 → #242424 → #2e2e2e → … → #616161`, espaçados em
-CIE L\*. Quem seguir a instalação manual monta uma escada diferente da que o
-`Elevated` foi calibrado para produzir.
-
-**Comentário de `global.css` desatualizado sobre bounce.** O bloco que introduz
-`--ease-spring` afirma que "spring.fast e spring.moderate são ambos criticamente
-amortecidos (bounce: 0)". O `motion-tokens.ts` já os move para `0.1` e `0.15`, e
-o próprio JSDoc de lá explica por quê. O comentário do CSS ficou para trás.
-
-**GUIDE.md aponta para `matos-ui.vercel.app`** nos templates de MDX e instalação,
-enquanto README e docs usam `matos-ui.com`. Um componente novo criado a partir do
-template nasce documentado com a URL antiga.
+Nenhuma pendente. As três anteriores — valores de superfície dark
+desatualizados em `elevated.mdx`, o comentário de bounce em `global.css` e a
+URL `matos-ui.vercel.app` no `GUIDE.md` — foram corrigidas.
 
 ---
 
