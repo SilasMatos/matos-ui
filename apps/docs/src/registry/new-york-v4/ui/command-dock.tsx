@@ -11,6 +11,12 @@ import {
 import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
 
+import {
+  duration,
+  ease,
+  spring,
+} from "@/registry/new-york-v4/lib/motion-tokens";
+
 export const commandDockVariants = tv({
   slots: {
     root: "relative isolate flex w-full flex-col items-center gap-3",
@@ -25,13 +31,13 @@ export const commandDockVariants = tv({
     ],
     item: [
       "group relative grid size-12 shrink-0 place-items-center rounded-2xl border border-transparent",
-      "text-muted-foreground outline-none transition-colors duration-200",
+      "text-muted-foreground outline-none transition-colors",
       "hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
       "data-[active=true]:text-foreground",
     ],
     icon: [
       "relative z-10 grid size-10 place-items-center rounded-xl border border-border/70",
-      "bg-card shadow-xs transition-colors duration-200",
+      "bg-card shadow-xs transition-colors",
       "group-data-[active=true]:border-primary/30 group-data-[active=true]:bg-primary/10",
     ],
   },
@@ -84,30 +90,16 @@ export type CommandDockProps = Omit<ComponentProps<"div">, "onSelect"> &
     showPanel?: boolean;
   };
 
+// Tone is accent / destructive / neutral — the system has no literal green or
+// amber, so `success` and `warning` resolve to the accent and `danger` to
+// `--destructive`.
 const toneClassName: Record<NonNullable<CommandDockAction["tone"]>, string> = {
   default: "text-muted-foreground",
   primary: "text-primary",
-  success: "text-green-600 dark:text-green-400",
-  warning: "text-amber-600 dark:text-amber-400",
+  success: "text-primary",
+  warning: "text-primary",
   danger: "text-destructive",
 };
-
-const spring = {
-  type: "spring",
-  stiffness: 320,
-  damping: 34,
-  mass: 0.9,
-} as const;
-
-const panelSpring = {
-  type: "spring",
-  stiffness: 260,
-  damping: 30,
-  mass: 0.86,
-} as const;
-
-const smoothEase = [0.22, 1, 0.36, 1] as const;
-const snappyEase = [0.2, 0, 0, 1] as const;
 
 function getNeighborScale(index: number, activeIndex: number | null) {
   if (activeIndex === null) {
@@ -202,29 +194,8 @@ export function CommandDock({
                 ? { opacity: 0 }
                 : { opacity: 0, y: -4, scale: 0.996, filter: "blur(3px)" }
             }
-            transition={panelSpring}
+            transition={spring.moderate}
           >
-            <motion.div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0 -z-10 opacity-80"
-              animate={
-                shouldReduceMotion
-                  ? undefined
-                  : { backgroundPosition: ["0% 50%", "100% 50%"] }
-              }
-              transition={{
-                duration: 7,
-                repeat: Infinity,
-                repeatType: "mirror",
-                ease: "easeInOut",
-              }}
-              style={{
-                backgroundImage:
-                  "linear-gradient(110deg, transparent, color-mix(in oklch, var(--primary) 12%, transparent), transparent)",
-                backgroundSize: "220% 100%",
-              }}
-            />
-
             <div className="flex items-start gap-3">
               <motion.div
                 className={twMerge(
@@ -236,7 +207,7 @@ export function CommandDock({
                     ? undefined
                     : { y: [0, -2, 0], scale: [1, 1.035, 1] }
                 }
-                transition={{ duration: 0.46, ease: smoothEase }}
+                transition={{ duration: duration.slow, ease: ease.standard }}
               >
                 {activeAction.icon}
               </motion.div>
@@ -277,7 +248,7 @@ export function CommandDock({
         className={styles.dock()}
         onMouseLeave={() => setHoveredId(null)}
         layout
-        transition={spring}
+        transition={spring.snappy}
       >
         {actions.map((action, index) => {
           const isActive = selectedId === action.id;
@@ -312,7 +283,7 @@ export function CommandDock({
                 y: shouldReduceMotion ? 0 : isPreview ? -5 : 0,
               }}
               whileTap={shouldReduceMotion ? undefined : { scale: 0.97, y: -1 }}
-              transition={spring}
+              transition={spring.snappy}
             >
               <motion.span
                 data-slot="command-dock-icon"
@@ -329,7 +300,10 @@ export function CommandDock({
                           : "0 1px 2px color-mix(in oklch, var(--foreground) 8%, transparent)",
                       }
                 }
-                transition={{ duration: 0.28, ease: smoothEase }}
+                transition={{
+                  duration: duration.moderate,
+                  ease: ease.standard,
+                }}
               >
                 {action.icon}
               </motion.span>
@@ -342,7 +316,7 @@ export function CommandDock({
                     initial={{ opacity: 0, scaleX: 0.4 }}
                     animate={{ opacity: 1, scaleX: 1 }}
                     exit={{ opacity: 0, scaleX: 0.4 }}
-                    transition={{ duration: 0.22, ease: snappyEase }}
+                    transition={spring.fast}
                   />
                 ) : null}
               </AnimatePresence>
@@ -352,7 +326,7 @@ export function CommandDock({
                   layoutId="command-dock-active-dot"
                   aria-hidden="true"
                   className="absolute -bottom-0.5 left-1/2 size-1.5 -translate-x-1/2 rounded-full bg-primary"
-                  transition={spring}
+                  transition={spring.snappy}
                 />
               ) : null}
             </motion.button>

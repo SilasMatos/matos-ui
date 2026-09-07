@@ -407,7 +407,7 @@ export const Index: Record<string, any> = {
   "command-dock": {
     name: "command-dock",
     type: "registry:ui",
-    registryDependencies: undefined,
+    registryDependencies: ["motion-tokens"],
     files: [
       {
         path: "src/registry/new-york-v4/ui/command-dock.tsx",
