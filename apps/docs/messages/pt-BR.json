@@ -80,18 +80,11 @@
   "foundations": {
     "badge": "Fundações",
     "title": "Profundidade e ritmo, como tokens",
-    "subtitle": "Os dois sistemas por trás de todo componente do registry. Os dois estão rodando nesta página agora.",
-    "surface": {
-      "eyebrow": "Surface philosophy",
-      "title": "Elevação que aninha",
-      "body": "Cada componente lê o substrato onde está e sobe a partir dele — popovers, diálogos e menus continuam legíveis em qualquer profundidade.",
-      "link": "Ler a filosofia"
-    },
-    "motion": {
-      "eyebrow": "Motion tokens",
-      "title": "Cinco caracteres, uma distância",
-      "body": "Timing não é escolha por componente — é um token, ligado à profundidade.",
-      "link": "Ler os motion tokens"
+    "subtitle": "Elevação e movimento são uma decisão só, contada duas vezes. Uma superfície sobe a partir do substrato que lê, e o tamanho desse passo é o que escolhe o spring com que ela se move.",
+    "demo": {
+      "caption": "Um card com um diálogo com um popover com um menu. Cada camada nomeia o nível que resolve e o tier que a profundidade lhe dá — e abre exatamente com esse spring.",
+      "surfaceLink": "Ler a filosofia",
+      "motionLink": "Ler os motion tokens"
     }
   },
   "scrollCards": {

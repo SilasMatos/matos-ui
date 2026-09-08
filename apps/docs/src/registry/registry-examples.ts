@@ -66,6 +66,22 @@ export const examples: Registry["items"] = [
     ],
   },
   {
+    name: "confirm-button-demo",
+    type: "registry:example",
+    registryDependencies: ["confirm-button"],
+    files: [
+      { path: "examples/confirm-button-demo.tsx", type: "registry:example" },
+    ],
+  },
+  {
+    name: "edit-in-place-demo",
+    type: "registry:example",
+    registryDependencies: ["edit-in-place", "elevated"],
+    files: [
+      { path: "examples/edit-in-place-demo.tsx", type: "registry:example" },
+    ],
+  },
+  {
     name: "calendar-demo",
     type: "registry:example",
     registryDependencies: ["calendar", "elevated"],

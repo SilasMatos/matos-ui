@@ -1,0 +1,16 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "confirm-button-demo",
+  "registryDependencies": [
+    "confirm-button"
+  ],
+  "files": [
+    {
+      "path": "components/matos-ui/examples/confirm-button-demo.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\n\nimport { ConfirmButton } from \"@/components/matos-ui/confirm-button\";\n\nconst INITIAL = [\n  { id: \"1\", name: \"Q3 forecast.xlsx\" },\n  { id: \"2\", name: \"Brand assets.zip\" },\n  { id: \"3\", name: \"Meeting notes.md\" },\n];\n\nexport default function ConfirmButtonDemo() {\n  const [rows, setRows] = useState(INITIAL);\n  const [log, setLog] = useState(\"\");\n\n  return (\n    <div className=\"mx-auto flex w-full max-w-md flex-col gap-6 py-6\">\n      <ul className=\"flex flex-col rounded-xl border border-border p-1\">\n        {rows.length === 0 ? (\n          <li className=\"px-3 py-8 text-center text-muted-foreground text-sm\">\n            Nothing left.{\" \"}\n            <button\n              type=\"button\"\n              onClick={() => setRows(INITIAL)}\n              className=\"font-medium text-foreground underline underline-offset-2\"\n            >\n              Restore\n            </button>\n          </li>\n        ) : (\n          rows.map((row) => (\n            <li\n              key={row.id}\n              className=\"flex items-center gap-2 rounded-lg px-3 py-2 text-sm\"\n            >\n              <span className=\"min-w-0 flex-1 truncate\">{row.name}</span>\n              <ConfirmButton\n                label={`Delete ${row.name}`}\n                onConfirm={() =>\n                  setRows((r) => r.filter((x) => x.id !== row.id))\n                }\n              />\n            </li>\n          ))\n        )}\n      </ul>\n\n      <div className=\"flex items-center justify-between gap-2 rounded-xl border border-border px-3 py-2 text-sm\">\n        <span>Revoke API key — async confirm</span>\n        <ConfirmButton\n          label=\"Revoke API key\"\n          confirmLabel=\"Revoke\"\n          onConfirm={() => new Promise((resolve) => setTimeout(resolve, 1400))}\n          onCancel={() => setLog(\"Kept the key.\")}\n        />\n      </div>\n\n      <div className=\"flex items-center justify-between gap-2 rounded-xl border border-border px-3 py-2 text-sm\">\n        <span>Clear draft — neutral, auto-cancels in 3s</span>\n        <ConfirmButton\n          label=\"Clear draft\"\n          confirmLabel=\"Clear\"\n          variant=\"default\"\n          timeout={3000}\n          defaultFocus=\"confirm\"\n          onConfirm={() => setLog(\"Draft cleared.\")}\n        />\n      </div>\n\n      <p className=\"h-4 text-muted-foreground text-xs\" aria-live=\"polite\">\n        {log}\n      </p>\n    </div>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/confirm-button-demo.tsx"
+    }
+  ],
+  "type": "registry:example"
+}

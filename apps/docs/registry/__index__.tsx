@@ -209,6 +209,52 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
   },
+  "confirm-button": {
+    name: "confirm-button",
+    type: "registry:ui",
+    registryDependencies: ["elevated", "motion-tokens"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/confirm-button.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/ui/confirm-button.tsx");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "edit-in-place": {
+    name: "edit-in-place",
+    type: "registry:ui",
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/edit-in-place.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/ui/edit-in-place.tsx");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
   calendar: {
     name: "calendar",
     type: "registry:ui",
@@ -1934,6 +1980,52 @@ export const Index: Record<string, any> = {
     component: React.lazy(async () => {
       const mod = await import(
         "@/registry/new-york-v4/examples/copy-button-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "confirm-button-demo": {
+    name: "confirm-button-demo",
+    type: "registry:example",
+    registryDependencies: ["confirm-button"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/confirm-button-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/confirm-button-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "edit-in-place-demo": {
+    name: "edit-in-place-demo",
+    type: "registry:example",
+    registryDependencies: ["edit-in-place", "elevated"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/edit-in-place-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/edit-in-place-demo.tsx"
       );
       const exportName =
         Object.keys(mod).find(

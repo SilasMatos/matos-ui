@@ -246,6 +246,26 @@ export const ui: Registry["items"] = [
     files: [{ path: "ui/copy-button.tsx", type: "registry:ui" }],
   },
   {
+    name: "confirm-button",
+    type: "registry:ui",
+    cssVars: liftCssVars,
+    css: liftCss,
+    dependencies: [...physicsDeps, "lucide-react"],
+    registryDependencies: ["elevated", "motion-tokens"],
+    files: [{ path: "ui/confirm-button.tsx", type: "registry:ui" }],
+  },
+  {
+    name: "edit-in-place",
+    type: "registry:ui",
+    dependencies: ["framer-motion", "lucide-react", "tailwind-variants"],
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
+    files: [{ path: "ui/edit-in-place.tsx", type: "registry:ui" }],
+  },
+  {
     name: "calendar",
     type: "registry:ui",
     cssVars: liftCssVars,

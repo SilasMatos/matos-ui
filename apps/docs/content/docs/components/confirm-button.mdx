@@ -1,0 +1,154 @@
+---
+title: Confirm Button
+description: A destructive action that arms in place instead of opening a dialog — the trash slides aside and a ✓ / ✕ pair fills the space it left, with three distinct outcomes on purpose.
+---
+
+<ComponentPreview name="confirm-button-demo" chromeless align="start" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/confirm-button.json" />
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Install the following dependencies:</Step>
+
+<CodeBlockCommand command="npm install framer-motion lucide-react tailwind-merge tailwind-variants" />
+
+<Step>Add the <code>elevated</code> primitive, then copy this in.</Step>
+
+<ComponentSource name="confirm-button" title="components/matos-ui/confirm-button.tsx" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { ConfirmButton } from '@/components/matos-ui/confirm-button'
+```
+
+```tsx
+<ConfirmButton
+  label="Delete invoice"
+  onConfirm={() => deleteInvoice(id)}
+/>
+```
+
+Return a `Promise` from `onConfirm` and the control holds a spinner until it
+settles — the box doesn't collapse on a request still in flight.
+
+```tsx
+<ConfirmButton
+  label="Revoke key"
+  confirmLabel="Revoke"
+  onConfirm={() => api.revoke(id)} // async
+/>
+```
+
+## Geometry: the right edge is the anchor
+
+The button doesn't sit still while a box grows around it. The **right edge stays
+put**; the box grows left, the trash travels left with it, and the ✓ / ✕ keys
+appear in the space the trash just vacated — which is exactly where the cursor
+already is.
+
+```
+rest:   [·····················] [🗑]
+armed:  [···········] [🗑 ✓ ✕]
+                          ↑ cursor hasn't moved
+```
+
+Three things fall out of that at once:
+
+- **It doesn't push anyone.** It grows into the empty space of a `justify-end`
+  row, where destructive actions usually live.
+- **The cursor ends on ✕.** The outermost key is cancel, so a reflex second
+  click cancels instead of destroying.
+- **Focus lands on ✕ too** (`defaultFocus="cancel"`), so a reflex second
+  *keypress* is safe as well.
+
+`grow="start"` is the default. Pass `grow="end"` to anchor the left edge instead.
+For a fixed-width cell or a clipped container where neither works,
+`mode="overlay"` floats the keys over the trigger.
+
+## Three outcomes, three choreographies
+
+Confirm can't just be cancel in reverse — if both exits looked the same, the
+control would have no opinion about what happened.
+
+| | Arm | Cancel | Confirm |
+| --- | --- | --- | --- |
+| **Lid** | dips, then swings open (`ease.anticipate`) | settles back, soft (`spring.fast`) | slams shut (`ease.accelerate`) |
+| **Box** | widens on `spring.moderate` | shrinks back | collapses |
+| **Keys** | overlap in on `spring.fast`, ✓ then ✕ | recede, ✕ first | ✕ leaves first; ✓ blooms an `attentionGlow` ring |
+
+The keys arriving *before* the box finishes widening is deliberate overlap — the
+`spring.fast` / `spring.moderate` tier contrast is what makes it read as one
+motion instead of two steps.
+
+## How it's built
+
+- **One node morphs.** The box is `motion.create(Elevated)` at `offset={1}`,
+  stepping to `offset={2}` as it arms — same element, per DESIGN §2.6. The ✓ / ✕
+  group is a nested `offset={1}`, a half-step above.
+- **`layout` handles the width.** Framer animates the resize with a transform
+  and counter-scales the children; `border-radius` is set via `style` as a
+  number so it's corrected for the scale rather than turning elliptical.
+- **The lid is a hinged `<g>`.** `ease.anticipate` on a plain `0 → -26°` tween
+  undershoots then overshoots, so the dip-before-open beat comes for free.
+- **`attentionGlow` earns its keep here** — one bloom on the ✓ when a confirm
+  lands, using the theme ring colour, so it reads as "received" rather than
+  repeating the danger red.
+- **`prefers-reduced-motion`** keeps the resize (it's layout, not decoration)
+  but drops the travel, the lid swing and the glow; the keys crossfade in place.
+
+## Accessibility
+
+- Armed state is a `role="group"` labelled with the question; a `role="status"`
+  live region announces it.
+- Escape cancels and returns focus to the trigger. Blur out of the group
+  disarms.
+- Once armed, the trash is `disabled` and `aria-hidden` — decorative, not a
+  second target.
+- `timeout` (off by default) auto-cancels, paused while hovered or focused.
+
+## Reference
+
+### ConfirmButton Props
+
+| Prop           | Type                              | Default         | Description                                             |
+| -------------- | --------------------------------- | --------------- | ------------------------------------------------------ |
+| `onConfirm`    | `() => void \| Promise<void>`     | —               | Runs on confirm. A Promise holds the armed state.       |
+| `onCancel`     | `() => void`                      | —               | Runs on cancel, Escape, blur-out, or timeout.           |
+| `label`        | `string`                         | `"Delete"`      | Accessible name for the action.                         |
+| `confirmLabel` | `string`                         | `"Confirm"`     | —                                                      |
+| `cancelLabel`  | `string`                         | `"Cancel"`      | —                                                      |
+| `variant`      | `"destructive" \| "default"`      | `"destructive"` | ✓ key fill — `--destructive` or `--primary`.            |
+| `size`         | `"sm" \| "md" \| "lg"`            | `"md"`          | `md` is 40px tall.                                      |
+| `grow`         | `"start" \| "end"`                | `"start"`       | Which edge stays fixed as the box widens.               |
+| `mode`         | `"push" \| "overlay"`             | `"push"`        | `overlay` floats the keys over the trigger.             |
+| `defaultFocus` | `"confirm" \| "cancel"`           | `"cancel"`      | Where focus lands when armed.                           |
+| `timeout`      | `number`                         | —               | ms of inactivity before auto-cancel.                   |
+| `disabled`     | `boolean`                        | `false`         | —                                                      |
+| `icon`         | `ReactNode`                      | —               | Replaces the trash can (no animated lid).               |
+| `armed`        | `boolean`                        | —               | Controlled armed state.                                 |
+| `defaultArmed` | `boolean`                        | `false`         | —                                                      |
+| `onArmedChange`| `(armed: boolean) => void`       | —               | —                                                      |

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "edit-in-place-demo",
+  "registryDependencies": [
+    "edit-in-place",
+    "elevated"
+  ],
+  "files": [
+    {
+      "path": "components/matos-ui/examples/edit-in-place-demo.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\n\nimport { EditInPlace } from \"@/components/matos-ui/edit-in-place\";\nimport { Elevated } from \"@/components/matos-ui/elevated\";\n\nexport default function EditInPlaceDemo() {\n  const [name, setName] = useState(\"Quarterly planning\");\n  const [summary, setSummary] = useState(\n    \"Roadmap, headcount and budget for Q3.\",\n  );\n  const [owner, setOwner] = useState(\"\");\n  const [budget, setBudget] = useState(\"42,000\");\n\n  return (\n    <div className=\"mx-auto w-full max-w-md py-6\">\n      <Elevated offset={1} className=\"rounded-2xl p-5\">\n        <p className=\"font-medium text-muted-foreground text-xs uppercase tracking-wide\">\n          Project\n        </p>\n\n        <div className=\"mt-1\">\n          <EditInPlace\n            label=\"Project name\"\n            value={name}\n            onValueChange={setName}\n            size=\"lg\"\n          />\n        </div>\n\n        <div className=\"mt-0.5\">\n          <EditInPlace\n            label=\"Summary\"\n            value={summary}\n            onValueChange={setSummary}\n            placeholder=\"Add a summary\"\n          />\n        </div>\n\n        <dl className=\"mt-5 flex flex-col gap-3 border-border border-t pt-4 text-sm\">\n          <div className=\"flex items-center justify-between gap-4\">\n            <dt className=\"text-muted-foreground\">Owner</dt>\n            <dd className=\"flex min-w-0 justify-end\">\n              <EditInPlace\n                label=\"Owner\"\n                value={owner}\n                onValueChange={setOwner}\n                placeholder=\"Unassigned\"\n                size=\"sm\"\n              />\n            </dd>\n          </div>\n\n          <div className=\"flex items-center justify-between gap-4\">\n            <dt className=\"text-muted-foreground\">Budget (USD)</dt>\n            <dd className=\"flex min-w-0 justify-end\">\n              <EditInPlace\n                label=\"Budget\"\n                value={budget}\n                onValueChange={setBudget}\n                size=\"sm\"\n                validate={(v) =>\n                  /^[0-9,]+$/.test(v.trim()) || \"Numbers and commas only.\"\n                }\n                renderValue={(v) => <span className=\"tabular-nums\">${v}</span>}\n              />\n            </dd>\n          </div>\n        </dl>\n      </Elevated>\n    </div>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/edit-in-place-demo.tsx"
+    }
+  ],
+  "type": "registry:example"
+}

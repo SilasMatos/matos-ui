@@ -1,0 +1,128 @@
+---
+title: Edit in Place
+description: Texto que vira input onde está. A caixa sobe um degrau ao entrar em edição e volta ao confirmar — elevação como estado de edição, e a mudança de caixa é morph em escala pequena.
+---
+
+<ComponentPreview name="edit-in-place-demo" chromeless align="start" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/edit-in-place.json" />
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Instale as dependências:</Step>
+
+<CodeBlockCommand command="npm install framer-motion lucide-react tailwind-variants" />
+
+<Step>Copie o componente.</Step>
+
+<ComponentSource name="edit-in-place" title="components/matos-ui/edit-in-place.tsx" />
+
+<Step>Ajuste os imports para o seu projeto.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { EditInPlace } from '@/components/matos-ui/edit-in-place'
+```
+
+```tsx
+const [name, setName] = useState('Quarterly planning')
+
+<EditInPlace label="Project name" value={name} onValueChange={setName} />
+```
+
+Um clique — ou <kbd>Enter</kbd>, <kbd>Space</kbd>, <kbd>F2</kbd> — entra em
+edição. <kbd>Enter</kbd> confirma, <kbd>Esc</kbd> reverte, e sair do campo
+confirma (`submitOnBlur`, ligado por padrão).
+
+## Elevação é o estado de edição
+
+Em repouso a caixa está rente ao substrato — sem preenchimento, sem anel — e lê
+como texto puro. Ao editar ela sobe **um degrau** na escada de elevação, cresce o
+padding, arredonda os cantos e desenha uma borda. Confirmar desfaz tudo.
+
+A transição inteira é `spring.morph`, o tier de forma — o mesmo que um bento usa
+atravessando centenas de pixels, aqui atravessando um punhado. É o argumento de
+que o tier vale nas duas escalas.
+
+## Como é construído
+
+- **A troca não desloca nada.** Um _sizer_ invisível carrega a largura exata do
+  texto; o botão e o input ficam sobrepostos a ele, então nada reflui quando
+  trocam de lugar e o cursor pousa onde o texto estava. O sizer renderiza o mesmo
+  que a camada visível (incluindo `renderValue`), então a largura sempre bate.
+- **`layout` + `layoutDependency={editing}`** anima a caixa só na troca de modo —
+  digitar muda a largura do sizer sem disparar o morph.
+- **A tecla ✓ recua antes de aparecer** — `ease.anticipate`, a batida de
+  antecipação dos 12 princípios, com um beat de atraso para entrar depois que a
+  caixa assentou.
+- **`prefers-reduced-motion`** mantém o crossfade e a troca de cor, derruba a
+  escala da caixa, o travel e o recuo da antecipação.
+
+## Validação
+
+`validate` recebe o valor e retorna `true` para aceitar ou uma string para
+rejeitar — a string aparece abaixo do campo, a caixa dá um `attentionShake` e a
+edição continua aberta.
+
+```tsx
+<EditInPlace
+  label="URL slug"
+  value={slug}
+  onValueChange={setSlug}
+  validate={(v) =>
+    /^[a-z0-9-]+$/.test(v) || 'Lowercase letters, numbers and dashes only.'
+  }
+/>
+```
+
+## Accessibility
+
+- Em repouso é um `<button aria-label="Edit …">`; ao editar, um `<input>` com o
+  mesmo nome acessível, focado e com o texto selecionado.
+- <kbd>Esc</kbd> reverte e devolve o foco ao gatilho. Erro de validação marca
+  `aria-invalid` e liga `aria-describedby` à mensagem (`role="alert"`).
+
+## Reference
+
+### EditInPlace Props
+
+| Prop              | Type                                 | Default   | Description                                                  |
+| ----------------- | ------------------------------------ | --------- | ---------------------------------------------------------- |
+| `value`           | `string`                            | —         | O valor editável.                                           |
+| `onValueChange`   | `(value: string) => void`           | —         | Confirmação — Enter, tecla ✓ ou blur.                       |
+| `onCancel`        | `() => void`                        | —         | Dispara no Esc ou na tecla ✕, após reverter.                |
+| `label`           | `string`                            | —         | Nome acessível do campo. Obrigatório.                       |
+| `placeholder`     | `string`                            | `"Empty"` | Mostrado quando o valor está vazio.                         |
+| `validate`        | `(value: string) => boolean \| string` | —      | String rejeita a confirmação e vira mensagem de erro.       |
+| `submitOnBlur`    | `boolean`                           | `true`    | Sair do campo confirma; `false` reverte.                    |
+| `selectOnEdit`    | `boolean`                           | `true`    | Seleciona o texto ao começar a editar.                      |
+| `trim`            | `boolean`                           | `true`    | Remove espaços nas pontas ao confirmar.                     |
+| `maxLength`       | `number`                            | —         | —                                                          |
+| `renderValue`     | `(value: string) => ReactNode`      | —         | Formata a exibição em repouso (a string editável é o `value`). |
+| `disabled`        | `boolean`                           | `false`   | —                                                          |
+| `size`            | `"sm" \| "md" \| "lg"`              | `"md"`    | —                                                          |
+| `editing`         | `boolean`                           | —         | Estado de edição controlado.                                |
+| `defaultEditing`  | `boolean`                           | `false`   | —                                                          |
+| `onEditingChange` | `(editing: boolean) => void`        | —         | —                                                          |
+| `name`            | `string`                            | —         | Nome de um input hidden, para postar o valor com um form.   |
