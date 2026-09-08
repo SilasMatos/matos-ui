@@ -43,13 +43,13 @@ Motion and elevation are the same story told twice — see
 
 | Tier       | Visual duration | Bounce | For                                                                 |
 | ---------- | --------------- | ------ | ------------------------------------------------------------------- |
-| `fast`     | `0.15s`         | `0.1`  | Micro-feedback: toggles, checkboxes, a single-step surface lift.     |
-| `snappy`   | `0.11s`         | `0`    | Zero-latency follow: a dragged sheet, a magnetic button, an element tracking the cursor. Opt in by hand. |
-| `moderate` | `0.28s`         | `0.15` | Panels that must land exactly: dropdowns, tabs, drawers, selects.    |
-| `slow`     | `0.42s`         | `0.2`  | Dialogs and sheets — far enough that a touch of overshoot reads alive. |
-| `gentle`   | `0.6s`          | `0.06` | Ambient, unhurried: a backdrop fading up, a hero settling on load, a section easing in on scroll. Opt in by hand. |
-| `morph`    | `0.75s`         | `0.12` | Shape, not distance: a `layout` animation changing width, height and radius together. |
-| `playful`  | `0.5s`          | `0.45` | A tone, not a speed. Opt in by hand, never reached by offset.        |
+| `fast`     | `0.24s`         | `0.16` | Micro-feedback: toggles, checkboxes, a single-step surface lift.     |
+| `snappy`   | `0.14s`         | `0`    | Zero-latency follow: a dragged sheet, a magnetic button, an element tracking the cursor. Opt in by hand. |
+| `moderate` | `0.38s`         | `0.18` | Panels that must land exactly: dropdowns, tabs, drawers, selects.    |
+| `slow`     | `0.52s`         | `0.18` | Dialogs and sheets — far enough that a touch of overshoot reads alive. |
+| `gentle`   | `0.72s`         | `0.06` | Ambient, unhurried: a backdrop fading up, a hero settling on load, a section easing in on scroll. Opt in by hand. |
+| `morph`    | `0.85s`         | `0.12` | Shape, not distance: a `layout` animation changing width, height and radius together. |
+| `playful`  | `0.56s`         | `0.42` | A tone, not a speed. Opt in by hand, never reached by offset.        |
 
 The column says **visual** duration, and the distinction is the whole reason
 these numbers are trustworthy. A spring's `duration` covers the settling tail as
@@ -85,7 +85,7 @@ reason `snappy` is: a mood is not a distance.
 above it, because it is the only one measuring a different thing. The others
 move an element that stays itself — a panel sliding four pixels while it fades.
 `morph` is for an element *becoming* something else, where the box crosses
-hundreds of pixels of width and height at once. At `slow`'s 0.42s that reads as
+hundreds of pixels of width and height at once. At `slow`'s 0.52s that reads as
 a snap, and at `slow`'s bounce the far edge of a wide box wobbles visibly after
 it lands. It is opt-in by hand: `motionForOffset` never returns it, because how
 far a surface sits above its substrate says nothing about whether it is
@@ -104,7 +104,7 @@ constant-velocity loop — the system has a `duration`-driven counterpart.
 
 ```ts
 ease = { standard, decelerate, accelerate, emphasized, anticipate, linear }
-duration = { instant: 0, fast: 0.18, moderate: 0.28, slow: 0.42, slower: 0.6 }
+duration = { instant: 0, fast: 0.26, moderate: 0.38, slow: 0.52, slower: 0.72 }
 ```
 
 - `decelerate` — fast start, soft landing: for something *entering* (a reveal, a
@@ -163,19 +163,19 @@ focus rings, colour changes — the same character lives in two theme variables:
 
 ```css
 @theme inline {
-  --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
-  --duration-moderate: 280ms;
-  --duration-slow: 420ms;
+  --ease-spring: cubic-bezier(0.3, 0.86, 0.36, 1);
+  --duration-moderate: 380ms;
+  --duration-slow: 520ms;
   --default-transition-duration: var(--duration-moderate);
   --default-transition-timing-function: var(--ease-spring);
 }
 ```
 
-These two match `spring.moderate` and `spring.slow` exactly, and that is a
-result rather than a coincidence: both sides were tuned by feel, independently,
-and both landed on 280ms and 420ms. The CSS pair got there first — which is the
-clearest evidence available that the spring scale, back when it read 0.16s and
-0.24s, was calibrated on the wrong number. Keep them in step: a tier and its CSS
+These two match `spring.moderate` and `spring.slow` — not a coincidence: both
+sides are tuned by feel and move together. The scale has been through three
+passes now, each in the same direction — every tier a little longer, a little
+softer — because each earlier version still read as too quick to register as
+*comfort* rather than just presence. Keep them in step: a tier and its CSS
 counterpart drifting apart is a hover fill and the panel it sits in visibly
 disagreeing about how fast this interface moves.
 
@@ -191,8 +191,8 @@ cursor. That is one token, `hover-lift`, not a per-component recipe:
 
 ```css
 --ease-lift: cubic-bezier(0.4, 0, 0.2, 1);
---duration-lift: 320ms;
---duration-lift-press: 120ms;
+--duration-lift: 380ms;
+--duration-lift-press: 150ms;
 ```
 
 The curve is deliberately **not** `--ease-spring`. That one covers roughly 90%
@@ -375,8 +375,9 @@ Seven tiers, each a framer-motion `Transition` plus an `exit` duration:
 
 `ease` holds six named cubic-bézier curves (`standard`, `decelerate`,
 `accelerate`, `emphasized`, `anticipate`, `linear`), JS-only. `duration` holds
-five seconds values (`instant` `0`, `fast` `0.18`, `moderate` `0.28`, `slow`
-`0.42`, `slower` `0.6`); the middle three are the exact twin of `--duration-*`.
+five seconds values (`instant` `0`, `fast` `0.26`, `moderate` `0.38`, `slow`
+`0.52`, `slower` `0.72`); `fast`/`moderate`/`slow` are the twin of the CSS
+timing.
 
 ### `motionForOffset`
 

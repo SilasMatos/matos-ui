@@ -33,7 +33,9 @@ import {
 import { duration, spring } from "@/registry/new-york-v4/lib/motion-tokens";
 
 export const calendarVariants = tv({
-  base: "inline-flex select-none flex-col gap-2 text-sm",
+  // `not-prose`: the grid is a real <table>, and `.prose` would force it to
+  // full width with its own borders, padding and font-size.
+  base: "not-prose inline-flex select-none flex-col gap-2 text-sm",
   variants: {
     size: {
       sm: "[--cal-cell:1.75rem] text-xs",

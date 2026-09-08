@@ -23,7 +23,9 @@ import { tv, type VariantProps } from "tailwind-variants";
 import { spring } from "@/registry/new-york-v4/lib/motion-tokens";
 
 export const progressRingVariants = tv({
-  base: ["relative inline-grid shrink-0 place-items-center text-primary"],
+  base: [
+    "not-prose relative inline-grid shrink-0 place-items-center text-primary",
+  ],
   variants: {
     size: {
       sm: "size-16 text-[0.8rem]",

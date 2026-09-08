@@ -19,7 +19,7 @@ import {
 
 export const commandDockVariants = tv({
   slots: {
-    root: "relative isolate flex w-full flex-col items-center gap-3",
+    root: "not-prose relative isolate flex w-full flex-col items-center gap-3",
     panel: [
       "relative min-h-[112px] w-full max-w-[520px] overflow-hidden rounded-2xl border border-border",
       "bg-card/90 p-4 text-card-foreground shadow-sm backdrop-blur-xl",

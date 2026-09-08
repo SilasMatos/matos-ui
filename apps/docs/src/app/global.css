@@ -263,21 +263,23 @@
 
   /* CSS-transition counterpart to the spring tiers in
      registry/new-york-v4/lib/motion-tokens.ts. spring.fast and
-     spring.moderate carry only a small bounce (0.10 / 0.15) — imperceptible
+     spring.moderate carry only a small bounce (0.16 / 0.18) — imperceptible
      as overshoot at panel distances — so their CSS equivalent is a
      fast-start/soft-land deceleration curve, not a bounce/overshoot one —
      closer to a spring's settle than Tailwind's stock `ease-out`, which
      decelerates too evenly to read as alive.
      Durations run well past their spring counterpart because a plain
      transition has no snap-then-settle shape of its own, so it needs the
-     extra time to *read* as equally smooth — pushed further still (was
-     120/180/260ms) after the first pass still read as too quick to
-     register as motion rather than a jump-cut. The curve itself softened
-     too: a wider late tail (0.36 vs 0.3 on the third control point) so the
-     settle glides rather than snapping shut. `--default-transition-*`
-     below is what every bare `transition-colors`/`transition-opacity`
-     utility resolves through, so hover states that never set their own
-     duration/easing inherit this automatically.
+     extra time to *read* as equally smooth. Three tuning passes now, all the
+     same direction (120/180/260 → 180/280/420 → 260/380/520ms): each earlier
+     scale still read as too quick — motion that registers as comfortable,
+     not merely present, wants room for its own settle to show. The curve
+     eased with it — the second control point down to 0.86 from 1, so it
+     glides to a stop instead of shooting to near-final in the first frames.
+     `--default-transition-*` below is what every bare
+     `transition-colors`/`transition-opacity` utility resolves through, so
+     hover states that never set their own duration/easing inherit this
+     automatically.
 
      No `--duration-fast` entry: verified (renaming it, and separately
      forcing it through an explicit `var()` reference) that this Tailwind
@@ -286,25 +288,25 @@
      also references it via `var()` — moderate/slow survive only because
      `--default-transition-duration` and the view-transition rule below
      happen to reference them that way. A fast tier has no such natural
-     reference, so it never compiled; the 180ms fast tier below is spelled
-     out as the literal `duration-180` at its two call sites
-     (docs-sidebar.tsx, mobile-nav.tsx) instead. */
-  --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
-  --duration-moderate: 280ms;
-  --duration-slow: 420ms;
+     reference, so it never compiled; the fast tier is spelled out as the
+     literal `duration-260` at its two call sites (docs-sidebar.tsx,
+     mobile-nav.tsx) instead, in step with `duration.fast` (0.26s). */
+  --ease-spring: cubic-bezier(0.3, 0.86, 0.36, 1);
+  --duration-moderate: 380ms;
+  --duration-slow: 520ms;
   --default-transition-duration: var(--duration-moderate);
   --default-transition-timing-function: var(--ease-spring);
 
   /* The hover-lift tier — see the `hover-lift` utility below.
-     Deliberately NOT `--ease-spring`: that curve covers ~90% of its travel in
-     the first 15% of the time, which reads as arrival for a panel crossing
+     Deliberately NOT `--ease-spring`: that curve is still front-loaded, most
+     of its travel spent early, which reads as arrival for a panel crossing
      real distance but as a flinch for a 2px hover. This one eases in before it
      eases out, so a control that lifts under the cursor drifts instead of
      snapping. Both entries survive the `--duration-*` drop described above
      because the utility references them through `var()` in this same file. */
   --ease-lift: cubic-bezier(0.4, 0, 0.2, 1);
-  --duration-lift: 320ms;
-  --duration-lift-press: 120ms;
+  --duration-lift: 380ms;
+  --duration-lift-press: 150ms;
 }
 
 @layer components {

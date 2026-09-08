@@ -21,7 +21,7 @@ const labelThumbTranslate: Record<"sm" | "md" | "lg", string> = {
 export const switchVariants = tv({
   slots: {
     root: [
-      "group relative inline-flex shrink-0 cursor-pointer items-center overflow-visible border transition-all duration-300 active:scale-[0.98]",
+      "not-prose group relative inline-flex shrink-0 cursor-pointer items-center overflow-visible border transition-all duration-300 active:scale-[0.98]",
       "before:absolute before:-inset-2 before:content-['']",
       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
       "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",

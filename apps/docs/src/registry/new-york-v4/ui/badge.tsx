@@ -9,7 +9,7 @@ import { useSurface } from "@/registry/new-york-v4/lib/surface-context";
 
 export const badgeVariants = tv({
   base: [
-    "group/badge inline-flex min-w-0 shrink-0 items-center justify-center overflow-hidden border font-medium leading-none",
+    "not-prose group/badge inline-flex min-w-0 shrink-0 items-center justify-center overflow-hidden border font-medium leading-none",
     // `hover-lift` owns the transition list as well as the timing; a badge
     // that is not interactive simply never sets --lift above 0.
     "hover-lift [--lift:0px]",

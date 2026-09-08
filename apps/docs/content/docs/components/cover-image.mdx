@@ -1,0 +1,123 @@
+---
+title: Cover Image
+description: Uma imagem que nunca mostra frame quebrado. src faltando, 404, bloqueio de mixed content — tudo cai num fallback que é uma superfície na escada de elevação, não um bg-muted chapado.
+---
+
+<ComponentPreview name="cover-image-demo" chromeless align="start" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/cover-image.json" />
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Instale as dependências:</Step>
+
+<CodeBlockCommand command="npm install framer-motion lucide-react tailwind-merge tailwind-variants" />
+
+<Step>Adicione o primitivo <code>elevated</code> e copie o componente.</Step>
+
+<ComponentSource name="cover-image" title="components/matos-ui/cover-image.tsx" />
+
+<Step>Ajuste os imports para o seu projeto.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { CoverImage } from '@/components/matos-ui/cover-image'
+```
+
+```tsx
+<CoverImage src={book.imageLinks?.thumbnail} alt={book.title} />
+```
+
+`alt` é obrigatório — ele nomeia a capa mesmo quando a imagem nunca carrega.
+
+## Nunca um frame quebrado
+
+Quatro coisas terminam no mesmo lugar: `src` ausente, um 404, um bloqueio de
+mixed content, e uma imagem que decodifica pra nada (`naturalWidth === 0` mesmo
+depois do `load`). Nenhuma delas mostra o ícone de imagem quebrada do navegador
+— todas resolvem pro `fallback`.
+
+E o fallback **não é `bg-muted` fixo**. É `Elevated offset={1}` sobre o substrato
+onde a capa está. A mesma capa vazia numa célula de tabela, num card e num dialog
+de detalhe lê como uma superfície na profundidade dela — é a §2.1 num componente
+que todo app de catálogo precisa.
+
+## Três estados, dois tiers
+
+| Estado | O que aparece | Tier |
+| --- | --- | --- |
+| `loading` (sem `placeholder`) | Skeleton `Elevated` com um pulso lento e ambiente | recuado, `easeInOut` em três beats de `duration.slower` |
+| `loading` (com `placeholder`) | O `blurDataURL` / cor borrado por baixo | — |
+| `loaded` | A imagem entra em crossfade com um _focus pull_ blur→nítido (`revealVariants`) | `fast` |
+| `empty` / `error` | Fallback `Elevated` com ícone | — |
+
+`prefers-reduced-motion` mantém o crossfade, derruba o pulso e o blur.
+
+## Google Books e afins — `sanitize`
+
+As thumbs da Google Books chegam em `http://` (bloqueadas numa página https) e
+com `&edge=curl`, que pinta uma borda de canto dobrado; `zoom=1` devolve um
+selo minúsculo. `sanitize` força https, tira o `edge=curl` e sobe pra `zoom=2`.
+
+```tsx
+<CoverImage src={dirtyUrl} alt={title} sanitize />
+```
+
+É uma função pura exportada — dá pra usar solta, e uma URL que não casa com nada
+volta intacta, então é seguro deixar ligado pra uma lista inteira de fonte mista.
+
+```tsx
+import { sanitizeCoverUrl } from '@/components/matos-ui/cover-image'
+```
+
+## Generaliza
+
+Capa de livro, avatar, thumb de produto — troque `ratio` e `radius`. Toda API
+suja devolve `imageLinks` pela metade.
+
+```tsx
+<CoverImage src={user.avatarUrl} alt={user.name} ratio="square" radius="lg" />
+```
+
+## Reference
+
+### CoverImage Props
+
+| Prop             | Type                              | Default   | Description                                                       |
+| ---------------- | --------------------------------- | --------- | --------------------------------------------------------------- |
+| `src`            | `string \| null`                  | —         | A URL da imagem — pode faltar, pode estar suja.                   |
+| `alt`            | `string`                          | —         | Obrigatório. Nomeia a capa carregue ela ou não.                  |
+| `sanitize`       | `boolean`                         | `false`   | Corrige `http://` e as bordas da Google Books antes de carregar. |
+| `placeholder`    | `string`                          | —         | Um `blurDataURL` ou uma cor CSS, borrado sob a imagem no load.   |
+| `fallback`       | `ReactNode`                       | ícone     | O que preenche o frame quando não há imagem usável.              |
+| `ratio`          | `"book" \| "portrait" \| "square" \| "video" \| "wide"` | `"book"` | Proporção do frame.                    |
+| `radius`         | `"none" \| "sm" \| "md" \| "lg"`  | `"md"`    | —                                                               |
+| `fit`            | `"cover" \| "contain"`            | `"cover"` | —                                                               |
+| `loading`        | `"lazy" \| "eager"`               | `"lazy"`  | —                                                               |
+| `onStatusChange` | `(status) => void`                | —         | `"empty" \| "loading" \| "loaded" \| "error"`.                   |
+
+### sanitizeCoverUrl
+
+`(url: string) => string` — https-força, tira `&edge=curl`, troca `zoom=1` por
+`zoom=2` em URLs da Google Books. Idempotente e genérica.

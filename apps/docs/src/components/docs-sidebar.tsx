@@ -81,7 +81,7 @@ const activeSpring = {
 
 const sidebarLinkClassName = [
   "group/sidebar-link relative flex h-8 w-full min-w-0 items-center rounded-md px-2.5 pl-3.5 text-[0.83rem] font-medium",
-  "outline-none transition-[background-color,color,transform] duration-180 ease-spring",
+  "outline-none transition-[background-color,color,transform] duration-260 ease-spring",
   "hover:translate-x-px hover:bg-background hover:text-foreground hover:shadow-[0_0_0_1px_color-mix(in_oklab,var(--border)_65%,transparent)] dark:hover:bg-muted/40 dark:hover:shadow-none",
   "motion-reduce:transform-none motion-reduce:transition-none",
   "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background",
@@ -259,7 +259,7 @@ function SidebarGroup({
           aria-expanded={isOpen}
           disabled={isFiltering}
           onClick={onToggle}
-          className="group/header flex h-7 w-full items-center gap-2 rounded-md px-1.5 text-left outline-none transition-colors duration-180 hover:bg-background/75 disabled:pointer-events-none focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none dark:hover:bg-muted/20"
+          className="group/header flex h-7 w-full items-center gap-2 rounded-md px-1.5 text-left outline-none transition-colors duration-260 hover:bg-background/75 disabled:pointer-events-none focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none dark:hover:bg-muted/20"
         >
           <span className="shrink-0 font-semibold text-[0.64rem] text-foreground/60 uppercase tracking-[0.16em] dark:text-muted-foreground/75">
             {group.title}

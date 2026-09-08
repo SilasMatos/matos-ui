@@ -1,0 +1,128 @@
+---
+title: Skeleton Morph
+description: Um skeleton cuja geometria é a geometria do conteúdo real. A chegada vira crossfade no lugar, não substituição — nada salta.
+---
+
+<ComponentPreview name="skeleton-morph-demo" chromeless align="start" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/skeleton-morph.json" />
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Instale a dependência:</Step>
+
+<CodeBlockCommand command="npm install framer-motion" />
+
+<Step>Copie o componente.</Step>
+
+<ComponentSource name="skeleton-morph" title="components/matos-ui/skeleton-morph.tsx" />
+
+<Step>Ajuste os imports para o seu projeto.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { SkeletonMorph, Skel } from '@/components/matos-ui/skeleton-morph'
+```
+
+```tsx
+<SkeletonMorph loading={query.isPending}>
+  <div className="flex items-center gap-3">
+    <Skel className="size-12 rounded-full">
+      <Avatar src={user.avatar} />
+    </Skel>
+    <div className="space-y-1.5">
+      <Skel className="h-4 w-40">
+        <p className="truncate font-medium text-sm">{user.name}</p>
+      </Skel>
+      <Skel className="h-3 w-28">
+        <p className="truncate text-muted-foreground text-xs">{user.role}</p>
+      </Skel>
+    </div>
+  </div>
+</SkeletonMorph>
+```
+
+Você monta a tela **uma vez** e envolve cada peça vinculada a dados num `Skel`.
+Enquanto `loading`, cada `Skel` mostra um shimmer do tamanho e raio exatos do
+conteúdo final. Quando resolve, o shimmer sai em crossfade e o conteúdo entra —
+no mesmo lugar.
+
+## Por que não pula
+
+O skeleton genérico do registry é um retângulo — o conteúdo chega e tudo salta,
+o que faz a interface *parecer* rápida sem *ser*. Casar a forma elimina o salto.
+
+- O `className` do `Skel` é a caixa — do shimmer **e** o frame onde o conteúdo
+  é recortado. Escreva-o para bater com o conteúdo (`h-5 w-40`,
+  `size-10 rounded-full`, `aspect-[2/3]`) e recorte o conteúdo para caber
+  (`truncate`, `line-clamp-3`, `object-cover`).
+- A caixa é a mesma nas duas fases, então a troca é crossfade puro no lugar —
+  sem reflow. Qualquer resíduo (um texto um fio mais largo que o previsto) o
+  `layout` na raiz assenta como morph, não como pulo.
+
+## Superfície
+
+Nada aqui eleva. O preenchimento do shimmer é um alpha do foreground, então um
+`Skel` lê sobre qualquer degrau em que o conteúdo esteja — **mesmo offset do
+conteúdo final**. Isso é o requisito, não um detalhe: um skeleton num degrau
+diferente do conteúdo é o próprio salto que ele deveria evitar.
+
+## Movimento
+
+- O shimmer varre num beat gentle — sem pressa, com um descanso entre passadas,
+  então recua em vez de incomodar.
+- O crossfade para o conteúdo é `fast` — ele responde.
+- Sob `prefers-reduced-motion` o shimmer **some inteiro**. É decoração ambiente,
+  e a regra é matar decoração ambiente, não movimento necessário — o
+  preenchimento chapado ainda marca a caixa, e o crossfade ainda roda.
+
+## Um skeleton que nunca resolve
+
+O `loading` do `Skel` sobrepõe o do boundary. Um `Skel` sozinho com `loading` e
+sem `SkeletonMorph` em volta é uma caixa de shimmer permanente — o caso do
+fallback de capa em [Cover Image](/docs/components/cover-image), onde a imagem
+nunca vai chegar.
+
+```tsx
+<Skel loading className="aspect-[2/3] rounded-lg" />
+```
+
+## Reference
+
+### SkeletonMorph Props
+
+| Prop        | Type              | Default | Description                                            |
+| ----------- | ----------------- | ------- | ---------------------------------------------------- |
+| `loading`   | `boolean`         | —       | Enquanto `true`, todo `Skel` dentro mostra o shimmer. |
+| `children`  | `ReactNode`       | —       | Seu layout, com `Skel` em volta das peças de dados.   |
+| `as`        | `"div" \| "span"` | `"div"` | Elemento raiz.                                        |
+
+### Skel Props
+
+| Prop        | Type              | Default        | Description                                                  |
+| ----------- | ----------------- | -------------- | --------------------------------------------------------- |
+| `className` | `string`          | —              | A caixa: tamanho e raio do shimmer, e o frame do conteúdo.  |
+| `children`  | `ReactNode`       | —              | O conteúdo real.                                            |
+| `loading`   | `boolean`         | contexto       | Sobrepõe o `loading` do boundary.                           |
+| `as`        | `"span" \| "div"` | `"span"`       | Use `"div"` para uma região em bloco.                       |

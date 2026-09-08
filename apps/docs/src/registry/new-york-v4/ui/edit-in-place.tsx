@@ -250,7 +250,10 @@ export function EditInPlace({
       data-slot="edit-in-place"
       data-editing={editing || undefined}
       animate={shake}
-      className={cn("inline-flex flex-col items-start gap-1", className)}
+      className={cn(
+        "not-prose inline-flex flex-col items-start gap-1",
+        className,
+      )}
     >
       <SurfaceProvider value={editing ? editLevel : substrate}>
         <motion.div

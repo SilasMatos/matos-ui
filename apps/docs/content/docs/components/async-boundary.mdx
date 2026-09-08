@@ -1,0 +1,130 @@
+---
+title: Async Boundary
+description: Um wrapper que recebe o resultado de um useQuery e resolve os quatro estados — pending, error, empty, success — com um sistema de movimento só.
+---
+
+<ComponentPreview name="async-boundary-demo" chromeless align="start" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/async-boundary.json" />
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Instale as dependências:</Step>
+
+<CodeBlockCommand command="npm install framer-motion lucide-react tailwind-merge" />
+
+<Step>Adicione o primitivo <code>elevated</code> e copie o componente.</Step>
+
+<ComponentSource name="async-boundary" title="components/matos-ui/async-boundary.tsx" />
+
+<Step>Ajuste os imports para o seu projeto.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { AsyncBoundary } from '@/components/matos-ui/async-boundary'
+```
+
+```tsx
+const query = useQuery({ queryKey: ['tasks'], queryFn: fetchTasks })
+
+<AsyncBoundary query={query}>
+  {(tasks) => <TaskList tasks={tasks} />}
+</AsyncBoundary>
+```
+
+Passe o resultado inteiro do `useQuery`. O boundary lê `status`, `data` e `error`
+e resolve para um dos quatro estados. `children` pode ser um node ou uma função
+que recebe a `data` já garantida não-vazia.
+
+## Os quatro estados
+
+| Estado | Quando | O que aparece |
+| --- | --- | --- |
+| `pending` | `status === 'pending'` | Um shimmer genérico (ou o seu `pending`). |
+| `error` | `status === 'error'` | Card de erro com "Try again". |
+| `empty` | `success` e `isEmpty(data)` | Estado vazio (padrão: `data` nula ou array vazio). |
+| `success` | `success` e não-vazio | `children`. |
+
+## Superfície: o erro sobe um degrau
+
+O estado de erro é `Elevated offset={1}` — uma superfície acima do conteúdo.
+Erro interrompe, e a elevação diz isso **sem vermelho**: o ícone é
+`text-muted-foreground`, o degrau é que carrega o peso.
+
+O skeleton e o conteúdo ficam no **mesmo offset** (rente). É isso que impede o
+salto visual na troca — nenhuma superfície aparece ou some, só o conteúdo dentro
+dela.
+
+## Movimento
+
+- O container anima a **própria altura** com `layout`, então a caixa cresce e
+  encolhe entre estados em vez de pular.
+- Os estados trocam via `AnimatePresence mode="wait"` — um por vez. Saída num
+  tween `ease.accelerate` (sai da frente), entrada em `spring.moderate`.
+- **Exceção:** o conteúdo entra em `spring.fast`. Ele é uma *resposta* — os dados
+  chegaram, mostre agora.
+- O skeleton pulsa num beat ambiente e recuado (três `duration.slower`, com um
+  atraso por linha que lê como onda). O contraste ambiente/responsivo é o ponto
+  do sistema de tiers.
+- `prefers-reduced-motion` mantém o crossfade, derruba a animação de altura, o
+  travel e o pulso.
+
+## Customizando cada estado
+
+```tsx
+<AsyncBoundary
+  query={query}
+  isEmpty={(data) => data.items.length === 0}
+  pending={<TaskListSkeleton />}
+  empty={{
+    title: 'Sem tarefas',
+    description: 'O que você criar aparece aqui.',
+    action: <Button onClick={create}>Nova tarefa</Button>,
+  }}
+  errorFallback={(error, retry) => <MyError error={error} onRetry={retry} />}
+>
+  {(data) => <TaskList tasks={data.items} />}
+</AsyncBoundary>
+```
+
+Um `query` desabilitado (`enabled: false`) fica em `pending` — mostra o skeleton
+até habilitar.
+
+## Reference
+
+### AsyncBoundary Props
+
+| Prop                | Type                                                        | Default        | Description                                                     |
+| ------------------- | ---------------------------------------------------------- | -------------- | ------------------------------------------------------------- |
+| `query`             | `{ status, data, error, refetch?, isFetching?, fetchStatus? }` | —          | O resultado do `useQuery` (tipado estruturalmente).            |
+| `children`          | `ReactNode \| ((data: T) => ReactNode)`                    | —              | Renderizado no sucesso.                                        |
+| `isEmpty`           | `(data: T) => boolean`                                     | nula / `[]`    | Decide o estado vazio.                                         |
+| `pending`           | `ReactNode`                                                | shimmer        | O estado de carregamento.                                      |
+| `empty`             | `ReactNode \| { icon, title, description, action }`        | estado padrão  | O estado vazio.                                                |
+| `errorFallback`     | `ReactNode \| ((error, retry) => ReactNode)`               | card padrão    | O estado de erro.                                              |
+| `onRetry`           | `() => void`                                               | `query.refetch`| Handler do "Try again".                                        |
+| `fetchingIndicator` | `boolean`                                                  | `true`         | Barra fina indeterminada enquanto um `success` faz refetch.    |
+
+`QueryLike<T>` e `EmptyStateConfig` são exportados — úteis para tipar um mock ou
+um adapter de outra lib de data-fetching.

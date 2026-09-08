@@ -167,7 +167,7 @@ function MenuPanel({
           data-surface={level}
           style={getMotionStyle(style)}
           className={cn(
-            "min-w-44 rounded-lg border border-border/40 p-1 text-sm outline-none",
+            "not-prose min-w-44 rounded-lg border border-border/40 p-1 text-sm outline-none",
             surfaceClasses(level, FIXED_SHADOW_LEVEL),
             className,
           )}

@@ -126,7 +126,11 @@ function PreviewWrapper({
         // desenha o limite, e `border-border` sobre `bg-surface-N` faz o canvas
         // ler como caixa contornada em vez de superfície.
         className={cn(
-          "preview relative flex w-full justify-center overflow-hidden rounded-xl p-4 sm:p-10",
+          // `not-prose` so DocsBody's `.prose` typography (margins on p/ul/table,
+          // list markers, table layout) never leaks into a demo — the canvas is
+          // the one place every registry component renders, and not all of them
+          // carry their own guard.
+          "not-prose preview relative flex w-full justify-center overflow-hidden rounded-xl p-4 sm:p-10",
           surfaceClasses(1),
           "data-[align=center]:items-center data-[align=end]:items-end data-[align=start]:items-start",
           chromeless
