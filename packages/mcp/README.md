@@ -32,9 +32,41 @@ This server is **read-only and side-effect-free**:
 
 ## Install
 
+**Claude Code**
+
 ```bash
 claude mcp add matos-ui -- npx -y @matos-ui/mcp@latest
 ```
+
+**Codex** — one command, or add the block by hand to `~/.codex/config.toml`:
+
+```bash
+codex mcp add matos-ui --env MATOS_UI_REGISTRY_URL=https://matos-ui.com -- npx -y @matos-ui/mcp@latest
+```
+
+```toml
+[mcp_servers.matos-ui]
+command = "npx"
+args = ["-y", "@matos-ui/mcp@latest"]
+env = { MATOS_UI_REGISTRY_URL = "https://matos-ui.com" }
+```
+
+**OpenCode** — in `opencode.json` (project) or `~/.config/opencode/opencode.json` (global):
+
+```json
+{
+  "mcp": {
+    "matos-ui": {
+      "type": "local",
+      "command": ["npx", "-y", "@matos-ui/mcp@latest"],
+      "enabled": true,
+      "environment": { "MATOS_UI_REGISTRY_URL": "https://matos-ui.com" }
+    }
+  }
+}
+```
+
+**Cursor** and any other stdio client — `command: "npx"`, `args: ["-y", "@matos-ui/mcp@latest"]` in the client's `mcp.json`.
 
 ## Tools
 

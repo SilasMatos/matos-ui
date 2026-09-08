@@ -15,6 +15,8 @@ Matos UI already follows the shadcn registry spec, so generic third-party MCPs t
 
 <TabsList>
   <TabsTrigger value="claude-code">Claude Code</TabsTrigger>
+  <TabsTrigger value="codex">Codex</TabsTrigger>
+  <TabsTrigger value="opencode">OpenCode</TabsTrigger>
   <TabsTrigger value="cursor">Cursor</TabsTrigger>
   <TabsTrigger value="manual">Manual (stdio)</TabsTrigger>
 </TabsList>
@@ -23,6 +25,55 @@ Matos UI already follows the shadcn registry spec, so generic third-party MCPs t
 <McpInstallClaude />
 
 Check it registered with `claude mcp list` — it should show `matos-ui` as connected.
+
+</TabsContent>
+
+<TabsContent value="codex">
+
+One command:
+
+<TerminalBlock
+  code={`codex mcp add matos-ui \\
+  --env MATOS_UI_REGISTRY_URL=https://matos-ui.com \\
+  -- npx -y @matos-ui/mcp@latest`}
+/>
+
+Or add it to `~/.codex/config.toml` by hand:
+
+<TerminalBlock
+  lang="toml"
+  label="~/.codex/config.toml"
+  code={`[mcp_servers.matos-ui]
+command = "npx"
+args = ["-y", "@matos-ui/mcp@latest"]
+env = { MATOS_UI_REGISTRY_URL = "https://matos-ui.com" }`}
+/>
+
+Verify with `codex mcp list`.
+
+</TabsContent>
+
+<TabsContent value="opencode">
+
+Add it to `opencode.json` (project root) or `~/.config/opencode/opencode.json` (global):
+
+<TerminalBlock
+  lang="json"
+  label="opencode.json"
+  code={`{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "matos-ui": {
+      "type": "local",
+      "command": ["npx", "-y", "@matos-ui/mcp@latest"],
+      "enabled": true,
+      "environment": {
+        "MATOS_UI_REGISTRY_URL": "https://matos-ui.com"
+      }
+    }
+  }
+}`}
+/>
 
 </TabsContent>
 
