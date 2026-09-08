@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "cover-image-demo",
+  "registryDependencies": [
+    "cover-image",
+    "elevated"
+  ],
+  "files": [
+    {
+      "path": "components/matos-ui/examples/cover-image-demo.tsx",
+      "content": "\"use client\";\n\nimport { CoverImage } from \"@/components/matos-ui/cover-image\";\nimport { Elevated } from \"@/components/matos-ui/elevated\";\n\nconst BOOKS: Array<{\n  id: string;\n  label: string;\n  alt: string;\n  src?: string | null;\n  sanitize?: boolean;\n  placeholder?: string;\n}> = [\n  {\n    id: \"gatsby\",\n    label: \"loads\",\n    alt: \"The Great Gatsby\",\n    src: \"https://covers.openlibrary.org/b/isbn/9780743273565-L.jpg\",\n  },\n  {\n    id: \"mockingbird\",\n    label: \"colour placeholder\",\n    alt: \"To Kill a Mockingbird\",\n    src: \"https://covers.openlibrary.org/b/isbn/9780061120084-L.jpg\",\n    placeholder: \"oklch(0.5 0.1 150)\",\n  },\n  {\n    id: \"orwell\",\n    label: \"http:// — sanitize on\",\n    alt: \"1984\",\n    src: \"http://books.google.com/books/content?id=kotPYEqx7kMC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api\",\n    sanitize: true,\n  },\n  {\n    id: \"missing\",\n    label: \"no src\",\n    alt: \"The Pale King\",\n    src: null,\n  },\n  {\n    id: \"broken\",\n    label: \"src that 404s\",\n    alt: \"Infinite Jest\",\n    src: \"https://covers.openlibrary.org/b/isbn/0000000000000-L.jpg?default=false\",\n  },\n  {\n    id: \"brave\",\n    label: \"loads\",\n    alt: \"Brave New World\",\n    src: \"https://covers.openlibrary.org/b/isbn/9780060850524-L.jpg\",\n  },\n];\n\nexport default function CoverImageDemo() {\n  return (\n    <div className=\"mx-auto w-full max-w-md space-y-8 py-6\">\n      <div className=\"grid grid-cols-3 gap-x-4 gap-y-3\">\n        {BOOKS.map((book) => (\n          <figure key={book.id} className=\"flex flex-col gap-2\">\n            <CoverImage\n              src={book.src}\n              alt={book.alt}\n              sanitize={book.sanitize}\n              placeholder={book.placeholder}\n            />\n            <figcaption className=\"text-[11px] text-muted-foreground\">\n              {book.label}\n            </figcaption>\n          </figure>\n        ))}\n      </div>\n\n      <div className=\"space-y-2\">\n        <p className=\"text-muted-foreground text-xs\">\n          The same missing cover at two depths — the fallback is a surface, so\n          it steps with its substrate.\n        </p>\n        <div className=\"grid grid-cols-2 gap-4\">\n          {(\n            [\n              [\"in a card\", 1],\n              [\"in a detail dialog\", 4],\n            ] as const\n          ).map(([label, offset]) => (\n            <Elevated key={label} offset={offset} className=\"rounded-xl p-4\">\n              <p className=\"mb-3 font-mono text-[11px] text-muted-foreground\">\n                {label}\n              </p>\n              <CoverImage src={null} alt=\"No cover\" className=\"mx-auto w-20\" />\n            </Elevated>\n          ))}\n        </div>\n      </div>\n    </div>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/cover-image-demo.tsx"
+    }
+  ],
+  "type": "registry:example"
+}

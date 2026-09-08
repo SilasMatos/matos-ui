@@ -230,6 +230,94 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
   },
+  "cover-image": {
+    name: "cover-image",
+    type: "registry:ui",
+    registryDependencies: ["elevated", "motion-tokens"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/cover-image.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/ui/cover-image.tsx");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "async-boundary": {
+    name: "async-boundary",
+    type: "registry:ui",
+    registryDependencies: ["elevated", "motion-tokens"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/async-boundary.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/ui/async-boundary.tsx");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "skeleton-morph": {
+    name: "skeleton-morph",
+    type: "registry:ui",
+    registryDependencies: ["motion-tokens"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/skeleton-morph.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/ui/skeleton-morph.tsx");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "inline-select": {
+    name: "inline-select",
+    type: "registry:ui",
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
+    files: [
+      {
+        path: "src/registry/new-york-v4/ui/inline-select.tsx",
+        type: "registry:ui",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/new-york-v4/ui/inline-select.tsx");
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
   "edit-in-place": {
     name: "edit-in-place",
     type: "registry:ui",
@@ -2003,6 +2091,98 @@ export const Index: Record<string, any> = {
     component: React.lazy(async () => {
       const mod = await import(
         "@/registry/new-york-v4/examples/confirm-button-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "cover-image-demo": {
+    name: "cover-image-demo",
+    type: "registry:example",
+    registryDependencies: ["cover-image", "elevated"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/cover-image-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/cover-image-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "async-boundary-demo": {
+    name: "async-boundary-demo",
+    type: "registry:example",
+    registryDependencies: ["async-boundary"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/async-boundary-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/async-boundary-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "skeleton-morph-demo": {
+    name: "skeleton-morph-demo",
+    type: "registry:example",
+    registryDependencies: ["skeleton-morph"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/skeleton-morph-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/skeleton-morph-demo.tsx"
+      );
+      const exportName =
+        Object.keys(mod).find(
+          (key) =>
+            typeof mod[key] === "function" || typeof mod[key] === "object",
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+  },
+  "inline-select-demo": {
+    name: "inline-select-demo",
+    type: "registry:example",
+    registryDependencies: ["inline-select"],
+    files: [
+      {
+        path: "src/registry/new-york-v4/examples/inline-select-demo.tsx",
+        type: "registry:example",
+        target: "",
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import(
+        "@/registry/new-york-v4/examples/inline-select-demo.tsx"
       );
       const exportName =
         Object.keys(mod).find(

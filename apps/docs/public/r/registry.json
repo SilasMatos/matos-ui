@@ -272,6 +272,7 @@
     {
       "name": "confirm-button",
       "type": "registry:ui",
+      "description": "A destructive action that arms in place instead of opening a dialog — the trash slides aside and a ✓ / ✕ pair fills the space it left, cursor landing on cancel.",
       "cssVars": {
         "theme": {
           "ease-lift": "cubic-bezier(0.4, 0, 0.2, 1)",
@@ -321,8 +322,119 @@
       ]
     },
     {
+      "name": "cover-image",
+      "type": "registry:ui",
+      "description": "An image that never shows a broken frame — a missing src, a 404, a mixed-content block or a decode failure all resolve to an elevated fallback, not a flat placeholder. Optional URL sanitiser for Google Books thumbnails.",
+      "dependencies": [
+        "framer-motion",
+        "tailwind-merge",
+        "tailwind-variants",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "elevated",
+        "motion-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/cover-image.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "async-boundary",
+      "type": "registry:ui",
+      "description": "Wraps a TanStack Query result and resolves its four states — pending, error, empty, success — on one motion system. Error lifts a rung; skeleton and content stay flush so the swap doesn't jump.",
+      "cssVars": {
+        "theme": {
+          "ease-lift": "cubic-bezier(0.4, 0, 0.2, 1)",
+          "duration-lift": "320ms",
+          "duration-lift-press": "120ms"
+        }
+      },
+      "css": {
+        "@utility hover-lift": {
+          "--lift": "2px",
+          "transition-property": "translate, scale, box-shadow, background-color, border-color, border-radius, color, opacity",
+          "transition-duration": "var(--duration-lift)",
+          "transition-timing-function": "var(--ease-lift)",
+          "@media (hover: hover)": {
+            "&:hover": {
+              "translate": "0 calc(var(--lift) * -1)"
+            }
+          },
+          "&:active": {
+            "translate": "0 0",
+            "transition-duration": "var(--duration-lift-press)"
+          },
+          "@media (prefers-reduced-motion: reduce)": {
+            "transition-property": "background-color, border-color, color, opacity",
+            "&:hover, &:active": {
+              "translate": "none",
+              "scale": "none"
+            }
+          }
+        }
+      },
+      "dependencies": [
+        "framer-motion",
+        "lucide-react",
+        "tailwind-merge"
+      ],
+      "registryDependencies": [
+        "elevated",
+        "motion-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/async-boundary.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "skeleton-morph",
+      "type": "registry:ui",
+      "description": "A skeleton whose geometry is the content's geometry — each Skel is sized to its final content, so the arrival is a crossfade in place, not a rectangle swapped for real content and everything jumping.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "registryDependencies": [
+        "motion-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/skeleton-morph.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "inline-select",
+      "type": "registry:ui",
+      "description": "A value picked in place — the current value is a pill, a click opens a small menu of options. The pill magic-moves on spring.fast when a status change re-sorts the list and its row travels on spring.moderate.",
+      "dependencies": [
+        "@base-ui/react",
+        "framer-motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "motion-tokens",
+        "surface-classes",
+        "surface-context"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/ui/inline-select.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "edit-in-place",
       "type": "registry:ui",
+      "description": "Text that becomes an input where it sits — one click and the box climbs a rung and morphs its padding, radius and border while you edit; committing drops it back.",
       "dependencies": [
         "framer-motion",
         "lucide-react",
@@ -2218,6 +2330,59 @@
       "files": [
         {
           "path": "src/registry/new-york-v4/examples/confirm-button-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "cover-image-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "cover-image",
+        "elevated"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/cover-image-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "async-boundary-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "async-boundary"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/async-boundary-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "skeleton-morph-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "skeleton-morph"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/skeleton-morph-demo.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "inline-select-demo",
+      "type": "registry:example",
+      "registryDependencies": [
+        "inline-select"
+      ],
+      "files": [
+        {
+          "path": "src/registry/new-york-v4/examples/inline-select-demo.tsx",
           "type": "registry:example"
         }
       ]

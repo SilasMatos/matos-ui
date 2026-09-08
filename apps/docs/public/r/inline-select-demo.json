@@ -1,0 +1,16 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "inline-select-demo",
+  "registryDependencies": [
+    "inline-select"
+  ],
+  "files": [
+    {
+      "path": "components/matos-ui/examples/inline-select-demo.tsx",
+      "content": "\"use client\";\n\nimport { motion } from \"framer-motion\";\nimport { useState } from \"react\";\nimport { spring } from \"@/lib/motion-tokens\";\nimport { InlineSelect } from \"@/components/matos-ui/inline-select\";\n\nconst STATUSES = [\n  {\n    value: \"backlog\",\n    label: \"Backlog\",\n    pill: \"bg-muted text-muted-foreground\",\n  },\n  { value: \"active\", label: \"Active\", pill: \"bg-primary/12 text-foreground\" },\n  {\n    value: \"done\",\n    label: \"Done\",\n    pill: \"bg-secondary text-secondary-foreground\",\n  },\n];\n\nconst RANK: Record<string, number> = { backlog: 0, active: 1, done: 2 };\n\ntype Row = { id: string; title: string; status: string };\n\nconst INITIAL: Row[] = [\n  { id: \"a\", title: \"Auth rewrite\", status: \"active\" },\n  { id: \"b\", title: \"Design tokens\", status: \"done\" },\n  { id: \"c\", title: \"Onboarding flow\", status: \"backlog\" },\n  { id: \"d\", title: \"Search index\", status: \"active\" },\n  { id: \"e\", title: \"Billing webhooks\", status: \"backlog\" },\n];\n\nexport default function InlineSelectDemo() {\n  const [rows, setRows] = useState(INITIAL);\n\n  const setStatus = (id: string, status: string) =>\n    setRows((rs) => rs.map((r) => (r.id === id ? { ...r, status } : r)));\n\n  const sorted = [...rows].sort(\n    (a, b) => RANK[a.status] - RANK[b.status] || a.title.localeCompare(b.title),\n  );\n\n  return (\n    <div className=\"mx-auto w-full max-w-md py-6\">\n      <p className=\"mb-2 text-muted-foreground text-xs\">\n        Sorted by status. Change one — the row travels, and the pill leads it.\n      </p>\n      <ul className=\"overflow-hidden rounded-xl border border-border\">\n        {sorted.map((row) => (\n          <motion.li\n            key={row.id}\n            layout\n            transition={spring.moderate}\n            className=\"flex items-center justify-between gap-3 border-border border-b bg-background px-3 py-2.5 text-sm last:border-b-0\"\n          >\n            <span className=\"min-w-0 truncate\">{row.title}</span>\n            <InlineSelect\n              label={`Status of ${row.title}`}\n              value={row.status}\n              onValueChange={(s) => setStatus(row.id, s)}\n              options={STATUSES}\n              layoutId={`status-${row.id}`}\n              align=\"end\"\n            />\n          </motion.li>\n        ))}\n      </ul>\n    </div>\n  );\n}\n",
+      "type": "registry:example",
+      "target": "components/matos-ui/examples/inline-select-demo.tsx"
+    }
+  ],
+  "type": "registry:example"
+}
