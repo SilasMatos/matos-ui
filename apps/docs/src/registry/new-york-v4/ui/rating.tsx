@@ -15,7 +15,7 @@ import {
 
 export const ratingVariants = tv({
   base: [
-    "inline-flex items-center outline-none",
+    "not-prose inline-flex items-center outline-none",
     "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-md",
     "data-[disabled=true]:cursor-not-allowed data-[disabled=true]:opacity-50",
   ],

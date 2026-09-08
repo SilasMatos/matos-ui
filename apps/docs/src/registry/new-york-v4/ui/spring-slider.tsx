@@ -7,7 +7,7 @@ import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
 
 export const springSliderVariants = tv({
-  base: ["group relative w-full touch-none select-none"],
+  base: ["not-prose group relative w-full touch-none select-none"],
   variants: {
     size: {
       sm: "max-w-[220px]",

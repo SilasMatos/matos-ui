@@ -8,7 +8,7 @@ import { tv, type VariantProps } from "tailwind-variants";
 
 export const bouncyToggleVariants = tv({
   base: [
-    "relative inline-flex shrink-0 cursor-pointer items-center rounded-full p-1 outline-none transition-colors",
+    "not-prose relative inline-flex shrink-0 cursor-pointer items-center rounded-full p-1 outline-none transition-colors",
     "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
     "disabled:cursor-not-allowed disabled:opacity-50",
   ],

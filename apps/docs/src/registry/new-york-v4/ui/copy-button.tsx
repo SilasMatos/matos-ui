@@ -50,7 +50,7 @@ function useClipboard(timeout = 2000) {
 
 export const copyButtonVariants = tv({
   base: [
-    "hover-lift [--lift:1px] inline-flex shrink-0 items-center justify-center gap-1.5 rounded-md font-medium",
+    "not-prose hover-lift [--lift:1px] inline-flex shrink-0 items-center justify-center gap-1.5 rounded-md font-medium",
     "text-muted-foreground outline-none hover:bg-muted hover:text-foreground",
     "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
     "active:scale-[0.96] motion-reduce:active:scale-100",

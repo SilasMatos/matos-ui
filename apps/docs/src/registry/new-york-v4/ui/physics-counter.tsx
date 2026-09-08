@@ -8,7 +8,7 @@ import { tv, type VariantProps } from "tailwind-variants";
 
 export const physicsCounterVariants = tv({
   base: [
-    "inline-flex items-baseline font-semibold tabular-nums tracking-tight",
+    "not-prose inline-flex items-baseline font-semibold tabular-nums tracking-tight",
   ],
   variants: {
     size: {

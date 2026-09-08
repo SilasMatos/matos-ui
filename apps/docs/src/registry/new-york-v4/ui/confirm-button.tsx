@@ -30,7 +30,7 @@ type Phase = "idle" | "armed" | "pending" | "confirming" | "cancelling";
 type Size = "sm" | "md" | "lg";
 
 export const confirmButtonVariants = tv({
-  base: "relative inline-flex w-fit items-center p-1 text-foreground transition-colors",
+  base: "not-prose relative inline-flex w-fit items-center p-1 text-foreground transition-colors",
   variants: {
     size: {
       sm: "h-8",

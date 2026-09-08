@@ -15,7 +15,7 @@ import { tv, type VariantProps } from "tailwind-variants";
 
 export const magneticCardVariants = tv({
   base: [
-    "group relative overflow-hidden rounded-2xl border border-border bg-card text-card-foreground",
+    "not-prose group relative overflow-hidden rounded-2xl border border-border bg-card text-card-foreground",
     "shadow-sm outline-none [transform-style:preserve-3d]",
     "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
   ],

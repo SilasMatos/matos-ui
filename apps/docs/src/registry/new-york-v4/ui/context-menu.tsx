@@ -249,7 +249,7 @@ export function ContextMenuContent({
           data-slot="context-menu-content"
           className={cn(
             // No border: the shadow-surface ring on <Elevated> draws the edge.
-            "max-h-(--available-height) min-w-40 origin-(--transform-origin) overflow-x-hidden overflow-y-auto rounded-xl p-1 outline-none",
+            "not-prose max-h-(--available-height) min-w-40 origin-(--transform-origin) overflow-x-hidden overflow-y-auto rounded-xl p-1 outline-none",
             className,
           )}
           render={(popupProps, state) => (

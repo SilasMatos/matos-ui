@@ -8,7 +8,7 @@ import { tv, type VariantProps } from "tailwind-variants";
 
 export const spotlightCardVariants = tv({
   base: [
-    "group relative w-full overflow-hidden rounded-2xl border border-border",
+    "not-prose group relative w-full overflow-hidden rounded-2xl border border-border",
     "bg-secondary text-foreground transition-colors",
   ],
   variants: {
