@@ -215,13 +215,13 @@ mesma superfície.
 
 | Tier | `visualDuration` | `bounce` | `exit` | Para |
 |---|---|---|---|---|
-| `fast` | `0.15s` | `0.10` | `0.10s` | Micro-feedback: toggle, checkbox, lift de um degrau. |
-| `snappy` | `0.11s` | `0.00` | `0.08s` | Follow de latência zero: sheet arrastada, botão magnético, elemento seguindo o cursor. Opt-in manual. |
-| `moderate` | `0.28s` | `0.15` | `0.20s` | Painéis que precisam pousar exato: dropdown, tabs, drawer, select. |
-| `slow` | `0.42s` | `0.20` | `0.30s` | Dialog e sheet — distância suficiente para o overshoot ler como vivo. |
-| `gentle` | `0.60s` | `0.06` | `0.40s` | Movimento ambiente: backdrop surgindo, hero assentando no load, seção entrando no scroll. Opt-in manual. |
-| `morph` | `0.75s` | `0.12` | `0.52s` | Forma, não distância: `layout` mudando largura, altura e raio juntos. |
-| `playful` | `0.50s` | `0.45` | `0.35s` | Um tom, não uma velocidade. Opt-in manual. |
+| `fast` | `0.24s` | `0.16` | `0.16s` | Micro-feedback: toggle, checkbox, lift de um degrau. |
+| `snappy` | `0.14s` | `0.00` | `0.10s` | Follow de latência zero: sheet arrastada, botão magnético, elemento seguindo o cursor. Opt-in manual. |
+| `moderate` | `0.38s` | `0.18` | `0.26s` | Painéis que precisam pousar exato: dropdown, tabs, drawer, select. |
+| `slow` | `0.52s` | `0.18` | `0.36s` | Dialog e sheet — distância suficiente para o overshoot ler como vivo. |
+| `gentle` | `0.72s` | `0.06` | `0.48s` | Movimento ambiente: backdrop surgindo, hero assentando no load, seção entrando no scroll. Opt-in manual. |
+| `morph` | `0.85s` | `0.12` | `0.58s` | Forma, não distância: `layout` mudando largura, altura e raio juntos. |
+| `playful` | `0.56s` | `0.42` | `0.38s` | Um tom, não uma velocidade. Opt-in manual. |
 
 **`snappy` é o oposto de `playful`.** Onde `playful` adiciona caráter, `snappy`
 remove todo ele: bounce 0 e uma `visualDuration` menor que `fast`, porque
@@ -253,15 +253,17 @@ de compasso.
 carregam deliberadamente só um campo — o outro seria peso morto com aparência de
 autoridade.
 
-**Por que nada é criticamente amortecido.** `fast` e `moderate` ficavam em
-`bounce: 0`, no raciocínio de que um painel que precisa pousar exato não deve
-ultrapassar. O raciocínio estava certo e o valor era literal demais: bounce zero
-somado a duração muito curta é a receita de movimento que lê como troca de
-estado, não como transição — mecânico, sem desaceleração para o olho seguir.
+**Calmo, não rápido.** `fast` e `moderate` já ficaram em `bounce: 0` e em
+durações bem mais curtas (0.15s / 0.28s), no raciocínio de que um painel que
+precisa pousar exato não deve ultrapassar nem demorar. Cada versão era literal
+demais: curto e sem bounce lê como troca de estado, não como transição —
+mecânico, sem desaceleração para o olho seguir. Movimento que registra como
+*confortável*, e não só presente, quer tempo para o próprio assentamento
+aparecer.
 
-Um bounce pequeno (0.10–0.15) não tem overshoot perceptível nessas distâncias; o
+Um bounce pequeno (0.12–0.18) não tem overshoot perceptível nessas distâncias; o
 que ele compra é a desaceleração orgânica no final. Se um painel específico
-algum dia ler como instável, leve **aquele** tier a 0, não o par.
+algum dia ler como instável, baixe o bounce **daquele** tier, não do par.
 
 **`moderate` não é simplesmente "mais rápido que `slow`".** Os dois pousam em
 velocidade percebida parecida; a diferença é onde terminam. O bounce de
@@ -272,7 +274,7 @@ do item que o usuário já está alcançando.
 **`morph` é o fora-da-curva.** É o único tier mais longo que os acima dele,
 porque é o único medindo outra coisa. Os outros movem um elemento que continua
 sendo ele mesmo. `morph` é para um elemento *virando* outro, onde a caixa cruza
-centenas de pixels de largura e altura de uma vez. Nos 0.42s de `slow` isso lê
+centenas de pixels de largura e altura de uma vez. Nos 0.52s de `slow` isso lê
 como corte seco, e no bounce de `slow` a borda distante de uma caixa larga
 oscila visivelmente depois de pousar.
 
@@ -448,18 +450,20 @@ de hover, anel de foco, mudança de cor — o mesmo caráter vive em duas variá
 de tema:
 
 ```css
---ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
---duration-moderate: 280ms;
---duration-slow: 420ms;
+--ease-spring: cubic-bezier(0.3, 0.86, 0.36, 1);
+--duration-moderate: 380ms;
+--duration-slow: 520ms;
 --default-transition-duration: var(--duration-moderate);
 --default-transition-timing-function: var(--ease-spring);
 ```
 
-Esses dois batem com `spring.moderate` e `spring.slow` exatamente, e isso é
-resultado e não coincidência: os dois lados foram afinados por sensação, de forma
-independente, e os dois chegaram em 280ms e 420ms. **Mantenha-os em passo** — um
-tier e sua contraparte CSS se afastando é um preenchimento de hover e o painel em
-que ele está discordando visivelmente sobre a velocidade desta interface.
+Esses dois batem com `spring.moderate` e `spring.slow` — não por acaso: os dois
+lados são afinados por sensação e movem juntos. A escala já passou por três
+ajustes, todos na mesma direção (mais longo, mais macio a cada vez), porque cada
+versão anterior ainda lia como rápida demais para registrar como *conforto* em
+vez de só presença. **Mantenha-os em passo** — um tier e sua contraparte CSS se
+afastando é um preenchimento de hover e o painel em que ele está discordando
+visivelmente sobre a velocidade desta interface.
 
 Como `--default-transition-*` está definido, qualquer `transition-colors` ou
 `transition-opacity` sem timing próprio já herda isso. Só se escreve
@@ -482,13 +486,13 @@ token, `hover-lift`, não uma receita por componente:
 
 ```css
 --ease-lift: cubic-bezier(0.4, 0, 0.2, 1);
---duration-lift: 320ms;
---duration-lift-press: 120ms;
+--duration-lift: 380ms;
+--duration-lift-press: 150ms;
 ```
 
-A curva **não** é `--ease-spring`. Aquela cobre ~90% do percurso nos primeiros
-15% do tempo — certo para um painel cruzando distância real, errado para um hover
-de 2px, onde lê como espasmo em vez de elevação. `--ease-lift` acelera antes de
+A curva **não** é `--ease-spring`. Aquela ainda é front-loaded, a maior parte do
+percurso gasta cedo — certo para um painel cruzando distância real, errado para
+um hover de 2px, onde lê como espasmo em vez de elevação. `--ease-lift` acelera antes de
 desacelerar, então o controle flutua para cima em vez de saltar.
 
 **O utilitário é dono da lista de propriedades de transição também**, o que é

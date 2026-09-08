@@ -41,7 +41,7 @@ import {
  *   of width at those timings reads as a snap. Bounce stays low for the same
  *   reason: overshoot on a large dimension change reads as unstable rather
  *   than alive. Like playful, it is never reached through motionForOffset.
- * - playful: a character tier, not a speed. The bounce (0.45) is loud on
+ * - playful: a character tier, not a speed. The bounce (0.42) is loud on
  *   purpose, for the one-off moment worth celebrating: a deploy that finished,
  *   a goal that was hit. It is never reached through motionForOffset — a
  *   component opts into it by hand, so no ordinary overlay turns festive by
@@ -67,65 +67,68 @@ import {
  * deliberately carry only the one field — the other would be dead weight that
  * looks authoritative.
  *
- * ## Why nothing common is critically damped any more
+ * ## Calm, not quick
  *
  * `fast` and `moderate` used to sit at `bounce: 0`, on the reasoning that a
- * panel which must land exactly should not overshoot. The reasoning was right
- * and the value was too literal: zero bounce plus a very short duration is the
- * recipe for movement that reads as a state swap rather than a transition —
- * mechanical, and with no deceleration for the eye to follow.
+ * panel which must land exactly should not overshoot. That was too literal:
+ * zero bounce plus a very short duration reads as a state swap rather than a
+ * transition — mechanical, with no deceleration for the eye to follow.
  *
- * A small bounce (0.10–0.15) still has no perceptible overshoot at these
- * distances; what it buys is the organic slow-down at the end. If a specific
- * panel ever reads as unstable, take *that* tier back to 0 rather than the
- * pair of them. `snappy` is the deliberate exception — see its note above.
+ * The scale has been through two tuning passes since, both in the same
+ * direction — every tier a little longer, a little softer. Movement that
+ * registers as *comfortable* rather than merely fast wants time for its own
+ * settle to be visible: `fast` at 0.24s with a 0.16 bounce eases into place
+ * where 0.15s / 0.10 stopped dead. A small bounce (0.12–0.18) still has no
+ * perceptible overshoot at these distances; what it buys is the organic
+ * slow-down at the end. If a specific panel ever reads as unstable, take
+ * *that* tier's bounce down rather than the pair of them. `snappy` is the
+ * deliberate exception — it stays tight because it follows the hand.
  *
  * The `exit` durations are plain tweens (not springs — nothing needs character
- * on the way out) held at roughly 70% of their tier's entrance, which is the
- * ratio the previous scale already used.
+ * on the way out) held at roughly 70% of their tier's entrance.
  */
 export const spring = {
   fast: {
     type: "spring" as const,
-    visualDuration: 0.15,
-    bounce: 0.1,
-    exit: { duration: 0.1 },
+    visualDuration: 0.24,
+    bounce: 0.16,
+    exit: { duration: 0.16 },
   },
   snappy: {
     type: "spring" as const,
-    visualDuration: 0.11,
+    visualDuration: 0.14,
     bounce: 0,
-    exit: { duration: 0.08 },
+    exit: { duration: 0.1 },
   },
   moderate: {
     type: "spring" as const,
-    visualDuration: 0.28,
-    bounce: 0.15,
-    exit: { duration: 0.2 },
+    visualDuration: 0.38,
+    bounce: 0.18,
+    exit: { duration: 0.26 },
   },
   slow: {
     type: "spring" as const,
-    visualDuration: 0.42,
-    bounce: 0.2,
-    exit: { duration: 0.3 },
+    visualDuration: 0.52,
+    bounce: 0.18,
+    exit: { duration: 0.36 },
   },
   gentle: {
     type: "spring" as const,
-    visualDuration: 0.6,
+    visualDuration: 0.72,
     bounce: 0.06,
-    exit: { duration: 0.4 },
+    exit: { duration: 0.48 },
   },
   morph: {
     type: "spring" as const,
-    visualDuration: 0.75,
+    visualDuration: 0.85,
     bounce: 0.12,
-    exit: { duration: 0.52 },
+    exit: { duration: 0.58 },
   },
   playful: {
     type: "spring" as const,
-    visualDuration: 0.5,
-    bounce: 0.45,
-    exit: { duration: 0.35 },
+    visualDuration: 0.56,
+    bounce: 0.42,
+    exit: { duration: 0.38 },
   },
 } as const;
 
@@ -167,17 +170,19 @@ export const ease = {
 export type EaseName = keyof typeof ease;
 
 /**
- * Tween durations, in seconds, for the `ease`-driven half of the system. The
- * first three are the exact JS counterpart of `--duration-*` in globals.css and
- * must move together with them — see DESIGN.md §3.8. `slower` has no CSS twin;
- * it is for `gentle`-tier tweens (ambient reveals, hero intros).
+ * Tween durations, in seconds, for the `ease`-driven half of the system.
+ * `fast` / `moderate` / `slow` are the JS counterpart of the CSS timing in
+ * globals.css (`--duration-moderate` / `--duration-slow`, and the `duration-260`
+ * literal that stands in for the fast tier) and must move together with them —
+ * see DESIGN.md §3.8. `slower` has no CSS twin; it is for `gentle`-tier tweens
+ * (ambient reveals, hero intros).
  */
 export const duration = {
   instant: 0,
-  fast: 0.18,
-  moderate: 0.28,
-  slow: 0.42,
-  slower: 0.6,
+  fast: 0.26,
+  moderate: 0.38,
+  slow: 0.52,
+  slower: 0.72,
 } as const;
 
 export type DurationName = keyof typeof duration;
