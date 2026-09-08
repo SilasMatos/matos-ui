@@ -248,6 +248,8 @@ export const ui: Registry["items"] = [
   {
     name: "confirm-button",
     type: "registry:ui",
+    description:
+      "A destructive action that arms in place instead of opening a dialog — the trash slides aside and a ✓ / ✕ pair fills the space it left, cursor landing on cancel.",
     cssVars: liftCssVars,
     css: liftCss,
     dependencies: [...physicsDeps, "lucide-react"],
@@ -255,8 +257,52 @@ export const ui: Registry["items"] = [
     files: [{ path: "ui/confirm-button.tsx", type: "registry:ui" }],
   },
   {
+    name: "cover-image",
+    type: "registry:ui",
+    description:
+      "An image that never shows a broken frame — a missing src, a 404, a mixed-content block or a decode failure all resolve to an elevated fallback, not a flat placeholder. Optional URL sanitiser for Google Books thumbnails.",
+    dependencies: [...physicsDeps, "lucide-react"],
+    registryDependencies: ["elevated", "motion-tokens"],
+    files: [{ path: "ui/cover-image.tsx", type: "registry:ui" }],
+  },
+  {
+    name: "async-boundary",
+    type: "registry:ui",
+    description:
+      "Wraps a TanStack Query result and resolves its four states — pending, error, empty, success — on one motion system. Error lifts a rung; skeleton and content stay flush so the swap doesn't jump.",
+    cssVars: liftCssVars,
+    css: liftCss,
+    dependencies: ["framer-motion", "lucide-react", "tailwind-merge"],
+    registryDependencies: ["elevated", "motion-tokens"],
+    files: [{ path: "ui/async-boundary.tsx", type: "registry:ui" }],
+  },
+  {
+    name: "skeleton-morph",
+    type: "registry:ui",
+    description:
+      "A skeleton whose geometry is the content's geometry — each Skel is sized to its final content, so the arrival is a crossfade in place, not a rectangle swapped for real content and everything jumping.",
+    dependencies: ["framer-motion"],
+    registryDependencies: ["motion-tokens"],
+    files: [{ path: "ui/skeleton-morph.tsx", type: "registry:ui" }],
+  },
+  {
+    name: "inline-select",
+    type: "registry:ui",
+    description:
+      "A value picked in place — the current value is a pill, a click opens a small menu of options. The pill magic-moves on spring.fast when a status change re-sorts the list and its row travels on spring.moderate.",
+    dependencies: ["@base-ui/react", "framer-motion", "lucide-react"],
+    registryDependencies: [
+      "motion-tokens",
+      "surface-classes",
+      "surface-context",
+    ],
+    files: [{ path: "ui/inline-select.tsx", type: "registry:ui" }],
+  },
+  {
     name: "edit-in-place",
     type: "registry:ui",
+    description:
+      "Text that becomes an input where it sits — one click and the box climbs a rung and morphs its padding, radius and border while you edit; committing drops it back.",
     dependencies: ["framer-motion", "lucide-react", "tailwind-variants"],
     registryDependencies: [
       "motion-tokens",

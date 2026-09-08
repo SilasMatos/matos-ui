@@ -74,6 +74,38 @@ export const examples: Registry["items"] = [
     ],
   },
   {
+    name: "cover-image-demo",
+    type: "registry:example",
+    registryDependencies: ["cover-image", "elevated"],
+    files: [
+      { path: "examples/cover-image-demo.tsx", type: "registry:example" },
+    ],
+  },
+  {
+    name: "async-boundary-demo",
+    type: "registry:example",
+    registryDependencies: ["async-boundary"],
+    files: [
+      { path: "examples/async-boundary-demo.tsx", type: "registry:example" },
+    ],
+  },
+  {
+    name: "skeleton-morph-demo",
+    type: "registry:example",
+    registryDependencies: ["skeleton-morph"],
+    files: [
+      { path: "examples/skeleton-morph-demo.tsx", type: "registry:example" },
+    ],
+  },
+  {
+    name: "inline-select-demo",
+    type: "registry:example",
+    registryDependencies: ["inline-select"],
+    files: [
+      { path: "examples/inline-select-demo.tsx", type: "registry:example" },
+    ],
+  },
+  {
     name: "edit-in-place-demo",
     type: "registry:example",
     registryDependencies: ["edit-in-place", "elevated"],

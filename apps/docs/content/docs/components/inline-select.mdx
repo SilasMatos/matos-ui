@@ -1,0 +1,116 @@
+---
+title: Inline Select
+description: Um valor escolhido no lugar — em repouso é só a pílula do valor atual, um clique abre o menu de opções. A pílula faz magic-move quando a linha dela reordena.
+---
+
+<ComponentPreview name="inline-select-demo" chromeless align="start" />
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+<CodeBlockCommand command="npx shadcn@latest add https://matos-ui.com/r/inline-select.json" />
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Instale as dependências:</Step>
+
+<CodeBlockCommand command="npm install @base-ui/react framer-motion lucide-react" />
+
+<Step>Copie o componente.</Step>
+
+<ComponentSource name="inline-select" title="components/matos-ui/inline-select.tsx" />
+
+<Step>Ajuste os imports para o seu projeto.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { InlineSelect } from '@/components/matos-ui/inline-select'
+```
+
+```tsx
+<InlineSelect
+  label="Status"
+  value={task.status}
+  onValueChange={(s) => updateStatus(task.id, s)}
+  options={[
+    { value: 'backlog', label: 'Backlog', pill: 'bg-muted text-muted-foreground' },
+    { value: 'active', label: 'Active', pill: 'bg-primary/12 text-foreground' },
+    { value: 'done', label: 'Done', pill: 'bg-secondary text-secondary-foreground' },
+  ]}
+/>
+```
+
+Sem chrome de campo — em repouso é a pílula do valor atual, com um chevron que
+aparece no hover/foco. Um clique abre o menu; escolher uma opção confirma e
+fecha.
+
+`pill` é uma classe token-based por opção (`bg-primary/10 text-foreground`), não
+uma cor solta — o pill segue o customizer de paletas como qualquer superfície.
+
+## Magic-move na reordenação
+
+O segundo motivo do componente: numa tabela ordenada por status, mudar o status
+de uma linha reordena a estante. A pílula carrega `layout` (e um `layoutId`
+opcional), então enquanto a linha viaja para a nova posição em `spring.moderate`,
+a pílula voa para lá em `spring.fast` — chega antes, a linha alcança.
+
+```tsx
+{sorted.map((row) => (
+  <motion.li key={row.id} layout transition={spring.moderate}>
+    <span>{row.title}</span>
+    <InlineSelect
+      label={`Status of ${row.title}`}
+      value={row.status}
+      onValueChange={(s) => setStatus(row.id, s)}
+      options={STATUSES}
+      layoutId={`status-${row.id}`}
+    />
+  </motion.li>
+))}
+```
+
+Dois `layout` simultâneos, dois tiers. `layoutId` é o que faz a pílula
+sobreviver a uma lista virtualizada (linha desmonta e remonta noutra posição);
+sem virtualização, o `layout` na pílula já basta.
+
+## Superfície
+
+O popup sobe dois degraus a partir de onde o controle está e mantém o peso de
+sombra constante (§2.5.5) — um menu de opções lê como menu em qualquer
+profundidade. `prefers-reduced-motion` derruba o travel da pílula e o zoom do
+popup; o crossfade fica.
+
+## Reference
+
+### InlineSelect Props
+
+| Prop            | Type                                        | Default     | Description                                                      |
+| --------------- | ------------------------------------------- | ----------- | ------------------------------------------------------------- |
+| `value`         | `string`                                    | —           | —                                                              |
+| `onValueChange` | `(value: string) => void`                   | —           | —                                                              |
+| `options`       | `Array<{ value, label, pill?, disabled? }>` | —           | `pill` é a classe do pill daquela opção.                       |
+| `label`         | `string`                                    | —           | Nome acessível do controle.                                    |
+| `layoutId`      | `string`                                    | —           | Id estável por linha para o magic-move da pílula.              |
+| `placeholder`   | `ReactNode`                                 | `"—"`       | Quando `value` não casa com nenhuma opção.                     |
+| `disabled`      | `boolean`                                   | `false`     | —                                                              |
+| `open` / `defaultOpen` / `onOpenChange` | —                        | —           | Estado do popup, controlado ou não.                           |
+| `side`          | `"top" \| "bottom"`                         | `"bottom"`  | —                                                              |
+| `align`         | `"start" \| "center" \| "end"`              | `"start"`   | —                                                              |
