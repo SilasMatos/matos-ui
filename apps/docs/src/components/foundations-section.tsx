@@ -3,10 +3,8 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useTranslations } from "next-intl";
-import type { ReactNode } from "react";
 
-import { MotionTiersDemo } from "@/components/motion-tiers-demo";
-import { SurfaceLadderDemo } from "@/components/surface-ladder-demo";
+import { SurfaceMotionDemo } from "@/components/surface-motion-demo";
 import { Link } from "@/i18n/navigation";
 import {
   liftVariants,
@@ -17,77 +15,36 @@ import { Elevated } from "@/registry/new-york-v4/ui/elevated";
 const container = staggerContainer("moderate");
 
 /**
- * Both panels are `Elevated offset={1}`, so `liftVariants(1)` is not a taste
- * call — it is the tier `motionForOffset` already assigns to a surface that
- * lifts one step, which is the claim the right-hand column is busy making. The
- * y is raised from the shared 4px default because these are the two largest
- * surfaces on the page, and the docstring on `liftVariants` asks for exactly
- * that when 4px would read as a twitch.
+ * The panel is `Elevated offset={1}`, so `liftVariants(1)` is not a taste call —
+ * it is the tier `motionForOffset` assigns a surface that lifts one step, which
+ * is the claim the demo inside it is making. The y is raised from the shared 4px
+ * default because this is the largest surface on the page and 4px would read as
+ * a twitch.
  */
 const panel = liftVariants(1, { y: 12 });
 const heading = liftVariants(1, { y: 8 });
 
-function Column({
-  eyebrow,
-  title,
-  body,
-  href,
-  linkLabel,
-  children,
-}: {
-  eyebrow: string;
-  title: string;
-  body: string;
-  href: string;
-  linkLabel: string;
-  children: ReactNode;
-}) {
+function DocLink({ href, label }: { href: string; label: string }) {
   return (
-    <motion.div variants={panel} className="h-full">
-      <Elevated
-        offset={1}
-        className="flex h-full flex-col gap-6 rounded-3xl p-6 sm:p-8"
-      >
-        <div className="space-y-2">
-          <p className="font-mono text-[11px] text-muted-foreground uppercase tracking-widest">
-            {eyebrow}
-          </p>
-          <h3 className="font-display font-semibold text-foreground text-xl tracking-tight">
-            {title}
-          </h3>
-          <p className="text-pretty text-muted-foreground text-sm leading-relaxed">
-            {body}
-          </p>
-        </div>
-
-        {/* `min-w-0` on the growing half: the motion demo measures its own rail
-         *  with a ResizeObserver, and a flex child that is allowed to size to
-         *  its content would let that measurement push the column wider on the
-         *  first frame instead of settling into it. */}
-        <div className="flex min-w-0 flex-1 flex-col justify-center py-2">
-          {children}
-        </div>
-
-        <Link
-          href={href}
-          className="group inline-flex items-center gap-1.5 text-muted-foreground text-xs transition-colors hover:text-foreground"
-        >
-          {linkLabel}
-          <ArrowRight className="size-3.5 transition-transform ease-spring group-hover:translate-x-0.5" />
-        </Link>
-      </Elevated>
-    </motion.div>
+    <Link
+      href={href}
+      className="group inline-flex items-center gap-1.5 text-muted-foreground text-xs transition-colors hover:text-foreground"
+    >
+      {label}
+      <ArrowRight className="size-3.5 transition-transform ease-spring group-hover:translate-x-0.5" />
+    </Link>
   );
 }
 
 /**
- * The two systems the rest of the registry is built on, shown rather than
- * described: a ladder of real surfaces naming its own tokens as the highlight
- * walks it, and the five spring tiers crossing one distance side by side.
+ * The two systems the registry is built on, shown as one thing rather than
+ * argued across two columns: a chain of real surfaces nesting a step apart up
+ * the elevation ladder, each opening on the spring `motionForOffset` reads off
+ * its depth. §1's claim — elevation and motion are the same decision, told
+ * twice — made literal in a single object.
  *
- * Both demos are ambient — they drive themselves, they stop when they leave the
- * viewport or the tab goes to the background, and they park on a representative
- * frame under `prefers-reduced-motion`.
+ * The demo is ambient: it drives itself, stops off screen or in a background
+ * tab, and parks fully open under `prefers-reduced-motion`.
  */
 export function FoundationsSection() {
   const t = useTranslations("foundations");
@@ -99,9 +56,9 @@ export function FoundationsSection() {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
-        className="mx-auto max-w-5xl"
+        className="mx-auto max-w-3xl"
       >
-        <div className="mb-10 max-w-2xl">
+        <div className="mb-10 text-center">
           <motion.span
             variants={heading}
             className="inline-flex rounded-full bg-muted px-3 py-1 font-medium text-[11px] text-muted-foreground uppercase tracking-widest"
@@ -116,33 +73,37 @@ export function FoundationsSection() {
           </motion.h2>
           <motion.p
             variants={heading}
-            className="mt-3 text-pretty text-base text-muted-foreground leading-relaxed"
+            className="mx-auto mt-3 max-w-xl text-pretty text-base text-muted-foreground leading-relaxed"
           >
             {t("subtitle")}
           </motion.p>
         </div>
 
-        <div className="grid items-stretch gap-4 md:grid-cols-2 md:gap-6">
-          <Column
-            eyebrow={t("surface.eyebrow")}
-            title={t("surface.title")}
-            body={t("surface.body")}
-            href="/docs/foundations/elevated"
-            linkLabel={t("surface.link")}
+        <motion.div variants={panel}>
+          <Elevated
+            offset={1}
+            className="flex flex-col gap-6 rounded-3xl p-6 sm:p-8"
           >
-            <SurfaceLadderDemo />
-          </Column>
+            <div className="py-2">
+              <SurfaceMotionDemo />
+            </div>
 
-          <Column
-            eyebrow={t("motion.eyebrow")}
-            title={t("motion.title")}
-            body={t("motion.body")}
-            href="/docs/foundations/motion"
-            linkLabel={t("motion.link")}
-          >
-            <MotionTiersDemo />
-          </Column>
-        </div>
+            <p className="mx-auto max-w-md text-pretty text-center text-muted-foreground text-xs leading-relaxed">
+              {t("demo.caption")}
+            </p>
+
+            <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
+              <DocLink
+                href="/docs/foundations/elevated"
+                label={t("demo.surfaceLink")}
+              />
+              <DocLink
+                href="/docs/foundations/motion"
+                label={t("demo.motionLink")}
+              />
+            </div>
+          </Elevated>
+        </motion.div>
       </motion.div>
     </section>
   );
