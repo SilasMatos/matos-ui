@@ -1,6 +1,6 @@
 ---
 title: Inline Select
-description: Um valor escolhido no lugar — em repouso é só a pílula do valor atual, um clique abre o menu de opções. A pílula faz magic-move quando a linha dela reordena.
+description: A value picked in place — at rest it is just the current value as a pill, one click opens the menu of options. The pill magic-moves when its row reorders.
 ---
 
 <ComponentPreview name="inline-select-demo" chromeless align="start" />
@@ -23,15 +23,15 @@ description: Um valor escolhido no lugar — em repouso é só a pílula do valo
 
 <Steps className="mb-0 pt-2">
 
-<Step>Instale as dependências:</Step>
+<Step>Install the following dependencies:</Step>
 
 <CodeBlockCommand command="npm install @base-ui/react framer-motion lucide-react" />
 
-<Step>Copie o componente.</Step>
+<Step>Copy this in.</Step>
 
 <ComponentSource name="inline-select" title="components/matos-ui/inline-select.tsx" />
 
-<Step>Ajuste os imports para o seu projeto.</Step>
+<Step>Update the import paths to match your project setup.</Step>
 
 </Steps>
 
@@ -58,19 +58,19 @@ import { InlineSelect } from '@/components/matos-ui/inline-select'
 />
 ```
 
-Sem chrome de campo — em repouso é a pílula do valor atual, com um chevron que
-aparece no hover/foco. Um clique abre o menu; escolher uma opção confirma e
-fecha.
+No field chrome — at rest it is the current value as a pill, with a chevron that
+shows on hover and focus. A click opens the menu; choosing an option commits and
+closes.
 
-`pill` é uma classe token-based por opção (`bg-primary/10 text-foreground`), não
-uma cor solta — o pill segue o customizer de paletas como qualquer superfície.
+`pill` is a token-based class per option (`bg-primary/10 text-foreground`), not a
+loose colour — the pill tracks the palette customiser like any other surface.
 
-## Magic-move na reordenação
+## Magic-move on reorder
 
-O segundo motivo do componente: numa tabela ordenada por status, mudar o status
-de uma linha reordena a estante. A pílula carrega `layout` (e um `layoutId`
-opcional), então enquanto a linha viaja para a nova posição em `spring.moderate`,
-a pílula voa para lá em `spring.fast` — chega antes, a linha alcança.
+The component's second reason: in a table sorted by status, changing one row's
+status re-sorts the shelf. The pill carries `layout` (and an optional
+`layoutId`), so while the row travels to its new place on `spring.moderate`, the
+pill flies there on `spring.fast` — it arrives first, the row catches up.
 
 ```tsx
 {sorted.map((row) => (
@@ -87,16 +87,16 @@ a pílula voa para lá em `spring.fast` — chega antes, a linha alcança.
 ))}
 ```
 
-Dois `layout` simultâneos, dois tiers. `layoutId` é o que faz a pílula
-sobreviver a uma lista virtualizada (linha desmonta e remonta noutra posição);
-sem virtualização, o `layout` na pílula já basta.
+Two layout animations at once, at two tiers. `layoutId` is what lets the pill
+survive a virtualised list (the row unmounts and remounts in a new place);
+without virtualisation, `layout` on the pill is enough.
 
-## Superfície
+## Surface
 
-O popup sobe dois degraus a partir de onde o controle está e mantém o peso de
-sombra constante (§2.5.5) — um menu de opções lê como menu em qualquer
-profundidade. `prefers-reduced-motion` derruba o travel da pílula e o zoom do
-popup; o crossfade fica.
+The popup climbs two rungs from wherever the control sits and keeps a constant
+shadow weight (§2.5.5) — a menu of options reads as a menu at any depth.
+`prefers-reduced-motion` drops the pill travel and the popup's zoom; the
+crossfade stays.
 
 ## Reference
 
@@ -106,11 +106,11 @@ popup; o crossfade fica.
 | --------------- | ------------------------------------------- | ----------- | ------------------------------------------------------------- |
 | `value`         | `string`                                    | —           | —                                                              |
 | `onValueChange` | `(value: string) => void`                   | —           | —                                                              |
-| `options`       | `Array<{ value, label, pill?, disabled? }>` | —           | `pill` é a classe do pill daquela opção.                       |
-| `label`         | `string`                                    | —           | Nome acessível do controle.                                    |
-| `layoutId`      | `string`                                    | —           | Id estável por linha para o magic-move da pílula.              |
-| `placeholder`   | `ReactNode`                                 | `"—"`       | Quando `value` não casa com nenhuma opção.                     |
+| `options`       | `Array<{ value, label, pill?, disabled? }>` | —           | `pill` is that option's pill class.                            |
+| `label`         | `string`                                    | —           | Accessible name for the control.                               |
+| `layoutId`      | `string`                                    | —           | A stable per-row id for the pill's magic-move.                 |
+| `placeholder`   | `ReactNode`                                 | `"—"`       | Shown when `value` matches no option.                          |
 | `disabled`      | `boolean`                                   | `false`     | —                                                              |
-| `open` / `defaultOpen` / `onOpenChange` | —                        | —           | Estado do popup, controlado ou não.                           |
+| `open` / `defaultOpen` / `onOpenChange` | —                        | —           | Popup state, controlled or not.                               |
 | `side`          | `"top" \| "bottom"`                         | `"bottom"`  | —                                                              |
 | `align`         | `"start" \| "center" \| "end"`              | `"start"`   | —                                                              |
