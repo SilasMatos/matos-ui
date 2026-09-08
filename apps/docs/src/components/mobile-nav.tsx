@@ -12,6 +12,11 @@ import {
   type PageTreePage,
 } from "@/lib/page-tree";
 import { cn } from "@/lib/utils";
+import {
+  duration,
+  ease,
+  spring,
+} from "@/registry/new-york-v4/lib/motion-tokens";
 import { Button } from "@/registry/new-york-v4/ui/button";
 import {
   Popover,
@@ -110,11 +115,7 @@ function MobileGroup({
             aria-hidden="true"
             className="flex text-muted-foreground/55"
             animate={{ rotate: isOpen ? 0 : -90 }}
-            transition={
-              shouldReduceMotion
-                ? { duration: 0 }
-                : { duration: 0.18, ease: [0.2, 0, 0, 1] }
-            }
+            transition={shouldReduceMotion ? { duration: 0 } : spring.fast}
           >
             <ChevronDown className="size-3" />
           </motion.span>
@@ -131,7 +132,7 @@ function MobileGroup({
             transition={
               shouldReduceMotion
                 ? { duration: 0 }
-                : { duration: 0.22, ease: [0.4, 0, 0.2, 1] }
+                : { duration: duration.moderate, ease: ease.standard }
             }
             className="overflow-hidden"
           >

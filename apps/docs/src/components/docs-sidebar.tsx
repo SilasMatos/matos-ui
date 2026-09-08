@@ -24,6 +24,12 @@ import {
   type PageTreePage,
 } from "@/lib/page-tree";
 import { cn } from "@/lib/utils";
+import {
+  duration,
+  ease,
+  spring,
+  stagger,
+} from "@/registry/new-york-v4/lib/motion-tokens";
 import { Elevated } from "@/registry/new-york-v4/ui/elevated";
 import { Sidebar, SidebarContent } from "@/registry/new-york-v4/ui/sidebar";
 
@@ -50,7 +56,7 @@ type NavigationGroup = {
 const containerVariants: Variants = {
   hidden: {},
   visible: {
-    transition: { staggerChildren: 0.026, delayChildren: 0.04 },
+    transition: { staggerChildren: stagger.fast, delayChildren: stagger.slow },
   },
 };
 
@@ -59,7 +65,7 @@ const groupVariants: Variants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.22, ease: [0.2, 0, 0, 1] },
+    transition: { duration: duration.fast, ease: ease.decelerate },
   },
 };
 
@@ -68,16 +74,13 @@ const itemVariants: Variants = {
   visible: {
     opacity: 1,
     x: 0,
-    transition: { duration: 0.16, ease: [0.2, 0, 0, 1] },
+    transition: { duration: duration.fast, ease: ease.decelerate },
   },
 };
 
-const activeSpring = {
-  type: "spring" as const,
-  stiffness: 500,
-  damping: 38,
-  mass: 0.65,
-};
+// The active-item indicator follows the selection between links: `snappy`, the
+// zero-latency follow tier — it tracks the choice, it doesn't arrive like a panel.
+const activeSpring = spring.snappy;
 
 const sidebarLinkClassName = [
   "group/sidebar-link relative flex h-8 w-full min-w-0 items-center rounded-md px-2.5 pl-3.5 text-[0.83rem] font-medium",
@@ -246,7 +249,11 @@ function SidebarGroup({
       exit={
         shouldReduceMotion
           ? undefined
-          : { opacity: 0, y: -2, transition: { duration: 0.12 } }
+          : {
+              opacity: 0,
+              y: -2,
+              transition: { duration: spring.fast.exit.duration },
+            }
       }
       aria-labelledby={labelId}
       className={cn(index > 0 && "mt-4")}
@@ -277,11 +284,7 @@ function SidebarGroup({
             aria-hidden="true"
             className="flex text-foreground/55 dark:text-muted-foreground/55"
             animate={{ rotate: isOpen ? 0 : -90 }}
-            transition={
-              shouldReduceMotion
-                ? { duration: 0 }
-                : { duration: 0.18, ease: [0.2, 0, 0, 1] }
-            }
+            transition={shouldReduceMotion ? { duration: 0 } : spring.fast}
           >
             <ChevronDown className="size-3" />
           </motion.span>
@@ -298,7 +301,7 @@ function SidebarGroup({
             transition={
               shouldReduceMotion
                 ? { duration: 0 }
-                : { duration: 0.22, ease: [0.4, 0, 0.2, 1] }
+                : { duration: duration.moderate, ease: ease.standard }
             }
             className="overflow-hidden"
           >
@@ -431,6 +434,9 @@ export function DocsSidebar({
                   aria-live="polite"
                   initial={shouldReduceMotion ? false : { opacity: 0, y: -2 }}
                   animate={{ opacity: 1, y: 0 }}
+                  transition={
+                    shouldReduceMotion ? { duration: 0 } : spring.fast
+                  }
                   className="mt-5 rounded-lg border border-border/50 bg-muted/20 px-3 py-4 text-center text-muted-foreground text-xs"
                 >
                   No components found.
