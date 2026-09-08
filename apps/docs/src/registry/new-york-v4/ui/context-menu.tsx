@@ -336,21 +336,23 @@ export function ContextMenuGroup(props: ContextMenuGroupProps) {
   );
 }
 
-export type ContextMenuLabelProps = Omit<
-  MenuPrimitive.GroupLabel.Props,
-  "className"
-> & {
-  className?: string;
+export type ContextMenuLabelProps = ComponentProps<"div"> & {
   inset?: boolean;
 };
 
+/**
+ * A plain styled heading, not `Menu.GroupLabel` — that part throws
+ * (`MenuGroupRootContext is missing`) unless it is inside a `Menu.Group`, and a
+ * section header is routinely used on its own. Wrap items in `ContextMenuGroup`
+ * for the semantic grouping.
+ */
 export function ContextMenuLabel({
   className,
   inset,
   ...props
 }: ContextMenuLabelProps) {
   return (
-    <ContextMenuPrimitive.GroupLabel
+    <div
       data-slot="context-menu-label"
       data-inset={inset}
       className={cn(
