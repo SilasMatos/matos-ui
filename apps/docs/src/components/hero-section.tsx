@@ -47,8 +47,8 @@ export function HeroSection({ componentCount }: { componentCount: number }) {
     : showcaseBase;
 
   return (
-    // Altura de conteúdo, não de viewport: `min-h-svh` sozinho respondia por
-    // boa parte da sensação de "área excessiva" antes da dobra.
+    // Content height, not viewport height: `min-h-svh` on its own accounted for
+    // much of the "too much empty space" above the fold.
     <section className="flex flex-col items-center px-4 py-20 sm:px-6 sm:py-24">
       <motion.div
         variants={staggerContainer("slow", 0.1)}

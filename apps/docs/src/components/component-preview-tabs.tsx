@@ -19,7 +19,7 @@ export function ComponentPreviewTabs({
   previewClassName?: string;
   align?: "center" | "start" | "end";
   hideCode?: boolean;
-  /** Altura segue o conteúdo (sem `h-72`), com scroll se passar do viewport. */
+  /** Height follows the content (no `h-72`), scrolling if it overflows the viewport. */
   chromeless?: boolean;
   component: React.ReactNode;
   source: React.ReactNode;
@@ -39,8 +39,8 @@ export function ComponentPreviewTabs({
     >
       {!hideCode && <ViewSwitcher value={view} onValueChange={setView} />}
 
-      {/* O preview segue montado enquanto o código aparece: desmontar reinicia
-          as animações de entrada dos demos a cada troca de aba. */}
+      {/* The preview stays mounted while the code is shown: unmounting it would
+          replay every demo's entrance animation on each tab switch. */}
       <PreviewWrapper
         align={align}
         previewClassName={previewClassName}
@@ -120,11 +120,11 @@ function PreviewWrapper({
       <div
         data-align={align}
         data-chromeless={chromeless ? "true" : undefined}
-        // O canvas é o chão do demo: pinamos o nível 1 em vez de usar `Elevated`
-        // (que soma sobre o substrato) para que ele não suba junto com a página.
-        // A borda saiu com a textura — o anel de 1px de `shadow-surface-1` já
-        // desenha o limite, e `border-border` sobre `bg-surface-N` faz o canvas
-        // ler como caixa contornada em vez de superfície.
+        // The canvas is the demo's floor: it pins level 1 rather than using
+        // `Elevated` (which would stack on the substrate) so it doesn't climb
+        // with the page. No border by choice — the 1px ring on `shadow-surface-1`
+        // already draws the edge, and `border-border` over `bg-surface-N` would
+        // read as an outlined box rather than a surface.
         className={cn(
           // `not-prose` so DocsBody's `.prose` typography (margins on p/ul/table,
           // list markers, table layout) never leaks into a demo — the canvas is
