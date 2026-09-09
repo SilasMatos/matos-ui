@@ -60,20 +60,32 @@ Requires a `ThemeProvider` from `next-themes` (with `attribute="class"`) somewhe
 
 `variant` controls the reveal animation played on the incoming theme:
 
+**Seeded at the button**
+
 - `circle` — a circle expands outward from the button, revealing the new theme (default).
 - `circle-blur` — the same circle reveal, softened with a blur-to-sharp transition.
 - `iris` — a circle reveal with a spring overshoot, like a camera iris snapping into focus.
-- `polygon` — a diagonal wipe sweeps across the screen.
+- `rectangle` — a rectangle unfolds from the click point, every edge racing to the matching edge of the screen.
+- `zoom` — the new theme scales up from the button and fades in over the old one.
+
+**Directional sweeps** (obey `direction`)
+
+- `polygon` — a slanted wipe whose angle shifts mid-flight, rejoining flush at both ends.
+- `diagonal` — a wipe that holds one constant 45°-ish angle for its whole travel.
 - `slide` — a straight curtain wipe, axis-aligned to `direction`.
-- `fade` — a plain crossfade, also used automatically as the safe fallback.
+- `blinds` — six venetian slats grow together, the gaps between them closing to nothing.
+
+**Fallback**
+
+- `fade` — a plain crossfade, also used automatically when the View Transitions API is unavailable.
 
 ```tsx
 <ThemeTogglerButton variant="iris" />
-<ThemeTogglerButton variant="polygon" direction="rtl" />
-<ThemeTogglerButton variant="slide" direction="ttb" />
+<ThemeTogglerButton variant="blinds" direction="rtl" />
+<ThemeTogglerButton variant="diagonal" direction="ttb" />
 ```
 
-`direction` (`"ltr" | "rtl" | "ttb" | "btt"`) sets the sweep axis for `polygon` and `slide`, and the rotation direction of the icon swap. It has no visible effect on `circle`, `circle-blur`, `iris`, or `fade`, which always originate from the button itself.
+`direction` (`"ltr" | "rtl" | "ttb" | "btt"`) sets the sweep axis for `polygon`, `diagonal`, `slide` and `blinds`, and the rotation direction of the icon swap. It has no visible effect on the button-seeded variants (`circle`, `circle-blur`, `iris`, `rectangle`, `zoom`) or on `fade`.
 
 ## Three-Way Toggle
 
@@ -101,7 +113,7 @@ import { CloudMoon, CloudSun } from "lucide-react"
 
 | Prop        | Type                                                                     | Default     |
 | ----------- | ------------------------------------------------------------------------- | ----------- |
-| `variant`   | `"circle" \| "circle-blur" \| "iris" \| "polygon" \| "slide" \| "fade"`     | `"circle"`  |
+| `variant`   | `"circle" \| "circle-blur" \| "iris" \| "polygon" \| "slide" \| "fade" \| "rectangle" \| "diagonal" \| "blinds" \| "zoom"` | `"circle"`  |
 | `size`      | `"sm" \| "md" \| "lg" \| "icon"`                                        | `"md"`      |
 | `direction` | `"ltr" \| "rtl" \| "ttb" \| "btt"`                                       | `"ltr"`     |
 | `modes`     | `("light" \| "dark" \| "system")[]`                                       | `["light", "dark"]` |

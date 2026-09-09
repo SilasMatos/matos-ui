@@ -531,7 +531,7 @@ export const Index: Record<string, any> = {
   "theme-toggler-button": {
     name: "theme-toggler-button",
     type: "registry:ui",
-    registryDependencies: undefined,
+    registryDependencies: ["motion-tokens"],
     files: [
       {
         path: "src/registry/new-york-v4/ui/theme-toggler-button.tsx",

@@ -411,6 +411,8 @@ export const ui: Registry["items"] = [
   {
     name: "theme-toggler-button",
     type: "registry:ui",
+    description:
+      "An icon button that switches theme with a full-page reveal animation seeded at the button, via the View Transitions API — ten reveal shapes (circle, iris, rectangle, zoom, diagonal, blinds…), with an instant fallback where the API is missing.",
     dependencies: [
       "framer-motion",
       "lucide-react",
@@ -418,6 +420,7 @@ export const ui: Registry["items"] = [
       "tailwind-merge",
       "tailwind-variants",
     ],
+    registryDependencies: ["motion-tokens"],
     files: [
       {
         path: "ui/theme-toggler-button.tsx",
