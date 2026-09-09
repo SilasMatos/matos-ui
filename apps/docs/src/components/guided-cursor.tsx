@@ -55,15 +55,15 @@ import {
  *  (12.9, 8.5) × 24/32. */
 const TIP = { x: 9.7, y: 6.4 } as const;
 
-/** Travel time for one hop, matched to the spring that actually moves the
- *  cursor so a demo's `setTimeout` choreography and the animation agree.
- *  `duration.slow` reads as a deliberate glide without the dead air a longer
- *  hop left between arriving and clicking. */
+/** Nominal travel time for one hop, still exported for a consumer that wants to
+ *  pace something else against the glide. It is no longer how the demos know
+ *  the pointer has landed — that is `moveTo`'s `onArrive`, which watches the
+ *  actual spring — so a small mismatch here no longer desyncs a click. */
 export const CURSOR_TRAVEL_MS = Math.round(duration.slow * 1000);
 
-/** Follow spring for the pointer's travel. `visualDuration` keeps its arrival
- *  in step with `CURSOR_TRAVEL_MS`; the small bounce gives an organic
- *  deceleration rather than the slow creep a `bounce: 0` tail leaves. */
+/** Follow spring for the pointer's travel. `visualDuration` sets the glide to
+ *  `duration.slow`; the small bounce gives an organic deceleration rather than
+ *  the slow creep a `bounce: 0` tail leaves. */
 const TRAVEL_SPRING = { visualDuration: duration.slow, bounce: 0.1 } as const;
 
 /** How long the pointer holds its pressed pose. Long enough to register as a
@@ -233,6 +233,7 @@ export function useGuidedCursor(
   const [userPresent, setUserPresent] = useState(false);
   const targetRef = useRef<HTMLElement | null>(null);
   const rafRef = useRef(0);
+  const arrivalRafRef = useRef(0);
   const pollUntilRef = useRef(0);
   const clickTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -280,14 +281,69 @@ export function useGuidedCursor(
     [sample],
   );
 
+  const cancelArrival = useCallback(() => {
+    cancelAnimationFrame(arrivalRafRef.current);
+    arrivalRafRef.current = 0;
+  }, []);
+
+  /**
+   * Fires `onArrive` once the spring has actually reached the current target and
+   * all but stopped — so a demo can hang a click, a selection or the next hop on
+   * the pointer *being there* rather than on a `setTimeout` guess at how long the
+   * travel takes. A deadline guards against a hop that never settles (a target
+   * that unmounted mid-flight).
+   */
+  const watchArrival = useCallback(
+    (onArrive: () => void) => {
+      cancelArrival();
+      const deadline = performance.now() + 1600;
+      const tick = () => {
+        const stage = stageRef.current;
+        const el = targetRef.current;
+        if (stage && el) {
+          const s = stage.getBoundingClientRect();
+          const r = el.getBoundingClientRect();
+          const cx = r.left - s.left + r.width / 2;
+          const cy = r.top - s.top + r.height / 2;
+          const gap = Math.hypot(x.get() - cx, y.get() - cy);
+          const speed = Math.hypot(x.getVelocity(), y.getVelocity());
+          if ((gap < 2.5 && speed < 60) || performance.now() > deadline) {
+            arrivalRafRef.current = 0;
+            onArrive();
+            return;
+          }
+        } else if (performance.now() > deadline) {
+          arrivalRafRef.current = 0;
+          onArrive();
+          return;
+        }
+        arrivalRafRef.current = requestAnimationFrame(tick);
+      };
+      arrivalRafRef.current = requestAnimationFrame(tick);
+    },
+    [cancelArrival, stageRef, x, y],
+  );
+
   const moveTo = useCallback(
-    (target: MaybeRef, settleMs = 1000) => {
+    (
+      target: MaybeRef,
+      options?: number | { settleMs?: number; onArrive?: () => void },
+    ) => {
+      const settleMs =
+        typeof options === "number" ? options : (options?.settleMs ?? 1000);
+      const onArrive =
+        typeof options === "number" ? undefined : options?.onArrive;
       const el = resolve(target);
-      if (!el) return;
+      if (!el) {
+        cancelArrival();
+        return;
+      }
       targetRef.current = el;
       pollFor(settleMs);
+      if (onArrive) watchArrival(onArrive);
+      else cancelArrival();
     },
-    [pollFor],
+    [pollFor, watchArrival, cancelArrival],
   );
 
   const click = useCallback(() => {
@@ -302,7 +358,8 @@ export function useGuidedCursor(
   // fades back in where it left off, rather than blanking and re-homing.
   const reset = useCallback(() => {
     cancelAnimationFrame(rafRef.current);
-  }, []);
+    cancelArrival();
+  }, [cancelArrival]);
 
   // Follow the stage resizing under a parked target.
   useEffect(() => {
@@ -316,6 +373,7 @@ export function useGuidedCursor(
   useEffect(
     () => () => {
       cancelAnimationFrame(rafRef.current);
+      cancelAnimationFrame(arrivalRafRef.current);
       if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
       if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
     },
@@ -355,6 +413,7 @@ export function useGuidedCursor(
     moveTo,
     click,
     reset,
+    cancelArrival,
     bind,
   } as const;
 }

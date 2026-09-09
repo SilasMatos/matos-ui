@@ -4,17 +4,14 @@ import {
   AnimatePresence,
   motion,
   useInView,
+  useMotionValueEvent,
   useReducedMotion,
 } from "framer-motion";
 import { ArrowRight, Check } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 
-import {
-  CURSOR_TRAVEL_MS,
-  GuidedCursor,
-  useGuidedCursor,
-} from "@/components/guided-cursor";
+import { GuidedCursor, useGuidedCursor } from "@/components/guided-cursor";
 import { usePageVisible } from "@/hooks/use-ambient-loop";
 import { cn } from "@/lib/utils";
 import {
@@ -191,11 +188,6 @@ const CONTENT_IN_SCALE = 0.96;
  */
 const CURSOR_START_MS =
   Math.round((CONTENT_IN_DELAY_S + CONTENT_IN_S) * 1000) + 60;
-/** Beat between pointer hops while it scans the menu rows before choosing one. */
-const CURSOR_SCAN_MS = 360;
-/** Beat between the pointer brushing the dismiss control and the primary action,
- *  and between the two segments it visits in the `segmented` state. */
-const CURSOR_HOP_MS = 500;
 /** The menu row the pointer lands on each time the `popover` state comes round;
  *  it is re-selected from a different default so the choice is a visible move. */
 const CURSOR_MENU_PICK = 0;
@@ -571,7 +563,12 @@ export function HeroSurfaceShowcase({ steps = 3 }: { steps?: number }) {
   const cycling = !shouldReduceMotion && inView && pageVisible;
 
   const cursor = useGuidedCursor(frameRef, { active: cycling });
-  const { moveTo, click, reset: resetCursor } = cursor;
+  const {
+    moveTo,
+    click,
+    reset: resetCursor,
+    cancelArrival: cancelCursorArrival,
+  } = cursor;
 
   // Reduced motion parks on Surface — the state that carries the depth idea
   // on its own, and the one this element already was before it learned to
@@ -636,10 +633,14 @@ export function HeroSurfaceShowcase({ steps = 3 }: { steps?: number }) {
   }, [cycling, state]);
 
   // The pointer choreography for the current state. It re-runs on every state
-  // change (and on pause/resume), starting only once CURSOR_START_MS has passed
-  // so the content it aims at is mounted. Each branch has to finish inside the
-  // stable window — after CURSOR_START_MS, before CONTENT_OUT_AT_MS — so the
-  // longest sequence (the menu scan) uses the shortest hops.
+  // change (and on pause/resume), starting once CURSOR_START_MS has passed so
+  // the content it aims at is mounted.
+  //
+  // Every hop is arrival-driven: the pointer is told to move, and the click, the
+  // selection or the next hop only fire once `onArrive` reports it has actually
+  // reached the mark. There is no travel-time constant to keep in step with the
+  // follow spring any more — that mismatch is what made the click ripples and
+  // the row highlights land a beat off the cursor.
   useEffect(() => {
     if (!cycling) {
       resetCursor();
@@ -656,57 +657,103 @@ export function HeroSurfaceShowcase({ steps = 3 }: { steps?: number }) {
       );
     };
     const g = targets.current;
-    const T = CURSOR_TRAVEL_MS;
+
+    const runSequence = (
+      steps: Array<{ key: string; commit?: () => void }>,
+    ) => {
+      let index = 0;
+      const step = () => {
+        if (!alive || index >= steps.length) return;
+        const { key, commit } = steps[index];
+        index += 1;
+        moveTo(g[key], {
+          settleMs: 320,
+          onArrive: () => {
+            if (!alive) return;
+            commit?.();
+            step();
+          },
+        });
+      };
+      step();
+    };
 
     if (state === "surface") {
-      at(CURSOR_START_MS, () => moveTo(g.core, 500));
-      at(CURSOR_START_MS + T, click);
+      at(CURSOR_START_MS, () => runSequence([{ key: "core", commit: click }]));
     } else if (state === "segmented") {
-      at(CURSOR_START_MS, () => moveTo(g[`seg-${CURSOR_SEG_REST + 1}`], 400));
-      at(CURSOR_START_MS + T, () => {
-        click();
-        setActiveSegment(CURSOR_SEG_REST + 1);
-      });
-      at(CURSOR_START_MS + T + CURSOR_HOP_MS, () =>
-        moveTo(g[`seg-${CURSOR_SEG_PICK}`], 400),
+      at(CURSOR_START_MS, () =>
+        runSequence([
+          {
+            key: `seg-${CURSOR_SEG_REST + 1}`,
+            commit: () => {
+              click();
+              setActiveSegment(CURSOR_SEG_REST + 1);
+            },
+          },
+          {
+            key: `seg-${CURSOR_SEG_PICK}`,
+            commit: () => {
+              click();
+              setActiveSegment(CURSOR_SEG_PICK);
+            },
+          },
+        ]),
       );
-      at(CURSOR_START_MS + T + CURSOR_HOP_MS + T, () => {
-        click();
-        setActiveSegment(CURSOR_SEG_PICK);
-      });
     } else if (state === "popover") {
-      setHoveredRow(0);
-      at(CURSOR_START_MS, () => {
-        moveTo(g["row-0"], 400);
-        setHoveredRow(0);
-      });
-      at(CURSOR_START_MS + CURSOR_SCAN_MS, () => {
-        moveTo(g["row-1"], 400);
-        setHoveredRow(1);
-      });
-      at(CURSOR_START_MS + CURSOR_SCAN_MS * 2, () => {
-        moveTo(g["row-2"], 400);
-        setHoveredRow(2);
-      });
-      at(CURSOR_START_MS + CURSOR_SCAN_MS * 3, () => {
-        moveTo(g[`row-${CURSOR_MENU_PICK}`], 400);
-        setHoveredRow(CURSOR_MENU_PICK);
-      });
-      at(CURSOR_START_MS + CURSOR_SCAN_MS * 3 + T, () => {
-        click();
-        setSelectedRow(CURSOR_MENU_PICK);
-      });
+      // Sweep down to the last row and back to the pick. The highlight tracks
+      // the tip on its own (see the hit-test effect), so passing over the rows
+      // in between lights each one in turn with nothing to keep in sync.
+      at(CURSOR_START_MS, () =>
+        runSequence([
+          { key: `row-${CURSOR_MENU_REST}` },
+          {
+            key: `row-${CURSOR_MENU_PICK}`,
+            commit: () => {
+              click();
+              setSelectedRow(CURSOR_MENU_PICK);
+            },
+          },
+        ]),
+      );
     } else if (state === "dialog") {
-      at(CURSOR_START_MS, () => moveTo(g.dismiss, 400));
-      at(CURSOR_START_MS + CURSOR_HOP_MS, () => moveTo(g.action, 400));
-      at(CURSOR_START_MS + CURSOR_HOP_MS + T, click);
+      at(CURSOR_START_MS, () =>
+        runSequence([{ key: "dismiss" }, { key: "action", commit: click }]),
+      );
     }
 
     return () => {
       alive = false;
       for (const timer of timers) clearTimeout(timer);
+      cancelCursorArrival();
     };
-  }, [state, cycling, moveTo, click, resetCursor]);
+  }, [state, cycling, moveTo, click, resetCursor, cancelCursorArrival]);
+
+  // The popover row highlight is read off the tip's live position, not set on a
+  // timer: whichever row the fingertip is vertically inside is the hovered one,
+  // so it can never run ahead of or lag behind the cursor.
+  useMotionValueEvent(cursor.y, "change", (value) => {
+    if (state !== "popover") return;
+    const stage = frameRef.current;
+    if (!stage) return;
+    const stageTop = stage.getBoundingClientRect().top;
+    let next: number | null = null;
+    for (let index = 0; index < 8; index += 1) {
+      const el = targets.current[`row-${index}`];
+      if (!el) break;
+      const rect = el.getBoundingClientRect();
+      if (value >= rect.top - stageTop && value <= rect.bottom - stageTop) {
+        next = index;
+        break;
+      }
+    }
+    setHoveredRow((prev) => (prev === next ? prev : next));
+  });
+
+  // No highlight when the scripted pointer has stepped aside for the reader's
+  // own cursor — the hit-test above only runs while the follow spring moves.
+  useEffect(() => {
+    if (state === "popover" && !cursor.visible) setHoveredRow(null);
+  }, [state, cursor.visible]);
 
   // Selections reset to their resting option while their state is off screen, so
   // next time it comes round the pointer's pick is a move the reader can see
