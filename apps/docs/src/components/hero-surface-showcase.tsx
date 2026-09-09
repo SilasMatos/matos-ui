@@ -24,36 +24,40 @@ import {
   surfaceClasses,
 } from "@/registry/new-york-v4/lib/surface-classes";
 import { SurfaceProvider } from "@/registry/new-york-v4/lib/surface-context";
+import { ConfirmButton } from "@/registry/new-york-v4/ui/confirm-button";
 import { Elevated } from "@/registry/new-york-v4/ui/elevated";
 
-type ShowcaseState = "surface" | "segmented" | "popover" | "dialog";
+type ShowcaseState = "surface" | "segmented" | "popover" | "dialog" | "confirm";
 
 /**
- * Four identities, the two foundations twice each. `surface` and `popover` are
- * the elevation ladder: a passive nested stack, then that same stack opened as
- * a menu on an `Elevated` at offset 2. `segmented` and `dialog` are the motion
- * tokens: a segmented control whose active pill glides between options on the
- * `moderate` tier (a shared-`layoutId` slide, the same move `ui/motion-tabs`
- * makes), then an `Elevated` dialog at offset 4 whose copy settles on `slow`.
- * Between `popover` (surface-3) and `dialog` (surface-5) the rung of the ladder
- * is meant to be visible.
+ * Five identities. `surface` and `popover` are the elevation ladder: a passive
+ * nested stack, then that same stack opened as a menu on an `Elevated` at
+ * offset 2. `segmented`, `dialog` and `confirm` are the motion tokens: a
+ * segmented control whose active pill glides between options on the `moderate`
+ * tier (a shared-`layoutId` slide, the same move `ui/motion-tabs` makes), an
+ * `Elevated` dialog at offset 4 whose copy settles on `slow`, and a real
+ * `ConfirmButton` that the guided pointer arms and stands down — its box morphs
+ * a rung up as the ✓/✕ slide out, the lid dips before it opens (`ease.anticipate`)
+ * and the whole thing reverses on cancel. Between `popover` (surface-3) and
+ * `dialog` (surface-5) the rung of the ladder is meant to be visible.
  *
  * Order is chosen for area, not silhouette: the sizes are roughly
- * segmented (~17k px²) < surface (~26k) < popover (~34k) < dialog (~51k), and
- * the cycle runs surface → segmented → popover → dialog → surface so the
- * smallest state always sits between two larger ones and the largest between
- * two smaller ones. That keeps every morph to a partial step — the widest jump
- * is segmented → popover at ~2×, against a full range of ~3× — and never lets
- * one run the whole range at once, which is what a widest-to-narrowest wrap
- * used to do and what read as the surface snapping rather than morphing.
- * popover → dialog is a width-only morph: the two share a height, and only the
- * box getting wider distinguishes the menu from the dialog it could sit inside.
+ * segmented (~17k px²) < confirm (~24k) < surface (~26k) < popover (~34k) <
+ * dialog (~51k), and the cycle runs surface → segmented → popover → dialog →
+ * confirm → surface so the two largest never sit next to each other. That keeps
+ * every morph to a partial step — the widest jump is dialog → confirm at ~2×,
+ * against a full range of ~3× — and never lets one run the whole range at once,
+ * which is what a widest-to-narrowest wrap used to do and what read as the
+ * surface snapping rather than morphing. popover → dialog is a width-only morph:
+ * the two share a height, and only the box getting wider distinguishes the menu
+ * from the dialog it could sit inside.
  */
 const NEXT_STATE: Record<ShowcaseState, ShowcaseState> = {
   surface: "segmented",
   segmented: "popover",
   popover: "dialog",
-  dialog: "surface",
+  dialog: "confirm",
+  confirm: "surface",
 };
 
 /**
@@ -68,13 +72,15 @@ const NEXT_STATE: Record<ShowcaseState, ShowcaseState> = {
  *
  * Heights stay within one frame: `popover` and `dialog` are the tallest at
  * 176px, under the 192px fixed frame below — re-check that when a state's
- * height changes.
+ * height changes. `confirm` is the shortest at 112px; the ConfirmButton floats
+ * centred in it and does its own width swing inside that fixed box.
  */
 const STATE_SHAPE: Record<ShowcaseState, string> = {
   surface: "size-40",
   segmented: "h-14 w-[19rem] sm:w-80",
   popover: "h-44 w-48",
   dialog: "h-44 w-[18rem] sm:w-80",
+  confirm: "h-28 w-64",
 };
 
 /** How long each identity holds before the next morph. Long enough that the
@@ -442,6 +448,64 @@ function DialogContent({
   );
 }
 
+/**
+ * The `confirm` state: a real `ConfirmButton`, the one place the showcase runs a
+ * shipped component rather than a painting of one. The guided pointer taps the
+ * trash to arm it, then the ✕ to stand it down — its box climbs a rung and
+ * widens as the ✓/✕ slide out (`spring.moderate` + `spring.fast`), the lid dips
+ * before it opens (`ease.anticipate`), and the whole thing reverses.
+ *
+ * `armed` is driven from the parent so the pointer's tap and the state change
+ * stay one gesture — the same reason the segmented pill and the menu selection
+ * are props, not real events. `inert` wraps it because this subtree is
+ * `aria-hidden` decoration and ConfirmButton moves focus onto the ✕ when it
+ * arms: inert turns that `.focus()` into a no-op so the reader's focus is never
+ * pulled into the hero, while every state-driven part of the animation still
+ * plays. The labels feed only aria attributes that inert then hides, so they
+ * need no translation.
+ */
+function ConfirmContent({
+  armed,
+  registerTarget,
+}: {
+  armed: boolean;
+  registerTarget: (key: string, el: HTMLElement | null) => void;
+}) {
+  const wrapRef = useRef<HTMLDivElement>(null);
+
+  // Re-runs when `armed` flips because the ✓/✕ only exist in the DOM once the
+  // button is armed — that is the whole reason to read `armed` here.
+  useEffect(() => {
+    const root = wrapRef.current;
+    if (!root) return;
+    registerTarget(
+      "confirm-trash",
+      root.querySelector<HTMLElement>("[data-slot='confirm-button'] > button"),
+    );
+    const keys = armed
+      ? root
+          .querySelector("[data-slot='confirm-button-actions']")
+          ?.querySelectorAll<HTMLElement>("button")
+      : undefined;
+    registerTarget("confirm-yes", keys?.[0] ?? null);
+    registerTarget("confirm-no", keys?.[1] ?? null);
+  }, [armed, registerTarget]);
+
+  return (
+    <div ref={wrapRef} inert className="flex items-center justify-center">
+      <ConfirmButton
+        armed={armed}
+        label="Delete"
+        confirmLabel="Confirm"
+        cancelLabel="Cancel"
+        size="lg"
+        onConfirm={() => {}}
+        onCancel={() => {}}
+      />
+    </div>
+  );
+}
+
 function StateContent({
   state,
   steps,
@@ -455,6 +519,7 @@ function StateContent({
   dismissLabel,
   hoveredRow,
   selectedRow,
+  confirmArmed,
   registerTarget,
 }: {
   state: ShowcaseState;
@@ -469,8 +534,15 @@ function StateContent({
   dismissLabel: string;
   hoveredRow: number | null;
   selectedRow: number;
+  confirmArmed: boolean;
   registerTarget: (key: string, el: HTMLElement | null) => void;
 }) {
+  if (state === "confirm") {
+    return (
+      <ConfirmContent armed={confirmArmed} registerTarget={registerTarget} />
+    );
+  }
+
   if (state === "segmented") {
     return (
       <SegmentedContent
@@ -553,6 +625,7 @@ export function HeroSurfaceShowcase({ steps = 3 }: { steps?: number }) {
   const [hoveredRow, setHoveredRow] = useState<number | null>(null);
   const [selectedRow, setSelectedRow] = useState(CURSOR_MENU_REST);
   const [activeSegment, setActiveSegment] = useState(CURSOR_SEG_REST);
+  const [confirmArmed, setConfirmArmed] = useState(false);
   // The morph flag has to fire on a *change* of state, not on every run of its
   // effect: the effect also re-runs when the cycle pauses and resumes, and on
   // mount, neither of which is a morph. Without this the surface would lift its
@@ -659,21 +732,29 @@ export function HeroSurfaceShowcase({ steps = 3 }: { steps?: number }) {
     const g = targets.current;
 
     const runSequence = (
-      steps: Array<{ key: string; commit?: () => void }>,
+      steps: Array<{ key: string; wait?: number; commit?: () => void }>,
     ) => {
       let index = 0;
       const step = () => {
         if (!alive || index >= steps.length) return;
-        const { key, commit } = steps[index];
+        const { key, wait, commit } = steps[index];
         index += 1;
-        moveTo(g[key], {
-          settleMs: 320,
-          onArrive: () => {
-            if (!alive) return;
-            commit?.();
-            step();
-          },
-        });
+        const go = () => {
+          if (!alive) return;
+          moveTo(g[key], {
+            settleMs: 320,
+            onArrive: () => {
+              if (!alive) return;
+              commit?.();
+              step();
+            },
+          });
+        };
+        // `wait` holds before a hop starts — used when the previous commit needs
+        // a beat to land (a ConfirmButton arming, its ✕ mounting) before there
+        // is anything at `key` to aim at.
+        if (wait) timers.push(setTimeout(go, wait));
+        else go();
       };
       step();
     };
@@ -718,6 +799,30 @@ export function HeroSurfaceShowcase({ steps = 3 }: { steps?: number }) {
     } else if (state === "dialog") {
       at(CURSOR_START_MS, () =>
         runSequence([{ key: "dismiss" }, { key: "action", commit: click }]),
+      );
+    } else if (state === "confirm") {
+      // Tap the trash to arm (the box climbs a rung and the ✓/✕ slide out),
+      // then land on the ✕ — the safe key, the one ConfirmButton focuses by
+      // default — and stand it back down. `wait` gives the arm morph time to
+      // finish and mount the ✕ before the pointer sets off for it.
+      at(CURSOR_START_MS, () =>
+        runSequence([
+          {
+            key: "confirm-trash",
+            commit: () => {
+              click();
+              setConfirmArmed(true);
+            },
+          },
+          {
+            key: "confirm-no",
+            wait: 340,
+            commit: () => {
+              click();
+              setConfirmArmed(false);
+            },
+          },
+        ]),
       );
     }
 
@@ -765,6 +870,9 @@ export function HeroSurfaceShowcase({ steps = 3 }: { steps?: number }) {
     }
     if (state !== "segmented") {
       setActiveSegment(CURSOR_SEG_REST);
+    }
+    if (state !== "confirm") {
+      setConfirmArmed(false);
     }
   }, [state]);
 
@@ -883,6 +991,7 @@ export function HeroSurfaceShowcase({ steps = 3 }: { steps?: number }) {
                     dismissLabel={t("showcaseDismiss")}
                     hoveredRow={hoveredRow}
                     selectedRow={selectedRow}
+                    confirmArmed={confirmArmed}
                     registerTarget={(key, el) => {
                       targets.current[key] = el;
                     }}

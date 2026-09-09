@@ -49,11 +49,11 @@ import {
  * whose `cycling` folds that in — and each demo keeps its own frozen frame.
  */
 
-/** The tip of the SVG below, in its own 24px box — the point that has to land
+/** The tip of the SVG below, in its own 28px box — the point that has to land
  *  on the target, not the box's centre. The art is authored in a 32-unit
- *  viewBox and rendered at 24px, so the index fingertip at (12.9, 8.5) maps to
- *  (12.9, 8.5) × 24/32. */
-const TIP = { x: 9.7, y: 6.4 } as const;
+ *  viewBox and rendered at 28px, so the index fingertip at (12.9, 8.5) maps to
+ *  (12.9, 8.5) × 28/32. */
+const TIP = { x: 11.3, y: 7.4 } as const;
 
 /** Nominal travel time for one hop, still exported for a consumer that wants to
  *  pace something else against the glide. It is no longer how the demos know
@@ -92,8 +92,8 @@ const IDLE_BOB_TRANSITION = {
 function PointerIcon() {
   return (
     <svg
-      width="24"
-      height="24"
+      width="28"
+      height="28"
       viewBox="0 0 32 32"
       aria-hidden="true"
       // Foreground fill with a background-coloured seam, so the pointer keeps
