@@ -15,6 +15,8 @@ import { flushSync } from "react-dom";
 import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
 
+import { spring } from "@/registry/new-york-v4/lib/motion-tokens";
+
 export const themeTogglerButtonVariants = tv({
   base: [
     "not-prose relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full border border-transparent text-foreground outline-none select-none",
@@ -46,7 +48,11 @@ export type ThemeTogglerButtonVariant =
   | "iris"
   | "polygon"
   | "slide"
-  | "fade";
+  | "fade"
+  | "rectangle"
+  | "diagonal"
+  | "blinds"
+  | "zoom";
 
 /** Origin edge/rotation used by the reveal sweep and the icon swap. */
 export type ThemeTogglerButtonDirection = "ltr" | "rtl" | "ttb" | "btt";
@@ -114,6 +120,85 @@ function polygonClipPath(
     : `polygon(0% ${originEdge}%, 0% ${frontA}%, 100% ${frontB}%, 100% ${originEdge}%)`;
 }
 
+/**
+ * A rectangle that grows out of the click point in every direction at once,
+ * each edge racing to the matching edge of the viewport. Reads as the button
+ * "unfolding" the new theme rather than sweeping it on.
+ */
+function rectangleClipPath(origin: { x: number; y: number }, progress: number) {
+  const px = (origin.x / window.innerWidth) * 100;
+  const py = (origin.y / window.innerHeight) * 100;
+  const rest = 1 - progress;
+  return `inset(${py * rest}% ${(100 - px) * rest}% ${(100 - py) * rest}% ${px * rest}%)`;
+}
+
+/**
+ * A wipe that holds a constant 45°-ish angle for its whole travel, unlike
+ * `polygon` whose slant shifts mid-flight. `direction` picks which corner it
+ * starts from.
+ */
+function diagonalClipPath(
+  direction: ThemeTogglerButtonDirection,
+  progress: number,
+) {
+  const p = progress * 200;
+
+  switch (direction) {
+    case "ltr":
+      return `polygon(0% 0%, ${p}% 0%, ${p - 100}% 100%, 0% 100%)`;
+    case "rtl":
+      return `polygon(${100 - p}% 0%, 100% 0%, 100% 100%, ${200 - p}% 100%)`;
+    case "ttb":
+      return `polygon(0% 0%, 100% 0%, 100% ${p}%, 0% ${p - 100}%)`;
+    case "btt":
+      return `polygon(0% ${100 - p}%, 100% ${200 - p}%, 100% 100%, 0% 100%)`;
+  }
+}
+
+/**
+ * Venetian blinds: six slats across the axis perpendicular to `direction`, each
+ * growing along it, with the gap between them closing to nothing as the reveal
+ * finishes so the incoming theme lands flush. Each slat is traced starting and
+ * ending on the origin edge, so the connectors between them run along the
+ * viewport boundary and stay invisible.
+ */
+function blindsClipPath(
+  direction: ThemeTogglerButtonDirection,
+  progress: number,
+) {
+  const slats = 6;
+  const span = 100 / slats;
+  const gap = (1 - progress) * span * 0.5;
+  const fill = progress * 100;
+  const parts: string[] = [];
+
+  for (let index = 0; index < slats; index += 1) {
+    const a = index * span + gap / 2;
+    const b = (index + 1) * span - gap / 2;
+
+    switch (direction) {
+      case "ltr":
+        parts.push(`0% ${a}%, ${fill}% ${a}%, ${fill}% ${b}%, 0% ${b}%`);
+        break;
+      case "rtl":
+        parts.push(
+          `100% ${a}%, ${100 - fill}% ${a}%, ${100 - fill}% ${b}%, 100% ${b}%`,
+        );
+        break;
+      case "ttb":
+        parts.push(`${a}% 0%, ${a}% ${fill}%, ${b}% ${fill}%, ${b}% 0%`);
+        break;
+      case "btt":
+        parts.push(
+          `${a}% 100%, ${a}% ${100 - fill}%, ${b}% ${100 - fill}%, ${b}% 100%`,
+        );
+        break;
+    }
+  }
+
+  return `polygon(${parts.join(", ")})`;
+}
+
 type TransitionFrames = {
   keyframes: Keyframe[];
   easing: string;
@@ -166,6 +251,39 @@ function buildTransitionFrames(
           { clipPath: insetClipPath(direction, 1) },
         ],
         easing: "cubic-bezier(0.65, 0, 0.35, 1)",
+      };
+    }
+    case "rectangle": {
+      return {
+        keyframes: [
+          { clipPath: rectangleClipPath(origin, 0) },
+          { clipPath: rectangleClipPath(origin, 1) },
+        ],
+        easing: "cubic-bezier(0.3, 0.86, 0.36, 1)",
+      };
+    }
+    case "diagonal": {
+      const steps = 6;
+      const keyframes = Array.from({ length: steps + 1 }, (_, index) => ({
+        clipPath: diagonalClipPath(direction, index / steps),
+      }));
+      return { keyframes, easing: "cubic-bezier(0.65, 0, 0.35, 1)" };
+    }
+    case "blinds": {
+      const steps = 10;
+      const keyframes = Array.from({ length: steps + 1 }, (_, index) => ({
+        clipPath: blindsClipPath(direction, index / steps),
+      }));
+      return { keyframes, easing: "cubic-bezier(0.3, 0.86, 0.36, 1)" };
+    }
+    case "zoom": {
+      const transformOrigin = `${origin.x}px ${origin.y}px`;
+      return {
+        keyframes: [
+          { transform: "scale(0.65)", opacity: 0, transformOrigin },
+          { transform: "scale(1)", opacity: 1, transformOrigin },
+        ],
+        easing: "cubic-bezier(0.3, 0.86, 0.36, 1)",
       };
     }
     case "fade": {
@@ -327,7 +445,7 @@ function ThemeTogglerButton({
               ? undefined
               : { opacity: 0, rotate: 90 * spin, scale: 0.4 }
           }
-          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          transition={spring.fast}
         >
           {icon}
         </motion.span>
