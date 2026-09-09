@@ -79,12 +79,18 @@
   },
   "foundations": {
     "badge": "Fundações",
-    "title": "Profundidade e ritmo, como tokens",
-    "subtitle": "Elevação e movimento são uma decisão só, contada duas vezes. Uma superfície sobe a partir do substrato que lê, e o tamanho desse passo é o que escolhe o spring com que ela se move.",
-    "demo": {
-      "caption": "Um card com um diálogo com um popover com um menu. Cada camada nomeia o nível que resolve e o tier que a profundidade lhe dá — e abre exatamente com esse spring.",
-      "surfaceLink": "Ler a filosofia",
-      "motionLink": "Ler os motion tokens"
+    "title": "Profundidade e movimento, decididos de uma vez",
+    "subtitle": "Um componente declara uma coisa — quanto ele sobe em relação ao fundo. Esse número escolhe o tom dele e o spring com que ele se move.",
+    "stackNote": "Três superfícies, três profundidades. Cada uma pousa no spring que o seu degrau merece.",
+    "surface": {
+      "label": "Surface",
+      "blurb": "Uma escada de elevação de oito níveis. Painéis declaram um degrau, nunca uma cor fixa — então um menu aberto dentro de um diálogo fica um degrau acima dele, nos dois temas.",
+      "link": "Ler a filosofia"
+    },
+    "motion": {
+      "label": "Motion",
+      "blurb": "Cinco tiers de spring, nomeados pelo que transmitem. O tier de um componente vem desse mesmo degrau de elevação, então profundidade e ritmo não se separam.",
+      "link": "Ler os motion tokens"
     }
   },
   "scrollCards": {
