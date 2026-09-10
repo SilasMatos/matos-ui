@@ -28,7 +28,7 @@ const MotionElevated = motion.create(Elevated);
 
 export const stepperInputVariants = tv({
   base: [
-    "inline-flex items-stretch overflow-hidden rounded-lg border border-border/70",
+    "not-prose inline-flex items-stretch overflow-hidden rounded-lg border border-border/70",
     "focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 focus-within:ring-offset-background",
     "data-[disabled=true]:cursor-not-allowed data-[disabled=true]:opacity-50",
   ],
