@@ -107,7 +107,7 @@ export function HeroSection({ componentCount }: { componentCount: number }) {
             nativeButton={false}
             variant="outline"
             size="lg"
-            className="rounded-full px-5"
+            className="rounded-full bg-card px-5 dark:bg-input/30"
             render={
               <Link
                 href={siteConfig.links.github}

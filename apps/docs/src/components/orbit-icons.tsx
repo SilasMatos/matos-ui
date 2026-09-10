@@ -50,7 +50,7 @@ export function OrbitIcons() {
       {icons.map((icon) => (
         <div
           key={icon.id}
-          className="absolute rounded-full border border-gray-200/40"
+          className="absolute rounded-full border border-white/45 dark:border-white/15"
           style={{
             width: icon.orbit * 2,
             height: icon.orbit * 2,
