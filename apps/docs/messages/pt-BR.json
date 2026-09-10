@@ -77,22 +77,6 @@
       }
     ]
   },
-  "foundations": {
-    "badge": "Fundações",
-    "title": "Profundidade e movimento, decididos de uma vez",
-    "subtitle": "Um componente declara uma coisa — quanto ele sobe em relação ao fundo. Esse número escolhe o tom dele e o spring com que ele se move.",
-    "stackNote": "Três superfícies, três profundidades. Cada uma pousa no spring que o seu degrau merece.",
-    "surface": {
-      "label": "Surface",
-      "blurb": "Uma escada de elevação de oito níveis. Painéis declaram um degrau, nunca uma cor fixa — então um menu aberto dentro de um diálogo fica um degrau acima dele, nos dois temas.",
-      "link": "Ler a filosofia"
-    },
-    "motion": {
-      "label": "Motion",
-      "blurb": "Cinco tiers de spring, nomeados pelo que transmitem. O tier de um componente vem desse mesmo degrau de elevação, então profundidade e ritmo não se separam.",
-      "link": "Ler os motion tokens"
-    }
-  },
   "scrollCards": {
     "badge": "Estilizado por design",
     "title": "Como os componentes do Matos UI ganham forma",

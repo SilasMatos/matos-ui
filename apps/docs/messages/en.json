@@ -77,22 +77,6 @@
       }
     ]
   },
-  "foundations": {
-    "badge": "Foundations",
-    "title": "Depth and motion, decided once",
-    "subtitle": "A component declares one thing — how far it lifts above its background. That number picks its shade and the spring it moves on.",
-    "stackNote": "Three surfaces, three depths. Each lands on the spring its step earns.",
-    "surface": {
-      "label": "Surface",
-      "blurb": "An eight-level elevation ladder. Panels declare a step, never a fixed colour, so a menu opened inside a dialog stays a rung clear of it in either theme.",
-      "link": "Read the philosophy"
-    },
-    "motion": {
-      "label": "Motion",
-      "blurb": "Five spring tiers, named for how they feel. A component's tier is read from that same elevation step, so depth and timing can't drift apart.",
-      "link": "Read the motion tokens"
-    }
-  },
   "scrollCards": {
     "badge": "Pillars",
     "title": "Secrets Behind Success",
