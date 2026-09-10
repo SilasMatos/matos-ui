@@ -24,7 +24,7 @@ import { useSurface } from "@/registry/new-york-v4/lib/surface-context";
 import { Elevated } from "@/registry/new-york-v4/ui/elevated";
 
 export const motionTabsVariants = tv({
-  base: ["w-full overflow-hidden rounded-2xl p-2 text-foreground"],
+  base: ["not-prose w-full overflow-hidden rounded-2xl p-2 text-foreground"],
   variants: {
     size: {
       sm: "max-w-[420px]",

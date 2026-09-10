@@ -160,7 +160,9 @@ export function DatePicker({
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <div className={twMerge("relative inline-flex w-56", className)}>
+      <div
+        className={twMerge("not-prose relative inline-flex w-56", className)}
+      >
         <Input
           id={id}
           value={text}

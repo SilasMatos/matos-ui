@@ -35,7 +35,7 @@ export function Accordion({ children, className, ...props }: AccordionProps) {
     <AccordionContext.Provider value={value}>
       <div
         data-slot="accordion"
-        className={cn("w-full space-y-2", className)}
+        className={cn("not-prose w-full space-y-2", className)}
         {...props}
       >
         {children}

@@ -270,7 +270,10 @@ export function Coachmark({
 
   return createPortal(
     <SurfaceProvider value={1}>
-      <div data-slot="coachmark" className={className}>
+      <div
+        data-slot="coachmark"
+        className={className ? `not-prose ${className}` : "not-prose"}
+      >
         {/* Scrim click-catcher — one flat layer so the cutout box-shadow
          *  doesn't have to. */}
         <button
